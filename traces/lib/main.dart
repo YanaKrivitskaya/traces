@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/colorsPalette.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Traces',
       theme: ThemeData(
-        primaryColor: Colors.lightGreen,
+        primaryColor: ColorsPalette.mainColor,
         accentColor: Colors.amberAccent,
         textTheme: GoogleFonts.quicksandTextTheme(Theme.of(context).textTheme)
         /*buttonTheme: ButtonThemeData(
@@ -43,146 +44,52 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))),
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(width: 10, color: ColorsPalette.mainColor),
+            color: ColorsPalette.backColor
+          ),
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              /*Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("Traces",style: GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.orange, fontSize: 44.0)))
+                  ]
+              ),*/
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  //Image.asset('assets/logo_dark_orange.png')
-                  Text("Traces",style: GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.orange, fontSize: 44.0)))
-                ]
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Column(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () => {},
-                        padding: EdgeInsets.all(10.0),
-                        child: Column( // Replace with a Row for horizontal icon + text
-                          children: <Widget>[
-                            Icon(Icons.card_travel, color: Colors.orange, size: 60.0),
-                            Text("Trips", style: TextStyle(color: Colors.orangeAccent, fontSize: 20.0))
-                          ],
-                        ),
-                      ),
-                    ]
-                ),
-                Column(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () => {},
-                        padding: EdgeInsets.all(10.0),
-                        child: Column( // Replace with a Row for horizontal icon + text
-                          children: <Widget>[
-                            Icon(Icons.explore, color: Colors.lightGreen, size: 60.0),
-                            Text("Map", style: TextStyle(color: Colors.lightGreen, fontSize: 20.0))
-                          ],
-                        ),
-                      ),
-                    ]
-                ),
-                Column(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () => {},
-                        padding: EdgeInsets.all(10.0),
-                        child: Column( // Replace with a Row for horizontal icon + text
-                          children: <Widget>[
-                            Icon(Icons.note, color: Colors.lightGreen, size: 60.0),
-                            Text("Notes", style: TextStyle(color: Colors.lightGreen, fontSize: 20.0))
-                          ],
-                        ),
-                      ),
-                    ]
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Column(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () => {},
-                        padding: EdgeInsets.all(10.0),
-                        child: Column( // Replace with a Row for horizontal icon + text
-                          children: <Widget>[
-                            Icon(Icons.flight, color: Colors.lightGreen, size: 60.0),
-                            Text("Flights", style: TextStyle(color: Colors.lightGreen, fontSize: 20.0))
-                          ],
-                        ),
-                      ),
-                    ]
-                ),
-                Column(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () => {},
-                        padding: EdgeInsets.all(10.0),
-                        child: Column( // Replace with a Row for horizontal icon + text
-                          children: <Widget>[
-                            Icon(Icons.attach_money, color: Colors.lightGreen, size: 60.0),
-                            Text("Expenses", style: TextStyle(color: Colors.lightGreen, fontSize: 20.0))
-                          ],
-                        ),
-                      ),
-                    ]
-                ),
-                Column(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () => {},
-                        padding: EdgeInsets.all(10.0),
-                        child: Column( // Replace with a Row for horizontal icon + text
-                          children: <Widget>[
-                            Icon(Icons.home, color: Colors.lightGreen, size: 60.0),
-                            Text("Hotels", style: TextStyle(color: Colors.lightGreen, fontSize: 20.0))
-                          ],
-                        ),
-                      ),
-                    ]
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Column(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () => {},
-                        padding: EdgeInsets.all(10.0),
-                        child: Column( // Replace with a Row for horizontal icon + text
-                          children: <Widget>[
-                            Icon(Icons.perm_identity, color: Colors.lightGreen, size: 60.0),
-                            Text("Profile", style: TextStyle(color: Colors.lightGreen, fontSize: 20.0))
-                          ],
-                        ),
-                      ),
-                    ]
-                ),
-                Column(
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () => {},
-                        padding: EdgeInsets.all(10.0),
-                        child: Column( // Replace with a Row for horizontal icon + text
-                          children: <Widget>[
-                            Icon(Icons.settings, color: Colors.lightGreen, size: 60.0),
-                            Text("Settings", style: TextStyle(color: Colors.lightGreen, fontSize: 20.0))
-                          ],
-                        ),
-                      ),
-                    ]
-                )
-              ],
-            ),
-          ],
-        ),
+                  _menuTile(Icons.card_travel, "Trips", ColorsPalette.beniukonBronze),
+                  _menuTile(Icons.explore, "Map", ColorsPalette.beniukonBronze),
+                  _menuTile(Icons.note, "Notes", ColorsPalette.beniukonBronze)
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _menuTile(Icons.flight, "Flights", ColorsPalette.beniukonBronze),
+                  _menuTile(Icons.attach_money, "Expenses", ColorsPalette.beniukonBronze),
+                  _menuTile(Icons.home, "Hotels", ColorsPalette.beniukonBronze)
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _menuTile(Icons.call_to_action, "Visas", ColorsPalette.beniukonBronze),
+                  _menuTile(Icons.perm_identity, "Profile", ColorsPalette.beniukonBronze),
+                  _menuTile(Icons.settings, "Settings", ColorsPalette.beniukonBronze)
+                ],
+              ),
+            ],
+          ),
+        )
       ),
       /*floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
@@ -192,3 +99,23 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+Column _menuTile(IconData icon, String title, Color color) =>Column(
+    children: <Widget>[
+      FlatButton(
+        onPressed: () => {},
+        padding: EdgeInsets.all(10.0),
+        child: Column( // Replace with a Row for horizontal icon + text
+          children: <Widget>[
+            /*Image(
+              image: new AssetImage(iconPath),
+              //color: null
+            ),*/
+            //Icon(icon, color: ColorsPalette.iconColor, size: 60.0),
+            Icon(icon, color: color, size: 60.0),
+            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
+          ],
+        ),
+      ),
+    ]
+);
