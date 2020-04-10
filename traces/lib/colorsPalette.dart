@@ -37,6 +37,8 @@ class ColorsPalette {
   //static const Color backColor = const Color(0xFFFEFCFB); // ++
   //static const Color backColor = const Color(0xFFFFFFEA);
 
+  static const Color greenGrass = const Color(0xFF51980B);
+  static const Color darkGrass = const Color(0xFF2CA653);
 
 ///de palette
   static const Color fusionRed = const Color(0xFFFC5C65);
