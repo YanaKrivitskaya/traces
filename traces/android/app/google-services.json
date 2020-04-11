@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "921192970635",
+    "firebase_url": "https://traces-722c4.firebaseio.com",
+    "project_id": "traces-722c4",
+    "storage_bucket": "traces-722c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921192970635:android:47584b78daf45df062178e",
+        "android_client_info": {
+          "package_name": "com.yk.traces"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "921192970635-nlifvquu33qbi5smeb6qtjuqn72ue1m3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-OnoKa8S7FzIeW7CYNtGd-pBykd6OdE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "921192970635-nlifvquu33qbi5smeb6qtjuqn72ue1m3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
