@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:traces/constants.dart';
-import 'package:traces/expenses.dart';
-import 'package:traces/flights.dart';
-import 'package:traces/hotels.dart';
-import 'package:traces/map.dart';
-import 'package:traces/notes.dart';
-import 'package:traces/profile.dart';
-import 'package:traces/settings.dart';
-import 'package:traces/trips.dart';
-import 'package:traces/visas.dart';
+import 'package:traces/screens/expenses.dart';
+import 'package:traces/screens/flights.dart';
+import 'package:traces/screens/home.dart';
+import 'package:traces/screens/hotels.dart';
+import 'package:traces/screens/login.dart';
+import 'package:traces/screens/map.dart';
+import 'package:traces/screens/notes.dart';
+import 'package:traces/screens/profile.dart';
+import 'package:traces/screens/register.dart';
+import 'package:traces/screens/settings.dart';
+import 'package:traces/screens/trips.dart';
+import 'package:traces/screens/visas.dart';
 
 class Router {
   static Map<String, WidgetBuilder> getRoutes() {
     return {
-      //homeRoute: (context) => HomePage(),
+      homeRoute: (context) => HomePage(),
       tripsRoute: (context) => TripsPage(),
       mapRoute: (context) => MapPage(),
       notesRoute: (context) => NotesPage(),
@@ -23,6 +26,8 @@ class Router {
       visasRoute: (context) => VisasPage(),
       profileRoute: (context) => ProfilePage(),
       settingsRoute: (context) => SettingsPage(),
+      loginRoute: (context) => LoginPage(),
+      registerRoute: (contect) => RegisterPage()
     };
   }
 }

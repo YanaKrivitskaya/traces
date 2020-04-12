@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'colorsPalette.dart';
+import '../colorsPalette.dart';
 
-class ProfilePage extends StatefulWidget{
+class HotelsPage extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
-    return new _ProfilePageState();
+    return new _HotelsPageState();
   }
 }
 
-class _ProfilePageState extends State<ProfilePage>{
+class _HotelsPageState extends State<HotelsPage>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Profile',
+          'Hotels',
           style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))
         ),
-        centerTitle: true
+        centerTitle: true,
       ),
       body: Center(
         child: RaisedButton(

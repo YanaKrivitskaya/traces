@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'colorsPalette.dart';
+import '../colorsPalette.dart';
 
-class SettingsPage extends StatefulWidget{
+class ProfilePage extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
-    return new _SettingsPageState();
+    return new _ProfilePageState();
   }
 }
 
-class _SettingsPageState extends State<SettingsPage>{
+class _ProfilePageState extends State<ProfilePage>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Settings',
+          'Profile',
           style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))
         ),
-        centerTitle: true,
+        centerTitle: true
       ),
       body: Center(
         child: RaisedButton(

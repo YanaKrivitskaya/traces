@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class ColorsPalette {
   static const Color orange = Colors.orange;
+  static const Color white = Colors.white;
   static const Color orangeBright = const Color(0xFFFFAB00);
   static const Color greenLight = const Color(0xFF9AAC1B);
   static const Color greenDark = const Color(0xFF3C9C50);
