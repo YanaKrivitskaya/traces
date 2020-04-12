@@ -1,5 +1,5 @@
 
-const String homeRoute = '/';
+const String homeRoute = '/home';
 const String tripsRoute = '/trips';
 const String mapRoute = '/map';
 const String notesRoute = '/notes';
@@ -9,3 +9,6 @@ const String hotelsRoute = '/hotels';
 const String visasRoute = '/visas';
 const String profileRoute = '/profile';
 const String settingsRoute = '/settings';
+const String loginRoute = '/login';
+const String registerRoute = '/register';
+//const String welcomeRoute = '/';
