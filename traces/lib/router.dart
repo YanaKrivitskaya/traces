@@ -4,11 +4,10 @@ import 'package:traces/screens/expenses.dart';
 import 'package:traces/screens/flights.dart';
 import 'package:traces/screens/home.dart';
 import 'package:traces/screens/hotels.dart';
-import 'package:traces/screens/login.dart';
+import 'package:traces/screens/loginSignup.dart';
 import 'package:traces/screens/map.dart';
 import 'package:traces/screens/notes.dart';
 import 'package:traces/screens/profile.dart';
-import 'package:traces/screens/register.dart';
 import 'package:traces/screens/settings.dart';
 import 'package:traces/screens/trips.dart';
 import 'package:traces/screens/visas.dart';
@@ -26,8 +25,7 @@ class Router {
       visasRoute: (context) => VisasPage(),
       profileRoute: (context) => ProfilePage(),
       settingsRoute: (context) => SettingsPage(),
-      loginRoute: (context) => LoginPage(),
-      registerRoute: (contect) => RegisterPage()
+      loginSignupRoute: (context) => LoginSignupPage()
     };
   }
 }

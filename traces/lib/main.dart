@@ -4,6 +4,8 @@ import 'package:traces/colorsPalette.dart';
 import 'package:traces/router.dart';
 import 'package:traces/screens/welcome.dart';
 
+import 'services/auth.dart';
+
 void main() => runApp(TracesApp());
 
 class TracesApp extends StatelessWidget {
@@ -11,6 +13,7 @@ class TracesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      //debugShowCheckedModeBanner: false,
       title: 'Traces',
       theme: ThemeData(
         primaryColor: ColorsPalette.mainColor,
@@ -18,7 +21,7 @@ class TracesApp extends StatelessWidget {
         textTheme: GoogleFonts.quicksandTextTheme(Theme.of(context).textTheme)
       ),
       routes: Router.getRoutes(),
-      home: WelcomePage(),
+      home: new WelcomePage(/*auth: new Auth()*/),
     );
   }
 }
