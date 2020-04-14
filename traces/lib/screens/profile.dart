@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/constants.dart';
+import 'package:traces/services/auth.dart';
 import '../colorsPalette.dart';
 
 class ProfilePage extends StatefulWidget{
+
+  final BaseAuth auth = new Auth();
 
   @override
   State<StatefulWidget> createState() {
@@ -22,13 +26,28 @@ class _ProfilePageState extends State<ProfilePage>{
         centerTitle: true
       ),
       body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
+        child: Column(
+          children: <Widget>[
+            RaisedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Go back!'),
+            ),
+            RaisedButton(
+              onPressed: () {
+                _logout();
+              },
+              child: Text('Logout'),
+            ),
+          ],
+        )
       ),
     );
+  }
+
+  _logout() async {
+    await widget.auth.logout();
+    Navigator.of(context).pushNamedAndRemoveUntil(Navigator.defaultRouteName, (Route<dynamic> route) => false);
   }
 }
