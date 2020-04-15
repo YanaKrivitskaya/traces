@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/Models/userModel.dart';
-import 'package:traces/constants.dart';
 import '../colorsPalette.dart';
 import '../services/auth.dart';
+
+enum FormAction {
+  LOGIN,
+  SIGNUP,
+  RESETPASS,
+}
 
 class LoginSignupPage extends StatefulWidget{
   LoginSignupPage({this.auth, this.loginCallback});
@@ -25,21 +30,23 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
 
   String _errorMessage;
   bool _isLoading;
-  bool _isLoginForm;
   bool _obscurePassword;
+  bool _resetPassword;
+
+  FormAction _formAction = FormAction.LOGIN;
 
   @override
   void initState() {
     _isLoading = false;
     _errorMessage = "";
-    _isLoginForm = true;
+    _formAction = FormAction.LOGIN;
     _obscurePassword = true;
+    _resetPassword = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context){
-    final bottom = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
       //resizeToAvoidBottomInset: false,
@@ -59,17 +66,16 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
                             key: _formKey,
                             child: Column(
                               children: <Widget>[
-                                _isLoginForm ?
-                                Text("Login", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0)))
-                                    : Text("Register", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0))),
+                                _getFormHeader(),
                                 Divider(color: ColorsPalette.blueHorizon),
-                                _isLoginForm ? Container(height: 0, width: 0,) : _usernameTextField(),
-                                _emailTextField(),
-                                _passwordTextField(),
-                                _isLoginForm ? _forgotPasswordLink() : Container(height: 0, width: 0,),
+                                _formAction == FormAction.SIGNUP ? _usernameTextField() : Container(height: 0, width: 0,),
+                                !_resetPassword ?  _emailTextField() : Container(height: 0, width: 0,),
+                                _passwordResetInfo(),
+                                _formAction == FormAction.RESETPASS ? Container(height: 0, width: 0,) : _passwordTextField(),
+                                _formAction == FormAction.LOGIN ? _forgotPasswordLink() : Container(height: 0, width: 0,),
                                 _showErrorMessage(),
                                 _progressIndicator(),
-                                _submitButton(),
+                                !_resetPassword ? _submitButton() : Container(height: 0, width: 0,),
                                 _footerLink()
                               ],
                             )
@@ -91,14 +97,44 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
     ],
   );
 
+  Widget _getFormHeader(){
+    switch(_formAction){
+      case FormAction.LOGIN:
+        return Text("Login", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0)));
+      case FormAction.SIGNUP:
+        return Text("Register", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0)));
+      case FormAction.RESETPASS:
+        return Text("Reset Password", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0)));
+    }
+    return Text("Login", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0)));
+  }
+
+  Widget _getButtonText(){
+    switch(_formAction){
+      case FormAction.LOGIN: return Text("Login");
+      case FormAction.SIGNUP: return Text("Register");
+      case FormAction.RESETPASS: return Text("Reset Password");
+    }
+    return Text("Login");
+  }
+
   Widget _progressIndicator() {
     if (_isLoading != null && _isLoading) {
       return Center(child: CircularProgressIndicator());
     }
-    return Container(
-      height: 0.0,
-      width: 0.0,
-    );
+    return Container(height: 0.0,width: 0.0,);
+  }
+
+  Widget _passwordResetInfo(){
+    if(_formAction == FormAction.RESETPASS && _resetPassword){
+      return Center(
+        child: Column(children: <Widget>[
+          Icon(Icons.check, size: 60.0, color: ColorsPalette.beniukonBronze),
+          Text("Check your mailbox before login")
+        ],)
+      );
+    }
+    return Container(height: 0.0,width: 0.0,);
   }
 
   void resetForm() {
@@ -109,7 +145,8 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
   void toggleFormMode() {
     resetForm();
     setState(() {
-      _isLoginForm = !_isLoginForm;
+      _formAction == FormAction.LOGIN ? _formAction = FormAction.SIGNUP : _formAction = FormAction.LOGIN;
+      _resetPassword = false;
     });
   }
 
@@ -178,7 +215,11 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
     child: Align(
         alignment: Alignment.centerRight,
         child: InkWell(
-          onTap: (){},
+          onTap: (){
+            setState(() {
+              _formAction = FormAction.RESETPASS;
+            });
+          },
           child: Text(
             "Forgot password?",
             style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.beniukonBronze)),
@@ -193,7 +234,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
           child: RaisedButton(
             color: ColorsPalette.blueHorizon,
             textColor: ColorsPalette.grayLight,
-            child: _isLoginForm ? Text("Login") : Text("Register"),
+            child: _getButtonText(),
             onPressed: (){
               _validateAndSubmit();
             },
@@ -214,19 +255,24 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
     setState(() {
       _isLoading = true;
       _errorMessage = "";
+      _resetPassword = false;
     });
     if(_validateAndSave()){
       String userId = "";
       try{
-        if(_isLoginForm){
+        if(_formAction == FormAction.LOGIN){
           userId = await widget.auth.login(_userModel.email, _userModel.password);
           print('Logged in: $userId');
-        }else{
+        }else if (_formAction == FormAction.SIGNUP){
           userId = await widget.auth.register(_userModel.email, _userModel.password, _userModel.username);
           await widget.auth.login(_userModel.email, _userModel.password);
           print('Registered: $userId');
+        }else{
+          await widget.auth.resetPassword(_userModel.email);
+          setState(() {
+            _resetPassword = true;
+          });
         }
-
         setState(() {
           _isLoading = false;
         });
@@ -237,6 +283,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
       catch(e){
         setState(() {
           _isLoading = false;
+          _resetPassword = false;
           print(e);
           _errorMessage = e.message != null ? e.message : e;
           _formKey.currentState.reset();
@@ -244,6 +291,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
       }
     }else{
       setState(() {
+        _resetPassword = false;
         _isLoading = false;
       });
     }
@@ -256,7 +304,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
       children: <Widget>[
         Column(
           children: <Widget>[
-            _isLoginForm ? Text("Don't have an account?") : Text("Already have an account?")
+            _formAction == FormAction.LOGIN ? Text("Don't have an account?") : Text("Already have an account?")
           ],
         ),
         Column(
@@ -265,7 +313,7 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
               onTap: (){
                 toggleFormMode();
               },
-              child: _isLoginForm ?
+              child: _formAction == FormAction.LOGIN ?
               Text("Create new", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.beniukonBronze)))
                   : Text("Login", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.beniukonBronze)))
             )
