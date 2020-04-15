@@ -39,42 +39,48 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
 
   @override
   Widget build(BuildContext context){
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
+
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomPadding: false,
       body: Center(
-        child: Container(
-          margin: const EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 20),
-          child: Column(
-          children: <Widget>[
-            _header(),
-            Container(
+        child: SingleChildScrollView(
+            //reverse: true,
+            child: Container(
               margin: const EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 20),
-              child: Builder(
-                builder: (context) => Form(
-                  key: _formKey,
-                  child: Column(
-                      children: <Widget>[
-                        _isLoginForm ?
-                          Text("Login", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0)))
-                        : Text("Register", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0))),
-                        Divider(color: ColorsPalette.blueHorizon),
-                        _isLoginForm ? Container(height: 0, width: 0,) : _usernameTextField(),
-                        _emailTextField(),
-                        _passwordTextField(),
-                        _isLoginForm ? _forgotPasswordLink() : Container(height: 0, width: 0,),
-                        _showErrorMessage(),
-                        _progressIndicator(),
-                        _submitButton(),
-                        _footerLink()
-                      ],
-                )
-                )
+              child: Column(
+                children: <Widget>[
+                  _header(),
+                  Container(
+                    margin: const EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 20),
+                    child: Builder(
+                        builder: (context) => Form(
+                            key: _formKey,
+                            child: Column(
+                              children: <Widget>[
+                                _isLoginForm ?
+                                Text("Login", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0)))
+                                    : Text("Register", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0))),
+                                Divider(color: ColorsPalette.blueHorizon),
+                                _isLoginForm ? Container(height: 0, width: 0,) : _usernameTextField(),
+                                _emailTextField(),
+                                _passwordTextField(),
+                                _isLoginForm ? _forgotPasswordLink() : Container(height: 0, width: 0,),
+                                _showErrorMessage(),
+                                _progressIndicator(),
+                                _submitButton(),
+                                _footerLink()
+                              ],
+                            )
+                        )
+                    ),
+                  )
+                ],
               ),
             )
-          ],
-        ),
         )
-      ),
+      )
     );
   }
 
@@ -163,7 +169,8 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
         setState(() =>
         _userModel.password = value.trim()
         );
-      }
+      },
+
   );
 
   Widget _forgotPasswordLink() => new Container(
