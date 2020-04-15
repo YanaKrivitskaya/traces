@@ -9,11 +9,13 @@ abstract class BaseAuth {
 
   Future<FirebaseUser> getCurrentUser();
 
-  Future<void> sendEmailVerification();
+  //Future<void> sendEmailVerification();
 
   Future<void> logout();
 
-  Future<bool> isEmailVerified();
+  //Future<bool> isEmailVerified();
+
+  Future<void> resetPassword(String email);
 }
 
 class Auth implements BaseAuth{
@@ -33,8 +35,12 @@ class Auth implements BaseAuth{
     UserUpdateInfo profileUpdate = UserUpdateInfo();
     profileUpdate.displayName = username;
     await user.updateProfile(profileUpdate);
-    return user.uid;
 
+    return user.uid;
+  }
+
+  Future<void> resetPassword(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
   Future<FirebaseUser> getCurrentUser() async{
@@ -42,18 +48,18 @@ class Auth implements BaseAuth{
     return user;
   }
 
-  Future<void> sendEmailVerification() async{
+  /*Future<void> sendEmailVerification() async{
     FirebaseUser user = await _firebaseAuth.currentUser();
     user.sendEmailVerification();
-  }
+  }*/
 
   Future<void> logout() async{
     return _firebaseAuth.signOut();
   }
 
-  Future<bool> isEmailVerified() async{
+  /*Future<bool> isEmailVerified() async{
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user.isEmailVerified;
-  }
+  }*/
 
 }
