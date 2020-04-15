@@ -19,12 +19,6 @@ class LoginSignupPage extends StatefulWidget{
   }
 }
 
-/*class LoginPageArguments{
-  final BaseAuth auth;
-  final VoidCallback loginCallback;
-  LoginPageArguments({this.auth, this.loginCallback});
-}*/
-
 class _LoginSignupPageState extends State<LoginSignupPage>{
   final _formKey = GlobalKey<FormState>();
   final _userModel = UserModel();
@@ -32,22 +26,19 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
   String _errorMessage;
   bool _isLoading;
   bool _isLoginForm;
+  bool _obscurePassword;
 
   @override
   void initState() {
     _isLoading = false;
     _errorMessage = "";
     _isLoginForm = true;
+    _obscurePassword = true;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context){
-    /*final LoginPageArguments arguments = ModalRoute.of(context).settings.arguments;
-
-    widget.auth = arguments.auth;
-    widget.loginCallback = arguments.loginCallback;*/
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
@@ -151,10 +142,18 @@ class _LoginSignupPageState extends State<LoginSignupPage>{
   );
 
   Widget _passwordTextField() => new TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Password',
+      decoration: InputDecoration(
+          labelText: 'Password',
+          suffixIcon: IconButton(
+            icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+            onPressed: (){
+              setState(() {
+                _obscurePassword = !_obscurePassword;
+              });
+            },
+          ),
       ),
-      obscureText: true,
+      obscureText: _obscurePassword,
       validator: (String value) {
         if(value.isEmpty){
           return 'Please enter Password';
