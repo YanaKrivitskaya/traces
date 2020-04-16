@@ -25,20 +25,16 @@ class ColorsPalette {
   static const Color light = const Color(0xFFF4D8CD);
   static const Color blue = const Color(0xFF1E555C);
 
-  static const Color paleBlue = const Color(0xFF59BAB7); // for icon
-  static const Color back = const Color(0xFFFEFCFB); // for back
+  static const Color paleBlue = const Color(0xFF59BAB7); //
+  static const Color back = const Color(0xFFFEFCFB); // back
   static const Color bordo = const Color(0xFFD3518A);
 
-  //static const Color iconTitle = const Color(0xFF47817E); //++
-  //static const Color mainColor = const Color(0xFFF15152); // ++
   static const Color iconColor = beniukonBronze;
   static const Color iconTitle = blueHorizon;
   static const Color mainColor = blueHorizon;
   static const Color backColor = back;
-  //static const Color backColor = const Color(0xFFFEFCFB); // ++
-  //static const Color backColor = const Color(0xFFFFFFEA);
 
-  static const Color greenGrass = const Color(0xFF51980B);
+  static const Color greenGrass = const Color(0xFF51980B); //notes
   static const Color darkGrass = const Color(0xFF2CA653);
 
 ///de palette
@@ -47,11 +43,11 @@ class ColorsPalette {
   static const Color highBlue = const Color(0xFF45AAF2);
   static const Color boyzone = const Color(0xFF2D98DA);
   static const Color orangeHibiscus = const Color(0xFFFD9644);
-  static const Color beniukonBronze = const Color(0xFFFA8231);
+  static const Color beniukonBronze = const Color(0xFFFA8231); // icons
   static const Color c64Ntsc = const Color(0xFF4B7BEC);
   static const Color royalBlue = const Color(0xFF3867D6);
   static const Color flirtatious = const Color(0xFFFED330);
-  static const Color nycTaxi = const Color(0xFFF7B731);
+  static const Color nycTaxi = const Color(0xFFF7B731); //note
   static const Color lighterPurple = const Color(0xFFA55EEA);
   static const Color gloomyPurple = const Color(0xFF8854D0);
   static const Color reptileGreen = const Color(0xFF26DE81);
