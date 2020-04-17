@@ -6,6 +6,7 @@ import 'package:traces/screens/home.dart';
 import 'package:traces/screens/hotels.dart';
 import 'package:traces/screens/loginSignup.dart';
 import 'package:traces/screens/map.dart';
+import 'package:traces/screens/notes/note-detail.dart';
 import 'package:traces/screens/notes/notes.dart';
 import 'package:traces/screens/profile.dart';
 import 'package:traces/screens/settings.dart';
@@ -19,6 +20,7 @@ class Router {
       tripsRoute: (context) => TripsPage(),
       mapRoute: (context) => MapPage(),
       notesRoute: (context) => NotesPage(),
+      noteDetailsRoute: (context) => NoteDetailsPage(),
       flightsRoute: (context) => FlightsPage(),
       expensesRoute: (context) => ExpensesPage(),
       hotelsRoute: (context) => HotelsPage(),

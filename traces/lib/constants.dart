@@ -10,5 +10,6 @@ const String visasRoute = '/visas';
 const String profileRoute = '/profile';
 const String settingsRoute = '/settings';
 const String loginSignupRoute = '/loginSignup';
+const String noteDetailsRoute = '/noteDetails';
 //const String registerRoute = '/register';
 //const String welcomeRoute = '/';
