@@ -5,6 +5,7 @@ import 'auth.dart';
 // Reference to a Collection
 CollectionReference notesCollectionRef = Firestore.instance.collection('notes');
 final String notesCollection = "userNotes";
+final String tagsCollection = "userTags";
 final BaseAuth auth = new Auth();
 
 class NoteFireService{
@@ -34,4 +35,10 @@ class NoteFireService{
     );*/
     yield* snapshots;
   }
+
+  Future<void> deleteNote(String id) async{
+    String uid = await auth.getUserId();
+    await notesCollectionRef.document(uid).collection(notesCollection).document(id).delete();
+  }
+
 }

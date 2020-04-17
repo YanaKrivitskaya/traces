@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/Models/noteModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:traces/constants.dart';
+import 'package:traces/screens/notes/note-detail.dart';
 import 'package:traces/services/noteFireService.dart';
 import '../../colorsPalette.dart';
 import 'package:intl/intl.dart';
 
 class NotesPage extends StatefulWidget{
-  //String uid = await auth.getUserId();
-
 
   @override
   State<StatefulWidget> createState() {
@@ -23,6 +23,8 @@ class _NotesPageState extends State<NotesPage>{
   StreamSubscription<QuerySnapshot> noteSub;
   final NoteFireService noteService = new NoteFireService();
 
+  int itemsLength = 0;
+
   @override
   void initState() {
     notes = new List();
@@ -32,6 +34,7 @@ class _NotesPageState extends State<NotesPage>{
           .map((documentSnapshot) => NoteModel.fromMap(documentSnapshot.data)).toList();
       setState(() {
         this.notes = items;
+        this.itemsLength = items.length;
       });
     });
     super.initState();
@@ -54,26 +57,31 @@ class _NotesPageState extends State<NotesPage>{
         centerTitle: true,
         backgroundColor: ColorsPalette.greenGrass,
       ),
-      body: SingleChildScrollView(child: Column(
-        children: <Widget>[
-          Container(
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: notes.length,
-                  itemBuilder: (context, position){
-                    return Card(
-                      child: ListTile(
-                        leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
-                        title: Text('${notes[position].title}'),
-                        subtitle: Text('Created: ${DateFormat.yMMMd().format(notes[position].dateCreated)}'),
-                        //subtitle: Text('Description can be here'),
-                        trailing: Icon(Icons.more_vert),
-                      ),
-                    );
-                  }
-              )
-          )],)),
+      body: Container(
+          padding: EdgeInsets.only(bottom: 65.0),
+          child: SingleChildScrollView(child: Column(
+            children: <Widget>[
+              Container(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: itemsLength,
+                      itemBuilder: (context, position){
+                        return Card(
+                          child: ListTile(
+                            leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
+                            title: Text('${notes[position].title}'),
+                            subtitle: Text('Created: ${DateFormat.yMMMd().format(notes[position].dateCreated)}'),
+                            trailing: _popupMenu(notes[position], position),
+                            onTap: (){
+                              _navigateToNote(context, notes[position]);
+                            },
+                          ),
+                        );
+                      }
+                  )
+              )],))
+        ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           _addNewNote();
@@ -86,7 +94,52 @@ class _NotesPageState extends State<NotesPage>{
   }
 
   void _addNewNote() async{
-      await noteService.createNote("New Note #xxx", "text of new note. Awesome text, just the best texte ever.");
+      await noteService.createNote("New Note #xxx", "text of new note. Awesome text, just the best text ever.");
   }
+
+  void _navigateToNote(BuildContext context, NoteModel note) async{
+    await Navigator.pushNamed(context, noteDetailsRoute, arguments: NoteDetailsPageArguments(note));
+  }
+
+  void _deleteNote(NoteModel note, int position) async{
+    await noteService.deleteNote(note.id).then((data){
+      setState(() {
+        /*this.notes.removeAt(this.notes.indexOf(note));
+        this.itemsLength = this.notes.length;*/
+      });
+    });
+  }
+
+
+  Widget _popupMenu(NoteModel note, int position) => PopupMenuButton<int>(
+    itemBuilder: (context) => [
+      PopupMenuItem(
+        value: 1,
+        child: Text(
+          "Edit",
+          style:
+          TextStyle(color: ColorsPalette.blueHorizon, fontWeight: FontWeight.w700),
+        ),
+      ),
+      PopupMenuItem(
+        value: 2,
+        child: Text(
+          "Delete",
+          style:
+          TextStyle(color: ColorsPalette.blueHorizon, fontWeight: FontWeight.w700),
+        ),
+      ),
+    ],
+    onSelected: (value) async{
+      if(value == 2){
+        print(note.id);
+        print(position);
+        _deleteNote(note, position);
+      }
+      print("value:$value");
+    },
+    //elevation: 4,
+    //padding: EdgeInsets.symmetric(horizontal: 50),
+  );
 
 }

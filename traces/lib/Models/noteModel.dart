@@ -6,14 +6,16 @@ class NoteModel{
   String _text;
   DateTime _dateCreated;
   DateTime _dateModified;
+  String _tagId;
 
-  NoteModel(this._id, this._title, this._text, this._dateCreated, this._dateModified);
+  NoteModel(this._id, this._title, this._text, this._dateCreated, this._dateModified, this._tagId);
 
   String get id => _id;
   String get title => _title;
   String get text => _text;
   DateTime get dateCreated => _dateCreated;
   DateTime get dateModified => _dateModified;
+  String get tagId => _tagId;
 
   NoteModel.map(dynamic obj){
     this._id = obj['id'];
@@ -29,6 +31,7 @@ class NoteModel{
     this._text = map["text"];
     this._dateCreated = map["dateCreated"].toDate();
     this._dateModified = map["dateModified"].toDate();
+    this._tagId = map["tagId"];
   }
 
   //var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
