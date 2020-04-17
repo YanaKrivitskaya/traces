@@ -121,5 +121,4 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
       Navigator.pop(context, "Delete");
     });
   }
-
 }
