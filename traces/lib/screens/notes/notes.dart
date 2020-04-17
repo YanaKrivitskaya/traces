@@ -101,15 +101,15 @@ class _NotesPageState extends State<NotesPage>{
     await Navigator.pushNamed(context, noteDetailsRoute, arguments: NoteDetailsPageArguments(note));
   }
 
-  void _deleteNote(NoteModel note, int position) async{
+  void _deleteNote(NoteModel note, BuildContext context) async{
     await noteService.deleteNote(note.id).then((data){
+      Navigator.pop(context, "Delete");
       setState(() {
         /*this.notes.removeAt(this.notes.indexOf(note));
         this.itemsLength = this.notes.length;*/
       });
     });
   }
-
 
   Widget _popupMenu(NoteModel note, int position) => PopupMenuButton<int>(
     itemBuilder: (context) => [
@@ -132,14 +132,45 @@ class _NotesPageState extends State<NotesPage>{
     ],
     onSelected: (value) async{
       if(value == 2){
-        print(note.id);
-        print(position);
-        _deleteNote(note, position);
+        _deleteAlert(note).then((res){});
       }
       print("value:$value");
     },
     //elevation: 4,
     //padding: EdgeInsets.symmetric(horizontal: 50),
   );
+
+  Future<String> _deleteAlert(NoteModel note) async {
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete note?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('${note.title}'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Delete'),
+              onPressed: () {
+                _deleteNote(note, context);
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context, "Cancel");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 }
