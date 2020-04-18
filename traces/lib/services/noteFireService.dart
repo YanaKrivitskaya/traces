@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:traces/Models/noteModel.dart';
 
 import 'auth.dart';
 
@@ -28,17 +29,22 @@ class NoteFireService{
 
     Stream<QuerySnapshot> snapshots = notesCollectionRef.document(uid).collection(notesCollection).snapshots();
 
-    /*notesCollectionRef.document(uid).collection(notesCollection).getDocuments().then(
-        (QuerySnapshot snapshot){
-          snapshot.documents.forEach((f) => print('${f.data}'));
-        }
-    );*/
     yield* snapshots;
   }
 
   Future<void> deleteNote(String id) async{
     String uid = await auth.getUserId();
     await notesCollectionRef.document(uid).collection(notesCollection).document(id).delete();
+  }
+
+  Future<NoteModel> updateNote(NoteModel note) async{
+    String uid = await auth.getUserId();
+
+    DocumentSnapshot  ds = await notesCollectionRef.document(uid).collection(notesCollection).document(note.id).get();
+    print(ds);
+    await ds.reference.updateData(note.toMap());
+    var resultNote = await notesCollectionRef.document(uid).collection(notesCollection).document(note.id).get();
+    return NoteModel.fromMap(resultNote.data);
   }
 
 }

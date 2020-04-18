@@ -25,15 +25,27 @@ class NoteDetailsPage extends StatefulWidget{
 class _NotesDetailsPageState extends State<NoteDetailsPage>{
 
   final NoteFireService noteService = new NoteFireService();
+  bool _editMode = false;
+
+  NoteModel _note;
+
+  TextEditingController _titleController;
+  TextEditingController _textController;
 
   @override
   void initState() {
     super.initState();
+    _editMode = false;
   }
 
   @override
   Widget build(BuildContext context){
     final NoteDetailsPageArguments arguments = ModalRoute.of(context).settings.arguments;
+
+    _note = arguments.note;
+
+    _titleController = new TextEditingController(text: _note.title);
+    _textController = new TextEditingController(text: _note.text);
 
     return Scaffold(
       appBar: AppBar(
@@ -42,41 +54,31 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              _deleteAlert(arguments.note).then((res){
-                if(res == "Delete") Navigator.of(context).pop();
-              });
-            },
-          ),
+          _editMode ? _saveAction(_note) : _editAction(),
+          _deleteAction(_note, context),
         ],
         backgroundColor: ColorsPalette.greenGrass,
       ),
       body: Container(child: Column(children: <Widget>[
         Card(
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                    title: Text('${arguments.note.title}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('Created: ${DateFormat.yMMMd().format(arguments.note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(arguments.note.dateModified)}' ),
-                )
-              ],
+            child: Padding(
+              padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
+              child:!_editMode?
+              ListTile(
+                title: Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}' ),
+              ) : _titleTextField()
             )
         ),
         Card(
-            child: Column(
-              children: <Widget>[
+          child: Padding(
+              padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
+              child:!_editMode?
                 ListTile(
-                    title: Text('${arguments.note.text}'),
+                  title: Text('${_note.text}'),
                   contentPadding: EdgeInsets.all(10.0)
-                )
-              ],
-            )
+                ) : _textTextField()
+              )
         )
       ])
       )
@@ -121,4 +123,64 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
       Navigator.pop(context, "Delete");
     });
   }
-}
+
+  void _editNote(NoteModel note) async{
+    NoteModel updatedNote = NoteModel(note.id, _titleController.text, _textController.text, note.dateCreated);
+    await noteService.updateNote(updatedNote).then((note){
+      print(note.title);
+      setState(() {
+        _editMode = false;
+        this._note = note;
+      });
+    });
+  }
+
+  Widget _editAction() => new IconButton(
+    icon: Icon(Icons.edit),
+    onPressed: () {
+      setState(() {
+        _editMode = true;
+      });
+    },
+  );
+
+  Widget _saveAction(NoteModel note) => new IconButton(
+    icon: Icon(Icons.save),
+    onPressed: () {
+      _editNote(note);
+      /*setState(() {
+        _editMode = false;
+      });*/
+    },
+  );
+
+  Widget _deleteAction(NoteModel note, BuildContext context) => new IconButton(
+    icon: Icon(Icons.delete),
+    onPressed: () {
+      _deleteAlert(note).then((res){
+        if(res == "Delete") Navigator.of(context).pop();
+      });
+    },
+  );
+
+  Widget _titleTextField() => new TextFormField(
+    decoration: const InputDecoration(
+      labelText: 'Title',
+    ),
+    controller: _titleController,
+    keyboardType: TextInputType.text
+  );
+
+  Widget _textTextField() => new TextFormField(
+      decoration: const InputDecoration(
+        labelText: 'Note text comes here',
+      ),
+      controller: _textController,
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+  );
+
+
+
+  }
+
