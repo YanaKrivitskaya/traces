@@ -8,7 +8,7 @@ class NoteModel{
   DateTime _dateModified;
   String _tagId;
 
-  NoteModel(this._id, this._title, this._text, this._dateCreated, this._dateModified, this._tagId);
+  NoteModel(this._id, this._title, this._text, this._dateCreated);
 
   String get id => _id;
   String get title => _title;
@@ -32,6 +32,17 @@ class NoteModel{
     this._dateCreated = map["dateCreated"].toDate();
     this._dateModified = map["dateModified"].toDate();
     this._tagId = map["tagId"];
+  }
+
+  Map<String, dynamic> toMap(){
+    var map = new Map<String, dynamic>();
+    if(_id != null) map['id'] = _id;
+    (_title != '' && _title != null) ? map['title'] = _title : map['title'] = 'No title';
+    map['text'] = text;
+    map['dateModified'] = DateTime.now();
+    map['dateCreated'] = _dateCreated;
+
+    return map;
   }
 
   //var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
