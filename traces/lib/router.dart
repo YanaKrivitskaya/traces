@@ -13,7 +13,7 @@ import 'package:traces/screens/settings.dart';
 import 'package:traces/screens/trips.dart';
 import 'package:traces/screens/visas.dart';
 
-class Router {
+/*class Router {
   static Map<String, WidgetBuilder> getRoutes() {
     return {
       homeRoute: (context) => HomePage(),
@@ -30,4 +30,37 @@ class Router {
       loginSignupRoute: (context) => LoginSignupPage()
     };
   }
+}*/
+
+class RouteGenerator{
+  static Route<dynamic> generateRoute(RouteSettings settings){
+    final args = settings.arguments;
+
+    switch(settings.name){
+      case homeRoute: return MaterialPageRoute(builder: (_) => HomePage());
+      case notesRoute: return MaterialPageRoute(builder: (_) => NotesPage());
+      case noteDetailsRoute: {
+        if(args is String){
+          return MaterialPageRoute(builder: (_) => NoteDetailsPage(noteId: args));
+        }
+        return _errorRoute();
+      }
+      case loginSignupRoute: return MaterialPageRoute(builder: (_) => LoginSignupPage());
+      default: return _errorRoute();
+    }
+  }
+
+  static Route<dynamic> _errorRoute() {
+    return MaterialPageRoute(builder: (_) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Oops'),
+        ),
+        body: Center(
+          child: Text('Something went wrong'),
+        ),
+      );
+    });
+  }
+
 }

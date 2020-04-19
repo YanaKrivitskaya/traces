@@ -8,13 +8,22 @@ import 'package:traces/services/noteFireService.dart';
 import '../../colorsPalette.dart';
 import 'package:intl/intl.dart';
 
-class NoteDetailsPageArguments {
+/*class NoteDetailsPageArguments {
   final NoteModel note;
 
   NoteDetailsPageArguments(this.note);
-}
+}*/
 
 class NoteDetailsPage extends StatefulWidget{
+
+  /*NoteDetailsPage({this.noteId});*/
+
+  NoteDetailsPage({
+    Key key,
+    @required this.noteId,
+  }) : super(key: key);
+
+  final String noteId;
 
   @override
   State<StatefulWidget> createState() {
@@ -27,6 +36,8 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
   final NoteFireService noteService = new NoteFireService();
   bool _editMode = false;
 
+  bool _isLoading = false;
+
   NoteModel _note;
 
   TextEditingController _titleController;
@@ -35,14 +46,17 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
   @override
   void initState() {
     super.initState();
+    _isLoading = true;
+    _note = new NoteModel('', '_title', '_text', new DateTime.now());
+    _getNoteById(widget.noteId);
     _editMode = false;
   }
 
   @override
   Widget build(BuildContext context){
-    final NoteDetailsPageArguments arguments = ModalRoute.of(context).settings.arguments;
+    //final NoteDetailsPageArguments arguments = ModalRoute.of(context).settings.arguments;
 
-    _note = arguments.note;
+    //_note = arguments.note;
 
     _titleController = new TextEditingController(text: _note.title);
     _textController = new TextEditingController(text: _note.text);
@@ -59,28 +73,29 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
         ],
         backgroundColor: ColorsPalette.greenGrass,
       ),
-      body: Container(child: Column(children: <Widget>[
-        Card(
-            child: Padding(
-              padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
-              child:!_editMode?
-              ListTile(
-                title: Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}' ),
-              ) : _titleTextField()
+      body: Container(
+          child: (_isLoading != null && !_isLoading) ? Column(children: <Widget>[
+            Card(
+                child: Padding(
+                  padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
+                  child:!_editMode?
+                  ListTile(
+                    title: Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}' ),
+                  ) : _titleTextField()
+                )
+            ),
+            Card(
+              child: Padding(
+                  padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
+                  child:!_editMode?
+                    ListTile(
+                      title: Text('${_note.text}'),
+                      contentPadding: EdgeInsets.all(10.0)
+                    ) : _textTextField()
+                  )
             )
-        ),
-        Card(
-          child: Padding(
-              padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
-              child:!_editMode?
-                ListTile(
-                  title: Text('${_note.text}'),
-                  contentPadding: EdgeInsets.all(10.0)
-                ) : _textTextField()
-              )
-        )
-      ])
+      ]) : Center(child: CircularProgressIndicator())
       )
     );
   }
@@ -124,12 +139,23 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
     });
   }
 
+  void _getNoteById(String id) async{
+    noteService.getNoteById(widget.noteId).then((note){
+      setState(() {
+        _note = note;
+        _isLoading = false;
+      });
+    });
+  }
+
   void _editNote(NoteModel note) async{
+    _isLoading = true;
     NoteModel updatedNote = NoteModel(note.id, _titleController.text, _textController.text, note.dateCreated);
     await noteService.updateNote(updatedNote).then((note){
       print(note.title);
       setState(() {
         _editMode = false;
+        _isLoading = false;
         this._note = note;
       });
     });

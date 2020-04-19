@@ -20,8 +20,9 @@ class TracesApp extends StatelessWidget {
         accentColor: ColorsPalette.iconColor,
         textTheme: GoogleFonts.quicksandTextTheme(Theme.of(context).textTheme)
       ),
-      routes: Router.getRoutes(),
+      //routes: Router.getRoutes(),
       home: new WelcomePage(/*auth: new Auth()*/),
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }
