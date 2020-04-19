@@ -8,7 +8,7 @@ class NoteModel{
   DateTime _dateModified;
   String _tagId;
 
-  NoteModel(this._id, this._title, this._text, this._dateCreated);
+  NoteModel(this._id, this._title, this._text, this._dateCreated, this._dateModified);
 
   String get id => _id;
   String get title => _title;

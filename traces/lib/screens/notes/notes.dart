@@ -93,7 +93,7 @@ class _NotesPageState extends State<NotesPage>{
   }
 
   void _addNewNote() async{
-      await noteService.createNote("New Note #xxx", "text of new note. Awesome text, just the best text ever.");
+      await Navigator.pushNamed(context, noteDetailsRoute, arguments: '');
   }
 
   void _navigateToNote(BuildContext context, NoteModel note) async{
@@ -103,23 +103,11 @@ class _NotesPageState extends State<NotesPage>{
   void _deleteNote(NoteModel note, BuildContext context) async{
     await noteService.deleteNote(note.id).then((data){
       Navigator.pop(context, "Delete");
-      setState(() {
-        /*this.notes.removeAt(this.notes.indexOf(note));
-        this.itemsLength = this.notes.length;*/
-      });
     });
   }
 
   Widget _popupMenu(NoteModel note, int position) => PopupMenuButton<int>(
     itemBuilder: (context) => [
-      PopupMenuItem(
-        value: 1,
-        child: Text(
-          "Edit",
-          style:
-          TextStyle(color: ColorsPalette.blueHorizon, fontWeight: FontWeight.w700),
-        ),
-      ),
       PopupMenuItem(
         value: 2,
         child: Text(
@@ -135,8 +123,6 @@ class _NotesPageState extends State<NotesPage>{
       }
       print("value:$value");
     },
-    //elevation: 4,
-    //padding: EdgeInsets.symmetric(horizontal: 50),
   );
 
   Future<String> _deleteAlert(NoteModel note) async {

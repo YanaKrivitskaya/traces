@@ -10,18 +10,20 @@ final String tagsCollection = "userTags";
 final BaseAuth auth = new Auth();
 
 class NoteFireService{
-  Future<String> createNote(String title, String text) async{
+  Future<NoteModel> createNote(String title, String text) async{
     String uid = await auth.getUserId();
 
     DocumentReference ref = await notesCollectionRef.document(uid).collection(notesCollection).add({
-      "title": title,
+      "title": (title != '' && title != null) ? title : 'No title',
       "text": text,
       "dateCreated": DateTime.now(),
       "dateModified": DateTime.now()
     });
 
     await notesCollectionRef.document(uid).collection(notesCollection).document(ref.documentID).updateData({"id": ref.documentID});
-    return ref.documentID;
+    var resultNote = await notesCollectionRef.document(uid).collection(notesCollection).document(ref.documentID).get();
+
+    return NoteModel.fromMap(resultNote.data);
   }
 
   Stream<QuerySnapshot> getNotes() async*{

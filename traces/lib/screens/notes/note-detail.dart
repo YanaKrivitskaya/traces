@@ -1,22 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/Models/noteModel.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:traces/services/noteFireService.dart';
 import '../../colorsPalette.dart';
 import 'package:intl/intl.dart';
 
-/*class NoteDetailsPageArguments {
-  final NoteModel note;
-
-  NoteDetailsPageArguments(this.note);
-}*/
-
 class NoteDetailsPage extends StatefulWidget{
-
-  /*NoteDetailsPage({this.noteId});*/
 
   NoteDetailsPage({
     Key key,
@@ -46,17 +36,18 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
   @override
   void initState() {
     super.initState();
-    _isLoading = true;
-    _note = new NoteModel('', '_title', '_text', new DateTime.now());
-    _getNoteById(widget.noteId);
-    _editMode = false;
+    _note = new NoteModel('', '', '', new DateTime.now(), new DateTime.now());
+    if(widget.noteId != '') {
+      _getNoteById(widget.noteId);
+      _isLoading = true;
+      _editMode = false;
+    }else{
+      _editMode = true;
+    }
   }
 
   @override
   Widget build(BuildContext context){
-    //final NoteDetailsPageArguments arguments = ModalRoute.of(context).settings.arguments;
-
-    //_note = arguments.note;
 
     _titleController = new TextEditingController(text: _note.title);
     _textController = new TextEditingController(text: _note.text);
@@ -81,24 +72,10 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
                   child:!_editMode?
                   ListTile(
                     title: Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}' ),
+                    subtitle: Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}',  ),
                   ) : _titleTextField()
                 )
             ),
-            /*SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(0),
-                child: Card(
-                    child: Padding(
-                        padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
-                        child:!_editMode?
-                        ListTile(
-                            title: Text('${_note.text}'),
-                            contentPadding: EdgeInsets.all(10.0)
-                        ) : _textTextField()
-                    )
-                ),
-            ))*/
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -173,15 +150,25 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
 
   void _editNote(NoteModel note) async{
     _isLoading = true;
-    NoteModel updatedNote = NoteModel(note.id, _titleController.text, _textController.text, note.dateCreated);
-    await noteService.updateNote(updatedNote).then((note){
-      print(note.title);
-      setState(() {
-        _editMode = false;
-        _isLoading = false;
-        this._note = note;
+    if(note.id != ''){
+      NoteModel updatedNote = NoteModel(note.id, _titleController.text, _textController.text, note.dateCreated, note.dateModified);
+      await noteService.updateNote(updatedNote).then((note){
+        setState(() {
+          _editMode = false;
+          _isLoading = false;
+          this._note = note;
+        });
       });
-    });
+    } else{
+      noteService.createNote(_titleController.text, _textController.text).then((note){
+        setState(() {
+          _editMode = false;
+          _isLoading = false;
+          this._note = note;
+        });
+      });;
+    }
+
   }
 
   Widget _editAction() => new IconButton(
@@ -197,9 +184,6 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
     icon: Icon(Icons.save),
     onPressed: () {
       _editNote(note);
-      /*setState(() {
-        _editMode = false;
-      });*/
     },
   );
 
@@ -227,9 +211,7 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
       controller: _textController,
       keyboardType: TextInputType.multiline,
       maxLines: null,
+      autofocus: true,
   );
-
-
-
   }
 
