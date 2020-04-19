@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/Models/noteModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:traces/constants.dart';
-import 'package:traces/screens/notes/note-detail.dart';
 import 'package:traces/services/noteFireService.dart';
 import '../../colorsPalette.dart';
 import 'package:intl/intl.dart';

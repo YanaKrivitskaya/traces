@@ -85,16 +85,39 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
                   ) : _titleTextField()
                 )
             ),
-            Card(
+            /*SingleChildScrollView(
               child: Padding(
-                  padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
-                  child:!_editMode?
-                    ListTile(
-                      title: Text('${_note.text}'),
-                      contentPadding: EdgeInsets.all(10.0)
-                    ) : _textTextField()
-                  )
-            )
+                padding: EdgeInsets.all(0),
+                child: Card(
+                    child: Padding(
+                        padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
+                        child:!_editMode?
+                        ListTile(
+                            title: Text('${_note.text}'),
+                            contentPadding: EdgeInsets.all(10.0)
+                        ) : _textTextField()
+                    )
+                ),
+            ))*/
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Card(
+                      child: Padding(
+                          padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
+                          child:!_editMode?
+                            ListTile(
+                                title: Text('${_note.text}'),
+                                contentPadding: EdgeInsets.all(10.0)
+                            ) : _textTextField()
+                          )
+                      )
+                  ],
+                ),
+              ),
+            ),
       ]) : Center(child: CircularProgressIndicator())
       )
     );
