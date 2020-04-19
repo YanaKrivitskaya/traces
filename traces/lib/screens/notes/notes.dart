@@ -98,7 +98,7 @@ class _NotesPageState extends State<NotesPage>{
   }
 
   void _navigateToNote(BuildContext context, NoteModel note) async{
-    await Navigator.pushNamed(context, noteDetailsRoute, arguments: NoteDetailsPageArguments(note));
+    await Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id);
   }
 
   void _deleteNote(NoteModel note, BuildContext context) async{

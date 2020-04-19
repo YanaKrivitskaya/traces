@@ -32,6 +32,13 @@ class NoteFireService{
     yield* snapshots;
   }
 
+  Future<NoteModel> getNoteById(String id) async{
+    String uid = await auth.getUserId();
+
+    var resultNote = await notesCollectionRef.document(uid).collection(notesCollection).document(id).get();
+    return NoteModel.fromMap(resultNote.data);
+  }
+
   Future<void> deleteNote(String id) async{
     String uid = await auth.getUserId();
     await notesCollectionRef.document(uid).collection(notesCollection).document(id).delete();
