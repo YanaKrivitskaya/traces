@@ -66,35 +66,8 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
       ),
       body: Container(
           child: (_isLoading != null && !_isLoading) ? Column(children: <Widget>[
-            Card(
-                child: Padding(
-                  padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
-                  child:!_editMode?
-                  ListTile(
-                    title: Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}',  ),
-                  ) : _titleTextField()
-                )
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Card(
-                      child: Padding(
-                          padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
-                          child:!_editMode?
-                            ListTile(
-                                title: Text('${_note.text}'),
-                                contentPadding: EdgeInsets.all(10.0)
-                            ) : _textTextField()
-                          )
-                      )
-                  ],
-                ),
-              ),
-            ),
+            _titleCard(),
+            _textCard()
       ]) : Center(child: CircularProgressIndicator())
       )
     );
@@ -170,6 +143,37 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
     }
 
   }
+
+  Widget _titleCard() => new Card(
+      child: Padding(
+          padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
+          child:!_editMode?
+          ListTile(
+            title: Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}',  ),
+          ) : _titleTextField()
+      )
+  );
+
+  Widget _textCard() => new Expanded(
+    child: SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Card(
+              child: Padding(
+                  padding: _editMode ? EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0) : EdgeInsets.all(5.0),
+                  child:!_editMode?
+                  ListTile(
+                      title: Text('${_note.text}'),
+                      contentPadding: EdgeInsets.all(10.0)
+                  ) : _textTextField()
+              )
+          )
+        ],
+      ),
+    ),
+  );
 
   Widget _editAction() => new IconButton(
     icon: Icon(Icons.edit),

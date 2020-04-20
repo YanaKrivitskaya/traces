@@ -21,9 +21,7 @@ class NoteFireService{
     });
 
     await notesCollectionRef.document(uid).collection(notesCollection).document(ref.documentID).updateData({"id": ref.documentID});
-    var resultNote = await notesCollectionRef.document(uid).collection(notesCollection).document(ref.documentID).get();
-
-    return NoteModel.fromMap(resultNote.data);
+    return await getNoteById(ref.documentID);
   }
 
   Stream<QuerySnapshot> getNotes() async*{
@@ -52,8 +50,7 @@ class NoteFireService{
     DocumentSnapshot  ds = await notesCollectionRef.document(uid).collection(notesCollection).document(note.id).get();
     print(ds);
     await ds.reference.updateData(note.toMap());
-    var resultNote = await notesCollectionRef.document(uid).collection(notesCollection).document(note.id).get();
-    return NoteModel.fromMap(resultNote.data);
+    return await getNoteById(note.id);
   }
 
 }

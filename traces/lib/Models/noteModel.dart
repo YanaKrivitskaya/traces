@@ -44,8 +44,4 @@ class NoteModel{
 
     return map;
   }
-
-  //var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-
-
 }
