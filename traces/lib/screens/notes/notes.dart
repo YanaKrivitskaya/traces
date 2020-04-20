@@ -120,13 +120,15 @@ class _NotesPageState extends State<NotesPage>{
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: itemsLength,
+                      reverse: _orderOption == OrderOptions.ASC ? false : true,
                       itemBuilder: (context, position){
                         return Card(
                           child: ListTile(
                             leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
                             title: Text('${notes[position].title}'),
-                            subtitle: Text('Created: ${DateFormat.yMMMd().format(notes[position].dateCreated)}'),
+                            subtitle: Text('Created: ${DateFormat.yMMMd().format(notes[position].dateCreated)} \nModified: ${DateFormat.yMMMd().format(notes[position].dateModified)}'),
                             trailing: _popupMenu(notes[position], position),
+                            isThreeLine: true,
                             onTap: (){
                               _navigateToNote(context, notes[position]);
                             },
@@ -136,7 +138,7 @@ class _NotesPageState extends State<NotesPage>{
                   )
               ) : Center(child: Text("No notes here"))
             ],))
-              : CircularProgressIndicator()
+              : Center(child: CircularProgressIndicator())
         ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
@@ -164,24 +166,27 @@ class _NotesPageState extends State<NotesPage>{
   }
 
   void _sortNotes(){
-    setState(() { 
+    setState(() {
       this.notes.sort((a, b){
         switch(_sortOption){
           case SortOptions.DATECREATED:{
-            return _orderOption == OrderOptions.ASC ?
+            /*return _orderOption == OrderOptions.ASC ?
               a.dateCreated.millisecondsSinceEpoch.compareTo(b.dateCreated.millisecondsSinceEpoch) :
-              b.dateCreated.millisecondsSinceEpoch.compareTo(a.dateCreated.millisecondsSinceEpoch);
+              b.dateCreated.millisecondsSinceEpoch.compareTo(a.dateCreated.millisecondsSinceEpoch);*/
+            return a.dateCreated.millisecondsSinceEpoch.compareTo(b.dateCreated.millisecondsSinceEpoch);
           }
           case SortOptions.DATEMODIFIED:{
-            return _orderOption == OrderOptions.ASC ?
+            /*return _orderOption == OrderOptions.ASC ?
               a.dateModified.millisecondsSinceEpoch.compareTo(b.dateModified.millisecondsSinceEpoch) :
-              b.dateModified.millisecondsSinceEpoch.compareTo(a.dateModified.millisecondsSinceEpoch);
+              b.dateModified.millisecondsSinceEpoch.compareTo(a.dateModified.millisecondsSinceEpoch);*/
+            return a.dateModified.millisecondsSinceEpoch.compareTo(b.dateModified.millisecondsSinceEpoch);
           }
           case SortOptions.TITLE:{
-            return _orderOption == OrderOptions.ASC ?
+            return a.title.compareTo(b.title);
+            /*return _orderOption == OrderOptions.ASC ?
               a.title.compareTo(b.title) :
-              b.title.compareTo(a.title);
-            ;
+              b.title.compareTo(a.title);*/
+
           }
         }
         return a.title.compareTo(b.title);
