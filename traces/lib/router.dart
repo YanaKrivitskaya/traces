@@ -46,6 +46,7 @@ class RouteGenerator{
         return _errorRoute();
       }
       case loginSignupRoute: return MaterialPageRoute(builder: (_) => LoginSignupPage());
+      case profileRoute: return MaterialPageRoute(builder: (_) => ProfilePage());
       default: return _errorRoute();
     }
   }
