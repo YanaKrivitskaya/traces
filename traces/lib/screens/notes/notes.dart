@@ -53,7 +53,7 @@ class _NotesPageState extends State<NotesPage>{
   int itemsLength = 0;
 
   SortOptions _sortOption = SortOptions.DATECREATED;
-  OrderOptions _orderOption = OrderOptions.ASC;
+  OrderOptions _orderOption = OrderOptions.DESC;
 
   bool _isLoading = false;
 
@@ -62,14 +62,19 @@ class _NotesPageState extends State<NotesPage>{
     notes = new List();
     noteSub?.cancel();
     _isLoading = true;
+    _sortOption = SortOptions.DATECREATED;
+    _orderOption = OrderOptions.DESC;
+
     noteSub = noteService.getNotes().listen((QuerySnapshot snapshot){
       final List<NoteModel> items = snapshot.documents
           .map((documentSnapshot) => NoteModel.fromMap(documentSnapshot.data)).toList();
       setState(() {
         this.notes = items;
+
+       _sortNotes();
+
         this.itemsLength = items.length;
-        _sortOption = SortOptions.DATECREATED;
-        _orderOption = OrderOptions.ASC;
+
         _isLoading = false;
       });
     });
@@ -98,6 +103,7 @@ class _NotesPageState extends State<NotesPage>{
                     if(res != null) setState(() {
                       _sortOption = res._sortOption;
                       _orderOption = res._orderOption;
+                      _sortNotes();
                     });
                   });
             },
@@ -154,6 +160,32 @@ class _NotesPageState extends State<NotesPage>{
   void _deleteNote(NoteModel note, BuildContext context) async{
     await noteService.deleteNote(note.id).then((data){
       Navigator.pop(context, "Delete");
+    });
+  }
+
+  void _sortNotes(){
+    setState(() { 
+      this.notes.sort((a, b){
+        switch(_sortOption){
+          case SortOptions.DATECREATED:{
+            return _orderOption == OrderOptions.ASC ?
+              a.dateCreated.millisecondsSinceEpoch.compareTo(b.dateCreated.millisecondsSinceEpoch) :
+              b.dateCreated.millisecondsSinceEpoch.compareTo(a.dateCreated.millisecondsSinceEpoch);
+          }
+          case SortOptions.DATEMODIFIED:{
+            return _orderOption == OrderOptions.ASC ?
+              a.dateModified.millisecondsSinceEpoch.compareTo(b.dateModified.millisecondsSinceEpoch) :
+              b.dateModified.millisecondsSinceEpoch.compareTo(a.dateModified.millisecondsSinceEpoch);
+          }
+          case SortOptions.TITLE:{
+            return _orderOption == OrderOptions.ASC ?
+              a.title.compareTo(b.title) :
+              b.title.compareTo(a.title);
+            ;
+          }
+        }
+        return a.title.compareTo(b.title);
+      });
     });
   }
 
@@ -254,7 +286,7 @@ class _SortDialogState extends State<SortDialog>{
         ),
         FlatButton(
           child: Text('Cancel'),
-          onPressed: () {Navigator.pop(context, new SortOrder(widget.initialSortOption, widget.initialOrderOption));},
+          onPressed: () {Navigator.pop(context);},
         ),
       ],
       content: SingleChildScrollView(
