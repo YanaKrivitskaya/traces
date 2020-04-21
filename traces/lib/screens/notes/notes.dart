@@ -14,7 +14,6 @@ enum SortOptions{
   DATECREATED,
   DATEMODIFIED
 }
-
 enum OrderOptions{
   ASC,
   DESC
@@ -38,7 +37,6 @@ class SortOrder{
 }
 
 class NotesPage extends StatefulWidget{
-
   @override
   State<StatefulWidget> createState() {
     return new _NotesPageState();
@@ -126,9 +124,12 @@ class _NotesPageState extends State<NotesPage>{
                           child: ListTile(
                             leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
                             title: Text('${notes[position].title}'),
-                            subtitle: Text('Created: ${DateFormat.yMMMd().format(notes[position].dateCreated)} \nModified: ${DateFormat.yMMMd().format(notes[position].dateModified)}'),
+                            subtitle: (notes[position].dateCreated.day.compareTo(notes[position].dateModified.day) == 0) ?
+                            Text('${DateFormat.yMMMd().format(notes[position].dateModified)}',
+                                style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
+                            Text('${DateFormat.yMMMd().format(notes[position].dateModified)} / ${DateFormat.yMMMd().format(notes[position].dateCreated)}',
+                                style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
                             trailing: _popupMenu(notes[position], position),
-                            isThreeLine: true,
                             onTap: (){
                               _navigateToNote(context, notes[position]);
                             },
@@ -170,23 +171,13 @@ class _NotesPageState extends State<NotesPage>{
       this.notes.sort((a, b){
         switch(_sortOption){
           case SortOptions.DATECREATED:{
-            /*return _orderOption == OrderOptions.ASC ?
-              a.dateCreated.millisecondsSinceEpoch.compareTo(b.dateCreated.millisecondsSinceEpoch) :
-              b.dateCreated.millisecondsSinceEpoch.compareTo(a.dateCreated.millisecondsSinceEpoch);*/
             return a.dateCreated.millisecondsSinceEpoch.compareTo(b.dateCreated.millisecondsSinceEpoch);
           }
           case SortOptions.DATEMODIFIED:{
-            /*return _orderOption == OrderOptions.ASC ?
-              a.dateModified.millisecondsSinceEpoch.compareTo(b.dateModified.millisecondsSinceEpoch) :
-              b.dateModified.millisecondsSinceEpoch.compareTo(a.dateModified.millisecondsSinceEpoch);*/
             return a.dateModified.millisecondsSinceEpoch.compareTo(b.dateModified.millisecondsSinceEpoch);
           }
           case SortOptions.TITLE:{
             return a.title.compareTo(b.title);
-            /*return _orderOption == OrderOptions.ASC ?
-              a.title.compareTo(b.title) :
-              b.title.compareTo(a.title);*/
-
           }
         }
         return a.title.compareTo(b.title);
