@@ -32,6 +32,14 @@ class NoteFireService{
     yield* snapshots;
   }
 
+  Stream<QuerySnapshot> getTags() async*{
+    String uid = await auth.getUserId();
+
+    Stream<QuerySnapshot> snapshots = notesCollectionRef.document(uid).collection(tagsCollection).snapshots();
+
+    yield* snapshots;
+  }
+
   Future<NoteModel> getNoteById(String id) async{
     String uid = await auth.getUserId();
 

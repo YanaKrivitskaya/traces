@@ -45,7 +45,10 @@ class NotesPage extends StatefulWidget{
 
 class _NotesPageState extends State<NotesPage>{
   List<NoteModel> notes;
+  List<TagModel> tags;
   StreamSubscription<QuerySnapshot> noteSub;
+  StreamSubscription<QuerySnapshot> tagsSub;
+
   final NoteFireService noteService = new NoteFireService();
 
   int itemsLength = 0;
@@ -59,6 +62,8 @@ class _NotesPageState extends State<NotesPage>{
   void initState() {
     notes = new List();
     noteSub?.cancel();
+    tagsSub?.cancel();
+
     _isLoading = true;
     _sortOption = SortOptions.DATECREATED;
     _orderOption = OrderOptions.DESC;
@@ -68,14 +73,24 @@ class _NotesPageState extends State<NotesPage>{
           .map((documentSnapshot) => NoteModel.fromMap(documentSnapshot.data)).toList();
       setState(() {
         this.notes = items;
-
-       _sortNotes();
-
         this.itemsLength = items.length;
 
+        _sortNotes();
         _isLoading = false;
       });
     });
+
+    tagsSub = noteService.getTags().listen(
+        (QuerySnapshot snapshot){
+          final List<TagModel> items = snapshot.documents.map(
+              (documentSnapshot) => TagModel.fromMap(documentSnapshot.data)
+          ).toList();
+          setState(() {
+            this.tags = items;
+          });
+        }
+    );
+
     super.initState();
   }
 
@@ -121,18 +136,27 @@ class _NotesPageState extends State<NotesPage>{
                       reverse: _orderOption == OrderOptions.ASC ? false : true,
                       itemBuilder: (context, position){
                         return Card(
-                          child: ListTile(
-                            leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
-                            title: Text('${notes[position].title}'),
-                            subtitle: (notes[position].dateCreated.day.compareTo(notes[position].dateModified.day) == 0) ?
-                            Text('${DateFormat.yMMMd().format(notes[position].dateModified)}',
-                                style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
-                            Text('${DateFormat.yMMMd().format(notes[position].dateModified)} / ${DateFormat.yMMMd().format(notes[position].dateCreated)}',
-                                style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
-                            trailing: _popupMenu(notes[position], position),
-                            onTap: (){
-                              _navigateToNote(context, notes[position]);
-                            },
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
+                                title: Text('${notes[position].title}'),
+                                subtitle: (notes[position].dateCreated.day.compareTo(notes[position].dateModified.day) == 0) ?
+                                Text('${DateFormat.yMMMd().format(notes[position].dateModified)}',
+                                    style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
+                                Text('${DateFormat.yMMMd().format(notes[position].dateModified)} / ${DateFormat.yMMMd().format(notes[position].dateCreated)}',
+                                    style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
+                                trailing: _popupMenu(notes[position], position),
+                                onTap: (){
+                                  _navigateToNote(context, notes[position]);
+                                },
+                              ),
+                              (notes[position].tagId != null && tags != null) ? Chip(
+                                label: Text('${tags.firstWhere((t) => t.id == notes[position].tagId).name}',
+                                    style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight))),
+                                backgroundColor: ColorsPalette.greenGrass,
+                              ): Container(height: 0.0)
+                            ],
                           ),
                         );
                       }
