@@ -6,7 +6,7 @@ class NoteModel{
   String _text;
   DateTime _dateCreated;
   DateTime _dateModified;
-  String _tagId;
+  List<String> _tagIds;
 
   NoteModel(this._id, this._title, this._text, this._dateCreated, this._dateModified);
 
@@ -15,7 +15,7 @@ class NoteModel{
   String get text => _text;
   DateTime get dateCreated => _dateCreated;
   DateTime get dateModified => _dateModified;
-  String get tagId => _tagId;
+  List<String> get tagIds => _tagIds;
 
   NoteModel.map(dynamic obj){
     this._id = obj['id'];
@@ -23,6 +23,7 @@ class NoteModel{
     this._text = obj['text'];
     this._dateCreated = obj['dateCreated'];
     this._dateModified = obj['dateModified'];
+    this._tagIds = obj['tagIds'];
   }
 
   NoteModel.fromMap(Map<dynamic, dynamic> map){
@@ -31,7 +32,7 @@ class NoteModel{
     this._text = map["text"];
     this._dateCreated = map["dateCreated"].toDate();
     this._dateModified = map["dateModified"].toDate();
-    this._tagId = map["tagId"];
+    this._tagIds = new List<String>.from(map["tagIds"]);
   }
 
   Map<String, dynamic> toMap(){
@@ -41,6 +42,7 @@ class NoteModel{
     map['text'] = text;
     map['dateModified'] = DateTime.now();
     map['dateCreated'] = _dateCreated;
+    map['tagIds'] = tagIds;
 
     return map;
   }

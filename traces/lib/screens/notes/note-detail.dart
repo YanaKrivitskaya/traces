@@ -6,6 +6,8 @@ import 'package:traces/services/noteFireService.dart';
 import '../../colorsPalette.dart';
 import 'package:intl/intl.dart';
 
+import '../../globals.dart';
+
 class NoteDetailsPage extends StatefulWidget{
 
   NoteDetailsPage({
@@ -23,7 +25,6 @@ class NoteDetailsPage extends StatefulWidget{
 
 class _NotesDetailsPageState extends State<NoteDetailsPage>{
 
-  final NoteFireService noteService = new NoteFireService();
   bool _editMode = false;
 
   bool _isLoading = false;
@@ -107,13 +108,13 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
   }
 
   void _deleteNote(BuildContext context, String id) async{
-    noteService.deleteNote(id).then((data){
+    Global.noteService.deleteNote(id).then((data){
       Navigator.pop(context, "Delete");
     });
   }
 
   void _getNoteById(String id) async{
-    noteService.getNoteById(widget.noteId).then((note){
+    Global.noteService.getNoteById(widget.noteId).then((note){
       setState(() {
         _note = note;
         _isLoading = false;
@@ -125,7 +126,7 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
     _isLoading = true;
     if(note.id != ''){
       NoteModel updatedNote = NoteModel(note.id, _titleController.text, _textController.text, note.dateCreated, note.dateModified);
-      await noteService.updateNote(updatedNote).then((note){
+      await Global.noteService.updateNote(updatedNote).then((note){
         setState(() {
           _editMode = false;
           _isLoading = false;
@@ -133,7 +134,7 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
         });
       });
     } else{
-      noteService.createNote(_titleController.text, _textController.text).then((note){
+      Global.noteService.createNote(_titleController.text, _textController.text).then((note){
         setState(() {
           _editMode = false;
           _isLoading = false;
