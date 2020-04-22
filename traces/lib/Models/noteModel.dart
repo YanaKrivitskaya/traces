@@ -42,7 +42,7 @@ class NoteModel{
     map['text'] = text;
     map['dateModified'] = DateTime.now();
     map['dateCreated'] = _dateCreated;
-    map['tagIds'] = tagIds;
+    map['tagIds'] = tagIds != null ? tagIds : new List<String>();
 
     return map;
   }

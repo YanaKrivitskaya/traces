@@ -17,7 +17,8 @@ class NoteFireService{
       "title": (title != '' && title != null) ? title : 'No title',
       "text": text,
       "dateCreated": DateTime.now(),
-      "dateModified": DateTime.now()
+      "dateModified": DateTime.now(),
+      "tagIds": new List<String>()
     });
 
     await notesCollectionRef.document(uid).collection(notesCollection).document(ref.documentID).updateData({"id": ref.documentID});

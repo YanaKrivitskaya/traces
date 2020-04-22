@@ -152,7 +152,7 @@ class _NotesPageState extends State<NotesPage>{
                                   _navigateToNote(context, notes[position]);
                                 },
                               ),
-                              (notes[position].tagIds != null && tags != null) ? Container(
+                              /*(notes[position].tagIds != null && tags != null) ? Container(
                                 child: ListView.builder
                                   (
                                     shrinkWrap: true,
@@ -168,7 +168,7 @@ class _NotesPageState extends State<NotesPage>{
                                       );
                                     }
                                 )
-                              ):Container(height: 0.0)
+                              ):Container(height: 0.0)*/
                             ],
                           ),
                         );
