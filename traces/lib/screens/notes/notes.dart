@@ -9,6 +9,8 @@ import 'package:traces/services/noteFireService.dart';
 import '../../colorsPalette.dart';
 import 'package:intl/intl.dart';
 
+import '../../globals.dart';
+
 enum SortOptions{
   TITLE,
   DATECREATED,
@@ -49,7 +51,6 @@ class _NotesPageState extends State<NotesPage>{
   StreamSubscription<QuerySnapshot> noteSub;
   StreamSubscription<QuerySnapshot> tagsSub;
 
-  final NoteFireService noteService = new NoteFireService();
 
   int itemsLength = 0;
 
@@ -68,7 +69,7 @@ class _NotesPageState extends State<NotesPage>{
     _sortOption = SortOptions.DATECREATED;
     _orderOption = OrderOptions.DESC;
 
-    noteSub = noteService.getNotes().listen((QuerySnapshot snapshot){
+    noteSub = Global.noteService.getNotes().listen((QuerySnapshot snapshot){
       final List<NoteModel> items = snapshot.documents
           .map((documentSnapshot) => NoteModel.fromMap(documentSnapshot.data)).toList();
       setState(() {
@@ -80,7 +81,7 @@ class _NotesPageState extends State<NotesPage>{
       });
     });
 
-    tagsSub = noteService.getTags().listen(
+    tagsSub = Global.noteService.getTags().listen(
         (QuerySnapshot snapshot){
           final List<TagModel> items = snapshot.documents.map(
               (documentSnapshot) => TagModel.fromMap(documentSnapshot.data)
@@ -151,11 +152,23 @@ class _NotesPageState extends State<NotesPage>{
                                   _navigateToNote(context, notes[position]);
                                 },
                               ),
-                              (notes[position].tagId != null && tags != null) ? Chip(
-                                label: Text('${tags.firstWhere((t) => t.id == notes[position].tagId).name}',
-                                    style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight))),
-                                backgroundColor: ColorsPalette.greenGrass,
-                              ): Container(height: 0.0)
+                              /*(notes[position].tagIds != null && tags != null) ? Container(
+                                child: ListView.builder
+                                  (
+                                    shrinkWrap: true,
+                                    itemCount: notes[position].tagIds.length,
+                                    itemBuilder: (BuildContext ctxt, int index) {
+                                      return new Container(
+                                        child: _getTagNameById(notes[position].tagIds[index]) != null ?
+                                            Chip(
+                                              label: Text('${_getTagNameById(notes[position].tagIds[index])}',
+                                                  style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight))),
+                                              backgroundColor: ColorsPalette.greenGrass,
+                                            ): Container(height: 0.0)
+                                      );
+                                    }
+                                )
+                              ):Container(height: 0.0)*/
                             ],
                           ),
                         );
@@ -185,9 +198,15 @@ class _NotesPageState extends State<NotesPage>{
   }
 
   void _deleteNote(NoteModel note, BuildContext context) async{
-    await noteService.deleteNote(note.id).then((data){
+    await Global.noteService.deleteNote(note.id).then((data){
       Navigator.pop(context, "Delete");
     });
+  }
+
+  String _getTagNameById(String tagId){
+    var tag =  tags.firstWhere((t) => t.id == tagId, orElse: () => null);
+    if(tag != null) return tag.name;
+    return null;
   }
 
   void _sortNotes(){
