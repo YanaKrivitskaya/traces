@@ -66,6 +66,7 @@ class _NotesDetailsPageState extends State<NoteDetailsPage>{
         backgroundColor: ColorsPalette.greenGrass,
       ),
       body: Container(
+        padding: EdgeInsets.only(bottom: 65.0),
           child: (_isLoading != null && !_isLoading) ? Column(children: <Widget>[
             _titleCard(),
             _textCard()
