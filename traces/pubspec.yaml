@@ -32,6 +32,10 @@ dev_dependencies:
   firebase_auth: ^0.15.5+3
   cloud_firestore: ^0.13.5
   intl: ^0.16.1
+  flutter_bloc: ^4.0.0
+  equatable: ^1.0.0
+  meta: ^1.1.6
+  rxdart: ^0.24.0
   flutter_test:
     sdk: flutter
 
