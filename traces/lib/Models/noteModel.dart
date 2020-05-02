@@ -6,7 +6,7 @@ class NoteModel{
   String _text;
   DateTime _dateCreated;
   DateTime _dateModified;
-  List<String> _tagIds;
+  String _categoryId;
 
   NoteModel(this._id, this._title, this._text, this._dateCreated, this._dateModified);
 
@@ -15,7 +15,7 @@ class NoteModel{
   String get text => _text;
   DateTime get dateCreated => _dateCreated;
   DateTime get dateModified => _dateModified;
-  List<String> get tagIds => _tagIds;
+  String get categoryId => _categoryId;
 
   NoteModel.map(dynamic obj){
     this._id = obj['id'];
@@ -23,7 +23,7 @@ class NoteModel{
     this._text = obj['text'];
     this._dateCreated = obj['dateCreated'];
     this._dateModified = obj['dateModified'];
-    this._tagIds = obj['tagIds'];
+    this._categoryId = obj['categoryId'];
   }
 
   NoteModel.fromMap(Map<dynamic, dynamic> map){
@@ -32,7 +32,7 @@ class NoteModel{
     this._text = map["text"];
     this._dateCreated = map["dateCreated"].toDate();
     this._dateModified = map["dateModified"].toDate();
-    this._tagIds = new List<String>.from(map["tagIds"]);
+    this._categoryId = map["categoryId"];
   }
 
   Map<String, dynamic> toMap(){
@@ -42,35 +42,40 @@ class NoteModel{
     map['text'] = text;
     map['dateModified'] = DateTime.now();
     map['dateCreated'] = _dateCreated;
-    map['tagIds'] = tagIds != null ? tagIds : new List<String>();
+    map['categoryId'] = _categoryId;
 
     return map;
   }
 }
 
-class TagModel{
+class CategoryModel{
   String _id;
   String _name;
+  int _usage;
 
-  TagModel(this._id, this._name);
+  CategoryModel(this._id, this._name);
 
   String get id => _id;
   String get name => _name;
+  int get usage => _usage;
 
-  TagModel.map(dynamic obj){
+  CategoryModel.map(dynamic obj){
     this._id = obj['id'];
     this._name = obj['name'];
+    this._usage = obj['usage'];
   }
 
-  TagModel.fromMap(Map<String, dynamic> map){
+  CategoryModel.fromMap(Map<String, dynamic> map){
     this._id = map["id"];
     this._name = map["name"];
+    this._usage = map["usage"];
   }
 
   Map<String, dynamic> toMap(){
     var map = new Map<String, dynamic>();
     if(_id != null) map['id'] = _id;
     map['name'] = name;
+    map['usage'] = usage;
 
     return map;
   }

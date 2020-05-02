@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/constants.dart';
-import 'package:traces/services/auth.dart';
+import 'package:traces/auth/authentication_bloc.dart';
+import 'package:traces/auth/authentication_event.dart';
 import '../colorsPalette.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfilePage extends StatefulWidget{
-
-  final BaseAuth auth = new Auth();
-
   @override
   State<StatefulWidget> createState() {
     return new _ProfilePageState();
@@ -36,7 +34,11 @@ class _ProfilePageState extends State<ProfilePage>{
             ),
             RaisedButton(
               onPressed: () {
-                _logout();
+                BlocProvider.of<AuthenticationBloc>(context).add(
+                  LoggedOut()
+                );
+                Navigator.of(context).pushNamedAndRemoveUntil(Navigator.defaultRouteName, (Route<dynamic> route) => false);
+                //_logout();
               },
               child: Text('Logout'),
             ),
@@ -44,10 +46,5 @@ class _ProfilePageState extends State<ProfilePage>{
         )
       ),
     );
-  }
-
-  _logout() async {
-    await widget.auth.logout();
-    Navigator.of(context).pushNamedAndRemoveUntil(Navigator.defaultRouteName, (Route<dynamic> route) => false);
   }
 }

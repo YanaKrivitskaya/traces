@@ -47,9 +47,9 @@ class NotesPage extends StatefulWidget{
 
 class _NotesPageState extends State<NotesPage>{
   List<NoteModel> notes;
-  List<TagModel> tags;
+  List<CategoryModel> categories;
   StreamSubscription<QuerySnapshot> noteSub;
-  StreamSubscription<QuerySnapshot> tagsSub;
+  StreamSubscription<QuerySnapshot> categSub;
 
 
   int itemsLength = 0;
@@ -63,7 +63,7 @@ class _NotesPageState extends State<NotesPage>{
   void initState() {
     notes = new List();
     noteSub?.cancel();
-    tagsSub?.cancel();
+    categSub?.cancel();
 
     _isLoading = true;
     _sortOption = SortOptions.DATECREATED;
@@ -81,13 +81,13 @@ class _NotesPageState extends State<NotesPage>{
       });
     });
 
-    tagsSub = Global.noteService.getTags().listen(
+    categSub = Global.noteService.getCategories().listen(
         (QuerySnapshot snapshot){
-          final List<TagModel> items = snapshot.documents.map(
-              (documentSnapshot) => TagModel.fromMap(documentSnapshot.data)
+          final List<CategoryModel> items = snapshot.documents.map(
+              (documentSnapshot) => CategoryModel.fromMap(documentSnapshot.data)
           ).toList();
           setState(() {
-            this.tags = items;
+            this.categories = items;
           });
         }
     );
@@ -152,23 +152,21 @@ class _NotesPageState extends State<NotesPage>{
                                   _navigateToNote(context, notes[position]);
                                 },
                               ),
-                              /*(notes[position].tagIds != null && tags != null) ? Container(
-                                child: ListView.builder
-                                  (
-                                    shrinkWrap: true,
-                                    itemCount: notes[position].tagIds.length,
-                                    itemBuilder: (BuildContext ctxt, int index) {
-                                      return new Container(
-                                        child: _getTagNameById(notes[position].tagIds[index]) != null ?
-                                            Chip(
-                                              label: Text('${_getTagNameById(notes[position].tagIds[index])}',
-                                                  style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight))),
-                                              backgroundColor: ColorsPalette.greenGrass,
-                                            ): Container(height: 0.0)
-                                      );
-                                    }
+                              (notes[position].categoryId != null && categories != null) ? Container(
+                                child: Container(
+                                    child: _getCategoryNameById(notes[position].categoryId) != null ?
+                                        Align(
+                                          child: Chip(
+                                            label: Text('${_getCategoryNameById(notes[position].categoryId)}',
+                                                style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight))),
+                                            backgroundColor: ColorsPalette.greenGrass,
+                                          ),
+                                          alignment: Alignment.centerLeft,
+                                        )
+                                        : Container(height: 0.0),
+                                    margin: EdgeInsets.only(left: 20.0),
                                 )
-                              ):Container(height: 0.0)*/
+                              ):Container(height: 0.0)
                             ],
                           ),
                         );
@@ -203,8 +201,8 @@ class _NotesPageState extends State<NotesPage>{
     });
   }
 
-  String _getTagNameById(String tagId){
-    var tag =  tags.firstWhere((t) => t.id == tagId, orElse: () => null);
+  String _getCategoryNameById(String tagId){
+    var tag =  categories.firstWhere((t) => t.id == tagId, orElse: () => null);
     if(tag != null) return tag.name;
     return null;
   }

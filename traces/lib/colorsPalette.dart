@@ -54,7 +54,7 @@ class ColorsPalette {
   static const Color algalFuel = const Color(0xFF20BF6B);
   static const Color maxBlueGreen = const Color(0xFF2BCBBA);
   static const Color turquoiseTopaz = const Color(0xFF0FB9B1);
-  static const Color blueGrey = const Color(0xFF778CA3);
+  static const Color blueGrey = const Color(0xFFACC1DA);
   static const Color blueHorizon = const Color(0xFF4B6584); //good for title and main color
 
   //nl palette

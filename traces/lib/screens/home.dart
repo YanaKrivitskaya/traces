@@ -1,16 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/auth/authentication_bloc.dart';
+import 'package:traces/auth/authentication_event.dart';
 import 'package:traces/constants.dart';
 import '../colorsPalette.dart';
-import '../services/auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.auth, this.userId, this.logoutCallback}) : super(key: key);
-
-  final BaseAuth auth;
-  final VoidCallback logoutCallback;
-  final String userId;
+  HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -22,6 +20,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: (){
+              BlocProvider.of<AuthenticationBloc>(context).add(
+                LoggedOut()
+              );
+            },
+          )
+        ],
       ),
       body: Center(
           child: Container(
@@ -29,7 +37,7 @@ class _HomePageState extends State<HomePage> {
                 border: Border.all(width: 10, color: ColorsPalette.mainColor),
                 color: ColorsPalette.backColor
             ),
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[

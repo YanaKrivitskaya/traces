@@ -4,7 +4,6 @@ import 'package:traces/screens/expenses.dart';
 import 'package:traces/screens/flights.dart';
 import 'package:traces/screens/home.dart';
 import 'package:traces/screens/hotels.dart';
-import 'package:traces/screens/loginSignup.dart';
 import 'package:traces/screens/map.dart';
 import 'package:traces/screens/notes/note-detail.dart';
 import 'package:traces/screens/notes/notes.dart';
@@ -45,7 +44,7 @@ class RouteGenerator{
         }
         return _errorRoute();
       }
-      case loginSignupRoute: return MaterialPageRoute(builder: (_) => LoginSignupPage());
+      //case loginSignupRoute: return MaterialPageRoute(builder: (_) => LoginSignupPage());
       case profileRoute: return MaterialPageRoute(builder: (_) => ProfilePage());
       default: return _errorRoute();
     }
