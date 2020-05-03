@@ -9,9 +9,9 @@ final String categoryCollection = "userCategories";
 
 UserRepository _userRepository;
 
-class NoteFireService {
+class NoteRepository {
 
-  NoteFireService() {
+  NoteRepository() {
     _userRepository = new UserRepository();
   }
 

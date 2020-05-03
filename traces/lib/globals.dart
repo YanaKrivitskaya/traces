@@ -1,6 +1,6 @@
 
-import 'package:traces/services/noteFireService.dart';
+import 'package:traces/screens/notes/noteRepository.dart';
 
 class Global{
-  static final NoteFireService noteService = NoteFireService();
+  static final NoteRepository noteRepository = NoteRepository();
 }

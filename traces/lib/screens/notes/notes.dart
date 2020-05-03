@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/Models/noteModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:traces/constants.dart';
-import 'package:traces/services/noteFireService.dart';
+import 'package:traces/screens/notes/noteRepository.dart';
 import '../../colorsPalette.dart';
 import 'package:intl/intl.dart';
 
@@ -69,19 +69,20 @@ class _NotesPageState extends State<NotesPage>{
     _sortOption = SortOptions.DATECREATED;
     _orderOption = OrderOptions.DESC;
 
-    noteSub = Global.noteService.getNotes().listen((QuerySnapshot snapshot){
+    noteSub = Global.noteRepository.getNotes().listen((QuerySnapshot snapshot){
       final List<NoteModel> items = snapshot.documents
           .map((documentSnapshot) => NoteModel.fromMap(documentSnapshot.data)).toList();
       setState(() {
         this.notes = items;
         this.itemsLength = items.length;
 
+
         _sortNotes();
         _isLoading = false;
       });
     });
 
-    categSub = Global.noteService.getCategories().listen(
+    categSub = Global.noteRepository.getCategories().listen(
         (QuerySnapshot snapshot){
           final List<CategoryModel> items = snapshot.documents.map(
               (documentSnapshot) => CategoryModel.fromMap(documentSnapshot.data)
@@ -196,7 +197,7 @@ class _NotesPageState extends State<NotesPage>{
   }
 
   void _deleteNote(NoteModel note, BuildContext context) async{
-    await Global.noteService.deleteNote(note.id).then((data){
+    await Global.noteRepository.deleteNote(note.id).then((data){
       Navigator.pop(context, "Delete");
     });
   }
