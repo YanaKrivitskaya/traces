@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:traces/screens/notes/note.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
 import '../repo/note_repository.dart';
@@ -13,7 +14,7 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
         _notesRepository = notesRepository;
 
   @override
-  NotesState get initialState => NotesEmpty(null, null);
+  NotesState get initialState => NotesEmpty();
 
   @override
   Stream<NotesState> mapEventToState(
@@ -39,7 +40,7 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     _notesSubscription?.cancel();
 
     _notesSubscription = _notesRepository.notes().listen(
-          (notes) => add(UpdateNotesList(notes, OrderOptions.DESC, SortOptions.DATEMODIFIED)),
+          (notes) => add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC)),
     );
   }
 
@@ -61,14 +62,14 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     if(currentState is NotesLoadSuccess){
       final notes = currentState.notes;
 
-      yield NotesLoadInProgress(event.sortOption, event.orderOption);
+      yield NotesLoadInProgress();
 
-      add(UpdateNotesList(notes, event.orderOption, event.sortOption));
+      add(UpdateNotesList(notes, event.sortField, event.sortDirection));
     }
   }
 
   Stream<NotesState> _mapUpdateNotesListToState(UpdateNotesList event) async* {
-    yield NotesLoadSuccess(event.sortOption, event.orderOption, event.notes);
+    yield NotesLoadSuccess(event.sortField, event.sortDirection, event.notes);
   }
 
   @override

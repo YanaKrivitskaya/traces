@@ -58,5 +58,14 @@ class Note{
       dateModified: entity.dateModified
     );
   }
+}
 
+enum SortFields{
+  TITLE,
+  DATECREATED,
+  DATEMODIFIED
+}
+enum SortDirections{
+  ASC,
+  DESC
 }

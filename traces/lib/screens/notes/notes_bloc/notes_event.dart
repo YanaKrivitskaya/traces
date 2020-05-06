@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/bloc/bloc.dart';
+import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 import 'package:traces/screens/notes/note.dart';
 
 @immutable
@@ -42,21 +42,21 @@ class DeleteNote extends NotesEvent {
 
 class UpdateNotesList extends NotesEvent {
   final List<Note> notes;
-  final OrderOptions orderOption;
-  final SortOptions sortOption;
+  final SortFields sortField;
+  final SortDirections sortDirection;
 
-  const UpdateNotesList(this.notes, this.orderOption, this.sortOption);
+  const UpdateNotesList(this.notes, this.sortField, this.sortDirection);
 
   @override
-  List<Object> get props => [notes, sortOption, orderOption];
+  List<Object> get props => [notes, sortField, sortDirection];
 }
 
 class UpdateSortOrder extends NotesEvent {
-  final OrderOptions orderOption;
-  final SortOptions sortOption;
+  final SortFields sortField;
+  final SortDirections sortDirection;
 
-  const UpdateSortOrder(this.orderOption, this.sortOption);
+  const UpdateSortOrder(this.sortField, this.sortDirection);
 
   @override
-  List<Object> get props => [orderOption, sortOption];
+  List<Object> get props => [sortField, sortDirection];
 }

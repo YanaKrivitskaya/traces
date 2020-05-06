@@ -2,16 +2,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/notes/bloc/bloc.dart';
+import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/screens/notes/note.dart';
 
 class NotesView extends StatefulWidget{
-  NotesBloc _notesBloc;
-
   NotesView();
-
   State<NotesView> createState() => _NotesViewState();
 }
 
@@ -23,7 +20,6 @@ class _NotesViewState extends State<NotesView> {
     super.initState();
     _notesBloc = BlocProvider.of<NotesBloc>(context);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +36,12 @@ class _NotesViewState extends State<NotesView> {
               if(state is NotesLoadInProgress){
                 return Center(child: CircularProgressIndicator());
               }else if(state is NotesLoadSuccess){
-                print(state.orderOption);
-                print(state.sortOption);
-                final notes = _sortNotes(state.notes, state);
+                final notes = _sortNotes(state.notes, state.sortField);
                 return ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: notes.length,
-                    reverse: state.orderOption == OrderOptions.ASC ? true : false,
+                    reverse: state.sortDirection == SortDirections.ASC ? true : false,
                     itemBuilder: (context, position){
                       final note = notes[position];
                       return Card(
@@ -94,22 +88,21 @@ class _NotesViewState extends State<NotesView> {
     );
   }
 
-  List<Note> _sortNotes(List<Note> notes, NotesState state){
+  List<Note> _sortNotes(List<Note> notes, SortFields sortOption){
     notes.sort((a, b){
-      switch(state.sortOption){
-        case SortOptions.DATECREATED:{
+      switch(sortOption){
+        case SortFields.DATECREATED:{
           return a.dateCreated.millisecondsSinceEpoch.compareTo(b.dateCreated.millisecondsSinceEpoch);
         }
-        case SortOptions.DATEMODIFIED:{
+        case SortFields.DATEMODIFIED:{
           return a.dateModified.millisecondsSinceEpoch.compareTo(b.dateModified.millisecondsSinceEpoch);
         }
-        case SortOptions.TITLE:{
+        case SortFields.TITLE:{
           return a.title.toUpperCase().compareTo(b.title.toUpperCase());
         }
       }
       return a.title.compareTo(b.title);
     });
-
     return notes;
   }
 

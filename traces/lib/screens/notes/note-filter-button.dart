@@ -3,149 +3,134 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/notes/bloc/bloc.dart';
+import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 
-class SortOption{
-  final SortOptions _key;
-  final String _value;
-  SortOption(this._key, this._value);
-}
-class OrderOption{
-  final OrderOptions _key;
-  final String _value;
-  OrderOption(this._key, this._value);
-}
+import 'sort_bloc/bloc.dart';
 
-class SortOrder{
-  SortOptions _sortOption;
-  OrderOptions _orderOption;
-  SortOrder(this._sortOption, this._orderOption);
+class SortField{
+  final SortFields _key;
+  final String _value;
+  SortField(this._key, this._value);
+}
+class SortDirection{
+  final SortDirections _key;
+  final String _value;
+  SortDirection(this._key, this._value);
 }
 
 class NoteFilterButton extends StatelessWidget{
-
-
   @override
   Widget build(BuildContext context) {
-
-    /*return BlocBuilder<NotesBloc, NotesState>(
-      builder: (context, state){*/
-        return IconButton(
-          icon: Icon(Icons.sort),
-          onPressed: (){
-            showDialog(barrierDismissible: false, context: context,builder: (_) =>
-            BlocProvider.value(
-                value: context.bloc<NotesBloc>(),
-                child: SortDialog())
-            );
-            /*showDialog(barrierDismissible: false, context: context,builder: (_) =>
-                SortDialog(initialSortOption: state.sortOption, initialOrderOption: state.orderOption,) ).then((res){
-              /*if(res != null) setState(() {
-                _sortOption = res._sortOption;
-                _orderOption = res._orderOption;
-                _sortNotes();
-              });*/
-            });*/
-          },
+    return IconButton(
+      icon: Icon(Icons.sort),
+      onPressed: (){
+        showDialog(barrierDismissible: false, context: context,builder: (_) =>
+            MultiBlocProvider(
+              providers: [
+                BlocProvider.value(
+                  value: context.bloc<NotesBloc>(),
+                ),
+                BlocProvider<SortBloc>(
+                  create: (context) => SortBloc(),
+                ),
+              ],
+              child: SortDialog(),
+            )
         );
-      /*},
-    );*/
+      },
+    );
   }
 }
 
 class SortDialog extends StatefulWidget {
-  //NotesBloc _notesBloc;
-  /*SortDialog({this.initialSortOption, this.initialOrderOption});
-
-  final SortOptions initialSortOption;
-  final OrderOptions initialOrderOption;*/
 
   @override
   _SortDialogState createState() => new _SortDialogState();
 }
 
 class _SortDialogState extends State<SortDialog>{
-  SortOptions _selectedSortOption;
-  OrderOptions _selectedOrderOption;
-
   NotesBloc _notesBloc;
+  SortBloc _sortBloc;
 
-  final _sortOptionsList = [
-    SortOption(SortOptions.TITLE, "Title"),
-    SortOption(SortOptions.DATECREATED, "Date Created"),
-    SortOption(SortOptions.DATEMODIFIED, "Date Modified"),
+  final _sortFieldsList = [
+    SortField(SortFields.TITLE, "Title"),
+    SortField(SortFields.DATECREATED, "Date Created"),
+    SortField(SortFields.DATEMODIFIED, "Date Modified"),
   ];
 
-  final _orderOptionsLst = [
-    OrderOption(OrderOptions.ASC, "Ascending"),
-    OrderOption(OrderOptions.DESC, "Descending")
+  final _sortDirectionsLst = [
+    SortDirection(SortDirections.ASC, "Ascending"),
+    SortDirection(SortDirections.DESC, "Descending")
   ];
 
   @override
   void initState() {
     super.initState();
     _notesBloc = BlocProvider.of<NotesBloc>(context);
-    _selectedSortOption = _notesBloc.state.sortOption;
-    _selectedOrderOption = _notesBloc.state.orderOption;
+    _sortBloc = BlocProvider.of<SortBloc>(context);
+
+    final currentState = _notesBloc.state;
+    if(currentState is NotesLoadSuccess){
+      _sortBloc.add(SortUpdated(currentState.sortField, currentState.sortDirection));
+    }
   }
 
   @override
   Widget build(BuildContext context){
 
-    return new AlertDialog(
-      title: Text('Sort by'),
-      actions: <Widget>[
-        FlatButton(
-          child: Text('Done'),
-          onPressed: () {
-            _notesBloc.add(UpdateSortOrder(_selectedOrderOption, _selectedSortOption));
-            Navigator.pop(context, new SortOrder(_selectedSortOption, _selectedOrderOption));
-          },
-        ),
-        FlatButton(
-          child: Text('Cancel'),
-          onPressed: () {Navigator.pop(context);},
-        ),
-      ],
-      content: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _sortOptions(),
-            Divider(color: ColorsPalette.blueHorizon),
-            _orderOptions()
-          ],
-        ),
-      ),
+    return BlocBuilder<SortBloc, SortState>(
+        builder: (context, state) {
+          return new AlertDialog(
+            title: Text('Sort by'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Done'),
+                onPressed: () {
+                  _notesBloc.add(UpdateSortOrder(state.tempSortField, state.tempSortDirection));
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {Navigator.pop(context);},
+              ),
+            ],
+            content: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  _sortOptions(state),
+                  Divider(color: ColorsPalette.blueHorizon),
+                  _orderOptions(state)
+                ],
+              ),
+            ),
+          );
+        }
     );
-
-
   }
 
-  Widget _sortOptions() => new Column(
+  Widget _sortOptions(SortState state) => new Column(
     children:
-    _sortOptionsList.map((SortOption option) => RadioListTile(
-      groupValue: _selectedSortOption,
+    _sortFieldsList.map((SortField option) => RadioListTile(
+      groupValue: state.tempSortField,
       title: Text(option._value),
       value: option._key,
       onChanged: (val) {
-        setState(() {
-          _selectedSortOption = val;
-        });
+        _sortBloc.add(SortTempFieldUpdated(val));
       },
     )).toList(),
     //]
   );
 
-  Widget _orderOptions() => new Column(
+  Widget _orderOptions(SortState state) => new Column(
     children:
-    _orderOptionsLst.map((OrderOption option) => RadioListTile(
-      groupValue: _selectedOrderOption,
+    _sortDirectionsLst.map((SortDirection option) => RadioListTile(
+      groupValue: state.tempSortDirection,
       title: Text(option._value),
       value: option._key,
       onChanged: (val) {
-        setState(() {
-          _selectedOrderOption = val;
-        });
+        _sortBloc.add(SortTempDirectionUpdated(val));
       },
     )).toList(),
     //]
