@@ -13,7 +13,7 @@ class Note{
     : this.dateCreated = dateCreated ?? DateTime.now(),
       this.dateModified = dateModified ?? DateTime.now(),
       this.id = id,
-      this.title = title ?? 'No title';
+      this.title = title ?? '';
 
   Note copyWith({String title, String text, DateTime dateCreated, DateTime dateModified, String id}){
     return Note(

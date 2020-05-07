@@ -32,20 +32,11 @@ class FirebaseNotesRepository extends NoteRepository{
     String uid = await _userRepository.getUserId();
 
     var resultNote = await notesCollection.document(uid).collection(userNotes).document(id).get();
-    return Note.fromEntity(NoteEntity.fromJson(resultNote.data));
+    return Note.fromEntity(NoteEntity.fromMap(resultNote.data));
   }
 
   @override
   Stream<List<Note>> notes() async* {
-    String uid = await _userRepository.getUserId();
-    yield* notesCollection.document(uid).collection(userNotes).snapshots().map((snapshot) {
-      return snapshot.documents
-          .map((doc) => Note.fromEntity(NoteEntity.fromSnapshot(doc)))
-          .toList();
-    });
-  }
-
-  Stream<List<Note>> notesSorted() async* {
     String uid = await _userRepository.getUserId();
     yield* notesCollection.document(uid).collection(userNotes).snapshots().map((snapshot) {
       return snapshot.documents

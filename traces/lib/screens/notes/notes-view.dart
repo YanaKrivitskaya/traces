@@ -2,6 +2,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
+import 'package:traces/constants.dart';
 import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,7 +58,7 @@ class _NotesViewState extends State<NotesView> {
                                   style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
                               trailing: _popupMenu(note, position),
                               onTap: (){
-                                //_navigateToNote(context, notes[position]);
+                                Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id);
                               },
                             ),
                             /*(notes[position].categoryId != null && categories != null) ? Container(

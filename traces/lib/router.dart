@@ -5,13 +5,17 @@ import 'package:traces/screens/flights.dart';
 import 'package:traces/screens/home.dart';
 import 'package:traces/screens/hotels.dart';
 import 'package:traces/screens/map.dart';
+import 'package:traces/screens/notes/details_bloc/bloc.dart';
+import 'package:traces/screens/notes/note-detail-view.dart';
 import 'package:traces/screens/notes/note-detail.dart';
 import 'package:traces/screens/notes/note-page.dart';
+import 'package:traces/screens/notes/repo/firebase_notes_repository.dart';
 //import 'package:traces/screens/notes/notes.dart';
 import 'package:traces/screens/profile.dart';
 import 'package:traces/screens/settings.dart';
 import 'package:traces/screens/trips.dart';
 import 'package:traces/screens/visas.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /*class Router {
   static Map<String, WidgetBuilder> getRoutes() {
@@ -41,7 +45,12 @@ class RouteGenerator{
       case notesRoute: return MaterialPageRoute(builder: (_) => NotesPage());
       case noteDetailsRoute: {
         if(args is String){
-          return MaterialPageRoute(builder: (_) => NoteDetailsPage(noteId: args));
+          return MaterialPageRoute(builder: (_) =>
+              BlocProvider<DetailsBloc>(
+                create: (context) => DetailsBloc(notesRepository: FirebaseNotesRepository()),
+                child: NoteDetailsView(noteId: args),
+              ));
+              //NoteDetailsView(noteId: args));
         }
         return _errorRoute();
       }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/constants.dart';
 import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 import 'package:traces/screens/notes/note-filter-button.dart';
 import 'package:traces/screens/notes/noteRepository.dart';
@@ -25,7 +26,15 @@ class NotesPage extends StatelessWidget{
             NoteFilterButton()
           ],
         ),
-        body:  NotesView()
+        body:  NotesView(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            Navigator.pushNamed(context, noteDetailsRoute, arguments: '');
+          },
+          tooltip: 'Add New Note',
+          backgroundColor: ColorsPalette.nycTaxi,
+          child: Icon(Icons.add, color: ColorsPalette.grayLight),
+        ),
       ),
     );
   }
