@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     _menuTile(Icons.card_travel, "Trips", context, tripsRoute),
                     _menuTile(Icons.explore, "Map", context, mapRoute),
-                    _menuTile(Icons.note, "Notes", context, notesRoute)
+                    _menuTile(/Icons.description, "Notes", context, notesRoute)
                   ],
                 ),
                 Row(
