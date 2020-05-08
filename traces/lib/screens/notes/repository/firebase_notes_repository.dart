@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:traces/auth/userRepository.dart';
-import 'package:traces/screens/notes/note-entity.dart';
+import 'package:traces/screens/notes/note_entity.dart';
 import 'dart:async';
 import 'package:traces/screens/notes/note.dart';
-import 'package:traces/screens/notes/repo/note_repository.dart';
+import 'package:traces/screens/notes/repository/note_repository.dart';
 
 class FirebaseNotesRepository extends NoteRepository{
   final notesCollection = Firestore.instance.collection('notes');
@@ -16,9 +16,10 @@ class FirebaseNotesRepository extends NoteRepository{
   }
 
   @override
-  Future<void> addNewNote(Note note) async{
+  Future<Note> addNewNote(Note note) async{
     String uid = await _userRepository.getUserId();
-    return notesCollection.document(uid).collection(userNotes).add(note.toEntity().toDocument());
+    final newNote = await notesCollection.document(uid).collection(userNotes).add(note.toEntity().toDocument());
+    return await getNoteById(newNote.documentID);
   }
 
   @override
@@ -32,7 +33,8 @@ class FirebaseNotesRepository extends NoteRepository{
     String uid = await _userRepository.getUserId();
 
     var resultNote = await notesCollection.document(uid).collection(userNotes).document(id).get();
-    return Note.fromEntity(NoteEntity.fromMap(resultNote.data));
+
+    return Note.fromEntity(NoteEntity.fromMap(resultNote.data, resultNote.documentID));
   }
 
   @override
@@ -46,11 +48,12 @@ class FirebaseNotesRepository extends NoteRepository{
   }
 
   @override
-  Future<void> updateNote(Note note) async {
+  Future<Note> updateNote(Note note) async {
     String uid = await _userRepository.getUserId();
-    return notesCollection.document(uid).collection(userNotes)
+    await notesCollection.document(uid).collection(userNotes)
         .document(note.id)
         .updateData(note.toEntity().toDocument());
+    return await getNoteById(note.id);
   }
 
 }

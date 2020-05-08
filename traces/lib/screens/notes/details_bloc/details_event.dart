@@ -29,3 +29,12 @@ class EditMode extends DetailsEvent{
   List<Object> get props => [note];
 }
 
+class SaveNote extends DetailsEvent{
+  final Note note;
+
+  SaveNote(this.note);
+
+  @override
+  List<Object> get props => [note];
+}
+

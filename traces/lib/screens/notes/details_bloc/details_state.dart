@@ -1,8 +1,9 @@
 import 'package:meta/meta.dart';
 import 'package:traces/screens/notes/note.dart';
+import 'package:equatable/equatable.dart';
 
 @immutable
-class DetailsState {
+abstract class DetailsState extends Equatable{
   const DetailsState();
 
   @override
@@ -21,15 +22,17 @@ class ViewDetailsState extends DetailsState {
 }
 
 class EditDetailsState extends DetailsState {
-  final Note notetoEdit;
-  const EditDetailsState(this.notetoEdit);
+  final Note note;
+  const EditDetailsState(this.note);
+
   @override
-  List<Object> get props => [notetoEdit];
+  List<Object> get props => [note];
 }
 
 class AddNoteState extends DetailsState {
   final Note note;
   const AddNoteState(this.note);
+
   @override
   List<Object> get props => [note];
 }

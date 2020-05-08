@@ -6,11 +6,9 @@ import 'package:traces/screens/home.dart';
 import 'package:traces/screens/hotels.dart';
 import 'package:traces/screens/map.dart';
 import 'package:traces/screens/notes/details_bloc/bloc.dart';
-import 'package:traces/screens/notes/note-detail-view.dart';
-import 'package:traces/screens/notes/note-detail.dart';
-import 'package:traces/screens/notes/note-page.dart';
-import 'package:traces/screens/notes/repo/firebase_notes_repository.dart';
-//import 'package:traces/screens/notes/notes.dart';
+import 'package:traces/screens/notes/note_detail_view.dart';
+import 'package:traces/screens/notes/note_page.dart';
+import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
 import 'package:traces/screens/profile.dart';
 import 'package:traces/screens/settings.dart';
 import 'package:traces/screens/trips.dart';
@@ -47,8 +45,9 @@ class RouteGenerator{
         if(args is String){
           return MaterialPageRoute(builder: (_) =>
               BlocProvider<DetailsBloc>(
-                create: (context) => DetailsBloc(notesRepository: FirebaseNotesRepository()),
-                child: NoteDetailsView(noteId: args),
+                  create: (context) => DetailsBloc(notesRepository: FirebaseNotesRepository(),
+                )..add(args != '' ? GetNoteDetails(args) : NewNoteMode()),
+                child: NoteDetailsView(),
               ));
               //NoteDetailsView(noteId: args));
         }

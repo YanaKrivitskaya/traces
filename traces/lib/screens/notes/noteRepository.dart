@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:traces/Models/noteModel.dart';
+import 'package:traces/Models/__noteModel.dart';
 import 'package:traces/auth/userRepository.dart';
 
 // Reference to a Collection

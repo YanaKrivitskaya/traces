@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/repository/note_repository.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
-import '../repo/note_repository.dart';
 
 class NotesBloc extends Bloc<NotesEvent, NotesState> {
   final NoteRepository _notesRepository;

@@ -28,22 +28,11 @@ class NoteEntity extends Equatable{
     return "NoteEntity: {title: $title, text: $text, id: $id, dateCreated: $dateCreated, dateModified: $dateModified}";
   }
 
-  static NoteEntity fromJson(Map<String, Object> json){
-    return NoteEntity(
-      json["title"] as String,
-      json["text"] as String,
-      json["id"] as String,
-      DateTime.fromMillisecondsSinceEpoch(json["dateCreated"]),
-      DateTime.fromMillisecondsSinceEpoch(json["dateModified"]),
-      //json["dateModified"] as DateTime
-    );
-  }
-
-  static NoteEntity fromMap(Map<dynamic, dynamic> map){
+  static NoteEntity fromMap(Map<dynamic, dynamic> map, String documentId){
     return NoteEntity(
       map["title"] as String,
       map["text"] as String,
-      map["id"] as String,
+      documentId,
       map["dateCreated"].toDate(),
       map["dateModified"].toDate(),
     );
@@ -61,10 +50,10 @@ class NoteEntity extends Equatable{
 
   Map<String, Object> toDocument(){
     return{
-      "title": title ?? 'No Title',
+      "title": title!= '' ? title : 'No Title',
       "text": text,
       "dateCreated": dateCreated,
-      "dateModified": dateModified,
+      "dateModified": DateTime.now(),
     };
   }
 }

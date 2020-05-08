@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:traces/screens/notes/note-entity.dart';
+import 'package:traces/screens/notes/note_entity.dart';
 
 @immutable
 class Note{
