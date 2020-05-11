@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:traces/auth/userRepository.dart';
+import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/tags/tag_entity.dart';
 import 'package:traces/screens/notes/note_entity.dart';
 import 'dart:async';
 import 'package:traces/screens/notes/note.dart';
@@ -8,6 +10,7 @@ import 'package:traces/screens/notes/repository/note_repository.dart';
 class FirebaseNotesRepository extends NoteRepository{
   final notesCollection = Firestore.instance.collection('notes');
   final String userNotes = "userNotes";
+  final String userTags = "userCategories";
   
   UserRepository _userRepository;
 
@@ -54,6 +57,49 @@ class FirebaseNotesRepository extends NoteRepository{
         .document(note.id)
         .updateData(note.toEntity().toDocument());
     return await getNoteById(note.id);
+  }
+
+  //tags
+
+  @override
+  Stream<List<Tag>> tags() async*{
+    String uid = await _userRepository.getUserId();
+    yield* notesCollection.document(uid).collection(userTags).snapshots().map((snapshot) {
+      return snapshot.documents
+          .map((doc) => Tag.fromEntity(TagEntity.fromSnapshot(doc)))
+          .toList();
+    });
+  }
+
+  @override
+  Future<Tag> addNewTag(Tag tag) async{
+    String uid = await _userRepository.getUserId();
+    final newTag = await notesCollection.document(uid).collection(userTags).add(tag.toEntity().toDocument());
+    return await getTagById(newTag.documentID);
+  }
+
+  @override
+  Future<Tag> getTagById(String id) async {
+    String uid = await _userRepository.getUserId();
+
+    var resultTag = await notesCollection.document(uid).collection(userTags).document(id).get();
+
+    return Tag.fromEntity(TagEntity.fromMap(resultTag.data, resultTag.documentID));
+  }
+
+  @override
+  Future<void> deleteTag(Tag tag) async {
+    String uid = await _userRepository.getUserId();
+    return notesCollection.document(uid).collection(userNotes).document(tag.id).delete();
+  }
+
+  @override
+  Future<Tag> updateTag(Tag tag) async {
+    String uid = await _userRepository.getUserId();
+    await notesCollection.document(uid).collection(userTags)
+        .document(tag.id)
+        .updateData(tag.toEntity().toDocument());
+    return await getTagById(tag.id);
   }
 
 }

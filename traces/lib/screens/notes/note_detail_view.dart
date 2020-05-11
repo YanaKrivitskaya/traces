@@ -159,9 +159,6 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
                   ),
             ),
       );
-      /*_deleteAlert(note).then((res){
-        if(res == "Delete") Navigator.of(context).pop();
-      });*/
     },
   );
 
