@@ -41,7 +41,7 @@ class _NotesViewState extends State<NotesView> {
         child: BlocBuilder<NotesBloc, NotesState>(
             bloc: BlocProvider.of(context),
             builder: (context, state){
-              if(state is NotesEmpty || state is NotesLoadInProgress){
+              if(state is NotesEmpty || state is NotesLoadInProgress || _tagBloc.state is TagsLoadInProgress){
                 return Center(child: CircularProgressIndicator());
               }
               if(state is NotesLoadSuccess){
@@ -49,6 +49,7 @@ class _NotesViewState extends State<NotesView> {
                 if(_tagBloc.state is TagsLoadSuccess){
                   _tags = _tagBloc.state.tags;
                 }
+                debugPrint("notes: $notes");
                 return Container(
                   padding: EdgeInsets.only(bottom: 65.0),
                   child: Container(

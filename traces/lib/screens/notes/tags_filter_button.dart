@@ -5,7 +5,7 @@ import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 import 'package:traces/screens/notes/tags/bloc/bloc.dart';
 import 'package:traces/screens/notes/tags/tag.dart';
 
-class TagsManagementButton extends StatelessWidget{
+class TagsFilterButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -66,15 +66,17 @@ class _TagsDialogState extends State<TagsDialog>{
               FlatButton(
                 child: Text('Done'),
                 onPressed: () {
-                  context.bloc<TagBloc>().add(UpdateTagsList(_tags, _noTags.isChecked));
+                  context.bloc<TagBloc>().add(UpdateTagsList(_tags, _noTags.isChecked, null));
                   context.bloc<NotesBloc>().add(UpdateTagsFilter(_tags.where((t) => t.isChecked).toList(), _selectAll.isChecked, _noTags.isChecked));
                   Navigator.pop(context);
                 },
+                textColor: ColorsPalette.greenGrass,
               ),
               FlatButton(
                 child: Text('Cancel'),
                 onPressed: () {
                   Navigator.pop(context);},
+                textColor: ColorsPalette.greenGrass,
               ),
             ],
             content: Container(

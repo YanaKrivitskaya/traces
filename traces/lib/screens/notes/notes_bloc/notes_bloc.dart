@@ -87,6 +87,7 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
 
       _notesSubscription = _notesRepository.notes().listen(
             (notes) {
+              notesFiltered = new List<Note>();
               if(event.allTagsSelected){
                 notesFiltered = notes;
               }else{
@@ -95,7 +96,7 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
                 }
                 event.tags.forEach((t) {
                   notes.where((n) => n.tagIds != null && n.tagIds.contains(t.id)).forEach((n){
-                    if(!notesFiltered.contains(n)) notesFiltered.add(n);
+                    if(!notesFiltered.any((note)=> note.id ==n.id)) notesFiltered.add(n);
                   });
                 });
               }

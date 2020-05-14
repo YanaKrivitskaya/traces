@@ -33,12 +33,12 @@ class NotesLoadSuccess extends NotesState {
   @override
   List<Object> get props => [notes, allTagsSelected];
 
-  @override
+  /*@override
   String toString(){
     return '''NotesState{      
       notes: $notes
     }''';
-  }
+  }*/
 }
 
 class NotesLoadFailure extends NotesState {

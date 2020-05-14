@@ -29,6 +29,8 @@ class EditMode extends DetailsEvent{
   List<Object> get props => [note];
 }
 
+class AddTagsClicked extends DetailsEvent{}
+
 class SaveNote extends DetailsEvent{
   final Note note;
 

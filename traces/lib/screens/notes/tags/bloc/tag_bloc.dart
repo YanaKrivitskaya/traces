@@ -14,7 +14,7 @@ class TagBloc extends Bloc<TagEvent, TagState> {
         _notesRepository = notesRepository;
 
   @override
-  TagState get initialState => TagsEmpty(null);
+  TagState get initialState => TagsEmpty();
 
   @override
   Stream<TagState> mapEventToState(
@@ -36,6 +36,8 @@ class TagBloc extends Bloc<TagEvent, TagState> {
       yield* _mapAllTagsCheckedToState(event);
     }else if (event is NoTagsChecked) {
       yield* _mapNoTagsCheckedToState(event);
+    }else if (event is TagChanged) {
+      yield* _mapTagChangedToState(event);
     }
   }
 
@@ -43,7 +45,7 @@ class TagBloc extends Bloc<TagEvent, TagState> {
     _notesSubscription?.cancel();
 
    _notesSubscription = _notesRepository.tags().listen(
-          (tags) => add(UpdateTagsList(tags, true)),
+          (tags) => add(UpdateTagsList(tags, true, state.tags ?? tags)),
     );
   }
 
@@ -64,7 +66,7 @@ class TagBloc extends Bloc<TagEvent, TagState> {
       List<Tag> tags = currentState.tags;
       tags.firstWhere((t) => t.id == event.tag.id).isChecked = event.tag.isChecked;
 
-      add(UpdateTagsList(tags, currentState.noTags));
+      add(UpdateTagsList(tags, currentState.noTags, state.filteredTags));
     }
   }
 
@@ -77,7 +79,7 @@ class TagBloc extends Bloc<TagEvent, TagState> {
       List<Tag> tags = currentState.tags;
       tags.forEach((t) => t.isChecked = event.checked);
 
-      add(UpdateTagsList(tags, event.checked));
+      add(UpdateTagsList(tags, event.checked, state.filteredTags));
     }
   }
 
@@ -85,15 +87,25 @@ class TagBloc extends Bloc<TagEvent, TagState> {
 
     yield TagsLoadInProgress(state.tags);
 
-    add(UpdateTagsList(state.tags, event.checked));
+    add(UpdateTagsList(state.tags, event.checked, state.filteredTags));
   }
 
   Stream<TagState> _mapDeleteTagToState(DeleteTag event) async* {
     _notesRepository.deleteTag(event.tag);
   }
 
+
+  Stream<TagState> _mapTagChangedToState(TagChanged event) async*{
+
+    yield TagsLoadInProgress(state.tags);
+
+    List<Tag> filteredTags = state.tags.where((t) => t.name.toLowerCase().startsWith(event.tagName.toLowerCase())).toList();
+
+    add(UpdateTagsList(state.tags, false, filteredTags));
+  }
+
   Stream<TagState> _mapUpdateTagsListToState(UpdateTagsList event) async* {
-    yield TagsLoadSuccess(event.tags, event.noTags);
+    yield TagsLoadSuccess(event.tags, event.noTags, event.filteredTags);
   }
 
   @override

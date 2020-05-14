@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:traces/screens/notes/note_entity.dart';
+import 'package:traces/screens/notes/tags/tag.dart';
 
 //Models will contain plain dart classes which we will work with in our Flutter Application.
 // Having the separation between models and entities allows us to switch our data provider at any time
@@ -18,7 +19,7 @@ class Note{
       this.dateModified = dateModified ?? DateTime.now(),
       this.id = id,
       this.title = title ?? '',
-      this.tagIds = tagIds ?? null;
+      this.tagIds = tagIds ?? new List<String>();
 
   Note copyWith({String title, String text, DateTime dateCreated, DateTime dateModified, String id, List<String> tagIds}){
     return Note(
@@ -45,7 +46,7 @@ class Note{
           dateCreated == other.dateCreated &&
           dateModified == other.dateModified &&
           id == other.id &&
-            tagIds == other.tagIds;
+          tagIds == other.tagIds;
 
   @override
   String toString(){
@@ -63,7 +64,7 @@ class Note{
       id: entity.id,
       dateCreated: entity.dateCreated,
       dateModified: entity.dateModified,
-        tagIds: entity.tagIds
+      tagIds: entity.tagIds
     );
   }
 }

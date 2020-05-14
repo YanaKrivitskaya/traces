@@ -50,6 +50,16 @@ class UpdateNotesList extends NotesEvent {
 
   @override
   List<Object> get props => [notes, sortField, sortDirection, allTagsSelected];
+
+  @override
+  String toString(){
+    return '''NotesEvent{      
+      notes: $notes,
+      sortField: $sortField,
+      sortDirection: $sortDirection,
+      allTagsSelected: $allTagsSelected
+    }''';
+  }
 }
 
 class UpdateSortOrder extends NotesEvent {

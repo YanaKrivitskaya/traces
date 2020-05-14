@@ -69,10 +69,29 @@ class NoTagsChecked extends TagEvent {
 
 class UpdateTagsList extends TagEvent {
   final List<Tag> tags;
+  final List<Tag> filteredTags;
   final bool noTags;
 
-  const UpdateTagsList(this.tags, this.noTags);
+  const UpdateTagsList(this.tags, this.noTags, this.filteredTags);
 
   @override
-  List<Object> get props => [tags, noTags];
+  List<Object> get props => [tags, noTags, filteredTags];
 }
+
+class TagChanged extends TagEvent{
+  final String tagName;
+
+  const TagChanged({@required this.tagName});
+
+  @override
+  List<Object> get props => [tagName];
+}
+
+/*class GetTagsByQuery extends TagEvent {
+  final String query;
+
+  const GetTagsByQuery(this.query);
+
+  @override
+  List<Object> get props => [query];
+}*/

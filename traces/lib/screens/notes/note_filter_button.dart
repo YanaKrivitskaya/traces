@@ -90,10 +90,12 @@ class _SortDialogState extends State<SortDialog>{
                   _notesBloc.add(UpdateSortOrder(state.tempSortField, state.tempSortDirection));
                   Navigator.pop(context);
                 },
+                textColor: ColorsPalette.greenGrass,
               ),
               FlatButton(
                 child: Text('Cancel'),
                 onPressed: () {Navigator.pop(context);},
+                textColor: ColorsPalette.greenGrass,
               ),
             ],
             content: SingleChildScrollView(

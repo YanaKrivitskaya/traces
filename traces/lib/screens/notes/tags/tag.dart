@@ -1,7 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:traces/screens/notes/tags/tag_entity.dart';
 
-
 @immutable
 class Tag{
   final String id;
@@ -35,6 +34,4 @@ class Tag{
         isChecked: true
     );
   }
-
-
 }
