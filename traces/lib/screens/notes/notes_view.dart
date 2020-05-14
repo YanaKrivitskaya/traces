@@ -44,11 +44,12 @@ class _NotesViewState extends State<NotesView> {
               if(state is NotesEmpty || state is NotesLoadInProgress || _tagBloc.state is TagsLoadInProgress){
                 return Center(child: CircularProgressIndicator());
               }
-              if(state is NotesLoadSuccess){
+              if(state is NotesLoadSuccess && _tagBloc.state is TagsLoadSuccess){
                 final notes = _sortNotes(state.notes, state.sortField);
-                if(_tagBloc.state is TagsLoadSuccess){
+                _tags = _tagBloc.state.tags;
+                /*if(_tagBloc.state is TagsLoadSuccess){
                   _tags = _tagBloc.state.tags;
-                }
+                }*/
                 debugPrint("notes: $notes");
                 return Container(
                   padding: EdgeInsets.only(bottom: 65.0),
