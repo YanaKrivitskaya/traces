@@ -83,9 +83,10 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     yield LoadingDetailsState(null);
 
     if(note.tagIds != null && note.tagIds.isNotEmpty){
-      note.tagIds.forEach((t) async {
-        noteTags.add(await _notesRepository.getTagById(t));
-      });
+      for(var i = 0; i< note.tagIds.length; i++){
+        final tag = await _notesRepository.getTagById(note.tagIds[i]);
+        noteTags.add(tag);
+      }
     }
 
     yield ViewDetailsState(note, noteTags);

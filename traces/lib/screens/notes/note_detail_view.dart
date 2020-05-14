@@ -76,7 +76,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
             ),
             title: _isEditMode ? Text("Edit note") : Text("View note"),
             actions: <Widget>[
-
+              !_isEditMode ? _tagsAction() : Container(),
               _isEditMode ? _saveAction(_note) : _editAction(state),
               _note.id != null ? _deleteAction(_note, context) : Container(),
             ],
@@ -104,6 +104,27 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               .toList(),
         ));
   }
+
+  Widget _tagsAction() => new IconButton(
+    icon: Icon(Icons.turned_in_not, color: Colors.white),
+    onPressed: () {
+      showDialog(
+          barrierDismissible: false, context: context, builder: (_) =>
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<TagBloc>(
+                create: (context) => TagBloc(notesRepository: FirebaseNotesRepository()
+                )..add(GetTags()),
+              ),
+              BlocProvider.value(
+                value: context.bloc<DetailsBloc>(),
+              ),
+            ],
+            child:  TagsAddDialog(),
+          )
+      );
+    },
+  );
 
   Widget _editAction(DetailsState state) => new IconButton(
     icon: Icon(Icons.edit),
@@ -173,7 +194,6 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
                       autofocus: true,
                   ),
                   _noteTags.length > 0 ? _getTags(tags) : Container(),
-                  _addTagsLink(),
                   Divider(color: ColorsPalette.nycTaxi),
                   TextFormField(
                     decoration: const InputDecoration(
@@ -188,58 +208,6 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               )
           )
       )
-  );
-
-  Widget _addTagsLink() => new Container(
-    margin: const EdgeInsets.only(top: 10),
-    child: Align(
-        alignment: Alignment.centerLeft,
-        child: OutlineButton(
-            child: _noteTags.length > 0
-                ? Text("Update Tags", style: TextStyle(color: ColorsPalette.greenGrass))
-                : Text("Add Tags", style: TextStyle(color: ColorsPalette.greenGrass)),
-            onPressed: (){
-              showDialog(
-                  barrierDismissible: false, context: context, builder: (_) =>
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider<TagBloc>(
-                        create: (context) => TagBloc(notesRepository: FirebaseNotesRepository()
-                        )..add(GetTags()),
-                      ),
-                      BlocProvider.value(
-                        value: context.bloc<DetailsBloc>(),
-                      ),
-                    ],
-                    child:  TagsAddDialog(),
-                  )
-              );
-            },
-        )
-      /*InkWell(
-          onTap: (){
-            //context.bloc<DetailsBloc>().add(AddTagsClicked());
-            showDialog(
-                barrierDismissible: false, context: context, builder: (_) =>
-                MultiBlocProvider(
-                  providers: [
-                    BlocProvider<TagBloc>(
-                      create: (context) => TagBloc(notesRepository: FirebaseNotesRepository()
-                      )..add(GetTags()),
-                    ),
-                    BlocProvider.value(
-                      value: context.bloc<DetailsBloc>(),
-                    ),
-                  ],
-                  child:  TagsAddDialog(),
-                )
-            );
-          },
-          child: _noteTags.length > 0
-              ? Text("Update Tags", style: TextStyle(color: ColorsPalette.greenGrass, decoration: TextDecoration.underline))
-              : Text("Add Tags", style: TextStyle(color: ColorsPalette.greenGrass, decoration: TextDecoration.underline))
-        )*/
-    ),
   );
 
   Widget _deleteAction(Note note, BuildContext context) => new IconButton(

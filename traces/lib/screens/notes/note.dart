@@ -48,10 +48,10 @@ class Note{
           id == other.id &&
           tagIds == other.tagIds;
 
-  @override
+  /*@override
   String toString(){
     return "Note {title: $title, text: $text, id: $id, dateCreated: $dateCreated, dateModified: $dateModified, tagIds: $tagIds}";
-  }
+  }*/
 
   NoteEntity toEntity(){
     return NoteEntity(title, text, id, dateCreated, dateModified, tagIds);
