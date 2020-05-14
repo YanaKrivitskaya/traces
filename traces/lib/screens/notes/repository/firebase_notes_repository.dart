@@ -10,7 +10,7 @@ import 'package:traces/screens/notes/repository/note_repository.dart';
 class FirebaseNotesRepository extends NoteRepository{
   final notesCollection = Firestore.instance.collection('notes');
   final String userNotes = "userNotes";
-  final String userTags = "userCategories";
+  final String userTags = "userTags";
   
   UserRepository _userRepository;
 
