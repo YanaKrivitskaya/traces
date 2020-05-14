@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:traces/screens/notes/note.dart';
 import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-typedef void StringCallback(String val);
+import 'package:traces/shared/shared.dart';
 
 class NoteDeleteAlert extends StatelessWidget{
   final Note note;

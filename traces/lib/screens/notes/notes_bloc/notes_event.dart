@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/tags/tag.dart';
 
 @immutable
 abstract class NotesEvent extends Equatable{
@@ -44,11 +44,22 @@ class UpdateNotesList extends NotesEvent {
   final List<Note> notes;
   final SortFields sortField;
   final SortDirections sortDirection;
+  final bool allTagsSelected;
 
-  const UpdateNotesList(this.notes, this.sortField, this.sortDirection);
+  const UpdateNotesList(this.notes, this.sortField, this.sortDirection, this.allTagsSelected);
 
   @override
-  List<Object> get props => [notes, sortField, sortDirection];
+  List<Object> get props => [notes, sortField, sortDirection, allTagsSelected];
+
+  @override
+  String toString(){
+    return '''NotesEvent{      
+      notes: $notes,
+      sortField: $sortField,
+      sortDirection: $sortDirection,
+      allTagsSelected: $allTagsSelected
+    }''';
+  }
 }
 
 class UpdateSortOrder extends NotesEvent {
@@ -59,4 +70,15 @@ class UpdateSortOrder extends NotesEvent {
 
   @override
   List<Object> get props => [sortField, sortDirection];
+}
+
+class UpdateTagsFilter extends NotesEvent {
+  final bool allTagsSelected;
+  final bool noTags;
+  final List<Tag> tags;
+
+  const UpdateTagsFilter(this.tags, this.allTagsSelected, this.noTags);
+
+  @override
+  List<Object> get props => [tags, allTagsSelected, noTags];
 }

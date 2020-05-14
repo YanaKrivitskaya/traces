@@ -21,24 +21,24 @@ class NotesLoadSuccess extends NotesState {
   final SortFields sortField;
   final SortDirections sortDirection;
 
+  final bool allTagsSelected;
+
   const NotesLoadSuccess(
       SortFields sortField,
       SortDirections sortDirection,
-      this.notes
+      this.notes, this.allTagsSelected,
       ) : sortField = sortField ?? SortFields.DATEMODIFIED,
         sortDirection = sortDirection ?? SortDirections.ASC;
 
   @override
-  List<Object> get props => [notes];
+  List<Object> get props => [notes, allTagsSelected];
 
-  @override
+  /*@override
   String toString(){
-    return '''NotesState{
-      orderOption: $sortDirection,
-      sortOption: $sortField,
+    return '''NotesState{      
       notes: $notes
     }''';
-  }
+  }*/
 }
 
 class NotesLoadFailure extends NotesState {

@@ -9,6 +9,7 @@ import 'package:traces/screens/notes/details_bloc/bloc.dart';
 import 'package:traces/screens/notes/note_detail_view.dart';
 import 'package:traces/screens/notes/note_page.dart';
 import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
+import 'package:traces/screens/notes/tags/bloc/bloc.dart';
 import 'package:traces/screens/profile.dart';
 import 'package:traces/screens/settings.dart';
 import 'package:traces/screens/trips.dart';
@@ -43,13 +44,26 @@ class RouteGenerator{
       case notesRoute: return MaterialPageRoute(builder: (_) => NotesPage());
       case noteDetailsRoute: {
         if(args is String){
-          return MaterialPageRoute(builder: (_) =>
+          /*return MaterialPageRoute(builder: (_) =>
               BlocProvider<DetailsBloc>(
                   create: (context) => DetailsBloc(notesRepository: FirebaseNotesRepository(),
                 )..add(args != '' ? GetNoteDetails(args) : NewNoteMode()),
                 child: NoteDetailsView(),
+              ));*/
+          return MaterialPageRoute(builder: (_) =>
+              MultiBlocProvider(
+                providers: [
+                  BlocProvider<DetailsBloc>(
+                    create: (context) => DetailsBloc(notesRepository: FirebaseNotesRepository(),
+                    )..add(args != '' ? GetNoteDetails(args) : NewNoteMode()),
+                  ),
+                  BlocProvider<TagBloc>(
+                    create: (context) => TagBloc(notesRepository: FirebaseNotesRepository(),
+                    )..add(GetTags()),
+                  ),
+                ],
+                child: NoteDetailsView(),
               ));
-              //NoteDetailsView(noteId: args));
         }
         return _errorRoute();
       }
