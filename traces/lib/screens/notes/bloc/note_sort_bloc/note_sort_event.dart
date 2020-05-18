@@ -1,13 +1,11 @@
-import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:traces/screens/notes/note.dart';
 
-@immutable
-abstract class SortEvent extends Equatable{
-  const SortEvent();
+abstract class NoteSortEvent extends Equatable {
+  const NoteSortEvent();
 }
 
-class SortUpdated extends SortEvent{
+class SortUpdated extends NoteSortEvent{
   final SortFields sortField;
   final SortDirections sortDirection;
 
@@ -19,15 +17,15 @@ class SortUpdated extends SortEvent{
   @override
   List<Object> get props => [sortField, sortDirection];
 
-  @override
+  /*@override
   String toString() => '''
-  SortUpdated { 
+  SortUpdated {
     sortField: $sortField,
-    sortDirection: $sortDirection    
-  }''';
+    sortDirection: $sortDirection
+  }''';*/
 }
 
-class SortTempFieldUpdated extends SortEvent{
+class SortTempFieldUpdated extends NoteSortEvent{
 
   final SortFields tempSortField;
 
@@ -36,15 +34,15 @@ class SortTempFieldUpdated extends SortEvent{
   @override
   List<Object> get props => [tempSortField];
 
-  @override
+  /*@override
   String toString() => '''
-  SortUpdated {     
+  SortUpdated {
     tempSortField: $tempSortField
-    
-  }''';
+
+  }''';*/
 }
 
-class SortTempDirectionUpdated extends SortEvent{
+class SortTempDirectionUpdated extends NoteSortEvent{
 
   final SortDirections tempSortDirection;
 
@@ -53,9 +51,9 @@ class SortTempDirectionUpdated extends SortEvent{
   @override
   List<Object> get props => [tempSortDirection];
 
-  @override
+  /*@override
   String toString() => '''
-  SortUpdated {     
-    tempSortDirection: $tempSortDirection    
-  }''';
+  SortUpdated {
+    tempSortDirection: $tempSortDirection
+  }''';*/
 }

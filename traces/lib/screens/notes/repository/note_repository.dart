@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/tag.dart';
 import 'package:traces/screens/notes/note.dart';
 
 abstract class NoteRepository {

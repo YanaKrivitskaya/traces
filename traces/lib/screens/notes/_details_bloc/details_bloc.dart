@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/notes/note.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/tag.dart';
 import './bloc.dart';
 
 class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {

@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:traces/screens/notes/note_entity.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/tag.dart';
 
 //Models will contain plain dart classes which we will work with in our Flutter Application.
 // Having the separation between models and entities allows us to switch our data provider at any time

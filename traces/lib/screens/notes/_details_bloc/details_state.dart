@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:traces/screens/notes/note.dart';
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/tag.dart';
 
 @immutable
 abstract class DetailsState extends Equatable{

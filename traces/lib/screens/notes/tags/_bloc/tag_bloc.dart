@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/tag.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -39,13 +39,16 @@ class TagBloc extends Bloc<TagEvent, TagState> {
     }else if (event is TagChanged) {
       yield* _mapTagChangedToState(event);
     }
+    else if (event is TagFilterChecked) {
+      yield* _mapTagFilterCheckedToState(event);
+    }
   }
 
   Stream<TagState> _mapGetTagsToState() async* {
     _notesSubscription?.cancel();
 
    _notesSubscription = _notesRepository.tags().listen(
-          (tags) => add(UpdateTagsList(tags, true, state.tags ?? tags)),
+          (tags) => add(UpdateTagsList(tags, true, state.tags ?? tags, state.selectedTags ?? tags)),
     );
   }
 
@@ -54,40 +57,59 @@ class TagBloc extends Bloc<TagEvent, TagState> {
   }
 
   Stream<TagState> _mapUpdateTagToState(UpdateTag event) async* {
+    print(event.tag);
     _notesRepository.updateTag(event.tag);
   }
 
+  // used from tag filtering alert an in add filter window
   Stream<TagState> _mapUpdateTagCheckedToState(UpdateTagChecked event) async* {
 
-    yield TagsLoadInProgress(state.tags);
+    yield TagsLoadInProgress(state.tags, state.selectedTags);
 
     final currentState = state;
     if(currentState is TagsLoadSuccess){
       List<Tag> tags = currentState.tags;
       tags.firstWhere((t) => t.id == event.tag.id).isChecked = event.tag.isChecked;
 
-      add(UpdateTagsList(tags, currentState.noTags, state.filteredTags));
+      add(UpdateTagsList(tags, currentState.noTags, state.filteredTags, state.selectedTags));
+    }
+  }
+
+  Stream<TagState> _mapTagFilterCheckedToState(TagFilterChecked event) async* {
+
+    yield TagsLoadInProgress(state.tags, state.selectedTags);
+
+    final currentState = state;
+    if(currentState is TagsLoadSuccess){
+
+      event.tag.isChecked ? state.selectedTags.add(event.tag) : state.selectedTags.remove(event.tag);
+
+      add(UpdateTagsList(state.tags, currentState.noTags, state.filteredTags, state.selectedTags));
     }
   }
 
   Stream<TagState> _mapAllTagsCheckedToState(AllTagsChecked event) async* {
 
-    yield TagsLoadInProgress(state.tags);
+    yield TagsLoadInProgress(state.tags, state.selectedTags);
 
     final currentState = state;
     if(currentState is TagsLoadSuccess){
-      List<Tag> tags = currentState.tags;
-      tags.forEach((t) => t.isChecked = event.checked);
+      /*List<Tag> tags = currentState.tags;
+      tags.forEach((t) => t.isChecked = event.checked);*/
 
-      add(UpdateTagsList(tags, event.checked, state.filteredTags));
+      if(event.checked){
+        add(UpdateTagsList(state.tags, event.checked, state.filteredTags, state.tags));
+      }else{
+        add(UpdateTagsList(state.tags, event.checked, state.filteredTags, null));
+      }
     }
   }
 
   Stream<TagState> _mapNoTagsCheckedToState(NoTagsChecked event) async* {
 
-    yield TagsLoadInProgress(state.tags);
+    yield TagsLoadInProgress(state.tags, state.selectedTags);
 
-    add(UpdateTagsList(state.tags, event.checked, state.filteredTags));
+    add(UpdateTagsList(state.tags, event.checked, state.filteredTags, state.selectedTags));
   }
 
   Stream<TagState> _mapDeleteTagToState(DeleteTag event) async* {
@@ -97,15 +119,15 @@ class TagBloc extends Bloc<TagEvent, TagState> {
 
   Stream<TagState> _mapTagChangedToState(TagChanged event) async*{
 
-    yield TagsLoadInProgress(state.tags);
+    yield TagsLoadInProgress(state.tags, state.selectedTags);
 
     List<Tag> filteredTags = state.tags.where((t) => t.name.toLowerCase().startsWith(event.tagName.toLowerCase())).toList();
 
-    add(UpdateTagsList(state.tags, false, filteredTags));
+    add(UpdateTagsList(state.tags, false, filteredTags, state.selectedTags));
   }
 
   Stream<TagState> _mapUpdateTagsListToState(UpdateTagsList event) async* {
-    yield TagsLoadSuccess(event.tags, event.noTags, event.filteredTags);
+    yield TagsLoadSuccess(event.tags, event.noTags, event.filteredTags, event.selectedTags ?? state.selectedTags);
   }
 
   @override

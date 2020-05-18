@@ -5,16 +5,17 @@ import 'package:traces/screens/flights.dart';
 import 'package:traces/screens/home.dart';
 import 'package:traces/screens/hotels.dart';
 import 'package:traces/screens/map.dart';
-import 'package:traces/screens/notes/details_bloc/bloc.dart';
 import 'package:traces/screens/notes/note_detail_view.dart';
 import 'package:traces/screens/notes/note_page.dart';
 import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
-import 'package:traces/screens/notes/tags/bloc/bloc.dart';
 import 'package:traces/screens/profile.dart';
 import 'package:traces/screens/settings.dart';
 import 'package:traces/screens/trips.dart';
 import 'package:traces/screens/visas.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'screens/notes/bloc/note_details_bloc/bloc.dart';
+import 'screens/notes/bloc/tag_filter_bloc/bloc.dart';
 
 /*class Router {
   static Map<String, WidgetBuilder> getRoutes() {
@@ -53,12 +54,12 @@ class RouteGenerator{
           return MaterialPageRoute(builder: (_) =>
               MultiBlocProvider(
                 providers: [
-                  BlocProvider<DetailsBloc>(
-                    create: (context) => DetailsBloc(notesRepository: FirebaseNotesRepository(),
+                  BlocProvider<NoteDetailsBloc>(
+                    create: (context) => NoteDetailsBloc(notesRepository: FirebaseNotesRepository(),
                     )..add(args != '' ? GetNoteDetails(args) : NewNoteMode()),
                   ),
-                  BlocProvider<TagBloc>(
-                    create: (context) => TagBloc(notesRepository: FirebaseNotesRepository(),
+                  BlocProvider<TagFilterBloc>(
+                    create: (context) => TagFilterBloc(notesRepository: FirebaseNotesRepository(),
                     )..add(GetTags()),
                   ),
                 ],

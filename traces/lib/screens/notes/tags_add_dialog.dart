@@ -1,12 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/notes/details_bloc/bloc.dart';
 import 'package:traces/screens/notes/note.dart';
-import 'package:traces/screens/notes/tags/bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'tags/tag.dart';
+import 'tag.dart';
 
 class TagsAddDialog extends StatefulWidget{
 
@@ -18,7 +16,6 @@ class TagsAddDialog extends StatefulWidget{
 
 class _TagsAddDialogState extends State<TagsAddDialog>{
   List<Tag> _tags;
-  List<Tag> _filteredTags;
 
   Note _note;
 
@@ -31,7 +28,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
     _tagController = new TextEditingController(text: '');
     _tagController.addListener(_onTagChanged);
 
-    _note = BlocProvider.of<DetailsBloc>(context).state.note;
+    //_note = BlocProvider.of<DetailsBloc>(context).state.note;
   }
 
   @override
@@ -43,7 +40,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
   @override
   Widget build(BuildContext context) {
 
-    return BlocBuilder<TagBloc, TagState>(
+    /*return BlocBuilder<TagBloc, TagState>(
         builder: (context, state) {
           if(state is TagsLoadSuccess){
             _tags = state.filteredTags;
@@ -63,7 +60,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
                   FlatButton(
                     child: Text('Done'),
                     onPressed: () {
-                      context.bloc<DetailsBloc>().add(GetNoteDetails(_note.id));
+                      //context.bloc<DetailsBloc>().add(GetNoteDetails(_note.id));
                       Navigator.pop(context);
                     },
                     textColor: ColorsPalette.greenGrass,
@@ -84,7 +81,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
           }else{
             return Center(child: CircularProgressIndicator());
           }
-        });
+        });*/
   }
   
   Widget _addSearchTagField() => new Row(
@@ -104,7 +101,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
         onPressed: (){
           if(_tagController.text != ''){
             Tag newTag = Tag(_tagController.text);
-            context.bloc<TagBloc>().add(AddTag(newTag));
+            //context.bloc<TagBloc>().add(AddTag(newTag));
             FocusScope.of(context).requestFocus(FocusNode());
           }
         },
@@ -113,7 +110,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
   );
 
   void _onTagChanged() {
-    context.bloc<TagBloc>().add(TagChanged(tagName: _tagController.text));
+    //context.bloc<TagBloc>().add(TagChanged(tagName: _tagController.text));
   }
 
   Widget _tagOptions() => new Column(
@@ -127,9 +124,9 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
 
           checked ? _note.tagIds.add(tag.id) : _note.tagIds.remove(tag.id);
 
-          context.bloc<DetailsBloc>().add(SaveNote(_note));
-          context.bloc<TagBloc>().add(UpdateTag(updatedTag));
-          context.bloc<TagBloc>().add(UpdateTagChecked(updatedTag));
+          //context.bloc<DetailsBloc>().add(SaveNote(_note));
+          //context.bloc<TagBloc>().add(UpdateTag(updatedTag));
+          //context.bloc<TagBloc>().add(UpdateTagChecked(updatedTag));
         },
       )).toList()
   );

@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:traces/colorsPalette.dart';
+import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
+import 'package:traces/screens/notes/bloc/note_sort_bloc/bloc.dart';
 import 'package:traces/screens/notes/note.dart';
-import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 
-import 'sort_bloc/bloc.dart';
+import 'bloc/note_bloc/bloc.dart';
 
 class SortField{
   final SortFields _key;
@@ -29,10 +29,10 @@ class NoteFilterButton extends StatelessWidget{
             MultiBlocProvider(
               providers: [
                 BlocProvider.value(
-                  value: context.bloc<NotesBloc>(),
+                  value: context.bloc<NoteBloc>(),
                 ),
-                BlocProvider<SortBloc>(
-                  create: (context) => SortBloc(),
+                BlocProvider<NoteSortBloc>(
+                  create: (context) => NoteSortBloc(),
                 ),
               ],
               child: SortDialog(),
@@ -50,8 +50,8 @@ class SortDialog extends StatefulWidget {
 }
 
 class _SortDialogState extends State<SortDialog>{
-  NotesBloc _notesBloc;
-  SortBloc _sortBloc;
+  NoteBloc _noteBloc;
+  NoteSortBloc _sortBloc;
 
   final _sortFieldsList = [
     SortField(SortFields.TITLE, "Title"),
@@ -67,10 +67,10 @@ class _SortDialogState extends State<SortDialog>{
   @override
   void initState() {
     super.initState();
-    _notesBloc = BlocProvider.of<NotesBloc>(context);
-    _sortBloc = BlocProvider.of<SortBloc>(context);
+    _noteBloc = BlocProvider.of<NoteBloc>(context);
+    _sortBloc = BlocProvider.of<NoteSortBloc>(context);
 
-    final currentState = _notesBloc.state;
+    final currentState = _noteBloc.state;
     if(currentState is NotesLoadSuccess){
       _sortBloc.add(SortUpdated(currentState.sortField, currentState.sortDirection));
     }
@@ -79,7 +79,7 @@ class _SortDialogState extends State<SortDialog>{
   @override
   Widget build(BuildContext context){
 
-    return BlocBuilder<SortBloc, SortState>(
+    return BlocBuilder<NoteSortBloc, NoteSortState>(
         builder: (context, state) {
           return new AlertDialog(
             title: Text('Sort by'),
@@ -87,7 +87,7 @@ class _SortDialogState extends State<SortDialog>{
               FlatButton(
                 child: Text('Done'),
                 onPressed: () {
-                  _notesBloc.add(UpdateSortOrder(state.tempSortField, state.tempSortDirection));
+                  _noteBloc.add(UpdateSortFilter(state.tempSortField, state.tempSortDirection));
                   Navigator.pop(context);
                 },
                 textColor: ColorsPalette.greenGrass,
@@ -112,7 +112,7 @@ class _SortDialogState extends State<SortDialog>{
     );
   }
 
-  Widget _sortOptions(SortState state) => new Column(
+  Widget _sortOptions(NoteSortState state) => new Column(
     children:
     _sortFieldsList.map((SortField option) => RadioListTile(
       groupValue: state.tempSortField,
@@ -125,7 +125,7 @@ class _SortDialogState extends State<SortDialog>{
     //]
   );
 
-  Widget _orderOptions(SortState state) => new Column(
+  Widget _orderOptions(NoteSortState state) => new Column(
     children:
     _sortDirectionsLst.map((SortDirection option) => RadioListTile(
       groupValue: state.tempSortDirection,

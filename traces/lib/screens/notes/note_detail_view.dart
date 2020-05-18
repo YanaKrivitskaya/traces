@@ -1,16 +1,16 @@
 
 import 'package:flutter/material.dart';
-import 'package:traces/screens/notes/details_bloc/bloc.dart';
+import 'package:traces/colorsPalette.dart';
+import 'package:traces/screens/notes/bloc/note_details_bloc/bloc.dart';
+import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
 import 'package:traces/screens/notes/note_delete_alert.dart';
 import 'package:traces/screens/notes/note.dart';
-import 'package:traces/screens/notes/notes_bloc/bloc.dart';
-import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
-import 'package:traces/screens/notes/tags/bloc/bloc.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/tag.dart';
 import 'package:traces/screens/notes/tags_add_dialog.dart';
-import '../../colorsPalette.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/note_bloc/bloc.dart';
 
 class NoteDetailsView extends StatefulWidget{
   NoteDetailsView({Key key}) : super(key: key);
@@ -28,35 +28,29 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
 
   Note _note = Note('');
   List<Tag> _noteTags = new List<Tag>();
-  List<Tag> _selectedTags = new List<Tag>();
   bool _isEditMode = false;
-
-  List<Tag> _allTags;
 
   @override
   void initState() {
     super.initState();
     _titleController = new TextEditingController(text: _note.title);
     _textController = new TextEditingController(text: _note.text);
-    //_tagController = new TextEditingController();
-
-    _allTags = BlocProvider.of<TagBloc>(context).state.tags;
   }
 
   @override
   void dispose(){
     _titleController.dispose();
     _textController.dispose();
-    _selectedTags.clear();
+    //_selectedTags.clear();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context){
 
-    return BlocListener<DetailsBloc, DetailsState>(
+    return BlocListener<NoteDetailsBloc, NoteDetailsState>(
       listener: (context, state){},
-      child: BlocBuilder<DetailsBloc, DetailsState>(builder: (context, state){
+      child: BlocBuilder<NoteDetailsBloc, NoteDetailsState>(builder: (context, state){
         if(state is ViewDetailsState){
           _note = state.note;
           _noteTags = state.noteTags;
@@ -83,9 +77,9 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
             backgroundColor: ColorsPalette.greenGrass,
           ),
           body: Container(
-             child: state is LoadingDetailsState
-                ? Center(child: CircularProgressIndicator())
-                : _noteView(_noteTags)
+              child: state is LoadingDetailsState
+                  ? Center(child: CircularProgressIndicator())
+                  :_noteView(_noteTags)
           ),
           backgroundColor: Colors.white,
         );
@@ -100,8 +94,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           children: tags.map((tag) => Padding(
               padding: EdgeInsets.all(3.0),
               child: Text("#"+tag.name, style: TextStyle(color: ColorsPalette.greenGrass, fontSize: 14.0),)
-          ))
-              .toList(),
+          )).toList(),
         ));
   }
 
@@ -112,25 +105,22 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           barrierDismissible: false, context: context, builder: (_) =>
           MultiBlocProvider(
             providers: [
-              BlocProvider<TagBloc>(
-                create: (context) => TagBloc(notesRepository: FirebaseNotesRepository()
-                )..add(GetTags()),
+              BlocProvider.value(
+                value: context.bloc<TagFilterBloc>(),
               ),
               BlocProvider.value(
-                value: context.bloc<DetailsBloc>(),
+                value: context.bloc<NoteDetailsBloc>(),
               ),
             ],
             child:  TagsAddDialog(),
-          )
-      );
-    },
+          ));},
   );
 
-  Widget _editAction(DetailsState state) => new IconButton(
+  Widget _editAction(NoteDetailsState state) => new IconButton(
     icon: Icon(Icons.edit),
     onPressed: () {
       if(state is ViewDetailsState){
-        context.bloc<DetailsBloc>().add(EditMode(state.note));
+        context.bloc<NoteDetailsBloc>().add(EditModeClicked(state.note));
       }
     },
   );
@@ -139,75 +129,64 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     icon: Icon(Icons.save),
     onPressed: () {
       Note noteToSave = new Note(_textController.text, title: _titleController.text, id: note.id, dateCreated: note.dateCreated, tagIds: note.tagIds);
-      context.bloc<DetailsBloc>().add(SaveNote(noteToSave));
+      context.bloc<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
     },
   );
 
   Widget _noteView(List<Tag> tags){
     return Container(
-      child: _isEditMode
-          ? _noteCardEdit(tags)
-          : _noteCardView(tags)
+        padding: EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 15),
+        margin: EdgeInsets.all(5),
+        color: Colors.white,
+        child: Container(
+            child: SingleChildScrollView(
+                child: _isEditMode
+                    ? _noteCardEdit(tags)
+                    : _noteCardView(tags)
+            )
+        )
     );
   }
 
-  Widget _noteCardView(List<Tag> tags) => new Container(
-    padding: EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 15),
-    margin: EdgeInsets.all(5),
-    color: Colors.white,
-    child: Container(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}',
-                style: new TextStyle(fontSize: 12.0
-                )),
-            _noteTags.length > 1 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
-            _getTags(tags),
-            Divider(color: ColorsPalette.nycTaxi),
-            Text('${_note.text}', style: new TextStyle(fontSize: 16),),
-          ],
-        )
-      )
-    )
+  Widget _noteCardView(List<Tag> tags) => new Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}',
+          style: new TextStyle(fontSize: 12.0
+          )),
+      _noteTags.length > 1 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
+      _getTags(tags),
+      Divider(color: ColorsPalette.nycTaxi),
+      Text('${_note.text}', style: new TextStyle(fontSize: 16),),
+    ],
   );
 
-  Widget _noteCardEdit(List<Tag> tags) => new Container(
-      padding: EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 15),
-      margin: EdgeInsets.all(5),
-      color: Colors.white,
-      child: Container(
-          child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Title',
-                         border: InputBorder.none
-                      ),
-                      style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      controller: _titleController,
-                      keyboardType: TextInputType.text,
-                      autofocus: true,
-                  ),
-                  _noteTags.length > 0 ? _getTags(tags) : Container(),
-                  Divider(color: ColorsPalette.nycTaxi),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Note text comes here',
-                       border: InputBorder.none
-                    ),
-                    controller: _textController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                  )
-                ],
-              )
-          )
+  Widget _noteCardEdit(List<Tag> tags) => new Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: <Widget>[
+      TextFormField(
+        decoration: const InputDecoration(
+            labelText: 'Title',
+            border: InputBorder.none
+        ),
+        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        controller: _titleController,
+        keyboardType: TextInputType.text,
+        autofocus: true,
+      ),
+      _noteTags.length > 0 ? _getTags(tags) : Container(),
+      Divider(color: ColorsPalette.nycTaxi),
+      TextFormField(
+        decoration: const InputDecoration(
+            labelText: 'Note text comes here',
+            border: InputBorder.none
+        ),
+        controller: _textController,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
       )
+    ],
   );
 
   Widget _deleteAction(Note note, BuildContext context) => new IconButton(
@@ -217,13 +196,13 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         context: context,
         barrierDismissible: false, // user must tap button!
         builder: (_) =>
-            BlocProvider<NotesBloc>(
-              create: (context) => NotesBloc(notesRepository: FirebaseNotesRepository()),
-              child: NoteDeleteAlert(note: note,
-                  callback: (val) =>
-                    val == 'Delete' ? Navigator.of(context).pop() : ''
-                  ),
+          BlocProvider.value(
+            value: context.bloc<NoteBloc>(),
+            child: NoteDeleteAlert(note: note,
+                callback: (val) =>
+                val == 'Delete' ? Navigator.of(context).pop() : ''
             ),
+          ),
       );
     },
   );

@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/tag.dart';
 
 @immutable
 abstract class TagEvent extends Equatable{
@@ -49,6 +49,15 @@ class UpdateTagChecked extends TagEvent {
   List<Object> get props => [tag];
 }
 
+class TagFilterChecked extends TagEvent {
+  final Tag tag;
+
+  const TagFilterChecked(this.tag);
+
+  @override
+  List<Object> get props => [tag];
+}
+
 class AllTagsChecked extends TagEvent {
   final bool checked;
 
@@ -71,11 +80,12 @@ class UpdateTagsList extends TagEvent {
   final List<Tag> tags;
   final List<Tag> filteredTags;
   final bool noTags;
+  final List<Tag> selectedTags;
 
-  const UpdateTagsList(this.tags, this.noTags, this.filteredTags);
+  const UpdateTagsList(this.tags, this.noTags, this.filteredTags, this.selectedTags);
 
   @override
-  List<Object> get props => [tags, noTags, filteredTags];
+  List<Object> get props => [tags, noTags, filteredTags, selectedTags];
 }
 
 class TagChanged extends TagEvent{
