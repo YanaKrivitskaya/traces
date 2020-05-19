@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
 import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
 
 import 'package:meta/meta.dart';
@@ -55,7 +56,16 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
+    List<String> noteTags = event.note.tagIds;
     _notesRepository.deleteNote(event.note);
+
+    if(noteTags.isNotEmpty){
+      noteTags.forEach((tagId) async {
+        Tag tag = await _notesRepository.getTagById(tagId);
+        Tag updatedTag = new Tag(tag.name, id: tag.id, usage: tag.usage -1);
+        _notesRepository.updateTag(updatedTag);
+      });
+    }
   }
 
   Stream<NoteState> _mapUpdateNotesListToState(UpdateNotesList event) async* {
