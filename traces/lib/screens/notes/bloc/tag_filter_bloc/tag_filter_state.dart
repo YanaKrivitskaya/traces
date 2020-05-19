@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/tag.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 import 'package:meta/meta.dart';
 
 class TagFilterState{

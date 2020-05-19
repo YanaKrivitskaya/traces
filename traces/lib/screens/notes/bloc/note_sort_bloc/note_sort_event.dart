@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/model/note.dart';
 
 abstract class NoteSortEvent extends Equatable {
   const NoteSortEvent();
@@ -16,17 +16,9 @@ class SortUpdated extends NoteSortEvent{
 
   @override
   List<Object> get props => [sortField, sortDirection];
-
-  /*@override
-  String toString() => '''
-  SortUpdated {
-    sortField: $sortField,
-    sortDirection: $sortDirection
-  }''';*/
 }
 
 class SortTempFieldUpdated extends NoteSortEvent{
-
   final SortFields tempSortField;
 
   SortTempFieldUpdated(this.tempSortField);
@@ -34,16 +26,9 @@ class SortTempFieldUpdated extends NoteSortEvent{
   @override
   List<Object> get props => [tempSortField];
 
-  /*@override
-  String toString() => '''
-  SortUpdated {
-    tempSortField: $tempSortField
-
-  }''';*/
 }
 
 class SortTempDirectionUpdated extends NoteSortEvent{
-
   final SortDirections tempSortDirection;
 
   SortTempDirectionUpdated(this.tempSortDirection);
@@ -51,9 +36,4 @@ class SortTempDirectionUpdated extends NoteSortEvent{
   @override
   List<Object> get props => [tempSortDirection];
 
-  /*@override
-  String toString() => '''
-  SortUpdated {
-    tempSortDirection: $tempSortDirection
-  }''';*/
 }

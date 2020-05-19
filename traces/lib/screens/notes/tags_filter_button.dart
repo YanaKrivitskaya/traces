@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
-import 'package:traces/screens/notes/tag.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 
 import 'bloc/note_bloc/bloc.dart';
 
@@ -17,7 +17,7 @@ class TagsFilterButton extends StatelessWidget{
               MultiBlocProvider(
                 providers: [
                   BlocProvider.value(
-                      value: context.bloc<TagFilterBloc>()
+                      value: context.bloc<TagFilterBloc>()..add(GetTags())
                   ),
                   BlocProvider.value(
                     value: context.bloc<NoteBloc>(),
@@ -78,10 +78,11 @@ class _TagsDialogState extends State<TagsDialog>{
             //check selected
             else if (_tags != null && !_selectAll.isChecked) {
               if (_selectedTags != null) {
-                _tags.forEach((t) {
-                  _selectedTags.contains(t) ?
-                  t.isChecked = true : t.isChecked = false;
-                });
+                for(var i=0; i< _tags.length; i++){
+                  if(_selectedTags.where((tag) => tag.id == _tags[i].id).toList().length > 0){
+                    _tags[i].isChecked = true;
+                  }else _tags[i].isChecked = false;
+                }
               } else {
                 _tags.forEach((t) => t.isChecked = true);
               }
@@ -94,18 +95,11 @@ class _TagsDialogState extends State<TagsDialog>{
               FlatButton(
                 child: Text('Done'),
                 onPressed: () {
-                  //context.bloc<TagBloc>().add(UpdateTagsList(_tags, _noTags.isChecked, null, null));
                   context.bloc<NoteBloc>().add(SelectedTagsUpdated());
                   Navigator.pop(context);
                 },
                 textColor: ColorsPalette.greenGrass,
               ),
-              /*FlatButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.pop(context);},
-                textColor: ColorsPalette.greenGrass,
-              ),*/
             ],
             content: Container(
               child: Column(

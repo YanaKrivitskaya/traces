@@ -1,10 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/bloc/note_details_bloc/bloc.dart';
+import 'package:traces/screens/notes/bloc/tag_add_bloc/bloc.dart';
+import 'package:traces/screens/notes/model/note.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'tag.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 
 class TagsAddDialog extends StatefulWidget{
 
@@ -28,7 +29,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
     _tagController = new TextEditingController(text: '');
     _tagController.addListener(_onTagChanged);
 
-    //_note = BlocProvider.of<DetailsBloc>(context).state.note;
+    _note = BlocProvider.of<NoteDetailsBloc>(context).state.note;
   }
 
   @override
@@ -40,12 +41,13 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
   @override
   Widget build(BuildContext context) {
 
-    /*return BlocBuilder<TagBloc, TagState>(
+    return BlocBuilder<TagAddBloc, TagAddState>(
         builder: (context, state) {
-          if(state is TagsLoadSuccess){
+
+          if(state.isSuccess){
             _tags = state.filteredTags;
             if(_tags != null){
-              if(_note.tagIds != null){
+              if(_note.tagIds != null && _note.tagIds.isNotEmpty){
                 _tags.forEach((t){
                   _note.tagIds.contains(t.id) ? t.isChecked = true : t.isChecked = false;
                 });
@@ -53,35 +55,36 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
                 _tags.forEach((t) => t.isChecked = false);
               }
             }
-
-            return new AlertDialog(
-                title: Text('Select Tags'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Done'),
-                    onPressed: () {
-                      //context.bloc<DetailsBloc>().add(GetNoteDetails(_note.id));
-                      Navigator.pop(context);
-                    },
-                    textColor: ColorsPalette.greenGrass,
-                  ),
-                ],
-                content: Container(
-                  child: Column(
-                    children: <Widget>[
-                      _addSearchTagField(),
-                      Divider(color: ColorsPalette.nycTaxi),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(children: <Widget>[
-                            _tags.length > 0 ? _tagOptions() : Text("No tags found")
-                          ],),),
-                      )],),)
-            );
-          }else{
-            return Center(child: CircularProgressIndicator());
           }
-        });*/
+
+          return new AlertDialog(
+              title: Text('Select Tags'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Done'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  textColor: ColorsPalette.greenGrass,
+                ),
+              ],
+              content: Container(
+                child: Column(
+                  children: <Widget>[
+                    _addSearchTagField(),
+                    Divider(color: ColorsPalette.nycTaxi),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(children: <Widget>[
+                          state.isSuccess && _tags.length > 0
+                              ? _tagOptions()
+                              : state.isLoading
+                                ? Center(child: CircularProgressIndicator(),)
+                                : Text("No tags found")
+                        ],),),
+                    )],),)
+          );
+        });
   }
   
   Widget _addSearchTagField() => new Row(
@@ -101,7 +104,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
         onPressed: (){
           if(_tagController.text != ''){
             Tag newTag = Tag(_tagController.text);
-            //context.bloc<TagBloc>().add(AddTag(newTag));
+            context.bloc<TagAddBloc>().add(AddTag(newTag));
             FocusScope.of(context).requestFocus(FocusNode());
           }
         },
@@ -110,7 +113,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
   );
 
   void _onTagChanged() {
-    //context.bloc<TagBloc>().add(TagChanged(tagName: _tagController.text));
+    context.bloc<TagAddBloc>().add(TagChanged(tagName: _tagController.text));
   }
 
   Widget _tagOptions() => new Column(
@@ -124,9 +127,8 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
 
           checked ? _note.tagIds.add(tag.id) : _note.tagIds.remove(tag.id);
 
-          //context.bloc<DetailsBloc>().add(SaveNote(_note));
-          //context.bloc<TagBloc>().add(UpdateTag(updatedTag));
-          //context.bloc<TagBloc>().add(UpdateTagChecked(updatedTag));
+          context.bloc<NoteDetailsBloc>().add(SaveNoteClicked(_note));
+          context.bloc<TagAddBloc>().add(UpdateTag(updatedTag));
         },
       )).toList()
   );

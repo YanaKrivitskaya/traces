@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:traces/constants.dart';
 import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
-import 'package:traces/screens/notes/tag.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/screens/notes/note_delete_alert.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/model/note.dart';
 import 'bloc/note_bloc/bloc.dart';
 
 class NotesView extends StatefulWidget{
@@ -119,10 +119,15 @@ class _NotesViewState extends State<NotesView> {
               child: Text("#"+tag.name, style: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: ColorsPalette.greenGrass),
                   fontSize: 15.0,
-                  fontWeight: (selectedTags != null && selectedTags.contains(tag) && !allTagsSelected) ? FontWeight.bold : FontWeight.normal))
+                  fontWeight: _isTagSelected(tag, allTagsSelected, selectedTags) ? FontWeight.bold : FontWeight.normal))
           ))
               .toList(),
         ));
+  }
+
+  bool _isTagSelected(Tag tag, bool allTagsSelected, List<Tag> selectedTags){
+    if(selectedTags != null && selectedTags.any((t) => t.id == tag.id) && !allTagsSelected) return true;
+    return false;
   }
 
   List<Note> _sortNotes(List<Note> notes, SortFields sortOption){
@@ -171,14 +176,10 @@ class _NotesViewState extends State<NotesView> {
           context: context,
           barrierDismissible: false, // user must tap button!
           builder: (_) =>
-              /*BlocProvider<NoteBloc>(
-                create: (context) => NoteBloc(notesRepository: FirebaseNotesRepository()),
-                child: NoteDeleteAlert(note: note, callback: (val) =>''),
-              ),*/
-          BlocProvider.value(
-            value: context.bloc<NoteBloc>(),
-            child: NoteDeleteAlert(note: note, callback: (val) =>''),
-          ),
+            BlocProvider.value(
+              value: context.bloc<NoteBloc>(),
+              child: NoteDeleteAlert(note: note, callback: (val) =>''),
+            ),
         );
       }},);
 

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/model/note.dart';
 
 abstract class NoteState extends Equatable {
   const NoteState();

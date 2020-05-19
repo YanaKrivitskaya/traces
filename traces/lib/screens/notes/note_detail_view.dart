@@ -2,10 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:traces/screens/notes/bloc/note_details_bloc/bloc.dart';
-import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
+import 'package:traces/screens/notes/bloc/tag_add_bloc/bloc.dart';
 import 'package:traces/screens/notes/note_delete_alert.dart';
-import 'package:traces/screens/notes/note.dart';
-import 'package:traces/screens/notes/tag.dart';
+import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/screens/notes/tags_add_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +42,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   void dispose(){
     _titleController.dispose();
     _textController.dispose();
-    //_selectedTags.clear();
+    _noteTags.clear();
     super.dispose();
   }
 
@@ -106,10 +107,11 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           MultiBlocProvider(
             providers: [
               BlocProvider.value(
-                value: context.bloc<TagFilterBloc>(),
-              ),
-              BlocProvider.value(
                 value: context.bloc<NoteDetailsBloc>(),
+              ),
+              BlocProvider<TagAddBloc>(
+                  create: (context) => TagAddBloc(notesRepository: FirebaseNotesRepository()
+                )..add(GetTags()),
               ),
             ],
             child:  TagsAddDialog(),

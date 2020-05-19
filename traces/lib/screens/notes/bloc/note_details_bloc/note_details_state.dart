@@ -1,21 +1,25 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/note.dart';
-import 'package:traces/screens/notes/tag.dart';
+import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 
 abstract class NoteDetailsState extends Equatable {
-  const NoteDetailsState();
+  final Note note;
+
+  const NoteDetailsState(this.note);
 
   @override
   List<Object> get props => [];
 }
 
-class LoadingDetailsState extends NoteDetailsState {}
+class LoadingDetailsState extends NoteDetailsState {
+  LoadingDetailsState(Note note) : super(note);
+}
 
 class ViewDetailsState extends NoteDetailsState {
   final Note note;
   final List<Tag> noteTags;
 
-  const ViewDetailsState(this.note, this.noteTags);
+  const ViewDetailsState(this.note, this.noteTags) : super(note);
 
   @override
   List<Object> get props => [note, noteTags];
@@ -24,31 +28,12 @@ class ViewDetailsState extends NoteDetailsState {
 class EditDetailsState extends NoteDetailsState {
   final Note note;
 
-  const EditDetailsState(this.note);
-
-
-  /*EditDetailsState copyWith({
-    bool addingTagsMode,
-    List<Tag> selectedTags
-  }){
-    return EditDetailsState(
-        this.note,
-        selectedTags: selectedTags ?? this.selectedTags
-    );
-  }
-
-  EditDetailsState update({
-    bool addingTagsMode,
-    List<Tag> selectedTags
-  }){
-    return EditDetailsState(
-        this.note,
-        selectedTags: selectedTags
-    );
-  }*/
+  const EditDetailsState(this.note) : super(note);
 
   @override
   List<Object> get props => [note];
 }
 
-class InitialNoteDetailsState extends NoteDetailsState {}
+class InitialNoteDetailsState extends NoteDetailsState {
+  InitialNoteDetailsState(Note note) : super(note);
+}

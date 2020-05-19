@@ -4,9 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
 import 'package:traces/screens/notes/bloc/note_sort_bloc/bloc.dart';
-import 'package:traces/screens/notes/note.dart';
-
-import 'bloc/note_bloc/bloc.dart';
+import 'package:traces/screens/notes/model/note.dart';
 
 class SortField{
   final SortFields _key;
@@ -81,6 +79,8 @@ class _SortDialogState extends State<SortDialog>{
 
     return BlocBuilder<NoteSortBloc, NoteSortState>(
         builder: (context, state) {
+          print(state.tempSortDirection);
+          print(state.tempSortField);
           return new AlertDialog(
             title: Text('Sort by'),
             actions: <Widget>[
@@ -92,11 +92,11 @@ class _SortDialogState extends State<SortDialog>{
                 },
                 textColor: ColorsPalette.greenGrass,
               ),
-              FlatButton(
+              /*FlatButton(
                 child: Text('Cancel'),
                 onPressed: () {Navigator.pop(context);},
                 textColor: ColorsPalette.greenGrass,
-              ),
+              ),*/
             ],
             content: SingleChildScrollView(
               child: Column(

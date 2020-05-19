@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
-import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/model/note.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
 
 import 'package:meta/meta.dart';
@@ -66,13 +66,11 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
     final currentState = state;
     if(currentState is NotesLoadSuccess){
-      //final notes = currentState.notes;
 
       yield NotesLoadInProgress();
 
       add(UpdateNotesList(currentState.notes, currentState.sortField, currentState.sortDirection));
     }
-    //yield NotesLoadSuccess(state.sortField, state.sortDirection, state.notes);
   }
 
   @override

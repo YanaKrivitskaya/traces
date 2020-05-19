@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/tag.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -35,18 +35,33 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
   }
 
   Stream<TagFilterState> _mapUpdateTagsListToState(UpdateTagsList event) async* {
+    yield TagFilterState.loading();
+
     List<Tag> selectedTags= new List<Tag>();
-    selectedTags.addAll(event.allTags);
-    yield TagFilterState.success(allTags: event.allTags, selectedTags: selectedTags, allTagsChecked: true, noTagsChecked: true, allUnchecked: false);
+    if(event.selectedTags.isEmpty){
+      selectedTags.addAll(event.allTags);
+    }else{
+      selectedTags.addAll(event.selectedTags);
+    }
+
+    yield TagFilterState.success(allTags: event.allTags, selectedTags: selectedTags,
+        allTagsChecked: event.allTagsChecked, noTagsChecked: event.noTagsChecked, allUnchecked: false);
   }
 
   Stream<TagFilterState> _mapGetTagsToState() async* {
     _notesSubscription?.cancel();
 
-    yield TagFilterState.loading();
-
     _notesSubscription = _notesRepository.tags().listen(
-          (tags) => add(UpdateTagsList(tags, tags, true, true)),
+          (tags) {
+            List<Tag> selectedTags = new List<Tag>();
+            bool allTagsChecked = !state.allTagsChecked ? false : true;
+            bool noTagsChecked = !state.noTagsChecked ? false : true;
+
+            if(state.selectedTags != null){
+              selectedTags = state.selectedTags;
+            }
+            add(UpdateTagsList(tags, selectedTags: selectedTags, allTagsChecked: allTagsChecked, noTagsChecked: noTagsChecked));
+          }
     );
   }
 
@@ -82,8 +97,11 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
 
   Stream<TagFilterState> _mapNoTagsCheckedToState(NoTagsChecked event) async* {
     yield state.update(isLoading: true);
+
     bool allChecked = state.allTagsChecked;
+
     event.checked && state.allTags.length == state.selectedTags.length ? allChecked = true : allChecked = false;
-    yield state.update(noTagsChecked: event.checked, allTagsChecked: allChecked);
+
+    yield state.update(noTagsChecked: event.checked, allTagsChecked: allChecked, allUnChecked: false);
   }
 }

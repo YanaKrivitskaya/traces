@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/model/note.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/tag.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -14,7 +14,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
         _notesRepository = notesRepository;
 
   @override
-  NoteDetailsState get initialState => InitialNoteDetailsState();
+  NoteDetailsState get initialState => InitialNoteDetailsState(null);
 
   @override
   Stream<NoteDetailsState> mapEventToState(
@@ -34,7 +34,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
   Stream<NoteDetailsState> _mapGetNoteDetailsToState(GetNoteDetails event) async*{
     Note note = await _notesRepository.getNoteById(event.noteId);
 
-    yield LoadingDetailsState();
+    yield LoadingDetailsState(null);
 
     List<Tag> noteTags = new List<Tag>();
 
@@ -57,7 +57,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
     }else{
       note = await _notesRepository.addNewNote(event.note);
     }
-    yield LoadingDetailsState();
+    yield LoadingDetailsState(null);
 
     if(note.tagIds != null && note.tagIds.isNotEmpty){
       for(var i = 0; i< note.tagIds.length; i++){

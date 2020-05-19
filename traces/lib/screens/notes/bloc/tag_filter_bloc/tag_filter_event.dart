@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:traces/screens/notes/tag.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 
 abstract class TagFilterEvent extends Equatable {
   const TagFilterEvent();
@@ -45,7 +44,7 @@ class UpdateTagsList extends TagFilterEvent {
   final bool noTagsChecked;
   final bool allTagsChecked;
 
-  const UpdateTagsList(this.allTags, this.selectedTags, this.noTagsChecked, this.allTagsChecked);
+  const UpdateTagsList(this.allTags, {this.selectedTags, this.noTagsChecked, this.allTagsChecked});
 
   @override
   List<Object> get props => [allTags, selectedTags, noTagsChecked, allTagsChecked];
