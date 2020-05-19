@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/notes/notes_bloc/bloc.dart';
-import 'package:traces/screens/notes/tags/bloc/bloc.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
+import 'package:traces/screens/notes/model/tag.dart';
+
+import 'bloc/note_bloc/bloc.dart';
 
 class TagsFilterButton extends StatelessWidget{
   @override
@@ -16,10 +17,10 @@ class TagsFilterButton extends StatelessWidget{
               MultiBlocProvider(
                 providers: [
                   BlocProvider.value(
-                      value: context.bloc<TagBloc>()
+                      value: context.bloc<TagFilterBloc>()..add(GetTags())
                   ),
                   BlocProvider.value(
-                    value: context.bloc<NotesBloc>(),
+                    value: context.bloc<NoteBloc>(),
                   ),
                 ],
                 child:  TagsDialog(),
@@ -41,24 +42,52 @@ class TagsDialog extends StatefulWidget{
 class _TagsDialogState extends State<TagsDialog>{
 
   List<Tag> _tags;
+  List<Tag> _selectedTags;
   Tag _selectAll = Tag("All", isChecked: true);
   Tag _noTags = Tag("No tags", isChecked: true);
 
   @override
   void initState() {
     super.initState();
-    _tags = BlocProvider.of<TagBloc>(context).state.tags;
   }
 
   @override
   Widget build(BuildContext context){
 
-    return BlocBuilder<TagBloc, TagState>(
+    return BlocBuilder<TagFilterBloc, TagFilterState>(
         builder: (context, state) {
-          if(state is TagsLoadSuccess){
-            _tags = state.tags;
-            _tags.any((t) => t.isChecked == false) || !state.noTags ? _selectAll.isChecked = false : _selectAll.isChecked=true;
-            _noTags.isChecked = state.noTags;
+          if(state.isSuccess){
+
+            _tags = state.allTags;
+            _selectedTags = state.selectedTags ?? state.allTags;
+            _noTags.isChecked = state.noTagsChecked;
+            _selectAll.isChecked = state.allTagsChecked;
+
+            // uncheck all
+            if(state.allUnChecked){
+              _tags.forEach((t) => t.isChecked = false);
+              _noTags.isChecked = false;
+            }
+
+            //check all
+            else if(_selectAll.isChecked){
+              _tags.forEach((t) => t.isChecked = true);
+              _noTags.isChecked = true;
+            }
+
+            //check selected
+            else if (_tags != null && !_selectAll.isChecked) {
+              if (_selectedTags != null) {
+                for(var i=0; i< _tags.length; i++){
+                  if(_selectedTags.where((tag) => tag.id == _tags[i].id).toList().length > 0){
+                    _tags[i].isChecked = true;
+                  }else _tags[i].isChecked = false;
+                }
+              } else {
+                _tags.forEach((t) => t.isChecked = true);
+              }
+            }
+
           }
           return new AlertDialog(
             title: Text('Tags'),
@@ -66,16 +95,9 @@ class _TagsDialogState extends State<TagsDialog>{
               FlatButton(
                 child: Text('Done'),
                 onPressed: () {
-                  context.bloc<TagBloc>().add(UpdateTagsList(_tags, _noTags.isChecked, null));
-                  context.bloc<NotesBloc>().add(UpdateTagsFilter(_tags.where((t) => t.isChecked).toList(), _selectAll.isChecked, _noTags.isChecked));
+                  context.bloc<NoteBloc>().add(SelectedTagsUpdated());
                   Navigator.pop(context);
                 },
-                textColor: ColorsPalette.greenGrass,
-              ),
-              FlatButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.pop(context);},
                 textColor: ColorsPalette.greenGrass,
               ),
             ],
@@ -99,8 +121,7 @@ class _TagsDialogState extends State<TagsDialog>{
       title: Text(tag.name + " (" + tag.usage.toString() + ")"),
       value: tag.isChecked,
       onChanged: (val) {
-        tag.isChecked = val;
-        context.bloc<TagBloc>().add(UpdateTagChecked(tag));
+        context.bloc<TagFilterBloc>().add(TagChecked(tag, val));
       },
     )).toList()
   );
@@ -112,7 +133,7 @@ class _TagsDialogState extends State<TagsDialog>{
           value: _selectAll.isChecked,
           onChanged: (val) {
             _selectAll.isChecked = val;
-            context.bloc<TagBloc>().add(AllTagsChecked(val));
+            context.bloc<TagFilterBloc>().add(AllTagsChecked(val));
           },
         )
       ],
@@ -125,7 +146,7 @@ class _TagsDialogState extends State<TagsDialog>{
         value: _noTags.isChecked,
         onChanged: (val) {
           _noTags.isChecked = val;
-          context.bloc<TagBloc>().add(NoTagsChecked(val));
+          context.bloc<TagFilterBloc>().add(NoTagsChecked(val));
         },
       )
     ],

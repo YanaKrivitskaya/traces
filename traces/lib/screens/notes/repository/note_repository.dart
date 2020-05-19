@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:traces/screens/notes/tags/tag.dart';
-import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/screens/notes/model/note.dart';
 
 abstract class NoteRepository {
   Future<Note> addNewNote(Note note);

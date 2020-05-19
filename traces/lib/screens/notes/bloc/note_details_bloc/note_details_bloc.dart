@@ -1,39 +1,37 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/model/note.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 import './bloc.dart';
+import 'package:meta/meta.dart';
 
-class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
+class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
   final NoteRepository _notesRepository;
 
-  DetailsBloc({@required NoteRepository notesRepository})
+  NoteDetailsBloc({@required NoteRepository notesRepository})
       : assert(notesRepository != null),
         _notesRepository = notesRepository;
 
   @override
-  DetailsState get initialState => InitialDetailsState(null);
+  NoteDetailsState get initialState => InitialNoteDetailsState(null);
 
   @override
-  Stream<DetailsState> mapEventToState(
-    DetailsEvent event,
+  Stream<NoteDetailsState> mapEventToState(
+    NoteDetailsEvent event,
   ) async* {
     if(event is GetNoteDetails){
       yield* _mapGetNoteDetailsToState(event);
     }else if(event is NewNoteMode){
       yield* _mapNewNoteModeToState(event);
-    }else if(event is EditMode){
+    }else if(event is EditModeClicked){
       yield* _mapEditModeToState(event);
-    }else if(event is SaveNote){
+    }else if(event is SaveNoteClicked){
       yield* _mapSaveNoteToState(event);
-    }else if(event is AddTagsClicked){
-      yield* _mapAddTagsClickedToState(event);
     }
   }
 
-  Stream<DetailsState> _mapGetNoteDetailsToState(GetNoteDetails event) async*{
+  Stream<NoteDetailsState> _mapGetNoteDetailsToState(GetNoteDetails event) async*{
     Note note = await _notesRepository.getNoteById(event.noteId);
 
     yield LoadingDetailsState(null);
@@ -49,28 +47,7 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     yield ViewDetailsState(note, noteTags);
   }
 
-  Stream<DetailsState> _mapNewNoteModeToState(NewNoteMode event) async*{
-    yield EditDetailsState(new Note(''));
-  }
-
-  Stream<DetailsState> _mapEditModeToState(EditMode event) async*{
-    yield EditDetailsState(event.note);
-  }
-
-  Stream<DetailsState> _mapAddTagsClickedToState(AddTagsClicked event) async*{
-
-    final currentState = state;
-
-    if(currentState is EditDetailsState){
-      yield currentState.update(
-          addingTagsMode: true
-      );
-    }/*else{
-      yield EditDetailsState(new Note(''), false);
-    }*///TODO: add yield error
-  }
-
-  Stream<DetailsState> _mapSaveNoteToState(SaveNote event) async*{
+  Stream<NoteDetailsState> _mapSaveNoteToState(SaveNoteClicked event) async*{
     Note note;
 
     List<Tag> noteTags = new List<Tag>();
@@ -90,5 +67,13 @@ class DetailsBloc extends Bloc<DetailsEvent, DetailsState> {
     }
 
     yield ViewDetailsState(note, noteTags);
+  }
+
+  Stream<NoteDetailsState> _mapNewNoteModeToState(NewNoteMode event) async*{
+    yield EditDetailsState(new Note(''));
+  }
+
+  Stream<NoteDetailsState> _mapEditModeToState(EditModeClicked event) async*{
+    yield EditDetailsState(event.note);
   }
 }

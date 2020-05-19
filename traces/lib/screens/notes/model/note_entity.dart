@@ -26,11 +26,6 @@ class NoteEntity extends Equatable{
   @override
   List<Object> get props => [title, text, id, dateCreated, dateModified, tagIds];
 
-  /*@override
-  String toString(){
-    return "NoteEntity: {title: $title, text: $text, id: $id, dateCreated: $dateCreated, dateModified: $dateModified, tagIds: $tagIds}";
-  }*/
-
   static NoteEntity fromMap(Map<dynamic, dynamic> map, String documentId){
     return NoteEntity(
       map["title"] as String,

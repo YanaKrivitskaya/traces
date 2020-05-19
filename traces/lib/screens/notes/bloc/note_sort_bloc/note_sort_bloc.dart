@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:traces/screens/notes/note.dart';
 import './bloc.dart';
 
-class SortBloc extends Bloc<SortEvent, SortState> {
+class NoteSortBloc extends Bloc<NoteSortEvent, NoteSortState> {
   @override
-  SortState get initialState => InitialSortBlocState();
+  NoteSortState get initialState => InitialNoteSortState();
 
   @override
-  Stream<SortState> mapEventToState(
-    SortEvent event,
+  Stream<NoteSortState> mapEventToState(
+    NoteSortEvent event,
   ) async* {
     if( event is SortUpdated){
       yield*_mapSortUpdatedToState(event);
@@ -22,20 +21,28 @@ class SortBloc extends Bloc<SortEvent, SortState> {
     }
   }
 
-  Stream<SortState> _mapSortTempFieldUpdatedToState(SortTempFieldUpdated event) async*{
+  Stream<NoteSortState> _mapSortTempFieldUpdatedToState(SortTempFieldUpdated event) async*{
+    yield state.update(isLoading: true);
+
     yield state.update(
+        isLoading: false,
         tempSortField: event.tempSortField
     );
   }
 
-  Stream<SortState> _mapSortTempDirectionUpdatedToState(SortTempDirectionUpdated event) async*{
+  Stream<NoteSortState> _mapSortTempDirectionUpdatedToState(SortTempDirectionUpdated event) async*{
+    yield state.update(isLoading: true);
+
     yield state.update(
+        isLoading: false,
         tempSortDirection: event.tempSortDirection
     );
   }
 
-  Stream<SortState> _mapSortUpdatedToState(SortUpdated event) async*{
+  Stream<NoteSortState> _mapSortUpdatedToState(SortUpdated event) async*{
     yield state.update(
+        isLoading: false,
+        isSuccess: true,
         tempSortField: event.sortField,
         tempSortDirection: event.sortDirection
     );

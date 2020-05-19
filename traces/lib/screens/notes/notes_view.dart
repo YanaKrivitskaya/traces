@@ -3,15 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:traces/constants.dart';
-import 'package:traces/screens/notes/tags/bloc/bloc.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
+import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
+import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/screens/notes/note_delete_alert.dart';
-import 'package:traces/screens/notes/notes_bloc/bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/screens/notes/note.dart';
-import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
-
+import 'package:traces/screens/notes/model/note.dart';
+import 'bloc/note_bloc/bloc.dart';
 
 class NotesView extends StatefulWidget{
   NotesView();
@@ -19,52 +17,54 @@ class NotesView extends StatefulWidget{
 }
 
 class _NotesViewState extends State<NotesView> {
-  NotesBloc _notesBloc;
-  TagBloc _tagBloc;
+  TagFilterBloc _tagBloc;
 
   List<Tag> _tags;
+  bool _allTagsSelected;
+  bool _noTagsSelected;
+  List<Tag> _selectedTags;
 
   @override
   void initState() {
     super.initState();
-    _notesBloc = BlocProvider.of<NotesBloc>(context);
-    _tagBloc = BlocProvider.of<TagBloc>(context);
 
-    final currentState = _notesBloc.state;
-    final tagsState = _tagBloc.state;
+    _tagBloc = BlocProvider.of<TagFilterBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NotesBloc, NotesState>(
+    return BlocListener<NoteBloc, NoteState>(
         listener: (context, state) {},
-        child: BlocBuilder<NotesBloc, NotesState>(
+        child: BlocBuilder<NoteBloc, NoteState>(
             bloc: BlocProvider.of(context),
             builder: (context, state){
-              if(state is NotesEmpty || state is NotesLoadInProgress || _tagBloc.state is TagsLoadInProgress){
+              if(state is NotesLoadInProgress || _tagBloc.state.isLoading || state is NotesEmpty){
                 return Center(child: CircularProgressIndicator());
               }
-              if(state is NotesLoadSuccess && _tagBloc.state is TagsLoadSuccess){
+              if(state is NotesLoadSuccess && _tagBloc.state.isSuccess){
                 final notes = _sortNotes(state.notes, state.sortField);
-                _tags = _tagBloc.state.tags;
-                /*if(_tagBloc.state is TagsLoadSuccess){
-                  _tags = _tagBloc.state.tags;
-                }*/
-                debugPrint("notes: $notes");
+
+                _tags = _tagBloc.state.allTags;
+                _selectedTags = _tagBloc.state.selectedTags;
+                _allTagsSelected = _tagBloc.state.allTagsChecked;
+                _noTagsSelected = _tagBloc.state.noTagsChecked;
+
+                final filteredNotes = _filterNotes(notes, _selectedTags, _allTagsSelected, _noTagsSelected);
+
                 return Container(
                   padding: EdgeInsets.only(bottom: 65.0),
                   child: Container(
                     child: SingleChildScrollView(
                       child: Column(
-                        children: <Widget>[notes.length > 0 ?
+                        children: <Widget>[filteredNotes != null && filteredNotes.length > 0 ?
                         Container(
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: notes.length,
+                              itemCount: filteredNotes.length,
                               reverse: state.sortDirection == SortDirections.ASC ? true : false,
                               itemBuilder: (context, position){
-                                final note = notes[position];
+                                final note = filteredNotes[position];
                                 return Card(
                                   child: Column(
                                     children: <Widget>[
@@ -84,7 +84,7 @@ class _NotesViewState extends State<NotesView> {
                                       Container(
                                         padding: EdgeInsets.only(left: 10.0, right: 10.0),
                                         alignment: Alignment.centerLeft,
-                                        child: note.tagIds != null && _tags != null ? getChips(note, _tags, state.allTagsSelected): Container(),
+                                        child: note.tagIds != null && _tags != null ? getChips(note, _tags, _allTagsSelected, _selectedTags): Container(),
                                       )
                                     ],
                                   ),
@@ -109,7 +109,7 @@ class _NotesViewState extends State<NotesView> {
         ),);
   }
 
-  Widget getChips(Note note, List<Tag> tags, bool allTagsSelected) {
+  Widget getChips(Note note, List<Tag> tags, bool allTagsSelected, List<Tag> selectedTags) {
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -119,10 +119,15 @@ class _NotesViewState extends State<NotesView> {
               child: Text("#"+tag.name, style: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: ColorsPalette.greenGrass),
                   fontSize: 15.0,
-                  fontWeight: tag.isChecked && !allTagsSelected ? FontWeight.bold : FontWeight.normal))
+                  fontWeight: _isTagSelected(tag, allTagsSelected, selectedTags) ? FontWeight.bold : FontWeight.normal))
           ))
               .toList(),
         ));
+  }
+
+  bool _isTagSelected(Tag tag, bool allTagsSelected, List<Tag> selectedTags){
+    if(selectedTags != null && selectedTags.any((t) => t.id == tag.id) && !allTagsSelected) return true;
+    return false;
   }
 
   List<Note> _sortNotes(List<Note> notes, SortFields sortOption){
@@ -143,6 +148,23 @@ class _NotesViewState extends State<NotesView> {
     return notes;
   }
 
+  List<Note> _filterNotes(List<Note> notes, List<Tag> selectedTags, bool allTagsSelected, bool noTagsSelected){
+    List<Note> filteredNotes = new List<Note>();
+    if(allTagsSelected){
+      filteredNotes = notes;
+    }else{
+      if(noTagsSelected){
+        filteredNotes.addAll(notes.where((n) => n.tagIds.isEmpty).toList());
+      }
+      selectedTags.forEach((t){
+        notes.where((n) => n.tagIds.isNotEmpty && n.tagIds.contains(t.id)).forEach((n){
+          if(!filteredNotes.any((note) => note.id == n.id)) filteredNotes.add(n);
+        });
+      });
+    }
+    return filteredNotes;
+  }
+
   Widget _popupMenu(Note note, int position) => PopupMenuButton<int>(
     itemBuilder: (context) => [
       PopupMenuItem(
@@ -154,10 +176,10 @@ class _NotesViewState extends State<NotesView> {
           context: context,
           barrierDismissible: false, // user must tap button!
           builder: (_) =>
-              BlocProvider<NotesBloc>(
-                create: (context) => NotesBloc(notesRepository: FirebaseNotesRepository()),
-                child: NoteDeleteAlert(note: note, callback: (val) =>''),
-              ),
+            BlocProvider.value(
+              value: context.bloc<NoteBloc>(),
+              child: NoteDeleteAlert(note: note, callback: (val) =>''),
+            ),
         );
       }},);
 

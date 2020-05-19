@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:traces/auth/userRepository.dart';
-import 'package:traces/screens/notes/tags/tag.dart';
-import 'package:traces/screens/notes/tags/tag_entity.dart';
-import 'package:traces/screens/notes/note_entity.dart';
+import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/screens/notes/model/tag_entity.dart';
+import 'package:traces/screens/notes/model/note_entity.dart';
 import 'dart:async';
-import 'package:traces/screens/notes/note.dart';
+import 'package:traces/screens/notes/model/note.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
 
 class FirebaseNotesRepository extends NoteRepository{
