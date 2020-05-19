@@ -70,15 +70,19 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
     bool allChecked = state.allTagsChecked;
     bool allUnChecked = state.allUnChecked;
 
+    print(event.checked);
+
     if(event.checked){
       state.selectedTags.add(event.tag);
       state.selectedTags.length == state.allTags.length && state.noTagsChecked ? allChecked = true : allChecked = false;
       allUnChecked = false;
     }else{
-      state.selectedTags.remove(event.tag);
+      state.selectedTags.removeWhere((t) => t.id == event.tag.id);
       state.selectedTags.length == 0 ? allUnChecked = true : allUnChecked = false;
       allChecked = false;
     }
+
+    print(state.selectedTags.length);
     yield state.update(isLoading: false, selectedTags: state.selectedTags, allTagsChecked: allChecked, allUnChecked: allUnChecked);
   }
 
