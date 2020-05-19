@@ -34,7 +34,6 @@ class ColorsPalette {
   static const Color mainColor = blueHorizon;
   static const Color backColor = back;
 
-  static const Color greenGrass = const Color(0xFF51980B); //notes
   static const Color darkGrass = const Color(0xFF2CA653);
 
 ///de palette
@@ -47,7 +46,7 @@ class ColorsPalette {
   static const Color c64Ntsc = const Color(0xFF4B7BEC);
   static const Color royalBlue = const Color(0xFF3867D6);
   static const Color flirtatious = const Color(0xFFFED330);
-  static const Color nycTaxi = const Color(0xFFF7B731); //note
+
   static const Color lighterPurple = const Color(0xFFA55EEA);
   static const Color gloomyPurple = const Color(0xFF8854D0);
   static const Color reptileGreen = const Color(0xFF26DE81);
@@ -76,4 +75,7 @@ class ColorsPalette {
   static const Color hollyhock = const Color(0xFF833471);
   static const Color magentaPurple = const Color(0xFF4B6584);
 
+  //notes module colors
+  static const Color nycTaxi = const Color(0xFFF7B731); //note
+  static const Color greenGrass = const Color(0xFF51980B); //notes
 }

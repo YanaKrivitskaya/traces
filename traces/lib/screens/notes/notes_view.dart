@@ -24,11 +24,22 @@ class _NotesViewState extends State<NotesView> {
   bool _noTagsSelected;
   List<Tag> _selectedTags;
 
+  TextEditingController _searchController;
+
   @override
   void initState() {
     super.initState();
 
+    _searchController = new TextEditingController(text: '');
+    _searchController.addListener(_onSearchTextChanged);
+
     _tagBloc = BlocProvider.of<TagFilterBloc>(context);
+  }
+
+  @override
+  void dispose(){
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -38,11 +49,12 @@ class _NotesViewState extends State<NotesView> {
         child: BlocBuilder<NoteBloc, NoteState>(
             bloc: BlocProvider.of(context),
             builder: (context, state){
-              if(state is NotesLoadInProgress || _tagBloc.state.isLoading || state is NotesEmpty){
+
+              if(state.isLoading || _tagBloc.state.isLoading /*|| state is NotesEmpty*/){
                 return Center(child: CircularProgressIndicator());
               }
-              if(state is NotesLoadSuccess && _tagBloc.state.isSuccess){
-                final notes = _sortNotes(state.notes, state.sortField);
+              if(state.isSuccess && _tagBloc.state.isSuccess){
+                final notes = _sortNotes(state.filteredNotes, state.sortField);
 
                 _tags = _tagBloc.state.allTags;
                 _selectedTags = _tagBloc.state.selectedTags;
@@ -51,52 +63,56 @@ class _NotesViewState extends State<NotesView> {
 
                 final filteredNotes = _filterNotes(notes, _selectedTags, _allTagsSelected, _noTagsSelected);
 
+                if(!state.searchEnabled) _searchController.clear();
+
                 return Container(
                   padding: EdgeInsets.only(bottom: 65.0),
                   child: Container(
                     child: SingleChildScrollView(
                       child: Column(
-                        children: <Widget>[filteredNotes != null && filteredNotes.length > 0 ?
-                        Container(
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: filteredNotes.length,
-                              reverse: state.sortDirection == SortDirections.ASC ? true : false,
-                              itemBuilder: (context, position){
-                                final note = filteredNotes[position];
-                                return Card(
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
-                                        title: Text('${note.title}'),
-                                        subtitle: (note.dateCreated.day.compareTo(note.dateModified.day) == 0) ?
-                                        Text('${DateFormat.yMMMd().format(note.dateModified)}',
-                                            style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
-                                        Text('${DateFormat.yMMMd().format(note.dateModified)} / ${DateFormat.yMMMd().format(note.dateCreated)}',
-                                            style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
-                                        trailing: _popupMenu(note, position),
-                                        onTap: (){
-                                          Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id);
-                                        },
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                        alignment: Alignment.centerLeft,
-                                        child: note.tagIds != null && _tags != null ? getChips(note, _tags, _allTagsSelected, _selectedTags): Container(),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                          ),
-                        ) : Container(
-                              padding: new EdgeInsets.all(25.0),
-                              child: Center(
-                                child: Text("No notes here", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.greenGrass), fontSize: 18.0)),
-                              )
-                        )
+                        children: <Widget>[
+                          state.searchEnabled ? _searchBar() : Container(),
+                          filteredNotes != null && filteredNotes.length > 0 ?
+                          Container(
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: filteredNotes.length,
+                                reverse: state.sortDirection == SortDirections.ASC ? true : false,
+                                itemBuilder: (context, position){
+                                  final note = filteredNotes[position];
+                                  return Card(
+                                    child: Column(
+                                      children: <Widget>[
+                                        ListTile(
+                                          leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
+                                          title: Text('${note.title}'),
+                                          subtitle: (note.dateCreated.day.compareTo(note.dateModified.day) == 0) ?
+                                          Text('${DateFormat.yMMMd().format(note.dateModified)}',
+                                              style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
+                                          Text('${DateFormat.yMMMd().format(note.dateModified)} / ${DateFormat.yMMMd().format(note.dateCreated)}',
+                                              style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
+                                          trailing: _popupMenu(note, position),
+                                          onTap: (){
+                                            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id);
+                                          },
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                          alignment: Alignment.centerLeft,
+                                          child: note.tagIds != null && _tags != null ? getChips(note, _tags, _allTagsSelected, _selectedTags): Container(),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }
+                            ),
+                          ) : Container(
+                                padding: new EdgeInsets.all(25.0),
+                                child: Center(
+                                  child: Text("No notes here", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.greenGrass), fontSize: 18.0)),
+                                )
+                          )
                         ],
                       ),
                     ),
@@ -107,6 +123,30 @@ class _NotesViewState extends State<NotesView> {
               }
             }
         ),);
+  }
+
+  Widget _searchBar(){
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      child: TextFormField(
+        decoration: const InputDecoration(
+          prefixIcon: Icon(Icons.search, color: ColorsPalette.greenGrass),
+          hintText: 'Search...',
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorsPalette.greenGrass,),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorsPalette.greenGrass),
+          ),
+        ),
+        controller: _searchController,
+        keyboardType: TextInputType.text,
+      )
+    );
+  }
+
+  void _onSearchTextChanged() {
+    context.bloc<NoteBloc>().add(SearchTextChanged(noteName: _searchController.text));
   }
 
   Widget getChips(Note note, List<Tag> tags, bool allTagsSelected, List<Tag> selectedTags) {
