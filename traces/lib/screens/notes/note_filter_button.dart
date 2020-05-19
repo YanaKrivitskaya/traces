@@ -69,7 +69,7 @@ class _SortDialogState extends State<SortDialog>{
     _sortBloc = BlocProvider.of<NoteSortBloc>(context);
 
     final currentState = _noteBloc.state;
-    if(currentState is NotesLoadSuccess){
+    if(currentState.isSuccess){
       _sortBloc.add(SortUpdated(currentState.sortField, currentState.sortDirection));
     }
   }

@@ -5,6 +5,7 @@ import 'package:traces/screens/flights.dart';
 import 'package:traces/screens/home.dart';
 import 'package:traces/screens/hotels.dart';
 import 'package:traces/screens/map.dart';
+import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
 import 'package:traces/screens/notes/note_detail_view.dart';
 import 'package:traces/screens/notes/note_page.dart';
 import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
@@ -42,15 +43,15 @@ class RouteGenerator{
 
     switch(settings.name){
       case homeRoute: return MaterialPageRoute(builder: (_) => HomePage());
-      case notesRoute: return MaterialPageRoute(builder: (_) => NotesPage());
+      case notesRoute: return MaterialPageRoute(builder: (_) =>
+          BlocProvider<NoteBloc>(
+            create: (context) => NoteBloc(notesRepository: FirebaseNotesRepository(),
+            ),
+            child: NotesPage(),
+          ),
+      );
       case noteDetailsRoute: {
         if(args is String){
-          /*return MaterialPageRoute(builder: (_) =>
-              BlocProvider<DetailsBloc>(
-                  create: (context) => DetailsBloc(notesRepository: FirebaseNotesRepository(),
-                )..add(args != '' ? GetNoteDetails(args) : NewNoteMode()),
-                child: NoteDetailsView(),
-              ));*/
           return MaterialPageRoute(builder: (_) =>
               MultiBlocProvider(
                 providers: [
@@ -68,7 +69,6 @@ class RouteGenerator{
         }
         return _errorRoute();
       }
-      //case loginSignupRoute: return MaterialPageRoute(builder: (_) => LoginSignupPage());
       case profileRoute: return MaterialPageRoute(builder: (_) => ProfilePage());
       default: return _errorRoute();
     }

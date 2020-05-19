@@ -16,7 +16,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         _notesRepository = notesRepository;
 
   @override
-  NoteState get initialState => NotesEmpty();
+  NoteState get initialState => NoteState.empty();
 
   @override
   Stream<NoteState> mapEventToState(
@@ -32,30 +32,47 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       yield* _mapNotesUpdateSortFilterToState(event);
     } else if(event is SelectedTagsUpdated){
       yield* _mapSelectedTagsUpdatedToState(event);
+    } else if(event is SearchTextChanged){
+      yield* _mapSearchTextChangedToState(event);
+    } else if(event is SearchBarToggle){
+      yield* _mapSearchBarToggleToState(event);
     }
+  }
+
+  Stream<NoteState> _mapUpdateNotesListToState(UpdateNotesList event) async* {
+    List<Note> filteredNotes = new List<Note>();
+    filteredNotes.addAll(event.allNotes);
+    yield NoteState.success(allNotes: event.allNotes, filteredNotes: filteredNotes,
+        sortField: event.sortField, sortDirection: event.sortDirection, searchEnabled: false);
   }
 
   Stream<NoteState> _mapGetAllNotesToState() async* {
     _notesSubscription?.cancel();
+
+    yield NoteState.loading();
+
     _notesSubscription = _notesRepository.notes().listen(
-            (notes) =>
-              add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC))
+          (notes) => add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes)),
     );
   }
 
   Stream<NoteState> _mapNotesUpdateSortFilterToState(UpdateSortFilter event) async*{
+    yield NoteState.loading();
+    yield state.update(sortField: event.sortField, sortDirection: event.sortDirection);
+  }
 
-    final currentState = state;
-    if(currentState is NotesLoadSuccess){
-      final notes = currentState.notes;
+  Stream<NoteState> _mapSearchBarToggleToState(SearchBarToggle event) async*{
+    yield state.update(isLoading: true);
 
-      yield NotesLoadInProgress();
+    List<Note> filteredNotes = new List<Note>();
 
-      add(UpdateNotesList(notes, event.sortField, event.sortDirection));
-    }
+    !state.searchEnabled ? filteredNotes.addAll(state.allNotes) :  filteredNotes.addAll(state.filteredNotes);
+
+    yield state.update(isLoading: false, searchEnabled: !state.searchEnabled, filteredNotes: filteredNotes);
   }
 
   Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
+
     List<String> noteTags = event.note.tagIds;
     _notesRepository.deleteNote(event.note);
 
@@ -66,21 +83,24 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         _notesRepository.updateTag(updatedTag);
       });
     }
-  }
 
-  Stream<NoteState> _mapUpdateNotesListToState(UpdateNotesList event) async* {
-    yield NotesLoadSuccess(event.sortField, event.sortDirection, event.notes);
   }
 
   Stream<NoteState> _mapSelectedTagsUpdatedToState(SelectedTagsUpdated event) async* {
+    yield state.update(isLoading: true);
+    yield state.update(isLoading: false);
+  }
 
-    final currentState = state;
-    if(currentState is NotesLoadSuccess){
+  Stream<NoteState> _mapSearchTextChangedToState(SearchTextChanged event) async*{
+    yield state.update(isLoading: true);
 
-      yield NotesLoadInProgress();
+    List<Note> filteredNotes = new List<Note>();
 
-      add(UpdateNotesList(currentState.notes, currentState.sortField, currentState.sortDirection));
-    }
+    event.noteName.length > 0
+        ? filteredNotes = state.allNotes.where((n) => n.title.toLowerCase().contains(event.noteName.toLowerCase())).toList()
+        : filteredNotes.addAll(state.allNotes);
+
+    yield state.update(filteredNotes: filteredNotes, isLoading: false);
   }
 
   @override

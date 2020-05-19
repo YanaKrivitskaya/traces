@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:traces/screens/notes/model/note.dart';
+import 'package:meta/meta.dart';
 
 abstract class NoteEvent extends Equatable {
   const NoteEvent();
@@ -10,15 +11,20 @@ abstract class NoteEvent extends Equatable {
 
 class GetAllNotes extends NoteEvent {}
 
+class SearchBarToggle extends NoteEvent {}
+
 class UpdateNotesList extends NoteEvent {
-  final List<Note> notes;
+  final List<Note> allNotes;
+
+  final List<Note> filteredNotes;
+
   final SortFields sortField;
   final SortDirections sortDirection;
 
-  const UpdateNotesList(this.notes, this.sortField, this.sortDirection);
+  const UpdateNotesList(this.allNotes, this.sortField, this.sortDirection, this.filteredNotes);
 
   @override
-  List<Object> get props => [notes, sortField, sortDirection];
+  List<Object> get props => [allNotes, sortField, sortDirection, filteredNotes];
 }
 
 class UpdateSortFilter extends NoteEvent{
@@ -40,4 +46,13 @@ class DeleteNote extends NoteEvent {
 
   @override
   List<Object> get props => [note];
+}
+
+class SearchTextChanged extends NoteEvent{
+  final String noteName;
+
+  const SearchTextChanged({@required this.noteName});
+
+  @override
+  List<Object> get props => [noteName];
 }

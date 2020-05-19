@@ -19,10 +19,8 @@ class NotesPage extends StatelessWidget{
     
     return MultiBlocProvider(
       providers: [
-        BlocProvider<NoteBloc>(
-          create: (context) => NoteBloc(
-              notesRepository: FirebaseNotesRepository()
-          )..add(GetAllNotes()),
+        BlocProvider.value(
+          value: context.bloc<NoteBloc>()..add(GetAllNotes()),
         ),
         BlocProvider<TagFilterBloc>(
           create: (context) => TagFilterBloc(
@@ -32,13 +30,15 @@ class NotesPage extends StatelessWidget{
       ],
       child: Scaffold(
         appBar: AppBar(
-          title: Text('All Notes', style: GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.white, fontSize: 25.0))),
-          //centerTitle: true,
+          title: Text('Notes', style: GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.white, fontSize: 25.0))),
           backgroundColor: ColorsPalette.greenGrass,
           actions: [
-            /*IconButton(
-                icon: Icon(Icons.search, color: Colors.white,)
-            ),*/
+            IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: (){
+                context.bloc<NoteBloc>().add(SearchBarToggle());
+              },
+            ),
             TagsFilterButton(),
             NoteFilterButton()
           ],
@@ -50,7 +50,7 @@ class NotesPage extends StatelessWidget{
           },
           tooltip: 'Add New Note',
           backgroundColor: ColorsPalette.nycTaxi,
-          child: Icon(Icons.add, color: ColorsPalette.grayLight),
+          child: Icon(Icons.add, color: ColorsPalette.white),
         ),
       ),
     );
