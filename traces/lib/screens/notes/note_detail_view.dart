@@ -198,13 +198,14 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         context: context,
         barrierDismissible: false, // user must tap button!
         builder: (_) =>
-          BlocProvider.value(
-            value: context.bloc<NoteBloc>(),
-            child: NoteDeleteAlert(note: note,
-                callback: (val) =>
-                val == 'Delete' ? Navigator.of(context).pop() : ''
+            BlocProvider<NoteBloc>(
+              create: (context) => NoteBloc(notesRepository: FirebaseNotesRepository(),
+              ),
+              child: NoteDeleteAlert(note: note,
+                  callback: (val) =>
+                  val == 'Delete' ? Navigator.of(context).pop() : ''
+              ),
             ),
-          ),
       );
     },
   );
