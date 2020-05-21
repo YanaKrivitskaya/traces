@@ -53,9 +53,15 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
     List<Tag> noteTags = new List<Tag>();
 
     if(event.note.id != null){
-      note = await _notesRepository.updateNote(event.note);
+      note = await _notesRepository.updateNote(event.note).timeout(Duration(seconds: 3), onTimeout: (){
+        print("have timeout");
+        return event.note;
+      });
     }else{
-      note = await _notesRepository.addNewNote(event.note);
+      note = await _notesRepository.addNewNote(event.note).timeout(Duration(seconds: 3), onTimeout: (){
+        print("have timeout");
+        return event.note;
+      });
     }
     yield LoadingDetailsState(null);
 

@@ -41,7 +41,7 @@ class TracesApp extends StatelessWidget{
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
-      //debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       title: 'Traces',
       theme: ThemeData(
           primaryColor: ColorsPalette.mainColor,
