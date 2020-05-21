@@ -16,6 +16,7 @@ class FirebaseNotesRepository extends NoteRepository{
 
   FirebaseNotesRepository() {
     _userRepository = new UserRepository();
+    Firestore.instance.settings(persistenceEnabled: true);
   }
 
   @override
