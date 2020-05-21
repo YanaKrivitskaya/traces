@@ -74,7 +74,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                     Container(
                       width: 250,
                       child: Text(
-                        state.errorMessage, style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight)),
+                        state.errorMessage, style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 5,
                       ),
@@ -94,7 +94,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.grayLight),
+                      valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.lynxWhite),
                     ),
                   ],
                 ),
@@ -177,7 +177,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
           child: RaisedButton(
             color: isButtonEnabled(state)
                 ? ColorsPalette.blueHorizon : ColorsPalette.blueGrey,
-            textColor: ColorsPalette.grayLight,
+            textColor: ColorsPalette.lynxWhite,
             child: Text(this.actionText),
             onPressed: () =>
             isButtonEnabled(state)

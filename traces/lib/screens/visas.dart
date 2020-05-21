@@ -17,7 +17,7 @@ class _VisasPageState extends State<VisasPage>{
       appBar: AppBar(
         title: Text(
           'Visas',
-          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))
+          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))
         ),
         centerTitle: true,
       ),

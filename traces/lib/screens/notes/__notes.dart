@@ -103,7 +103,7 @@ class _NotesPageState extends State<NotesPage>{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notes', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))),
+        title: Text('Notes', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))),
         centerTitle: true,
         backgroundColor: ColorsPalette.greenGrass,
         actions: <Widget>[
@@ -156,7 +156,7 @@ class _NotesPageState extends State<NotesPage>{
                                         Align(
                                           child: Chip(
                                             label: Text('${_getCategoryNameById(notes[position].categoryId)}',
-                                                style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight))),
+                                                style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite))),
                                             backgroundColor: ColorsPalette.greenGrass,
                                           ),
                                           alignment: Alignment.centerLeft,
@@ -180,7 +180,7 @@ class _NotesPageState extends State<NotesPage>{
         },
         tooltip: 'Add',
         backgroundColor: ColorsPalette.nycTaxi,
-        child: Icon(Icons.add, color: ColorsPalette.grayLight),
+        child: Icon(Icons.add, color: ColorsPalette.lynxWhite),
       ),
     );
   }

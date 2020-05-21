@@ -86,7 +86,7 @@ class _MapPageState extends State<MapPage>{
       appBar: AppBar(
         title: Text(
             'Map',
-            style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))
+            style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))
         ),
         centerTitle: true,
         backgroundColor: ColorsPalette.boyzone,
