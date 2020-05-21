@@ -5,36 +5,13 @@ import 'package:flutter/material.dart';
 class ColorsPalette {
   static const Color orange = Colors.orange;
   static const Color white = Colors.white;
-  static const Color orangeBright = const Color(0xFFFFAB00);
-  static const Color greenLight = const Color(0xFF9AAC1B);
-  static const Color greenDark = const Color(0xFF3C9C50);
-  static const Color greenBlue = const Color(0xFF008371);
-  static const Color blueLight = const Color(0xFF006673);
-  static const Color blueDark = const Color(0xFF2F4858);
 
-  static const Color pinkLight = const Color(0xFFFFECCC);
-  static const Color beigeDark = const Color(0xFFA48155);
-  static const Color greenBlueDark = const Color(0xFF005248);
-
-  static const Color redBrown = const Color(0xFF591E00);
-  static const Color blueGreen = const Color(0xFF00A58C);
-  static const Color grayLight = const Color(0xFFDFE0DF);
-
-  static const Color pink = const Color(0xFFF15152);
-  static const Color dark = const Color(0xFF3A2E39);
-  static const Color light = const Color(0xFFF4D8CD);
-  static const Color blue = const Color(0xFF1E555C);
-
-  static const Color paleBlue = const Color(0xFF59BAB7); //
   static const Color back = const Color(0xFFFEFCFB); // back
-  static const Color bordo = const Color(0xFFD3518A);
 
   static const Color iconColor = beniukonBronze;
   static const Color iconTitle = blueHorizon;
   static const Color mainColor = blueHorizon;
   static const Color backColor = back;
-
-  static const Color darkGrass = const Color(0xFF2CA653);
 
 ///de palette
   static const Color fusionRed = const Color(0xFFFC5C65);
@@ -46,7 +23,6 @@ class ColorsPalette {
   static const Color c64Ntsc = const Color(0xFF4B7BEC);
   static const Color royalBlue = const Color(0xFF3867D6);
   static const Color flirtatious = const Color(0xFFFED330);
-
   static const Color lighterPurple = const Color(0xFFA55EEA);
   static const Color gloomyPurple = const Color(0xFF8854D0);
   static const Color reptileGreen = const Color(0xFF26DE81);
@@ -72,8 +48,48 @@ class ColorsPalette {
   static const Color circumorbitalRing = const Color(0xFF5758BB);
   static const Color baraRed = const Color(0xFFED4C67);
   static const Color veryBerry = const Color(0xFFB53471);
-  static const Color hollyhock = const Color(0xFF833471);
+  static const Color hollyhock = const Color(0xFF833471); //cool
   static const Color magentaPurple = const Color(0xFF4B6584);
+
+  //au palette
+  static const Color beekeeper = const Color(0xFFF6E58D);
+  static const Color turbo = const Color(0xFFF9CA24);
+  static const Color middleBlue = const Color(0xFF7ED6DF);
+  static const Color greenlandGreen = const Color(0xFF22A6B3);
+  static const Color spicedNectarine = const Color(0xFFFFBE76);
+  static const Color quinceJelly = const Color(0xFFF0932B); //cool
+  static const Color helitrope = const Color(0xFFE056FD);
+  static const Color steelPink = const Color(0xFFBE2EDD);
+  static const Color pinkGlamour = const Color(0xFFFF7979);
+  static const Color carminePink = const Color(0xFFEB4D4B); // cool
+  static const Color exodusFruit = const Color(0xFF686DE0);
+  static const Color blurple = const Color(0xFF4834D4);
+  static const Color juneBud = const Color(0xFFBADC58);
+  static const Color pureApple = const Color(0xFF6AB04C); // cool
+  static const Color deepKoamaru = const Color(0xFF30336B); //cool
+  static const Color deepCove = const Color(0xFF130F40);
+  static const Color coastalBreeze = const Color(0xFFDFF9FB);
+  static const Color hintOfIcePack = const Color(0xFFC7ECEE);
+  static const Color soaringEagle = const Color(0xFF95AFC0);
+  static const Color wizardGrey = const Color(0xFF535C68);
+
+
+  //gb palette
+  static const Color lynxWhite = const Color(0xFFF5F6FA);
+  static const Color riseNShine = const Color(0xFFFBC531);
+  static const Color downloadProgress = const Color(0xFF4CD137);
+  static const Color skirretGreen = const Color(0xFF44BD32);
+  static const Color mazarineBlue = const Color(0xFF273C75);
+  static const Color picoVoid = const Color(0xFF192A56); // cool
+  static const Color blueNights = const Color(0xFF353B48);
+
+  //se palette
+  static const Color highLighterPink = const Color(0xFFEF5777);
+  static const Color sizzlingRed = const Color(0xFFF53B57);
+  static const Color mintyGreen = const Color(0xFF0BE881);
+  static const Color greenTeal = const Color(0xFF05C46B);
+
+
 
   //notes module colors
   static const Color nycTaxi = const Color(0xFFF7B731); //note

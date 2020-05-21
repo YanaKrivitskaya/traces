@@ -17,7 +17,7 @@ class _SettingsPageState extends State<SettingsPage>{
       appBar: AppBar(
         title: Text(
           'Settings',
-          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))
+          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))
         ),
         centerTitle: true,
       ),

@@ -17,7 +17,7 @@ class _HotelsPageState extends State<HotelsPage>{
       appBar: AppBar(
         title: Text(
           'Hotels',
-          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))
+          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))
         ),
         centerTitle: true,
       ),

@@ -17,7 +17,7 @@ class _FightsPageState extends State<FlightsPage>{
       appBar: AppBar(
         title: Text(
           'Flights',
-          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))
+          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))
         ),
         centerTitle: true,
       ),

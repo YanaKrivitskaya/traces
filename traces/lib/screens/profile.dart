@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage>{
       appBar: AppBar(
         title: Text(
           'Profile',
-          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.grayLight, fontSize: 40.0))
+          style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))
         ),
         centerTitle: true
       ),
