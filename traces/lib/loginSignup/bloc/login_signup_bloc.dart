@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/auth/userRepository.dart';
+import 'package:traces/screens/profile/model/profile.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/loginSignup/validator.dart';
@@ -145,6 +146,7 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
     );
     try{
       await _userRepository.signUp(email, password, username);
+
       yield LoginSignupState.success(
           isLogin: false,
           isRegister: true,

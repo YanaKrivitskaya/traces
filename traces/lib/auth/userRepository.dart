@@ -17,6 +17,7 @@ class UserRepository{
 
     UserUpdateInfo profileUpdate = UserUpdateInfo();
     profileUpdate.displayName = username;
+
     return await user.updateProfile(profileUpdate);
   }
 
@@ -30,6 +31,10 @@ class UserRepository{
 
   Future<String> getUserId() async{
     return (await _firebaseAuth.currentUser()).uid;
+  }
+
+  Future<FirebaseUser> getUser() async{
+    return (await _firebaseAuth.currentUser());
   }
 
   Future<bool> isSignedIn() async{

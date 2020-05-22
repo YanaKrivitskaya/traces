@@ -9,7 +9,9 @@ import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
 import 'package:traces/screens/notes/note_detail_view.dart';
 import 'package:traces/screens/notes/note_page.dart';
 import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
+import 'package:traces/screens/profile/bloc/bloc.dart';
 import 'package:traces/screens/profile/profile_page.dart';
+import 'package:traces/screens/profile/repository/firebase_profile_repository.dart';
 import 'package:traces/screens/settings.dart';
 import 'package:traces/screens/trips.dart';
 import 'package:traces/screens/visas.dart';
@@ -45,7 +47,7 @@ class RouteGenerator{
       case homeRoute: return MaterialPageRoute(builder: (_) => HomePage());
       case notesRoute: return MaterialPageRoute(builder: (_) =>
           BlocProvider<NoteBloc>(
-            create: (context) => NoteBloc(notesRepository: FirebaseNotesRepository(),
+              create: (context) => NoteBloc(notesRepository: FirebaseNotesRepository(),
             ),
             child: NotesPage(),
           ),
@@ -69,7 +71,13 @@ class RouteGenerator{
         }
         return _errorRoute();
       }
-      case profileRoute: return MaterialPageRoute(builder: (_) => ProfilePage());
+      case profileRoute: return MaterialPageRoute(builder: (_) =>
+          BlocProvider<ProfileBloc>(
+              create: (context) => ProfileBloc(profileRepository: FirebaseProfileRepository(),
+            ),
+            child: ProfilePage(),
+          ),
+      );
       default: return _errorRoute();
     }
   }
