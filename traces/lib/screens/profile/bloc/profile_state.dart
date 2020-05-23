@@ -5,6 +5,7 @@ import 'package:traces/screens/profile/model/profile.dart';
 class ProfileState {
   final Profile profile;
   final List<Family> familyMembers;
+  final bool isUsernameValid;
   final bool isLoading;
   final bool isSuccess;
   final bool isFailure;
@@ -13,6 +14,7 @@ class ProfileState {
   const ProfileState({
     @required this.profile,
     @required this.familyMembers,
+    @required this.isUsernameValid,
     @required this.isLoading,
     @required this.isSuccess,
     @required this.isFailure,
@@ -22,6 +24,7 @@ class ProfileState {
     return ProfileState(
         profile: null,
         familyMembers: null,
+        isUsernameValid: true,
         isLoading: false,
         isSuccess: false,
         isFailure: false,
@@ -33,6 +36,7 @@ class ProfileState {
     return ProfileState(
         profile: null,
         familyMembers: null,
+        isUsernameValid: true,
         isLoading: true,
         isSuccess: false,
         isFailure: false,
@@ -44,6 +48,7 @@ class ProfileState {
     return ProfileState(
         profile: profile,
         familyMembers: familyMembers,
+        isUsernameValid: true,
         isLoading: false,
         isSuccess: true,
         isFailure: false,
@@ -55,6 +60,7 @@ class ProfileState {
     return ProfileState(
         profile: profile,
         familyMembers: familyMembers,
+        isUsernameValid: true,
         isLoading: false,
         isSuccess: false,
         isFailure: true,
@@ -65,6 +71,7 @@ class ProfileState {
   ProfileState copyWith({
     final Profile profile,
     final List<Family> familyMembers,
+    bool isUsernameValid,
     bool searchEnabled,
     bool isLoading,
     bool isSuccess,
@@ -74,6 +81,7 @@ class ProfileState {
     return ProfileState(
         profile: profile ?? this.profile,
         familyMembers: familyMembers ?? this.familyMembers,
+        isUsernameValid: isUsernameValid ?? this.isUsernameValid,
         isLoading: isLoading ?? this.isLoading,
         isSuccess: isSuccess ?? this.isSuccess,
         isFailure: isFailure ?? this.isFailure,
@@ -84,6 +92,7 @@ class ProfileState {
   ProfileState update({
     Profile profile,
     List<Family> familyMembers,
+    bool isUsernameValid,
     bool isLoading,
     bool isSuccess,
     bool isFailure,
@@ -92,6 +101,7 @@ class ProfileState {
     return copyWith(
         profile: profile,
         familyMembers: familyMembers,
+        isUsernameValid: isUsernameValid,
         isLoading: isLoading,
         isSuccess: isSuccess,
         isFailure: isFailure,

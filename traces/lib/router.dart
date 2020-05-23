@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:traces/auth/userRepository.dart';
 import 'package:traces/constants.dart';
 import 'package:traces/screens/expenses.dart';
 import 'package:traces/screens/flights.dart';
@@ -47,7 +48,7 @@ class RouteGenerator{
       case homeRoute: return MaterialPageRoute(builder: (_) => HomePage());
       case notesRoute: return MaterialPageRoute(builder: (_) =>
           BlocProvider<NoteBloc>(
-              create: (context) => NoteBloc(notesRepository: FirebaseNotesRepository(),
+              create: (context) => NoteBloc(notesRepository: FirebaseNotesRepository()
             ),
             child: NotesPage(),
           ),
@@ -73,7 +74,7 @@ class RouteGenerator{
       }
       case profileRoute: return MaterialPageRoute(builder: (_) =>
           BlocProvider<ProfileBloc>(
-              create: (context) => ProfileBloc(profileRepository: FirebaseProfileRepository(),
+              create: (context) => ProfileBloc(profileRepository: FirebaseProfileRepository()
             ),
             child: ProfilePage(),
           ),

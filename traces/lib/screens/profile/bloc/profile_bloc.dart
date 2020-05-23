@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:traces/auth/userRepository.dart';
+import 'package:traces/loginSignup/validator.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
 import './bloc.dart';
@@ -9,7 +11,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository _profileRepository;
   StreamSubscription _profileSubscription;
 
-  ProfileBloc({@required ProfileRepository profileRepository})
+  ProfileBloc({@required ProfileRepository profileRepository, @required UserRepository userRepository})
       : assert(profileRepository != null),
         _profileRepository = profileRepository;
 
@@ -24,7 +26,33 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield* _mapGetProfileToState(event);
     } else if (event is UpdateProfileState) {
       yield* _mapUpdateProfileStateToState(event);
+    }else if (event is UsernameChanged) {
+      yield* _mapUsernameChangedToState(event.username);
     }
+    else if (event is UsernameUpdated) {
+      yield* _mapUsernameUpdatedToState(event.username);
+    }
+  }
+
+  Stream<ProfileState> _mapUsernameChangedToState(String username) async*{
+    yield state.update(
+        isUsernameValid: LoginSignupValidator.isValidUsername(username)
+    );
+  }
+
+  Stream<ProfileState> _mapUsernameUpdatedToState(String username) async*{
+
+    await _profileRepository.updateUsername(username);
+
+    Profile profile = Profile(state.profile.email, displayName: username, isEmailVerified: state.profile.isEmailVerified);
+
+    Profile updProfile = await _profileRepository.updateProfile(profile);
+
+    yield state.update(profile: updProfile);
+
+    /*yield state.update(
+        isUsernameValid: LoginSignupValidator.isValidUsername(username)
+    );*/
   }
 
   Stream<ProfileState> _mapUpdateProfileStateToState(UpdateProfileState event) async* {

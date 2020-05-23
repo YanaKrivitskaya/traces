@@ -19,7 +19,8 @@ class ProfilePage extends StatelessWidget{
       )
         ..add(GetProfile()),
       child: Scaffold(
-        appBar: AppBar(
+          resizeToAvoidBottomPadding: false,
+          appBar: AppBar(
           title: Text('Profile', style: GoogleFonts.quicksand(
               textStyle: TextStyle(
                   color: ColorsPalette.white, fontSize: 25.0))),

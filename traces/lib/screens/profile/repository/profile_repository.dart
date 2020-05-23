@@ -18,4 +18,6 @@ abstract class ProfileRepository {
   Future<Profile> getCurrentProfile();
 
   Future<Family> getFamilyById(String id);
+
+  Future<void> updateUsername(String username);
 }

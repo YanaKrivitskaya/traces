@@ -23,3 +23,21 @@ class UpdateProfileState extends ProfileEvent {
   @override
   List<Object> get props => [familyMembers, profile];
 }
+
+class UsernameChanged extends ProfileEvent{
+  final String username;
+
+  const UsernameChanged({@required this.username});
+
+  @override
+  List<Object> get props => [username];
+}
+
+class UsernameUpdated extends ProfileEvent{
+  final String username;
+
+  const UsernameUpdated({@required this.username});
+
+  @override
+  List<Object> get props => [username];
+}

@@ -82,6 +82,16 @@ class FirebaseProfileRepository extends ProfileRepository{
   }
 
   @override
+  Future<void> updateUsername(String username) async{
+    FirebaseUser user = await _userRepository.getUser();
+
+    UserUpdateInfo profileUpdate = UserUpdateInfo();
+    profileUpdate.displayName = username;
+
+    return await user.updateProfile(profileUpdate);
+  }
+
+  @override
   Future<Profile> addNewProfile() async {
     FirebaseUser user = await _userRepository.getUser();
 
