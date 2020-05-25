@@ -72,7 +72,6 @@ class ProfileState {
     final Profile profile,
     final List<Family> familyMembers,
     bool isUsernameValid,
-    bool searchEnabled,
     bool isLoading,
     bool isSuccess,
     bool isFailure,

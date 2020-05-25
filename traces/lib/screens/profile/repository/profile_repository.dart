@@ -9,9 +9,9 @@ abstract class ProfileRepository {
 
   Future<Profile> updateProfile(Profile profile);
 
-  Future<Family> addNewFamilyMember(Family family);
+  Future<void> addNewFamilyMember(Family family);
 
-  Future<Family> updateFamilyMember(Family family);
+  Future<void> updateFamilyMember(Family family);
 
   Future<void> deleteFamilyMember(Family family);
 

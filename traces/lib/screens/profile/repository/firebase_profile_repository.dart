@@ -30,10 +30,10 @@ class FirebaseProfileRepository extends ProfileRepository{
   }
 
   @override
-  Future<Family> addNewFamilyMember(Family family) async {
+  Future<void> addNewFamilyMember(Family family) async {
     String uid = await _userRepository.getUserId();
-    final newFamilyMember = await usersCollection.document(uid).collection(userFamily).add(family.toEntity().toDocument());
-    return await getFamilyById(newFamilyMember.documentID);
+    return await usersCollection.document(uid).collection(userFamily).add(family.toEntity().toDocument());
+    //return await getFamilyById(newFamilyMember.documentID);
   }
 
   @override
@@ -65,12 +65,12 @@ class FirebaseProfileRepository extends ProfileRepository{
   }
 
   @override
-  Future<Family> updateFamilyMember(Family family) async {
+  Future<void> updateFamilyMember(Family family) async {
     String uid = await _userRepository.getUserId();
-    await usersCollection.document(uid).collection(userFamily)
+    return await usersCollection.document(uid).collection(userFamily)
         .document(family.id)
         .updateData(family.toEntity().toDocument());
-    return await getFamilyById(family.id);
+    //return await getFamilyById(family.id);
   }
 
   @override
