@@ -41,3 +41,4 @@ class UsernameUpdated extends ProfileEvent{
   @override
   List<Object> get props => [username];
 }
+

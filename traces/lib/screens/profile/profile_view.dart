@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:traces/auth/bloc.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/profile/bloc/bloc.dart';
+import 'package:traces/screens/profile/add_family_button.dart';
+import 'package:traces/screens/profile/bloc/profile/bloc.dart';
+import 'package:traces/screens/profile/edit_family_button.dart';
 import 'package:traces/screens/profile/model/family.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/name_edit_button.dart';
@@ -91,7 +93,7 @@ class _ProfileViewState extends State<ProfileView>{
                                 final member = _familyMembers[position];
                                 return ListTile(
                                   title: Text(member.name),
-                                  trailing: Icon(Icons.arrow_forward_ios, size: 15.0),
+                                  trailing: EditFamilyButton(member),
                                 );
                               }),
                         )
@@ -101,7 +103,7 @@ class _ProfileViewState extends State<ProfileView>{
                         trailing: Icon(Icons.arrow_forward_ios, size: 15.0),
                       ),*/
                         Align(
-                            alignment: Alignment.centerLeft,child: OutlineButton(child: Text("Add...", style: TextStyle(color: ColorsPalette.fusionRed),))
+                            alignment: Alignment.centerLeft,child: AddFamilyButton()
                         ),
                       ],
                     ),

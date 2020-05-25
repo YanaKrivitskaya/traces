@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/profile/bloc/bloc.dart';
+import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 
 class NameEditButton extends StatelessWidget {
   @override
@@ -34,7 +34,12 @@ class _NameEditDialogState extends State<NameEditDialog>{
 
     _usernameController = TextEditingController(text: context.bloc<ProfileBloc>().state.profile.displayName);
     _usernameController.addListener(_onUsernameChanged);
+  }
 
+  @override
+  void dispose(){
+    _usernameController.dispose();
+    super.dispose();
   }
 
   @override

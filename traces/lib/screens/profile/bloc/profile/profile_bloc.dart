@@ -4,14 +4,14 @@ import 'package:traces/auth/userRepository.dart';
 import 'package:traces/loginSignup/validator.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
-import './bloc.dart';
+import 'bloc.dart';
 import 'package:meta/meta.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository _profileRepository;
   StreamSubscription _profileSubscription;
 
-  ProfileBloc({@required ProfileRepository profileRepository, @required UserRepository userRepository})
+  ProfileBloc({@required ProfileRepository profileRepository})
       : assert(profileRepository != null),
         _profileRepository = profileRepository;
 

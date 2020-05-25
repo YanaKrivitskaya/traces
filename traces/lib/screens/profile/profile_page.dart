@@ -2,7 +2,7 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/profile/bloc/bloc.dart';
+import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 import 'package:traces/screens/profile/profile_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/repository/firebase_profile_repository.dart';
