@@ -46,7 +46,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
             }
 
             return new AlertDialog(
-              title: Text('Add member'),
+              title: Text(state.isNewMode ? 'Add member' : 'Edit member'),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Done'),
@@ -79,8 +79,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
                     Container(
                       padding: EdgeInsets.only(top: 10.0),
                       child: _genderSelector(state),
-                    ),
-                  ],
+                    ),],
                 ),
               ),
             );

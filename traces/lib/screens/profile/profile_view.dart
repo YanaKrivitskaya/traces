@@ -14,7 +14,6 @@ class ProfileView extends StatefulWidget{
 
   ProfileView();
   State<ProfileView> createState() => _ProfileViewState();
-
 }
 
 class _ProfileViewState extends State<ProfileView>{
@@ -51,7 +50,6 @@ class _ProfileViewState extends State<ProfileView>{
                         children: <Widget>[
                           Text(_profile.displayName, style: TextStyle(fontSize: 20.0)),
                           NameEditButton()
-                          //IconButton(icon: Icon(Icons.edit, size: 20.0, color: ColorsPalette.meditSea,), onPressed: (){})
                         ],
                       ), alignment: Alignment.center,))
                     ],
@@ -97,11 +95,7 @@ class _ProfileViewState extends State<ProfileView>{
                                 );
                               }),
                         )
-                            : Container(child: Align(child: Text("No one added yet"), alignment: Alignment.centerLeft,),),
-                        /*ListTile(
-                        title: Text("SP"),
-                        trailing: Icon(Icons.arrow_forward_ios, size: 15.0),
-                      ),*/
+                            : Container(child: Align(child: Text("No one added yet"), alignment: Alignment.centerLeft)),
                         Align(
                             alignment: Alignment.centerLeft,child: AddFamilyButton()
                         ),
