@@ -15,8 +15,8 @@ import 'package:traces/screens/profile/profile_page.dart';
 import 'package:traces/screens/profile/repository/firebase_profile_repository.dart';
 import 'package:traces/screens/settings.dart';
 import 'package:traces/screens/trips.dart';
-import 'package:traces/screens/visas.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/screens/visas/visas_page.dart';
 
 import 'screens/notes/bloc/note_details_bloc/bloc.dart';
 import 'screens/notes/bloc/tag_filter_bloc/bloc.dart';
@@ -79,6 +79,7 @@ class RouteGenerator{
             child: ProfilePage(),
           ),
       );
+      case visasRoute: return MaterialPageRoute(builder: (_) => VisasPage());
       default: return _errorRoute();
     }
   }

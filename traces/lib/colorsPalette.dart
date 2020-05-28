@@ -14,11 +14,11 @@ class ColorsPalette {
   static const Color backColor = back;
 
 ///de palette
-  static const Color fusionRed = const Color(0xFFFC5C65);
+
   static const Color desire = const Color(0xFFEB3B5A);
   static const Color highBlue = const Color(0xFF45AAF2);
   static const Color boyzone = const Color(0xFF2D98DA);
-  static const Color orangeHibiscus = const Color(0xFFFD9644);
+  static const Color orangeHibiscus = const Color(0xFFFD9644); //nice
   static const Color beniukonBronze = const Color(0xFFFA8231); // icons
   static const Color c64Ntsc = const Color(0xFF4B7BEC);
   static const Color royalBlue = const Color(0xFF3867D6);
@@ -40,7 +40,7 @@ class ColorsPalette {
   static const Color androidGreen = const Color(0xFFA3CB38);
   static const Color turkishAqua = const Color(0xFF006266);
   static const Color blueMartina = const Color(0xFF12CBC4);
-  static const Color meditSea = const Color(0xFF1289A7);
+
   static const Color merchantMarBlue = const Color(0xFF0652DD);
   static const Color underSea = const Color(0xFF1B1464);
   static const Color lavenderRose = const Color(0xFFFDA7DF);
@@ -79,7 +79,7 @@ class ColorsPalette {
   static const Color riseNShine = const Color(0xFFFBC531);
   static const Color downloadProgress = const Color(0xFF4CD137);
   static const Color skirretGreen = const Color(0xFF44BD32);
-  static const Color mazarineBlue = const Color(0xFF273C75);
+  static const Color mazarineBlue = const Color(0xFF273C75); // cool
   static const Color picoVoid = const Color(0xFF192A56); // cool
   static const Color blueNights = const Color(0xFF353B48);
 
@@ -94,4 +94,8 @@ class ColorsPalette {
   //notes module colors
   static const Color nycTaxi = const Color(0xFFF7B731); //note
   static const Color greenGrass = const Color(0xFF51980B); //notes
+
+  // profile module colors
+  static const Color meditSea = const Color(0xFF1289A7); // profile
+  static const Color fusionRed = const Color(0xFFFC5C65); //profile
 }
