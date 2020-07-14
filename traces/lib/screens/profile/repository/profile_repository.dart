@@ -5,6 +5,8 @@ import 'package:traces/screens/profile/model/profile.dart';
 abstract class ProfileRepository {
   Stream<List<Family>> familyMembers();
 
+  Future<List<Family>> getFamilyMembers();
+
   Future<Profile> addNewProfile();
 
   Future<Profile> updateProfile(Profile profile);
