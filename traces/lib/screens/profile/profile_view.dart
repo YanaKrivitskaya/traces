@@ -73,14 +73,15 @@ class _ProfileViewState extends State<ProfileView>{
            ),
          ),*/
                   Divider(color: ColorsPalette.meditSea,),
+                  Align(
+                    alignment: Alignment.centerLeft,child: Text("Family", style: TextStyle(fontSize: 20.0, color: ColorsPalette.meditSea)),
+                  ),
                   Container(
                     padding: EdgeInsets.only(right: 10.0, left: 10.0),
                     alignment: Alignment.centerLeft,
-                    child: Column(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    child: SingleChildScrollView(child: Column(
                       children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,child: Text("Family", style: TextStyle(fontSize: 20.0, color: ColorsPalette.meditSea)),
-                        ),
                         _familyMembers.length > 0
                             ? Container(
                           child: ListView.builder(
@@ -100,9 +101,8 @@ class _ProfileViewState extends State<ProfileView>{
                             alignment: Alignment.centerLeft,child: AddFamilyButton()
                         ),
                       ],
-                    ),
+                    ),)
                   ),
-
                   _footer()
                 ],
               ),

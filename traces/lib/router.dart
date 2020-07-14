@@ -16,6 +16,9 @@ import 'package:traces/screens/profile/repository/firebase_profile_repository.da
 import 'package:traces/screens/settings.dart';
 import 'package:traces/screens/trips.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
+import 'package:traces/screens/visas/repository/firebase_visas_repository.dart';
+import 'package:traces/screens/visas/visa_edit_view.dart';
 import 'package:traces/screens/visas/visas_page.dart';
 
 import 'screens/notes/bloc/note_details_bloc/bloc.dart';
@@ -80,6 +83,18 @@ class RouteGenerator{
           ),
       );
       case visasRoute: return MaterialPageRoute(builder: (_) => VisasPage());
+      case visaDetailsRoute:{
+        if(args is String){
+          return MaterialPageRoute(builder: (_) =>
+              BlocProvider<VisaDetailsBloc>(
+                create: (context) => VisaDetailsBloc(visasRepository: FirebaseVisasRepository()
+                )..add(args != '' ? GetVisaDetails(args) : NewVisaMode()),
+                child: VisaEditView(),
+              ),
+          );
+        }
+        return _errorRoute();
+      }
       default: return _errorRoute();
     }
   }

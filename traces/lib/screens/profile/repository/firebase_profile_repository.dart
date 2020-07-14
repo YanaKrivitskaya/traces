@@ -46,9 +46,9 @@ class FirebaseProfileRepository extends ProfileRepository{
   Future<Family> getFamilyById(String id) async {
     String uid = await _userRepository.getUserId();
 
-    var resultNote = await usersCollection.document(uid).collection(userFamily).document(id).get();
+    var resultFamily = await usersCollection.document(uid).collection(userFamily).document(id).get();
 
-    return Family.fromEntity(FamilyEntity.fromMap(resultNote.data, resultNote.documentID));
+    return Family.fromEntity(FamilyEntity.fromMap(resultFamily.data, resultFamily.documentID));
   }
 
   @override
@@ -99,6 +99,15 @@ class FirebaseProfileRepository extends ProfileRepository{
     await usersCollection.document(user.uid).setData(newProfile.toEntity().toDocument());
 
     return await getCurrentProfile();
+  }
+
+  @override
+  Future<List<Family>> getFamilyMembers() async {
+    String uid = await _userRepository.getUserId();
+    QuerySnapshot querySnapshot = await usersCollection.document(uid).collection(userFamily).getDocuments();
+    var list = querySnapshot.documents;
+
+
   }
 
 }
