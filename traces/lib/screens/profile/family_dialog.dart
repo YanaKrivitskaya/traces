@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/profile/bloc/family/family_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/profile/model/family.dart';
+import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 
 class FamilyDialog extends StatefulWidget{
+  final int familyMemberPosition;
+
+  FamilyDialog(this.familyMemberPosition);
 
   @override
   _FamilyDialogState createState() => new _FamilyDialogState();
@@ -12,9 +14,6 @@ class FamilyDialog extends StatefulWidget{
 
 class _FamilyDialogState extends State<FamilyDialog>{
   TextEditingController _usernameController;
-  List<String> _genders = ['Male', 'Female'];
-  String _selectedGender = 'Male';
-  Color formColor;
 
   @override
   void initState() {
@@ -32,33 +31,25 @@ class _FamilyDialogState extends State<FamilyDialog>{
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<FamilyBloc, FamilyState>(
+    return BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
 
           if(state.isLoading){
             return new Center(child: CircularProgressIndicator());
           }else{
-            _selectedGender = state.selectedGender;
-            _selectedGender == 'Male' ? formColor = ColorsPalette.meditSea : formColor = ColorsPalette.fusionRed;
 
-            if(!state.isNewMode && !state.isEditing){
-              _usernameController.text = context.bloc<FamilyBloc>().state.familyMember.name;
+            if(widget.familyMemberPosition != null && !state.isEditing){
+              _usernameController.text = state.profile.familyMembers[widget.familyMemberPosition];
             }
 
             return new AlertDialog(
-              title: Text(state.isNewMode ? 'Add member' : 'Edit member'),
+              title: Text('Family member'),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Done'),
                   onPressed: () {
                     if(state.isUsernameValid){
-                      if(state.isNewMode){
-                        Family newMember = Family(_usernameController.text, gender: state.selectedGender);
-                        context.bloc<FamilyBloc>().add(FamilyAdded(newMember: newMember));
-                      }else{
-                        Family updMember = Family(_usernameController.text, gender: state.selectedGender, id: state.familyMember.id);
-                        context.bloc<FamilyBloc>().add(FamilyUpdated(updMember: updMember));
-                      }
+                      context.bloc<ProfileBloc>().add(FamilyUpdated(name: _usernameController.text.trim(), position: widget.familyMemberPosition));
                     }
                     Navigator.pop(context);
                   },
@@ -76,10 +67,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
                 child: Column(
                   children: <Widget>[
                     _usernameTextField(_usernameController, state),
-                    Container(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: _genderSelector(state),
-                    ),],
+                    ],
                 ),
               ),
             );
@@ -88,14 +76,14 @@ class _FamilyDialogState extends State<FamilyDialog>{
     );
   }
 
-  Widget _usernameTextField(TextEditingController usernameController, FamilyState state) => new TextFormField(
+  Widget _usernameTextField(TextEditingController usernameController, ProfileState state) => new TextFormField(
     decoration: InputDecoration(
         labelText: 'Name',
         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(
-            color: formColor, width: 1),
+            color: ColorsPalette.meditSea, width: 1),
         ),
         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(
-            color: formColor, width: 1),
+            color: ColorsPalette.meditSea, width: 1),
         )
     ),
     keyboardType: TextInputType.text,
@@ -107,27 +95,8 @@ class _FamilyDialogState extends State<FamilyDialog>{
     controller: usernameController,
   );
 
-  Widget _genderSelector(FamilyState state) => new DropdownButton<String>(
-    value: _selectedGender,
-    isExpanded: true,
-    hint: new Text("Select Gender"),
-    underline: Container(
-      height: 1,
-      color: formColor,
-    ),
-    items: _genders.map((String value) {
-      return new DropdownMenuItem<String>(
-        value: value,
-        child: new Text(value),
-      );
-    }).toList(),
-    onChanged: (String value) {
-      context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
-    },
-  );
-
   void _onUsernameChanged() {
-    context.bloc<FamilyBloc>().add(UsernameFamilyChanged(username: _usernameController.text));
+    context.bloc<ProfileBloc>().add(UsernameChanged(username: _usernameController.text.trim()));
   }
 
 }

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
 import 'package:traces/loginSignup/validator.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
@@ -9,7 +8,6 @@ import 'package:meta/meta.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository _profileRepository;
-  StreamSubscription _profileSubscription;
 
   ProfileBloc({@required ProfileRepository profileRepository})
       : assert(profileRepository != null),
@@ -32,11 +30,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     else if (event is UsernameUpdated) {
       yield* _mapUsernameUpdatedToState(event.username);
     }
+    else if (event is FamilyUpdated) {
+      yield* _mapFamilyMemberUpdatedToState(event.name, event.position);
+    }
   }
 
   Stream<ProfileState> _mapUsernameChangedToState(String username) async*{
     yield state.update(
-        isUsernameValid: LoginSignupValidator.isValidUsername(username)
+        isUsernameValid: LoginSignupValidator.isValidUsername(username),
+        isEditing: true
     );
   }
 
@@ -44,19 +46,30 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     await _profileRepository.updateUsername(username);
 
-    Profile profile = Profile(state.profile.email, displayName: username, isEmailVerified: state.profile.isEmailVerified);
+    Profile profile = Profile(state.profile.email, state.profile.familyMembers, displayName: username, isEmailVerified: state.profile.isEmailVerified);
 
     Profile updProfile = await _profileRepository.updateProfile(profile);
 
     yield state.update(profile: updProfile);
+  }
 
-    /*yield state.update(
-        isUsernameValid: LoginSignupValidator.isValidUsername(username)
-    );*/
+  Stream<ProfileState> _mapFamilyMemberUpdatedToState(String name, int position) async*{
+
+    if(position != null){
+      state.profile.familyMembers[position] = name;
+    }else{
+      state.profile.familyMembers.add(name);
+    }
+
+    Profile profile = Profile(state.profile.email, state.profile.familyMembers, displayName: state.profile.displayName, isEmailVerified: state.profile.isEmailVerified);
+
+    Profile updProfile = await _profileRepository.updateProfile(profile);
+
+    yield state.update(profile: updProfile);
   }
 
   Stream<ProfileState> _mapUpdateProfileStateToState(UpdateProfileState event) async* {
-    yield ProfileState.success(profile: event.profile, familyMembers: event.familyMembers);
+    yield ProfileState.success(profile: event.profile);
   }
 
   Stream<ProfileState> _mapGetProfileToState(GetProfile event) async*{
@@ -68,11 +81,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       profile = await _profileRepository.addNewProfile();
     }
 
-    _profileSubscription?.cancel();
-
-    _profileSubscription = _profileRepository.familyMembers().listen(
-          (familyMembers) => add(UpdateProfileState(familyMembers, profile)),
-    );
+    yield ProfileState.success(profile: profile);
   }
 
 }

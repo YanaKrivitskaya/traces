@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:traces/screens/profile/bloc/family/family_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/family_dialog.dart';
-import 'package:traces/screens/profile/model/family.dart';
-import 'package:traces/screens/profile/repository/firebase_profile_repository.dart';
+import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 
 class EditFamilyButton extends StatelessWidget {
-  final Family familyMember;
+  final int familyMemberPosition;
 
-  EditFamilyButton(this.familyMember);
+  EditFamilyButton(this.familyMemberPosition);
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +14,10 @@ class EditFamilyButton extends StatelessWidget {
       icon: Icon(Icons.arrow_forward_ios, size: 15.0),
       onPressed: (){
         showDialog(barrierDismissible: false, context: context,builder: (_) =>
-            BlocProvider<FamilyBloc>(
-              create: (context) => FamilyBloc(profileRepository: FirebaseProfileRepository())..add(EditMode(familyMember: familyMember)),
-              child: FamilyDialog(),
-            ),
+            BlocProvider.value(
+              value: context.bloc<ProfileBloc>(),
+              child: FamilyDialog(familyMemberPosition),
+            )
         );
       },
     );
