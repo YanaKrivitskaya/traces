@@ -51,8 +51,9 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
     UserCountries userCountries = await _visasRepository.userCountries();
     Settings settings = await _visasRepository.settings();
-    //FamilyMembers members = await _profileRepository.familyMembers();
+    var userProfile = await _profileRepository.getCurrentProfile();
+    List<String> members = userProfile.familyMembers;
 
-    yield VisaDetailsState.success(visa: null, settings: settings, userCountries: userCountries);
+    yield VisaDetailsState.success(visa: null, settings: settings, userCountries: userCountries, members: members);
   }
 }
