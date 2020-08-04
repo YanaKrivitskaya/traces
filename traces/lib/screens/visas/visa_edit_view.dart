@@ -65,10 +65,25 @@ class _VisaEditViewState extends State<VisaEditView> {
                 child: Form(
                   key: this._formKey,
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                    _ownerSelector(state),
                     _countrySelector(state),
                     _typeSelector(state),
-                    _entriesNumberSelector(state),
-                    _durationSelector(state),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: _entriesNumberSelector(state),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          padding: EdgeInsets.only(top: 3.0),
+                          child: _durationSelector(state),
+                        ),
+                      ],
+                    ),
+                    /*_entriesNumberSelector(state),
+                    _durationSelector(state),*/
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
                       Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                         Text("Valid from", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
@@ -97,14 +112,14 @@ class _VisaEditViewState extends State<VisaEditView> {
     });
   }
 
-  Widget _memberSelector(VisaDetailsState state) => new DropdownButtonFormField<String>(
+  Widget _ownerSelector(VisaDetailsState state) => new DropdownButtonFormField<String>(
     value: _selectedEntriesNumber,
     isExpanded: true,
     decoration: InputDecoration(
-        labelText: "Number of Entries",
+        labelText: "Visa owner",
         labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
     ),
-    items: state.settings.entries.map((String value) {
+    items: state.familyMembers.map((String value) {
       return new DropdownMenuItem<String>(
         value: value,
         child: new Text(value),
@@ -187,7 +202,7 @@ class _VisaEditViewState extends State<VisaEditView> {
     value: _selectedEntriesNumber,
     isExpanded: true,
     decoration: InputDecoration(
-        labelText: "Number of Entries",
+        labelText: "Entries",
         labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
     ),
     items: state.settings.entries.map((String value) {
@@ -237,7 +252,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         lastDate: DateTime(2101));
     if (picked != null && picked != dateValidTo)
       setState(() {
-        dateValidFrom = picked;
+        dateValidTo = picked;
       });
   }
 

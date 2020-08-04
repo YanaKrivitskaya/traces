@@ -4,7 +4,7 @@ class VisaDetailsState {
   final Visa visa;
   final Settings settings;
   final UserCountries userCountries;
- // final FamilyMembers familyMember;
+  final List<String> familyMembers;
   final bool isLoading;
   final bool isSuccess;
   final bool isFailure;
@@ -14,7 +14,7 @@ class VisaDetailsState {
     @required this.visa,
     @required this.settings,
     @required this.userCountries,
-  //  @required this.familyMember,
+    @required this.familyMembers,
     @required this.isLoading,
     @required this.isSuccess,
     @required this.isFailure,
@@ -25,7 +25,7 @@ class VisaDetailsState {
         visa: null,
         settings: null,
         userCountries: null,
-        //familyMember: null,
+        familyMembers: null,
         isLoading: false,
         isSuccess: false,
         isFailure: false,
@@ -38,7 +38,7 @@ class VisaDetailsState {
         visa: null,
         settings: null,
         userCountries: null,
-       // familyMember: null,
+        familyMembers: null,
         isLoading: true,
         isSuccess: false,
         isFailure: false,
@@ -46,12 +46,12 @@ class VisaDetailsState {
     );
   }
 
-  factory VisaDetailsState.success({Visa visa, Settings settings, UserCountries userCountries/*, FamilyMembers member*/}){
+  factory VisaDetailsState.success({Visa visa, Settings settings, UserCountries userCountries, List<String> members}){
     return VisaDetailsState(
         visa: visa,
         settings: settings,
         userCountries: userCountries,
-        //familyMember: member,
+        familyMembers: members,
         isLoading: false,
         isSuccess: true,
         isFailure: false,
@@ -59,12 +59,12 @@ class VisaDetailsState {
     );
   }
 
-  factory VisaDetailsState.failure({Visa visa, Settings settings, UserCountries userCountries/*, FamilyMembers member*/, String error}){
+  factory VisaDetailsState.failure({Visa visa, Settings settings, UserCountries userCountries, List<String> members, String error}){
     return VisaDetailsState(
         visa: visa,
         settings: settings,
         userCountries: userCountries,
-        //familyMember: member,
+        familyMembers: members,
         isLoading: false,
         isSuccess: false,
         isFailure: true,
@@ -76,7 +76,7 @@ class VisaDetailsState {
     final Visa visa,
     final Settings settings,
     final UserCountries userCountries,
-   // final FamilyMembers member,
+    final List<String> members,
     bool searchEnabled,
     bool isLoading,
     bool isSuccess,
@@ -87,7 +87,7 @@ class VisaDetailsState {
         visa: visa ?? this.visa,
         settings: settings ?? this.settings,
         userCountries: userCountries ?? this.userCountries,
-       // familyMember: member ?? this.familyMember,
+        familyMembers: members ?? this.familyMembers,
         isLoading: isLoading ?? this.isLoading,
         isSuccess: isSuccess ?? this.isSuccess,
         isFailure: isFailure ?? this.isFailure,
@@ -107,7 +107,7 @@ class VisaDetailsState {
         visa: visa,
         settings: settings,
         userCountries: userCountries,
-       // member: familyMember,
+        members: familyMembers,
         isLoading: isLoading,
         isSuccess: isSuccess,
         isFailure: isFailure,
