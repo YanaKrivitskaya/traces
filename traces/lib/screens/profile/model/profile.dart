@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:traces/screens/profile/model/profile_entity.dart';
 
@@ -7,27 +6,30 @@ import 'package:traces/screens/profile/model/profile_entity.dart';
   final String displayName;
   final bool isEmailVerified;
   final String id;
+  final List<String> familyMembers;
 
-  Profile(this.email, {String displayName, String id, bool isEmailVerified})
+  Profile(this.email, this.familyMembers, {String displayName, String id, bool isEmailVerified})
       : this.id = id,
         this.isEmailVerified = isEmailVerified,
         this.displayName = displayName ?? '';
 
-  Profile copyWith({String email, String displayName, bool isEmailVerified}){
+  Profile copyWith({String email, String displayName, bool isEmailVerified, List<String> familyMembers}){
     return Profile(
       email ?? this.email,
+      familyMembers ?? this.familyMembers,
       displayName: displayName ?? this.displayName,
-      isEmailVerified: isEmailVerified ?? isEmailVerified
+      isEmailVerified: isEmailVerified ?? this.isEmailVerified
     );
   }
 
   ProfileEntity toEntity(){
-    return ProfileEntity(id, email, displayName, isEmailVerified);
+    return ProfileEntity(id, familyMembers, email, displayName, isEmailVerified);
   }
 
   static Profile fromEntity(ProfileEntity entity){
     return Profile(
         entity.email,
+        entity.familyMembers,
         id: entity.id,
         displayName: entity.displayName,
         isEmailVerified: entity.isEmailVerified

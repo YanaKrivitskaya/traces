@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/screens/profile/model/family.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
 import 'package:traces/screens/visas/model/settings.dart';
 import 'package:traces/screens/visas/model/user_countries.dart';
@@ -52,7 +51,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
     UserCountries userCountries = await _visasRepository.userCountries();
     Settings settings = await _visasRepository.settings();
-    Family members = await _profileRepository.familyMembers();
+    //FamilyMembers members = await _profileRepository.familyMembers();
 
     yield VisaDetailsState.success(visa: null, settings: settings, userCountries: userCountries);
   }
