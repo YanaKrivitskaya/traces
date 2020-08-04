@@ -8,6 +8,22 @@ class ColorsPalette {
 
   static const Color back = const Color(0xFFFEFCFB); // back
 
+  static const MaterialColor matVisaCalendarColor = const MaterialColor(
+    0xFF273C75,
+    const <int, Color>{
+      50: const Color(0xFF273C75),
+      100: const Color(0xFF273C75),
+      200: const Color(0xFF273C75),
+      300: const Color(0xFF273C75),
+      400: const Color(0xFF273C75),
+      500: const Color(0xFF273C75),
+      600: const Color(0xFF273C75),
+      700: const Color(0xFF273C75),
+      800: const Color(0xFF273C75),
+      900: const Color(0xFF273C75),
+    },
+  );
+
   static const Color iconColor = beniukonBronze;
   static const Color iconTitle = blueHorizon;
   static const Color mainColor = blueHorizon;

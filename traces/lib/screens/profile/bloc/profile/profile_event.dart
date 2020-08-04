@@ -1,6 +1,5 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/profile/model/family.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 
 
@@ -14,7 +13,7 @@ abstract class ProfileEvent extends Equatable {
 class GetProfile extends ProfileEvent {}
 
 class UpdateProfileState extends ProfileEvent {
-  final List<Family> familyMembers;
+  final List<String> familyMembers;
 
   final Profile profile;
 
@@ -31,6 +30,16 @@ class UsernameChanged extends ProfileEvent{
 
   @override
   List<Object> get props => [username];
+}
+
+class FamilyUpdated extends ProfileEvent{
+  final String name;
+  final int position;
+
+  const FamilyUpdated({@required this.name, @required this.position});
+
+  @override
+  List<Object> get props => [name, position];
 }
 
 class UsernameUpdated extends ProfileEvent{

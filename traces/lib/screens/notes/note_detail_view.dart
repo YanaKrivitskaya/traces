@@ -157,7 +157,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
       Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}',
           style: new TextStyle(fontSize: 12.0
           )),
-      _noteTags.length > 1 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
+      _noteTags.length > 0 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
       _getTags(tags),
       Divider(color: ColorsPalette.nycTaxi),
       Text('${_note.text}', style: new TextStyle(fontSize: 16),),
