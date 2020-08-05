@@ -1,4 +1,3 @@
-
 import 'package:traces/auth/userRepository.dart';
 import 'package:traces/screens/visas/model/entryExit.dart';
 import 'package:traces/screens/visas/model/entryExit_entity.dart';
@@ -96,6 +95,19 @@ class FirebaseVisasRepository extends VisasRepository{
   Future<Visa> updateVisa(Visa visa) {
     // TODO: implement updateVisa
     return null;
+  }
+
+  @override
+  Future<void> updateUserCountries(List<String> countries) async {
+    String uid = await _userRepository.getUserId();
+
+    var userCountriesRef = await visasCollection.document(uid);
+
+    UserCountries userCountries = new UserCountries(countries);
+
+    await visasCollection.document(uid).setData(userCountries.toEntity().toDocument());
+    
+    //await userCountriesRef.updateData(userCountries.toEntity().toDocument());
   }
 
 }
