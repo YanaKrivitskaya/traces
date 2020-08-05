@@ -87,7 +87,7 @@ class RouteGenerator{
         if(args is String){
           return MaterialPageRoute(builder: (_) =>
               BlocProvider<VisaDetailsBloc>(
-                create: (context) => VisaDetailsBloc(visasRepository: FirebaseVisasRepository()
+                create: (context) => VisaDetailsBloc(visasRepository: FirebaseVisasRepository(), profileRepository: FirebaseProfileRepository()
                 )..add(args != '' ? GetVisaDetails(args) : NewVisaMode()),
                 child: VisaEditView(),
               ),

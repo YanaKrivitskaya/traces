@@ -8,9 +8,9 @@ import 'package:traces/screens/visas/model/visa_entity.dart';
   final DateTime startDate;
   final DateTime endDate;
   final String countryOfIssue;
-  final int durationOfStay;
+  final String durationOfStay;
   final String numberOfEntries;
-  final String memberId;
+  final String owner;
   final List<String> entryExitIds;
   final String type;
 
@@ -18,14 +18,14 @@ import 'package:traces/screens/visas/model/visa_entity.dart';
       this.endDate,
       this.countryOfIssue,
       this.durationOfStay,
-      this.numberOfEntries, this.memberId,
+      this.numberOfEntries, this.owner,
       {String id, List<String> entryExitIds, String type, String validCountries})
       : this.id = id,
         this.entryExitIds = entryExitIds ?? new List<String>(),
         this.type = type;
 
   VisaEntity toEntity(){
-    return VisaEntity(id, startDate, endDate, countryOfIssue, durationOfStay, numberOfEntries, entryExitIds, type, memberId);
+    return VisaEntity(id, startDate, endDate, countryOfIssue, durationOfStay, numberOfEntries, entryExitIds, type, owner);
   }
 
   static Visa fromEntity(VisaEntity entity){

@@ -28,10 +28,10 @@ class EditModeClicked extends VisaDetailsEvent{
   List<Object> get props => [visa];
 }
 
-class SaveNoteClicked extends VisaDetailsEvent{
+class SaveVisaClicked extends VisaDetailsEvent{
   final Visa visa;
 
-  SaveNoteClicked(this.visa);
+  SaveVisaClicked(this.visa);
 
   @override
   List<Object> get props => [visa];

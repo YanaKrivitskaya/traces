@@ -31,6 +31,8 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapGetVisaDetailsToState(event);
     }else if(event is NewVisaMode){
       yield* _mapNewVisaModeToState(event);
+    }else if(event is SaveVisaClicked){
+      yield* _mapSaveVisaClickedToState(event.visa);
     }
   }
 
@@ -51,8 +53,43 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
     UserCountries userCountries = await _visasRepository.userCountries();
     Settings settings = await _visasRepository.settings();
-    //FamilyMembers members = await _profileRepository.familyMembers();
+    var userProfile = await _profileRepository.getCurrentProfile();
+    List<String> members = userProfile.familyMembers;
 
-    yield VisaDetailsState.success(visa: null, settings: settings, userCountries: userCountries);
+    if(members.length == 0){
+      members.add(userProfile.displayName);
+    }
+
+    yield VisaDetailsState.success(visa: null, settings: settings, userCountries: userCountries, members: members);
+  }
+
+  Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async*{
+    yield state.copyWith(isLoading: true);
+
+    if(visa.endDate.difference(visa.startDate).inDays < 1){
+      yield VisaDetailsState.failure(
+          visa: visa,
+          settings: state.settings,
+          userCountries: state.userCountries,
+          members: state.familyMembers,
+          error: "End date should be greater than Start date");
+    }
+
+    visa = await _visasRepository.addNewVisa(visa).timeout(Duration(seconds: 3), onTimeout: (){
+      print("have timeout");
+      return visa;
+    });
+
+    UserCountries userCountries = await _visasRepository.userCountries();
+
+    if(userCountries.countries.where((c) => c == visa.countryOfIssue).length == 0){
+      userCountries.countries.add(visa.countryOfIssue);
+      await _visasRepository.updateUserCountries(userCountries.countries).timeout(Duration(seconds: 3), onTimeout: (){
+        print("have timeout");
+        return null;
+      });
+    }
+
+    yield VisaDetailsState.success(visa: visa, settings: state.settings, userCountries: state.userCountries, members: state.familyMembers);
   }
 }

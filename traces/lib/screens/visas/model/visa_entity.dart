@@ -6,7 +6,7 @@ class VisaEntity extends Equatable{
   final DateTime startDate;
   final DateTime endDate;
   final String countryOfIssue;
-  final int durationOfStay;
+  final String durationOfStay;
   final String numberOfEntries;
   final String memberId;
   final List<String> entryExitIds;
@@ -39,7 +39,7 @@ class VisaEntity extends Equatable{
         map["startDate"].toDate(),
         map["endDate"].toDate(),
         map["country"] as String,
-        map["durationOfStay"] as int,
+        map["durationOfStay"] as String,
         map["numberOfEntries"] as String,
         map["entryExitIds"] != null ? map["entryExitIds"].cast<String>() as List<String> : null,
         map["type"] as String,

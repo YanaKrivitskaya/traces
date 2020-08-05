@@ -4,8 +4,8 @@ import 'package:traces/colorsPalette.dart';
 import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:traces/screens/visas/model/visa.dart';
 
 class VisaEditView extends StatefulWidget {
   VisaEditView({Key key}) : super(key: key);
@@ -21,7 +21,7 @@ class _VisaEditViewState extends State<VisaEditView> {
 
   String _selectedType;
   String _selectedEntriesNumber;
-  String _selectedMember;
+  String _selectedOwner;
 
   DateTime dateValidFrom = DateTime.now();
   DateTime dateValidTo = DateTime.now();
@@ -42,10 +42,10 @@ class _VisaEditViewState extends State<VisaEditView> {
     super.dispose();
   }
 
-  @override
+  /*@override
   Widget build(BuildContext context) {
     return BlocBuilder<VisaDetailsBloc, VisaDetailsState>(builder: (context, state){
-      print(state);
+
       return new Scaffold(
         appBar: AppBar(
           title: Text('New Visa', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
@@ -57,60 +57,158 @@ class _VisaEditViewState extends State<VisaEditView> {
         ),
         body: Container(
             padding: EdgeInsets.all(5.0),
-            child: state.isSuccess ? Container(
-              color: ColorsPalette.white,
-              padding: EdgeInsets.all(15.0),
-              //height: MediaQuery.of(context).size.height * 0.6,
-              child: SingleChildScrollView(
-                child: Form(
-                  key: this._formKey,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                    _countrySelector(state),
-                    _typeSelector(state),
-                    _entriesNumberSelector(state),
-                    _durationSelector(state),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                        Text("Valid from", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
-                        SizedBox(height: 30.0),
-                        Text("Valid to", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
-                      ],),
-                      Column(children: <Widget>[
-                        Text('${DateFormat.yMMMd().format(dateValidFrom)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 30.0),
-                        Text('${DateFormat.yMMMd().format(dateValidTo)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
-                      ],),
-                      Column(children: <Widget>[
-                        IconButton(icon: Icon(Icons.calendar_today, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidFromDate(context),),
-                        IconButton(icon: Icon(Icons.calendar_today, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidToDate(context),)
-                      ],),
-                    ],),
-                    Divider(color: ColorsPalette.algalFuel,),
-                    Center(child:RaisedButton(child: Text("Create visa"), textColor: ColorsPalette.lynxWhite, color: ColorsPalette.algalFuel, onPressed: (){},) ,)
-                  ],),
-                )
-              ),
-            ) : Center(child: CircularProgressIndicator())
+            /*child: state.isSuccess ? Container(
+
+            ) : Center(child: CircularProgressIndicator())*/
+
         ),
         backgroundColor: Colors.white,
       );
     });
+  }*/
+
+  @override
+  Widget build(BuildContext context){
+    return new Scaffold(
+      appBar: AppBar(
+        title: Text('New Visa', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
+        backgroundColor: ColorsPalette.mazarineBlue,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        )
+      ),
+
+      body: BlocListener<VisaDetailsBloc, VisaDetailsState>(
+        listener: (context, state){
+          if(state.isFailure){
+            Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
+              SnackBar(
+                backgroundColor: ColorsPalette.redPigment,
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 250,
+                      child: Text(
+                        state.errorMessage, style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                    Icon(Icons.error)],
+                ),
+              ),
+            );
+          }
+        },
+        child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(builder: (context, state){
+          /*if (state is Initial) {
+            return Center(child: Text('Press the Button'));
+          }*/
+          if (state.isLoading) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if(state.isSuccess || state.isFailure){
+            return Container(
+                padding: EdgeInsets.all(5.0),
+                child: _createForm(state)
+            );
+          }else{
+            return Center(child: CircularProgressIndicator());
+          }
+        })
+      ),
+      backgroundColor: Colors.white,
+    );
   }
 
-  Widget _memberSelector(VisaDetailsState state) => new DropdownButtonFormField<String>(
-    value: _selectedEntriesNumber,
+
+  Widget _createForm(VisaDetailsState state) => new Container(
+    color: ColorsPalette.white,
+    padding: EdgeInsets.all(15.0),
+    //height: MediaQuery.of(context).size.height * 0.6,
+    child: SingleChildScrollView(
+        child: Form(
+          key: this._formKey,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+            _ownerSelector(state),
+            _countrySelector(state),
+            _typeSelector(state),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: _entriesNumberSelector(state),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  padding: EdgeInsets.only(top: 3.0),
+                  child: _durationSelector(state),
+                ),
+              ],
+            ),
+            /*_entriesNumberSelector(state),
+                    _durationSelector(state),*/
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                Text("Start date", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
+                SizedBox(height: 30.0),
+                Text("End date", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
+              ],),
+              Column(children: <Widget>[
+                Text('${DateFormat.yMMMd().format(dateValidFrom)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                SizedBox(height: 30.0),
+                Text('${DateFormat.yMMMd().format(dateValidTo)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+              ],),
+              Column(children: <Widget>[
+                IconButton(icon: Icon(Icons.calendar_today, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidFromDate(context),),
+                IconButton(icon: Icon(Icons.calendar_today, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidToDate(context),)
+              ],),
+            ],),
+            Divider(color: ColorsPalette.algalFuel),
+            _submitButton(state)
+          ],),
+        )
+    )
+  );
+
+  Widget _submitButton(VisaDetailsState state) => new Center(
+    child:RaisedButton(
+      child: Text("Create visa"),
+      textColor: ColorsPalette.lynxWhite,
+      color: ColorsPalette.algalFuel,
+      onPressed: (){
+        Visa visaToSave = new Visa(
+          this.dateValidFrom,
+          this.dateValidTo,
+          this._countryController.text.trim(),
+          this._durationController.text.trim(),
+          this._selectedEntriesNumber,
+          this._selectedOwner,
+          type: this._selectedType,
+          entryExitIds: new List<String>());
+        context.bloc<VisaDetailsBloc>().add(SaveVisaClicked(visaToSave));
+        //Navigator.pop(context);
+      })
+  );
+
+  Widget _ownerSelector(VisaDetailsState state) => new DropdownButtonFormField<String>(
+    value: _selectedOwner,
     isExpanded: true,
     decoration: InputDecoration(
-        labelText: "Number of Entries",
+        labelText: "Visa owner",
         labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
     ),
-    items: state.settings.entries.map((String value) {
+    items: state.familyMembers.map((String value) {
       return new DropdownMenuItem<String>(
         value: value,
         child: new Text(value),
       );
     }).toList(),
     onChanged: (String value) {
+      this._selectedOwner = value;
       //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
   );
@@ -118,6 +216,7 @@ class _VisaEditViewState extends State<VisaEditView> {
   Widget _countrySelector(VisaDetailsState state) => new TypeAheadFormField(
     textFieldConfiguration: TextFieldConfiguration(
         controller: this._countryController,
+        //focusNode: FocusNode(canRequestFocus: false),
         decoration: InputDecoration(
             labelText: 'Country of issue',
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
@@ -142,14 +241,14 @@ class _VisaEditViewState extends State<VisaEditView> {
     },
     onSuggestionSelected: (suggestion) {
       this._countryController.text = suggestion;
+      FocusScope.of(context).unfocus();
     },
     validator: (value) {
       if (value.isEmpty) {
         return 'Please select a country';
       }
       return '';
-    },
-    //onSaved: (value) => this._selectedCountry = value,
+    }
   );
 
   Widget _durationSelector(VisaDetailsState state) => new TextFormField(
@@ -179,7 +278,8 @@ class _VisaEditViewState extends State<VisaEditView> {
       );
     }).toList(),
     onChanged: (String value) {
-      //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
+      this._selectedType = value;
+      FocusScope.of(context).unfocus();
     },
   );
 
@@ -187,7 +287,7 @@ class _VisaEditViewState extends State<VisaEditView> {
     value: _selectedEntriesNumber,
     isExpanded: true,
     decoration: InputDecoration(
-        labelText: "Number of Entries",
+        labelText: "Entries",
         labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
     ),
     items: state.settings.entries.map((String value) {
@@ -197,6 +297,8 @@ class _VisaEditViewState extends State<VisaEditView> {
       );
     }).toList(),
     onChanged: (String value) {
+      this._selectedEntriesNumber = value;
+      FocusScope.of(context).unfocus();
       //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
   );
@@ -216,6 +318,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != dateValidFrom)
+      //TODO: add event DateFromChanged
       setState(() {
         dateValidFrom = picked;
       });
@@ -236,8 +339,9 @@ class _VisaEditViewState extends State<VisaEditView> {
         firstDate: DateTime(2010, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != dateValidTo)
+      //TODO: add event DateToChanged
       setState(() {
-        dateValidFrom = picked;
+        dateValidTo = picked;
       });
   }
 
