@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:traces/screens/visas/model/visa.dart';
+import 'dart:io';
 
 class VisaEditView extends StatefulWidget {
   VisaEditView({Key key}) : super(key: key);
@@ -27,6 +28,7 @@ class _VisaEditViewState extends State<VisaEditView> {
   DateTime dateValidTo = DateTime.now();
 
   bool _isEditMode = false;
+  bool _autovalidate = false;
 
   @override
   void initState() {
@@ -101,15 +103,63 @@ class _VisaEditViewState extends State<VisaEditView> {
               ),
             );
           }
+          if(state.isLoading && state.isEditing){
+            Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
+              SnackBar(
+                backgroundColor: ColorsPalette.algalFuel,
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.lynxWhite),),
+                      height: 30.0,
+                      width: 30.0,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          if(state.isSuccess){
+            Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
+              SnackBar(
+                backgroundColor: ColorsPalette.algalFuel,
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 250,
+                      child: Text(
+                        "Visa created successfully", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                    Icon(Icons.info)],
+                ),
+              ),
+            );
+            /*sleep(const Duration(seconds: 5));
+            Navigator.pop(context);*/
+            Future.delayed(const Duration(seconds: 2), () {
+              Navigator.pop(context);
+            });
+          }
+          if(state.isEditing){
+            if(state.familyMembers.length == 1) {
+              this._selectedOwner = state.familyMembers.first;
+            }
+          }
+
+          _autovalidate = state.autovalidate;
+          print("autovalidate");
+          print(state.autovalidate);
         },
         child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(builder: (context, state){
-          /*if (state is Initial) {
-            return Center(child: Text('Press the Button'));
-          }*/
-          if (state.isLoading) {
-            return Center(child: CircularProgressIndicator());
+          if (state.isLoading && !state.isEditing) {
+            return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.algalFuel)));
           }
-          if(state.isSuccess || state.isFailure){
+          if(state.isEditing || state.isSuccess || state.isFailure){
             return Container(
                 padding: EdgeInsets.all(5.0),
                 child: _createForm(state)
@@ -174,12 +224,28 @@ class _VisaEditViewState extends State<VisaEditView> {
     )
   );
 
+  /*Validations:
+
+  -- Owner should be selected
+  -- Country should be selected
+  -- Type should be selected
+  -- Entries should be selected
+  -- Duration of stay should be entered
+  -- End date should be greater than start date
+
+   */
+
   Widget _submitButton(VisaDetailsState state) => new Center(
     child:RaisedButton(
       child: Text("Create visa"),
       textColor: ColorsPalette.lynxWhite,
       color: ColorsPalette.algalFuel,
       onPressed: (){
+        var isFormValid = _formKey.currentState.validate();
+
+        print("isFormValid");
+        print(isFormValid);
+
         Visa visaToSave = new Visa(
           this.dateValidFrom,
           this.dateValidTo,
@@ -189,7 +255,9 @@ class _VisaEditViewState extends State<VisaEditView> {
           this._selectedOwner,
           type: this._selectedType,
           entryExitIds: new List<String>());
-        context.bloc<VisaDetailsBloc>().add(SaveVisaClicked(visaToSave));
+        //context.bloc<VisaDetailsBloc>().add(SaveVisaClicked(visaToSave));
+
+        context.bloc<VisaDetailsBloc>().add(VisaSubmitted(visaToSave, isFormValid));
         //Navigator.pop(context);
       })
   );
@@ -211,16 +279,19 @@ class _VisaEditViewState extends State<VisaEditView> {
       this._selectedOwner = value;
       //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
-  );
+    autovalidate: _autovalidate,
+    validator: (value) {
+      return value == null ? 'Required field' : null;
+    }
+    );
 
   Widget _countrySelector(VisaDetailsState state) => new TypeAheadFormField(
     textFieldConfiguration: TextFieldConfiguration(
         controller: this._countryController,
-        //focusNode: FocusNode(canRequestFocus: false),
         decoration: InputDecoration(
             labelText: 'Country of issue',
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
-        )
+        ),
     ),
     // ignore: missing_return
     suggestionsCallback: (pattern) {
@@ -243,11 +314,12 @@ class _VisaEditViewState extends State<VisaEditView> {
       this._countryController.text = suggestion;
       FocusScope.of(context).unfocus();
     },
+    autovalidate: _autovalidate,
     validator: (value) {
       if (value.isEmpty) {
-        return 'Please select a country';
+        return 'Required field';
       }
-      return '';
+      return null;
     }
   );
 
@@ -257,9 +329,9 @@ class _VisaEditViewState extends State<VisaEditView> {
         labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
     ),
     controller: _durationController,
-    autovalidate: true,
-    validator: (_) {
-      //return !state.isEmailValid ? 'Invalid Email' : null;
+    autovalidate: _autovalidate,
+    validator: (value) {
+      return value.isEmpty ? 'Required field' : null;
     },
     keyboardType: TextInputType.number
   );
@@ -281,6 +353,10 @@ class _VisaEditViewState extends State<VisaEditView> {
       this._selectedType = value;
       FocusScope.of(context).unfocus();
     },
+    autovalidate: _autovalidate,
+    validator: (value) {
+      return value == null ? 'Required field' : null;
+    },
   );
 
   Widget _entriesNumberSelector(VisaDetailsState state) => new DropdownButtonFormField<String>(
@@ -300,6 +376,10 @@ class _VisaEditViewState extends State<VisaEditView> {
       this._selectedEntriesNumber = value;
       FocusScope.of(context).unfocus();
       //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
+    },
+    autovalidate: _autovalidate,
+    validator: (value) {
+      return value == null ? 'Required field' : null;
     },
   );
 
