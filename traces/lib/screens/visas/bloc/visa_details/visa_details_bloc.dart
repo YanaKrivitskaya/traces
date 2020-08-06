@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
 import 'package:traces/screens/visas/model/settings.dart';
@@ -8,7 +9,6 @@ import 'package:traces/screens/visas/model/visa.dart';
 import 'package:traces/screens/visas/repository/visas_repository.dart';
 
 part 'visa_details_event.dart';
-
 part 'visa_details_state.dart';
 
 class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
@@ -33,6 +33,8 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapNewVisaModeToState(event);
     }else if(event is SaveVisaClicked){
       yield* _mapSaveVisaClickedToState(event.visa);
+    }else if(event is VisaSubmitted){
+      yield* _mapVisaSubmittedToState(event);
     }
   }
 
@@ -60,20 +62,36 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       members.add(userProfile.displayName);
     }
 
-    yield VisaDetailsState.success(visa: null, settings: settings, userCountries: userCountries, members: members);
+    yield VisaDetailsState.editing(visa: null, settings: settings, userCountries: userCountries, members: members, autovalidate: false);
   }
 
-  Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async*{
-    yield state.copyWith(isLoading: true);
+  Stream<VisaDetailsState> _mapVisaSubmittedToState(VisaSubmitted event)async*{
+    String errorMessage = "";
 
-    if(visa.endDate.difference(visa.startDate).inDays < 1){
+    if(!event.isFormValid){
+      errorMessage = 'Required fields should not be empty';
+    }
+
+    //validate dates
+    if(event.visa.endDate.difference(event.visa.startDate).inDays < 1){
+      errorMessage += "\nEnd date should be greater than Start date";
+    }
+
+    if(errorMessage.isNotEmpty){
       yield VisaDetailsState.failure(
-          visa: visa,
+          visa: event.visa,
           settings: state.settings,
           userCountries: state.userCountries,
           members: state.familyMembers,
-          error: "End date should be greater than Start date");
+          autovalidate: true,
+          error: errorMessage);
+    }else{
+      add(SaveVisaClicked(event.visa));
     }
+  }
+
+  Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async*{
+    yield state.copyWith(isLoading: true, isSuccess: false, isFailure: false, isEditing: true);
 
     visa = await _visasRepository.addNewVisa(visa).timeout(Duration(seconds: 3), onTimeout: (){
       print("have timeout");

@@ -6,8 +6,10 @@ class VisaDetailsState {
   final UserCountries userCountries;
   final List<String> familyMembers;
   final bool isLoading;
+  final bool isEditing;
   final bool isSuccess;
   final bool isFailure;
+  final bool autovalidate;
   final String errorMessage;
 
   const VisaDetailsState({
@@ -16,8 +18,10 @@ class VisaDetailsState {
     @required this.userCountries,
     @required this.familyMembers,
     @required this.isLoading,
+    @required this.isEditing,
     @required this.isSuccess,
     @required this.isFailure,
+    this.autovalidate = false,
     this.errorMessage});
 
   factory VisaDetailsState.empty(){
@@ -27,6 +31,7 @@ class VisaDetailsState {
         userCountries: null,
         familyMembers: null,
         isLoading: false,
+        isEditing: false,
         isSuccess: false,
         isFailure: false,
         errorMessage: ""
@@ -40,8 +45,24 @@ class VisaDetailsState {
         userCountries: null,
         familyMembers: null,
         isLoading: true,
+        isEditing: false,
         isSuccess: false,
         isFailure: false,
+        errorMessage: ""
+    );
+  }
+
+  factory VisaDetailsState.editing({Visa visa, Settings settings, UserCountries userCountries, List<String> members, bool autovalidate}){
+    return VisaDetailsState(
+        visa: visa,
+        settings: settings,
+        userCountries: userCountries,
+        familyMembers: members,
+        isLoading: false,
+        isEditing: true,
+        isSuccess: false,
+        isFailure: false,
+        autovalidate: autovalidate,
         errorMessage: ""
     );
   }
@@ -53,21 +74,31 @@ class VisaDetailsState {
         userCountries: userCountries,
         familyMembers: members,
         isLoading: false,
+        isEditing: false,
         isSuccess: true,
         isFailure: false,
         errorMessage: ""
     );
   }
 
-  factory VisaDetailsState.failure({Visa visa, Settings settings, UserCountries userCountries, List<String> members, String error}){
+  factory VisaDetailsState.failure({
+    Visa visa,
+    Settings settings,
+    UserCountries userCountries,
+    List<String> members,
+    bool autovalidate,
+    String error
+  }){
     return VisaDetailsState(
         visa: visa,
         settings: settings,
         userCountries: userCountries,
         familyMembers: members,
+        isEditing: false,
         isLoading: false,
         isSuccess: false,
         isFailure: true,
+        autovalidate: autovalidate,
         errorMessage: error
     );
   }
@@ -79,8 +110,10 @@ class VisaDetailsState {
     final List<String> members,
     bool searchEnabled,
     bool isLoading,
+    bool isEditing,
     bool isSuccess,
     bool isFailure,
+    bool autovalidate,
     String errorMessage
   }){
     return VisaDetailsState(
@@ -89,8 +122,10 @@ class VisaDetailsState {
         userCountries: userCountries ?? this.userCountries,
         familyMembers: members ?? this.familyMembers,
         isLoading: isLoading ?? this.isLoading,
+        isEditing: isEditing ?? this.isEditing,
         isSuccess: isSuccess ?? this.isSuccess,
         isFailure: isFailure ?? this.isFailure,
+        autovalidate: autovalidate ?? this.autovalidate,
         errorMessage: errorMessage ?? this.errorMessage
     );
   }
@@ -99,8 +134,10 @@ class VisaDetailsState {
     Visa visa,
     Settings settings,
     bool isLoading,
+    bool isEditing,
     bool isSuccess,
     bool isFailure,
+    bool autovalidate,
     String errorMessage
   }){
     return copyWith(
@@ -109,8 +146,10 @@ class VisaDetailsState {
         userCountries: userCountries,
         members: familyMembers,
         isLoading: isLoading,
+        isEditing: isEditing,
         isSuccess: isSuccess,
         isFailure: isFailure,
+        autovalidate: autovalidate,
         errorMessage: errorMessage
     );
   }

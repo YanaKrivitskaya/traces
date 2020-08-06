@@ -28,6 +28,34 @@ class EditModeClicked extends VisaDetailsEvent{
   List<Object> get props => [visa];
 }
 
+class DateFromChanged extends VisaDetailsEvent{
+  final DateTime dateFrom;
+
+  DateFromChanged(this.dateFrom);
+
+  @override
+  List<Object> get props => [dateFrom];
+}
+
+class DateToChanged extends VisaDetailsEvent{
+  final DateTime dateTo;
+
+  DateToChanged(this.dateTo);
+
+  @override
+  List<Object> get props => [dateTo];
+}
+
+class VisaSubmitted extends VisaDetailsEvent{
+  final Visa visa;
+  final bool isFormValid;
+
+  VisaSubmitted(this.visa, this.isFormValid);
+
+  @override
+  List<Object> get props => [visa, isFormValid];
+}
+
 class SaveVisaClicked extends VisaDetailsEvent{
   final Visa visa;
 
