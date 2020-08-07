@@ -30,7 +30,7 @@ class NoteFilterButton extends StatelessWidget{
                   value: context.bloc<NoteBloc>(),
                 ),
                 BlocProvider<NoteSortBloc>(
-                  create: (context) => NoteSortBloc(),
+                  create: (context) => NoteSortBloc(null),
                 ),
               ],
               child: SortDialog(),

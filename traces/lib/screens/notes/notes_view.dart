@@ -47,7 +47,7 @@ class _NotesViewState extends State<NotesView> {
     return BlocListener<NoteBloc, NoteState>(
         listener: (context, state) {},
         child: BlocBuilder<NoteBloc, NoteState>(
-            bloc: BlocProvider.of(context),
+            cubit: BlocProvider.of(context),
             builder: (context, state){
 
               if(state.isLoading || _tagBloc.state.isLoading /*|| state is NotesEmpty*/){

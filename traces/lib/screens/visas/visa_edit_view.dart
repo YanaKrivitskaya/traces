@@ -139,8 +139,6 @@ class _VisaEditViewState extends State<VisaEditView> {
                 ),
               ),
             );
-            /*sleep(const Duration(seconds: 5));
-            Navigator.pop(context);*/
             Future.delayed(const Duration(seconds: 2), () {
               Navigator.pop(context);
             });

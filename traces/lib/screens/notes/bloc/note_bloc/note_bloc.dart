@@ -13,7 +13,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   NoteBloc({@required NoteRepository notesRepository})
       : assert(notesRepository != null),
-        _notesRepository = notesRepository;
+        _notesRepository = notesRepository, super(null);
 
   @override
   NoteState get initialState => NoteState.empty();

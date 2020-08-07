@@ -11,7 +11,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
 
   NoteDetailsBloc({@required NoteRepository notesRepository})
       : assert(notesRepository != null),
-        _notesRepository = notesRepository;
+        _notesRepository = notesRepository, super(null);
 
   @override
   NoteDetailsState get initialState => InitialNoteDetailsState(null);

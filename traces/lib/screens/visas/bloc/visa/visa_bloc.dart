@@ -15,17 +15,22 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
 
   VisaBloc({@required VisasRepository visasRepository})
       : assert(visasRepository != null),
-        _visasRepository = visasRepository;
+        _visasRepository = visasRepository, super(null);
 
   @override
   VisaState get initialState => VisaState.empty();
 
   @override
   Stream<VisaState> mapEventToState(VisaEvent event) async* {
-    // TODO: Add your event logic
+    if (event is GetAllVisas) {
+      yield* _mapGetVisasToState(event);
+    } else if (event is UpdateVisasList) {
+      yield* _mapUpdateVisasListToState(event);
+    }
   }
 
   Stream<VisaState> _mapUpdateVisasListToState(UpdateVisasList event) async* {
+
     yield VisaState.success(allVisas: event.allVisas);
   }
 

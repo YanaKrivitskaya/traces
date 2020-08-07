@@ -11,7 +11,7 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
 
   TagAddBloc({@required NoteRepository notesRepository})
       : assert(notesRepository != null),
-        _notesRepository = notesRepository;
+        _notesRepository = notesRepository, super(null);
 
   @override
   TagAddState get initialState => TagAddState.empty();

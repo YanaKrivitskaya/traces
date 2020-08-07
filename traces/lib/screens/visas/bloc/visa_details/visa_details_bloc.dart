@@ -19,7 +19,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   VisaDetailsBloc({@required VisasRepository visasRepository, @required ProfileRepository profileRepository})
       : assert(visasRepository != null),
         _visasRepository = visasRepository,
-        _profileRepository = profileRepository;
+        _profileRepository = profileRepository, super(null);
 
 
   @override

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 
-class SimpleBlocDelegate extends BlocDelegate{
+class SimpleBlocDelegate extends BlocObserver{
   @override
   void onEvent(Bloc bloc, Object event) {
     print(event);
@@ -9,7 +9,7 @@ class SimpleBlocDelegate extends BlocDelegate{
   }
 
   @override
-  onError(Bloc bloc, Object error, StackTrace stackTrace){
+  onError(Cubit bloc, Object error, StackTrace stackTrace){
     super.onError(bloc, error, stackTrace);
     print(error);
   }
