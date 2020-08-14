@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/visas/model/visa.dart';
 import 'package:equatable/equatable.dart';
+import 'package:traces/screens/visas/model/visa_tab.dart';
 import 'package:traces/screens/visas/repository/visas_repository.dart';
 
 part 'visa_event.dart';
@@ -15,7 +16,7 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
 
   VisaBloc({@required VisasRepository visasRepository})
       : assert(visasRepository != null),
-        _visasRepository = visasRepository, super(null);
+        _visasRepository = visasRepository, super(VisaState.empty());
 
   @override
   VisaState get initialState => VisaState.empty();

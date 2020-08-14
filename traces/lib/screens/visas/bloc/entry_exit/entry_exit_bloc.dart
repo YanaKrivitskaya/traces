@@ -7,7 +7,7 @@ part 'entry_exit_event.dart';
 part 'entry_exit_state.dart';
 
 class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
-  EntryExitBloc(EntryExitState initialState) : super(initialState);
+  EntryExitBloc(EntryExitState initialState) : super(InitialEntryExitState());
 
   @override
   EntryExitState get initialState => InitialEntryExitState();

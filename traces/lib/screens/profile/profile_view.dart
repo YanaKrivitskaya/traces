@@ -8,6 +8,7 @@ import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 import 'package:traces/screens/profile/edit_family_button.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/name_edit_button.dart';
+import 'package:traces/shared/shared.dart';
 
 class ProfileView extends StatefulWidget{
 
@@ -39,7 +40,7 @@ class _ProfileViewState extends State<ProfileView>{
                     children: <Widget>[
                       CircleAvatar(
                           backgroundColor: ColorsPalette.lynxWhite,
-                          child: Text(_getAvatarName(), style: TextStyle(color: ColorsPalette.meditSea, fontSize: 40.0, fontWeight: FontWeight.w300),),
+                          child: Text(getAvatarName(_profile.displayName), style: TextStyle(color: ColorsPalette.meditSea, fontSize: 40.0, fontWeight: FontWeight.w300),),
                           radius: 50.0
                       ),
                       Expanded(child: Align(child: Row(
@@ -108,21 +109,6 @@ class _ProfileViewState extends State<ProfileView>{
         }else return Container();
       },
     );
-  }
-
-  String _getAvatarName(){
-    if(_profile.displayName.length <= 3) return _profile.displayName.toUpperCase();
-    if(_profile.displayName.contains(' ')){
-      List<String> nameParts = _profile.displayName.split(' ');
-      String avatarName = '';
-      nameParts.forEach((n) {
-        avatarName += n.substring(0, 1);
-      });
-      if(avatarName.length > 3) return avatarName.substring(0, 3);
-      return avatarName;
-    }else{
-      return _profile.displayName.substring(0, 1);
-    }
   }
 
   Widget _footer(){

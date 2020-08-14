@@ -6,7 +6,7 @@ import 'package:traces/screens/visas/model/visa_tab.dart';
 
 part 'visa_tab_event.dart';
 
-part 'visa_tab_state.dart';
+part '__visa_tab_state.dart';
 
 class VisaTabBloc extends Bloc<VisaTabEvent, VisaTab> {
   VisaTabBloc() : super(VisaTab.AllVisas);
