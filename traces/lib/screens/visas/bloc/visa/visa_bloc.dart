@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/visas/model/visa.dart';
 import 'package:equatable/equatable.dart';
+import 'package:traces/screens/visas/model/visa_tab.dart';
 import 'package:traces/screens/visas/repository/visas_repository.dart';
 
 part 'visa_event.dart';
@@ -15,17 +16,22 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
 
   VisaBloc({@required VisasRepository visasRepository})
       : assert(visasRepository != null),
-        _visasRepository = visasRepository;
+        _visasRepository = visasRepository, super(VisaState.empty());
 
   @override
   VisaState get initialState => VisaState.empty();
 
   @override
   Stream<VisaState> mapEventToState(VisaEvent event) async* {
-    // TODO: Add your event logic
+    if (event is GetAllVisas) {
+      yield* _mapGetVisasToState(event);
+    } else if (event is UpdateVisasList) {
+      yield* _mapUpdateVisasListToState(event);
+    }
   }
 
   Stream<VisaState> _mapUpdateVisasListToState(UpdateVisasList event) async* {
+
     yield VisaState.success(allVisas: event.allVisas);
   }
 

@@ -12,7 +12,7 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
 
   TagFilterBloc({@required NoteRepository notesRepository})
       : assert(notesRepository != null),
-        _notesRepository = notesRepository;
+        _notesRepository = notesRepository, super(TagFilterState.empty());
 
   @override
   TagFilterState get initialState => TagFilterState.empty();

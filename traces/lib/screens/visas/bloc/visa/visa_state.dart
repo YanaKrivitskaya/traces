@@ -87,4 +87,15 @@ class VisaState {
     );
   }
 
+  @override
+  String toString(){
+    return '''VisaState{
+      allVisas: $allVisas,
+      isLoading: $isLoading,
+      isSuccess: $isSuccess,
+      isFailure: $isFailure,
+      errorMessage: $errorMessage      
+    }''';
+  }
+
 }

@@ -14,7 +14,8 @@ import 'package:flutter/services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.
-  BlocSupervisor.delegate = SimpleBlocDelegate();
+  //BlocSupervisor.delegate = SimpleBlocDelegate();
+  Bloc.observer = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
 
   runApp(

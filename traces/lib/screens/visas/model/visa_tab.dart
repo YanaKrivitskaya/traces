@@ -1,0 +1,1 @@
+enum VisaTab {AllVisas, ActiveVisas, ExpiredVisas}

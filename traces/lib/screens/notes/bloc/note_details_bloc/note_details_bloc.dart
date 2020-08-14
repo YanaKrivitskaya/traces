@@ -11,10 +11,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
 
   NoteDetailsBloc({@required NoteRepository notesRepository})
       : assert(notesRepository != null),
-        _notesRepository = notesRepository;
-
-  @override
-  NoteDetailsState get initialState => InitialNoteDetailsState(null);
+        _notesRepository = notesRepository, super(InitialNoteDetailsState(null));
 
   @override
   Stream<NoteDetailsState> mapEventToState(

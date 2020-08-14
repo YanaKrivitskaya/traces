@@ -10,13 +10,11 @@ import 'package:rxdart/rxdart.dart';
 class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
   UserRepository _userRepository;
 
-  LoginSignupBloc({
-    @required UserRepository userRepository
-  }) : assert (userRepository != null),
-      _userRepository = userRepository;
+  LoginSignupBloc({@required UserRepository userRepository}) : assert (userRepository != null),
+      _userRepository = userRepository, super(LoginSignupState.empty());
 
-  @override
-  LoginSignupState get initialState => LoginSignupState.empty();
+  /*@override
+  LoginSignupState get initialState => LoginSignupState.empty();*/
 
   @override
   Stream<Transition<LoginSignupEvent, LoginSignupState>> transformEvents(

@@ -19,3 +19,12 @@ class UpdateVisasList extends VisaEvent {
   @override
   List<Object> get props => [allVisas];
 }
+
+class VisaTabUpdated extends VisaEvent {
+  final VisaTab activeTab;
+
+  const VisaTabUpdated(this.activeTab);
+
+  @override
+  List<Object> get props => [activeTab];
+}

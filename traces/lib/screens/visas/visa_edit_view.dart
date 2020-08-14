@@ -44,31 +44,6 @@ class _VisaEditViewState extends State<VisaEditView> {
     super.dispose();
   }
 
-  /*@override
-  Widget build(BuildContext context) {
-    return BlocBuilder<VisaDetailsBloc, VisaDetailsState>(builder: (context, state){
-
-      return new Scaffold(
-        appBar: AppBar(
-          title: Text('New Visa', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
-          backgroundColor: ColorsPalette.mazarineBlue,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        body: Container(
-            padding: EdgeInsets.all(5.0),
-            /*child: state.isSuccess ? Container(
-
-            ) : Center(child: CircularProgressIndicator())*/
-
-        ),
-        backgroundColor: Colors.white,
-      );
-    });
-  }*/
-
   @override
   Widget build(BuildContext context){
     return new Scaffold(
@@ -139,8 +114,6 @@ class _VisaEditViewState extends State<VisaEditView> {
                 ),
               ),
             );
-            /*sleep(const Duration(seconds: 5));
-            Navigator.pop(context);*/
             Future.delayed(const Duration(seconds: 2), () {
               Navigator.pop(context);
             });
