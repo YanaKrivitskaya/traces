@@ -3,20 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:traces/screens/visas/model/settings_entity.dart';
 
 @immutable
-class Settings{
+class VisaSettings{
   final List<String> visaTypes;
   final List<String> entries;
+  final List<String> transport;
 
-  Settings(this.visaTypes, this.entries);
+  VisaSettings(this.visaTypes, this.entries, this.transport);
 
-  SettingsEntity toEntity(){
-    return SettingsEntity(visaTypes, entries);
+  VisaSettingsEntity toEntity(){
+    return VisaSettingsEntity(visaTypes, entries, transport);
   }
 
-  static Settings fromEntity(SettingsEntity entity){
-    return Settings(
+  static VisaSettings fromEntity(VisaSettingsEntity entity){
+    return VisaSettings(
         entity.visaTypes,
-        entity.entries
+        entity.entries,
+        entity.transport
     );
   }
 

@@ -9,17 +9,16 @@ class VisaEntity extends Equatable{
   final String durationOfStay;
   final String numberOfEntries;
   final String memberId;
-  final List<String> entryExitIds;
   final String type;
   final DateTime dateCreated;
   final DateTime dateModified;
 
   VisaEntity(this.id, this.startDate, this.endDate, this.countryOfIssue,
-      this.durationOfStay, this.numberOfEntries, this.entryExitIds, this.type, this.memberId, this.dateCreated, this.dateModified);
+      this.durationOfStay, this.numberOfEntries, this.type, this.memberId, this.dateCreated, this.dateModified);
 
   @override
   List<Object> get props => [this.id, this.startDate, this.endDate,
-    this.countryOfIssue, this.durationOfStay, this.numberOfEntries, this.entryExitIds,  this.type, this.memberId, dateCreated, dateModified];
+    this.countryOfIssue, this.durationOfStay, this.numberOfEntries, this.type, this.memberId, dateCreated, dateModified];
 
   Map<String, Object> toJson(){
     return{
@@ -29,7 +28,6 @@ class VisaEntity extends Equatable{
       "country": countryOfIssue,
       "durationOfStay": durationOfStay,
       "numberOfEntries": numberOfEntries,
-      "entryExitIds": entryExitIds,
       "type": type,
       "memberId": memberId,
       "dateCreated": dateCreated,
@@ -45,7 +43,6 @@ class VisaEntity extends Equatable{
         map["country"] as String,
         map["durationOfStay"] as String,
         map["numberOfEntries"] as String,
-        map["entryExitIds"] != null ? map["entryExitIds"].cast<String>() as List<String> : null,
         map["type"] as String,
         map["memberId"] as String,
         map["dateCreated"].toDate(),
@@ -55,17 +52,16 @@ class VisaEntity extends Equatable{
 
   static VisaEntity fromSnapshot(DocumentSnapshot snap){
     return VisaEntity(
-        snap.documentID,
-        snap.data['startDate'].toDate(),
-        snap.data['endDate'].toDate(),
-        snap.data['country'],
-        snap.data['durationOfStay'],
-        snap.data['numberOfEntries'],
-        snap.data['entryExitIds']!= null ? snap.data['entryExitIds'].cast<String>() : null,
-        snap.data['type'],
-        snap.data['memberId'],
-        snap.data['dateCreated'].toDate(),
-        snap.data['dateModified'].toDate(),
+        snap.id,
+        snap.data()['startDate'].toDate(),
+        snap.data()['endDate'].toDate(),
+        snap.data()['country'],
+        snap.data()['durationOfStay'],
+        snap.data()['numberOfEntries'],
+        snap.data()['type'],
+        snap.data()['memberId'],
+        snap.data()['dateCreated'].toDate(),
+        snap.data()['dateModified'].toDate(),
     );
   }
 
@@ -76,7 +72,6 @@ class VisaEntity extends Equatable{
       "country": countryOfIssue,
       "durationOfStay": durationOfStay,
       "numberOfEntries": numberOfEntries,
-      "entryExitIds": entryExitIds,
       "type": type,
       "memberId": memberId,
       "dateCreated": dateCreated,

@@ -21,9 +21,9 @@ class TagEntity extends Equatable{
 
   static TagEntity fromSnapshot(DocumentSnapshot snap){
     return TagEntity(
-        snap.documentID,
-        snap.data["name"],
-        snap.data["usage"]
+        snap.id,
+        snap.data()["name"],
+        snap.data()["usage"]
     );
   }
 

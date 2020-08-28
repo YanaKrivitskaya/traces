@@ -23,7 +23,7 @@ class UserCountriesEntity extends Equatable{
 
   static UserCountriesEntity fromSnapshot(DocumentSnapshot snap){
     return UserCountriesEntity(
-        snap.data['countries'].cast<String>()
+        snap.data()['countries'].cast<String>()
     );
   }
 

@@ -12,13 +12,10 @@ class UserRepository{
   }
 
   Future<void> signUp(String email, String password, String username) async{
-    AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-    FirebaseUser user = result.user;
+    UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+    User user = userCredential.user;
 
-    UserUpdateInfo profileUpdate = UserUpdateInfo();
-    profileUpdate.displayName = username;
-
-    return await user.updateProfile(profileUpdate);
+    return await user.updateProfile(displayName: username);
   }
 
   Future<void> signOut() async{
@@ -30,15 +27,15 @@ class UserRepository{
   }
 
   Future<String> getUserId() async{
-    return (await _firebaseAuth.currentUser()).uid;
+    return (await _firebaseAuth.currentUser).uid;
   }
 
   Future<FirebaseUser> getUser() async{
-    return (await _firebaseAuth.currentUser());
+    return (await _firebaseAuth.currentUser);
   }
 
   Future<bool> isSignedIn() async{
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    User user = await _firebaseAuth.currentUser;
     return user != null;
   }
 

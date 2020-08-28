@@ -39,12 +39,12 @@ class NoteEntity extends Equatable{
 
   static NoteEntity fromSnapshot(DocumentSnapshot snap){
     return NoteEntity(
-        snap.data['title'],
-        snap.data['text'],
-        snap.documentID,
-        snap.data['dateCreated'].toDate(),
-        snap.data['dateModified'].toDate(),
-        snap.data['tagIds']!= null ? snap.data['tagIds'].cast<String>() : null
+        snap.data()['title'],
+        snap.data()['text'],
+        snap.id,
+        snap.data()['dateCreated'].toDate(),
+        snap.data()['dateModified'].toDate(),
+        snap.data()['tagIds']!= null ? snap.data()['tagIds'].cast<String>() : null
     );
   }
 

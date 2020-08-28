@@ -10,6 +10,7 @@ import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/screens/notes/tags_add_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'bloc/note_bloc/bloc.dart';
 
@@ -100,7 +101,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   }
 
   Widget _tagsAction() => new IconButton(
-    icon: Icon(Icons.turned_in_not, color: Colors.white),
+    icon: FaIcon(FontAwesomeIcons.hashtag),
     onPressed: () {
       showDialog(
           barrierDismissible: false, context: context, builder: (_) =>

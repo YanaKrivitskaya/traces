@@ -9,14 +9,26 @@ import 'package:traces/auth/bloc.dart';
 import 'package:traces/auth/userRepository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/shared/shared.dart';
 import 'loginSignup/loginSignup_page.dart';
 import 'package:flutter/services.dart';
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.
-  //BlocSupervisor.delegate = SimpleBlocDelegate();
+  await Firebase.initializeApp();
   Bloc.observer = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
+
+  // Create the initilization Future outside of `build`:
+  /*Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
+  FutureBuilder(
+    // Initialize FlutterFire:
+    future: _initialization,
+    builder: ()
+  );*/
 
   runApp(
     BlocProvider(
@@ -28,6 +40,9 @@ void main() {
 }
 
 class TracesApp extends StatelessWidget{
+  // Create the initilization Future outside of `build`:
+  //Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   final UserRepository _userRepository;
 
   TracesApp({Key key, @required UserRepository userRepository})
@@ -41,6 +56,7 @@ class TracesApp extends StatelessWidget{
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Traces',

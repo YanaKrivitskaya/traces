@@ -25,11 +25,11 @@ class ProfileEntity extends Equatable{
 
   static ProfileEntity fromSnapshot(DocumentSnapshot snap){
     return ProfileEntity(
-        snap.documentID,
-        snap.data["familyMembers"].cast<String>(),
-        snap.data["email"],
-        snap.data["displayName"],
-        snap.data["isEmailVerified"]
+        snap.id,
+        snap.data()["familyMembers"].cast<String>(),
+        snap.data()["email"],
+        snap.data()["displayName"],
+        snap.data()["isEmailVerified"]
     );
   }
 
