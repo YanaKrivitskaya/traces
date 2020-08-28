@@ -38,6 +38,8 @@ class _VisasViewState extends State<VisasView> {
                 ? this.visas = state.allVisas.where((visa) => !isVisaActive(visa)).toList()
                 : this.visas = state.allVisas.toList();
 
+            this.visas = _sortVisas(visas);
+
             return Container (padding: EdgeInsets.all(5.0),
                 child: SingleChildScrollView(
                   child: Column(
@@ -93,6 +95,13 @@ class _VisasViewState extends State<VisasView> {
       ],
     ),
   );
+
+  List<Visa> _sortVisas(List<Visa> visas){
+    visas.sort((a, b){
+      return b.startDate.millisecondsSinceEpoch.compareTo(a.startDate.millisecondsSinceEpoch);
+    });
+    return visas;
+  }
 
 
 
