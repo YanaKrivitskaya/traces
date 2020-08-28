@@ -124,6 +124,7 @@ class _TagsDialogState extends State<TagsDialog>{
       onChanged: (val) {
         context.bloc<TagFilterBloc>().add(TagChecked(tag, val));
       },
+      activeColor: ColorsPalette.nycTaxi,
     )).toList()
   );
 
@@ -136,6 +137,7 @@ class _TagsDialogState extends State<TagsDialog>{
             _selectAll.isChecked = val;
             context.bloc<TagFilterBloc>().add(AllTagsChecked(val));
           },
+          activeColor: ColorsPalette.nycTaxi,
         )
       ],
   );
@@ -149,6 +151,7 @@ class _TagsDialogState extends State<TagsDialog>{
           _noTags.isChecked = val;
           context.bloc<TagFilterBloc>().add(NoTagsChecked(val));
         },
+        activeColor: ColorsPalette.nycTaxi,
       )
     ],
   );

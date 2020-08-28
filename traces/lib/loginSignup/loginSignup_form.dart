@@ -6,6 +6,7 @@ import 'package:traces/auth/userRepository.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:traces/loginSignup/bloc/bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginSignupForm extends StatefulWidget{
   final UserRepository _userRepository;
@@ -253,7 +254,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
     decoration: InputDecoration(
       labelText: 'Password',
       suffixIcon: IconButton(
-        icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+        icon: FaIcon(_obscurePassword ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye),
         onPressed: (){
           setState(() {
             _obscurePassword = !_obscurePassword;

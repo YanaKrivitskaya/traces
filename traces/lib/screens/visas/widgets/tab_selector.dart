@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:traces/screens/visas/model/visa_tab.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 class TabSelector extends StatelessWidget {
 
@@ -32,8 +34,8 @@ class TabSelector extends StatelessWidget {
     return VisaTab.values.indexOf(activeTab) == VisaTab.values.indexOf(tab);
   }
 
-  Icon getTabIcon(VisaTab tab){
-    var icon = tab == VisaTab.AllVisas ? Icons.credit_card : tab == VisaTab.ActiveVisas ? Icons.check : Icons.close;
-    return Icon(icon, color: isCurrentTabActive(tab) ? ColorsPalette.algalFuel : ColorsPalette.mazarineBlue);
+  FaIcon getTabIcon(VisaTab tab){
+    var icon = tab == VisaTab.AllVisas ? FontAwesomeIcons.random : tab == VisaTab.ActiveVisas ? FontAwesomeIcons.check : FontAwesomeIcons.times;
+    return FaIcon(icon, color: isCurrentTabActive(tab) ? ColorsPalette.algalFuel : ColorsPalette.mazarineBlue);
   }
 }

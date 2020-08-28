@@ -8,7 +8,7 @@ import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/screens/notes/tags_filter_button.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'bloc/note_bloc/bloc.dart';
 
 class NotesPage extends StatelessWidget{
@@ -30,11 +30,15 @@ class NotesPage extends StatelessWidget{
       ],
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: FaIcon(FontAwesomeIcons.chevronLeft),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
           title: Text('Notes', style: GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.white, fontSize: 25.0))),
           backgroundColor: ColorsPalette.greenGrass,
           actions: [
             IconButton(
-              icon: Icon(Icons.search, color: Colors.white),
+              icon: FaIcon(FontAwesomeIcons.search),
               onPressed: (){
                 context.bloc<NoteBloc>().add(SearchBarToggle());
               },

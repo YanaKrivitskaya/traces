@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:traces/screens/visas/model/visa.dart';
-import 'dart:io';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class VisaEditView extends StatefulWidget {
   VisaEditView({Key key}) : super(key: key);
@@ -186,8 +186,8 @@ class _VisaEditViewState extends State<VisaEditView> {
                 Text('${DateFormat.yMMMd().format(dateValidTo)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
               ],),
               Column(children: <Widget>[
-                IconButton(icon: Icon(Icons.calendar_today, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidFromDate(context),),
-                IconButton(icon: Icon(Icons.calendar_today, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidToDate(context),)
+                IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidFromDate(context),),
+                IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidToDate(context),)
               ],),
             ],),
             Divider(color: ColorsPalette.algalFuel),
@@ -228,7 +228,6 @@ class _VisaEditViewState extends State<VisaEditView> {
           this._selectedOwner,
           type: this._selectedType,
           entryExitIds: new List<String>());
-        //context.bloc<VisaDetailsBloc>().add(SaveVisaClicked(visaToSave));
 
         context.bloc<VisaDetailsBloc>().add(VisaSubmitted(visaToSave, isFormValid));
         //Navigator.pop(context);

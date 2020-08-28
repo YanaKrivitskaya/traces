@@ -67,7 +67,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         return new Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: FaIcon(FontAwesomeIcons.chevronLeft),
               onPressed: () => Navigator.of(context).pop(),
             ),
             title: _isEditMode ? Text("Edit note") : Text("View note"),
@@ -120,7 +120,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   );
 
   Widget _editAction(NoteDetailsState state) => new IconButton(
-    icon: Icon(Icons.edit),
+    icon: FaIcon(FontAwesomeIcons.edit),
     onPressed: () {
       if(state is ViewDetailsState){
         context.bloc<NoteDetailsBloc>().add(EditModeClicked(state.note));
@@ -129,7 +129,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   );
 
   Widget _saveAction(Note note) => new IconButton(
-    icon: Icon(Icons.save),
+    icon: FaIcon(FontAwesomeIcons.solidSave),
     onPressed: () {
       Note noteToSave = new Note(_textController.text, title: _titleController.text, id: note.id, dateCreated: note.dateCreated, tagIds: note.tagIds);
       context.bloc<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
@@ -193,7 +193,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   );
 
   Widget _deleteAction(Note note, BuildContext context) => new IconButton(
-    icon: Icon(Icons.delete),
+    icon: FaIcon(FontAwesomeIcons.trashAlt),
     onPressed: () {
       showDialog<String>(
         context: context,

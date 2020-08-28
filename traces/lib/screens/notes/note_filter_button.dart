@@ -5,6 +5,7 @@ import 'package:traces/colorsPalette.dart';
 import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
 import 'package:traces/screens/notes/bloc/note_sort_bloc/bloc.dart';
 import 'package:traces/screens/notes/model/note.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SortField{
   final SortFields _key;
@@ -21,7 +22,7 @@ class NoteFilterButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.sort),
+      icon: FaIcon(FontAwesomeIcons.sortAmountDown),
       onPressed: (){
         showDialog(barrierDismissible: false, context: context,builder: (_) =>
             MultiBlocProvider(

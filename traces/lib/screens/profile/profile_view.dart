@@ -9,6 +9,7 @@ import 'package:traces/screens/profile/edit_family_button.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/name_edit_button.dart';
 import 'package:traces/shared/shared.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfileView extends StatefulWidget{
 
@@ -59,7 +60,7 @@ class _ProfileViewState extends State<ProfileView>{
                       Text("Email: " + _profile.email, style: TextStyle(fontSize: 15.0)),
                       _profile.isEmailVerified
                           ? IconButton(icon: Icon(Icons.check, color: ColorsPalette.meditSea), tooltip: 'Verified')
-                          : IconButton(icon: Icon(Icons.error_outline, color: ColorsPalette.fusionRed), tooltip: 'Not verified'),
+                          : IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.fusionRed), tooltip: 'Not verified'),
                     ],),
                   ),
                   /*Align(
@@ -122,7 +123,7 @@ class _ProfileViewState extends State<ProfileView>{
                 Divider(color: ColorsPalette.meditSea),
                 OutlineButton(
                   child: ListTile(
-                      leading: Icon(Icons.exit_to_app, color: ColorsPalette.fusionRed),
+                      leading: FaIcon(FontAwesomeIcons.signOutAlt, color: ColorsPalette.fusionRed),
                       title: Text('Sign out')),
                   onPressed: (){
                     BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
