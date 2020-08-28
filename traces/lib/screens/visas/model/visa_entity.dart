@@ -8,17 +8,17 @@ class VisaEntity extends Equatable{
   final String countryOfIssue;
   final String durationOfStay;
   final String numberOfEntries;
-  final String memberId;
+  final String owner;
   final String type;
   final DateTime dateCreated;
   final DateTime dateModified;
 
   VisaEntity(this.id, this.startDate, this.endDate, this.countryOfIssue,
-      this.durationOfStay, this.numberOfEntries, this.type, this.memberId, this.dateCreated, this.dateModified);
+      this.durationOfStay, this.numberOfEntries, this.type, this.owner, this.dateCreated, this.dateModified);
 
   @override
   List<Object> get props => [this.id, this.startDate, this.endDate,
-    this.countryOfIssue, this.durationOfStay, this.numberOfEntries, this.type, this.memberId, dateCreated, dateModified];
+    this.countryOfIssue, this.durationOfStay, this.numberOfEntries, this.type, this.owner, dateCreated, dateModified];
 
   Map<String, Object> toJson(){
     return{
@@ -29,7 +29,7 @@ class VisaEntity extends Equatable{
       "durationOfStay": durationOfStay,
       "numberOfEntries": numberOfEntries,
       "type": type,
-      "memberId": memberId,
+      "owner": owner,
       "dateCreated": dateCreated,
       "dateModified": dateModified,
     };
@@ -44,7 +44,7 @@ class VisaEntity extends Equatable{
         map["durationOfStay"] as String,
         map["numberOfEntries"] as String,
         map["type"] as String,
-        map["memberId"] as String,
+        map["owner"] as String,
         map["dateCreated"].toDate(),
         map["dateModified"].toDate(),
     );
@@ -59,7 +59,7 @@ class VisaEntity extends Equatable{
         snap.data()['durationOfStay'],
         snap.data()['numberOfEntries'],
         snap.data()['type'],
-        snap.data()['memberId'],
+        snap.data()['owner'],
         snap.data()['dateCreated'].toDate(),
         snap.data()['dateModified'].toDate(),
     );
@@ -73,7 +73,7 @@ class VisaEntity extends Equatable{
       "durationOfStay": durationOfStay,
       "numberOfEntries": numberOfEntries,
       "type": type,
-      "memberId": memberId,
+      "owner": owner,
       "dateCreated": dateCreated,
       "dateModified": DateTime.now(),
     };

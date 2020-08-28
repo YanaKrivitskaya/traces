@@ -1,7 +1,7 @@
 part of 'visa_details_bloc.dart';
 
 class VisaDetailsState {
-  final Visa visa;
+  Visa visa;
   final VisaSettings settings;
   final UserCountries userCountries;
   final List<String> familyMembers;
@@ -13,7 +13,7 @@ class VisaDetailsState {
   final bool autovalidate;
   final String errorMessage;
 
-  const VisaDetailsState({
+  VisaDetailsState({
     @required this.visa,
     @required this.settings,
     @required this.userCountries,

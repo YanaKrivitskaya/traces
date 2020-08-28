@@ -20,12 +20,10 @@ class _VisaEditViewState extends State<VisaEditView> {
   TextEditingController _countryController;
   TextEditingController _durationController;
 
-  String _selectedType;
-  String _selectedEntriesNumber;
-  String _selectedOwner;
-
-  DateTime dateValidFrom = DateTime.now();
-  DateTime dateValidTo = DateTime.now();
+ /* Visa newVisa = new Visa(
+      startDate: DateTime.now(),
+      endDate: DateTime.now(),
+      entryExitIds: new List<String>());*/
 
   bool _isEditMode = false;
   bool _autovalidate = false;
@@ -78,6 +76,14 @@ class _VisaEditViewState extends State<VisaEditView> {
               ),
             );
           }
+          if(state.isEditing){
+            if(state.visa == null){
+              state.visa = new Visa(
+                    startDate: DateTime.now(),
+                    endDate: DateTime.now(),
+                    entryExitIds: new List<String>());
+            }
+          }
           if(state.isLoading && state.isEditing){
             Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
               SnackBar(
@@ -120,7 +126,7 @@ class _VisaEditViewState extends State<VisaEditView> {
           }
           if(state.isEditing){
             if(state.familyMembers.length == 1) {
-              this._selectedOwner = state.familyMembers.first;
+              state.visa.owner = state.familyMembers.first;
             }
           }
 
@@ -172,8 +178,6 @@ class _VisaEditViewState extends State<VisaEditView> {
                 ),
               ],
             ),
-            /*_entriesNumberSelector(state),
-                    _durationSelector(state),*/
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                 Text("Start date", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
@@ -181,13 +185,13 @@ class _VisaEditViewState extends State<VisaEditView> {
                 Text("End date", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
               ],),
               Column(children: <Widget>[
-                Text('${DateFormat.yMMMd().format(dateValidFrom)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                Text('${DateFormat.yMMMd().format(state.visa.startDate)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
                 SizedBox(height: 30.0),
-                Text('${DateFormat.yMMMd().format(dateValidTo)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                Text('${DateFormat.yMMMd().format(state.visa.endDate)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
               ],),
               Column(children: <Widget>[
-                IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidFromDate(context),),
-                IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidToDate(context),)
+                IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidFromDate(context, state),),
+                IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidToDate(context, state),)
               ],),
             ],),
             Divider(color: ColorsPalette.algalFuel),
@@ -197,17 +201,6 @@ class _VisaEditViewState extends State<VisaEditView> {
     )
   );
 
-  /*Validations:
-
-  -- Owner should be selected
-  -- Country should be selected
-  -- Type should be selected
-  -- Entries should be selected
-  -- Duration of stay should be entered
-  -- End date should be greater than start date
-
-   */
-
   Widget _submitButton(VisaDetailsState state) => new Center(
     child:RaisedButton(
       child: Text("Create visa"),
@@ -216,26 +209,16 @@ class _VisaEditViewState extends State<VisaEditView> {
       onPressed: (){
         var isFormValid = _formKey.currentState.validate();
 
-        print("isFormValid");
-        print(isFormValid);
+        state.visa.countryOfIssue = _countryController.text.trim();
+        state.visa.durationOfStay = this._durationController.text.trim();
 
-        Visa visaToSave = new Visa(
-          this.dateValidFrom,
-          this.dateValidTo,
-          this._countryController.text.trim(),
-          this._durationController.text.trim(),
-          this._selectedEntriesNumber,
-          this._selectedOwner,
-          type: this._selectedType,
-          entryExitIds: new List<String>());
-
-        context.bloc<VisaDetailsBloc>().add(VisaSubmitted(visaToSave, isFormValid));
+        context.bloc<VisaDetailsBloc>().add(VisaSubmitted(state.visa, isFormValid));
         //Navigator.pop(context);
       })
   );
 
   Widget _ownerSelector(VisaDetailsState state) => new DropdownButtonFormField<String>(
-    value: _selectedOwner,
+    value: state.visa.owner,
     isExpanded: true,
     decoration: InputDecoration(
         labelText: "Visa owner",
@@ -248,7 +231,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       );
     }).toList(),
     onChanged: (String value) {
-      this._selectedOwner = value;
+      state.visa.owner = value;
       //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
     autovalidate: _autovalidate,
@@ -309,7 +292,7 @@ class _VisaEditViewState extends State<VisaEditView> {
   );
 
   Widget _typeSelector(VisaDetailsState state) => new DropdownButtonFormField<String>(
-    value: _selectedType,
+    value: state.visa.type,
     isExpanded: true,
     decoration: InputDecoration(
       labelText: "Type",
@@ -322,7 +305,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       );
     }).toList(),
     onChanged: (String value) {
-      this._selectedType = value;
+      state.visa.type = value;
       FocusScope.of(context).unfocus();
     },
     autovalidate: _autovalidate,
@@ -332,7 +315,7 @@ class _VisaEditViewState extends State<VisaEditView> {
   );
 
   Widget _entriesNumberSelector(VisaDetailsState state) => new DropdownButtonFormField<String>(
-    value: _selectedEntriesNumber,
+    value: state.visa.numberOfEntries,
     isExpanded: true,
     decoration: InputDecoration(
         labelText: "Entries",
@@ -345,7 +328,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       );
     }).toList(),
     onChanged: (String value) {
-      this._selectedEntriesNumber = value;
+      state.visa.numberOfEntries = value;
       FocusScope.of(context).unfocus();
       //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
@@ -355,7 +338,7 @@ class _VisaEditViewState extends State<VisaEditView> {
     },
   );
 
-  Future<Null> _selectValidFromDate(BuildContext context) async {
+  Future<Null> _selectValidFromDate(BuildContext context, VisaDetailsState state) async {
     final DateTime picked = await showDatePicker(
         builder: (BuildContext context, Widget child) {
           return Theme(
@@ -366,17 +349,14 @@ class _VisaEditViewState extends State<VisaEditView> {
           );
         },
         context: context,
-        initialDate: dateValidFrom,
+        initialDate: state.visa.startDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != dateValidFrom)
-      //TODO: add event DateFromChanged
-      setState(() {
-        dateValidFrom = picked;
-      });
+    if (picked != null && picked != state.visa.startDate)
+      context.bloc<VisaDetailsBloc>().add(DateFromChanged(picked));
   }
 
-  Future<Null> _selectValidToDate(BuildContext context) async {
+  Future<Null> _selectValidToDate(BuildContext context, VisaDetailsState state) async {
     final DateTime picked = await showDatePicker(
         builder: (BuildContext context, Widget child) {
           return Theme(
@@ -387,14 +367,11 @@ class _VisaEditViewState extends State<VisaEditView> {
           );
         },
         context: context,
-        initialDate: dateValidTo,
-        firstDate: DateTime(2010, 8),
+        initialDate: state.visa.startDate.add(new Duration(days: 1)),
+        firstDate: state.visa.startDate.add(new Duration(days: 1)),
         lastDate: DateTime(2101));
-    if (picked != null && picked != dateValidTo)
-      //TODO: add event DateToChanged
-      setState(() {
-        dateValidTo = picked;
-      });
+    if (picked != null && picked != state.visa.endDate)
+      context.bloc<VisaDetailsBloc>().add(DateToChanged(picked));
   }
 
 }
