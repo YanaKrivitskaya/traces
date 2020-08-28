@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
+import 'package:traces/screens/visas/model/entryExit.dart';
 import 'package:traces/screens/visas/model/visa.dart';
 
 Widget isActiveLabel(Visa visa) => new Text(
@@ -7,9 +8,21 @@ Widget isActiveLabel(Visa visa) => new Text(
     style: TextStyle(color: isVisaActive(visa) ? ColorsPalette.algalFuel : ColorsPalette.carminePink, fontSize: 18.0, fontWeight: FontWeight.bold)
 );
 
-/*Widget daysLeft(Visa visa) => new Text(
-    'Days left: '
-);*/
+String daysLeft(Visa visa, List<EntryExit> entries){
+  int daysLeft = visa.durationOfStay as int;
+
+  for (var entry in entries){
+    var duration = 0;
+    if(entry.hasExit){
+      duration = entry.exitDate.difference(entry.entryDate).inDays;
+    }else{
+      duration = DateTime.now().difference(entry.entryDate).inDays;
+    }
+
+    daysLeft -=duration;
+  }
+  return daysLeft.toString();
+}
 
 bool isVisaActive(Visa visa){
   var currentDate = DateTime.now();

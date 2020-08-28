@@ -8,7 +8,7 @@ import 'package:traces/screens/visas/model/visa_entity.dart';
   DateTime startDate;
   DateTime endDate;
   String countryOfIssue;
-  String durationOfStay;
+  int durationOfStay;
   String numberOfEntries;
   String owner;
   String type;
@@ -19,7 +19,7 @@ import 'package:traces/screens/visas/model/visa_entity.dart';
     DateTime startDate,
     DateTime endDate,
     String countryOfIssue,
-    String durationOfStay,
+    int durationOfStay,
     String numberOfEntries,
     String owner,
     String id,

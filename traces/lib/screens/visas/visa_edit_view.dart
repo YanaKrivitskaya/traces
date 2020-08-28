@@ -210,7 +210,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         var isFormValid = _formKey.currentState.validate();
 
         state.visa.countryOfIssue = _countryController.text.trim();
-        state.visa.durationOfStay = this._durationController.text.trim();
+        state.visa.durationOfStay = this._durationController.text.trim() as int;
 
         context.bloc<VisaDetailsBloc>().add(VisaSubmitted(state.visa, isFormValid));
         //Navigator.pop(context);
