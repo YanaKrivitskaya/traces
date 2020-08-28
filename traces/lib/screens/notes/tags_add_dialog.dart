@@ -130,6 +130,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
           context.bloc<NoteDetailsBloc>().add(SaveNoteClicked(_note));
           context.bloc<TagAddBloc>().add(UpdateTag(updatedTag));
         },
+        activeColor: ColorsPalette.nycTaxi,
       )).toList()
   );
 }

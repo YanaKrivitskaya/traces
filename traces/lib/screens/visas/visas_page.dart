@@ -7,6 +7,7 @@ import 'package:traces/screens/visas/model/visa_tab.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/screens/visas/visas_view.dart';
 import 'package:traces/screens/visas/widgets/tab_selector.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class VisasPage extends StatelessWidget {
 
@@ -20,7 +21,7 @@ class VisasPage extends StatelessWidget {
             title: Text('Visas', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
             backgroundColor: ColorsPalette.mazarineBlue,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: FaIcon(FontAwesomeIcons.chevronLeft),
               onPressed: () => Navigator.of(context).pop(),
             ),
 

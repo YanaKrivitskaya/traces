@@ -4,10 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/auth/authentication_bloc.dart';
 import 'package:traces/auth/authentication_event.dart';
 import 'package:traces/constants.dart';
-import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
-import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
+import 'package:traces/shared/shared.dart';
 import '../colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -46,25 +46,25 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    _menuTile(Icons.card_travel, "Trips", context, tripsRoute),
-                    _menuTile(Icons.explore, "Map", context, mapRoute),
-                    _menuTile(Icons.description, "Notes", context, notesRoute)
+                    _menuTile(FontAwesomeIcons.route, "Trips", context, tripsRoute, ColorsPalette.iconColor),
+                    _menuTile(FontAwesomeIcons.globeEurope, "Map", context, mapRoute, ColorsPalette.iconColor),
+                    _menuTile(FontAwesomeIcons.clipboard, "Notes", context, notesRoute, ColorsPalette.iconColor)
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    _menuTile(Icons.flight, "Flights", context, flightsRoute),
-                    _menuTile(Icons.attach_money, "Expenses", context, expensesRoute),
-                    _menuTile(Icons.home, "Hotels", context, hotelsRoute)
+                    _menuTile(FontAwesomeIcons.plane, "Flights", context, flightsRoute, ColorsPalette.iconColor),
+                    _menuTile(FontAwesomeIcons.dollarSign, "Expenses", context, expensesRoute, ColorsPalette.iconColor),
+                    _menuTile(FontAwesomeIcons.hotel, "Hotels", context, hotelsRoute, ColorsPalette.iconColor)
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    _menuTile(Icons.call_to_action, "Visas", context, visasRoute),
-                    _menuTile(Icons.perm_identity, "Profile", context, profileRoute),
-                    _menuTile(Icons.settings, "Settings", context, settingsRoute)
+                    _menuTile(FontAwesomeIcons.passport, "Visas", context, visasRoute, ColorsPalette.iconColor),
+                    _menuTile(FontAwesomeIcons.user, "Profile", context, profileRoute, ColorsPalette.iconColor),
+                    _menuTile(FontAwesomeIcons.cog, "Settings", context, settingsRoute, ColorsPalette.iconColor)
                   ],
                 ),
               ],
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Column _menuTile(IconData icon, String title, BuildContext context, String routeName) =>Column(
+Column _menuTile(IconData icon, String title, BuildContext context, String routeName, Color iconColor) =>Column(
     children: <Widget>[
       FlatButton(
         onPressed: () {
@@ -88,7 +88,14 @@ Column _menuTile(IconData icon, String title, BuildContext context, String route
         padding: EdgeInsets.all(10.0),
         child: Column( // Replace with a Row for horizontal icon + text
           children: <Widget>[
-            Icon(icon, color: ColorsPalette.iconColor, size: 60.0),
+            FaIcon(icon, color: iconColor, size: 50.0),
+            /*LinearGradientMask(
+              child: FaIcon(
+                icon,
+                size: 50,
+                color: Colors.white,
+              ),
+            ),*/
             //Icon(icon, color: color, size: 60.0),
             Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
           ],

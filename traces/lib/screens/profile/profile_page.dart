@@ -6,6 +6,7 @@ import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 import 'package:traces/screens/profile/profile_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/repository/firebase_profile_repository.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfilePage extends StatelessWidget{
   ProfilePage();
@@ -26,7 +27,7 @@ class ProfilePage extends StatelessWidget{
                   color: ColorsPalette.white, fontSize: 25.0))),
           backgroundColor: ColorsPalette.meditSea,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: FaIcon(FontAwesomeIcons.chevronLeft),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),

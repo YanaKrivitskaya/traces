@@ -25,6 +25,7 @@ class ColorsPalette {
   );
 
   static const Color iconColor = beniukonBronze;
+  //static const Color iconColor = algalFuel;
   static const Color iconTitle = blueHorizon;
   static const Color mainColor = blueHorizon;
   static const Color backColor = back;
@@ -114,4 +115,24 @@ class ColorsPalette {
   // profile module colors
   static const Color meditSea = const Color(0xFF1289A7); // profile
   static const Color fusionRed = const Color(0xFFFC5C65); //profile
+}
+
+class LinearGradientMask extends StatelessWidget {
+  LinearGradientMask({this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      shaderCallback: (bounds) {
+        return RadialGradient(
+          center: Alignment.topLeft,
+          radius: 1,
+          colors: [ColorsPalette.mazarineBlue, ColorsPalette.algalFuel],
+          tileMode: TileMode.mirror,
+        ).createShader(bounds);
+      },
+      child: child,
+    );
+  }
 }

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/bloc/profile/bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NameEditButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        icon: Icon(Icons.edit, size: 20.0, color: ColorsPalette.meditSea),
+        icon: FaIcon(FontAwesomeIcons.edit, size: 20.0, color: ColorsPalette.meditSea),
         onPressed: (){
           showDialog(barrierDismissible: false, context: context,builder: (_) =>
               BlocProvider.value(
