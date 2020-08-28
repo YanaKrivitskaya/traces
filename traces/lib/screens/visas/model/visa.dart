@@ -5,23 +5,35 @@ import 'package:traces/screens/visas/model/visa_entity.dart';
 
 @immutable class Visa{
   final String id;
-  final DateTime startDate;
-  final DateTime endDate;
-  final String countryOfIssue;
-  final String durationOfStay;
-  final String numberOfEntries;
-  final String owner;
-  final String type;
+  DateTime startDate;
+  DateTime endDate;
+  String countryOfIssue;
+  String durationOfStay;
+  String numberOfEntries;
+  String owner;
+  String type;
   final DateTime dateCreated;
   final DateTime dateModified;
 
-  Visa(this.startDate,
-      this.endDate,
-      this.countryOfIssue,
-      this.durationOfStay,
-      this.numberOfEntries, this.owner,
-      {String id, List<String> entryExitIds, String type, String validCountries, DateTime dateCreated, DateTime dateModified})
-      : this.id = id,
+  Visa({
+    DateTime startDate,
+    DateTime endDate,
+    String countryOfIssue,
+    String durationOfStay,
+    String numberOfEntries,
+    String owner,
+    String id,
+    List<String> entryExitIds,
+    String type,
+    DateTime dateCreated,
+    DateTime dateModified}) :
+        this.id = id,
+        this.startDate = startDate,
+        this.endDate = endDate,
+        this.countryOfIssue = countryOfIssue,
+        this.durationOfStay = durationOfStay,
+        this.numberOfEntries = numberOfEntries,
+        this.owner = owner,
         this.type = type,
         this.dateCreated = dateCreated ?? DateTime.now(),
         this.dateModified = dateModified ?? DateTime.now();
@@ -32,12 +44,12 @@ import 'package:traces/screens/visas/model/visa_entity.dart';
 
   static Visa fromEntity(VisaEntity entity){
     return Visa(
-        entity.startDate,
-        entity.endDate,
-        entity.countryOfIssue,
-        entity.durationOfStay,
-        entity.numberOfEntries,
-        entity.memberId,
+        startDate: entity.startDate,
+        endDate: entity.endDate,
+        countryOfIssue: entity.countryOfIssue,
+        durationOfStay: entity.durationOfStay,
+        numberOfEntries: entity.numberOfEntries,
+        owner: entity.owner,
         id: entity.id,
         type: entity.type,
         dateCreated: entity.dateCreated,

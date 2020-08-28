@@ -38,6 +38,10 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapVisaSubmittedToState(event);
     }else if(event is UpdateVisaDetails){
       yield* _mapUpdateVisaDetailsListToState(event);
+    }else if(event is DateFromChanged){
+      yield* _mapDateFromChangedToState(event);
+    }else if(event is DateToChanged){
+      yield* _mapDateToChangedToState(event);
     }
   }
 
@@ -51,8 +55,6 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
     yield VisaDetailsState.loading();
 
-    /*UserCountries userCountries = await _visasRepository.userCountries();*/
-
     VisaSettings settings = await _visasRepository.settings();
 
     _visasSubscription?.cancel();
@@ -60,8 +62,6 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     _visasSubscription = _visasRepository.entryExits(visa.id).listen(
           (entryExits) => add(UpdateVisaDetails(visa, entryExits, settings)),
     );
-
-    //yield VisaDetailsState.success(visa: visa, settings: settings, userCountries: userCountries);
   }
 
   Stream<VisaDetailsState> _mapNewVisaModeToState(NewVisaMode event) async*{
@@ -77,6 +77,20 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     }
 
     yield VisaDetailsState.editing(visa: null, settings: settings, userCountries: userCountries, members: members, autovalidate: false);
+  }
+
+  Stream<VisaDetailsState> _mapDateFromChangedToState(DateFromChanged event) async*{
+    Visa updVisa = state.visa;
+    updVisa.startDate = event.dateFrom;
+
+    yield state.update(visa: updVisa);
+  }
+
+  Stream<VisaDetailsState> _mapDateToChangedToState(DateToChanged event) async*{
+    Visa updVisa = state.visa;
+    updVisa.endDate = event.dateTo;
+
+    yield state.update(visa: updVisa);
   }
 
   Stream<VisaDetailsState> _mapVisaSubmittedToState(VisaSubmitted event)async*{
