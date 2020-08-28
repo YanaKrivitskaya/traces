@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
+import 'package:traces/screens/visas/model/entryExit.dart';
 import 'package:traces/screens/visas/model/settings.dart';
 import 'package:traces/screens/visas/model/user_countries.dart';
 import 'package:traces/screens/visas/model/visa.dart';
@@ -35,7 +36,14 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapSaveVisaClickedToState(event.visa);
     }else if(event is VisaSubmitted){
       yield* _mapVisaSubmittedToState(event);
+    }else if(event is UpdateVisaDetails){
+      yield* _mapUpdateVisaDetailsListToState(event);
     }
+  }
+
+  Stream<VisaDetailsState> _mapUpdateVisaDetailsListToState(UpdateVisaDetails event) async* {
+
+    yield VisaDetailsState.success(visa: event.visa, entryExits: event.entryExists, settings: event.settings);
   }
 
   Stream<VisaDetailsState> _mapGetVisaDetailsToState(GetVisaDetails event) async*{
@@ -43,18 +51,24 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
     yield VisaDetailsState.loading();
 
-    UserCountries userCountries = await _visasRepository.userCountries();
+    /*UserCountries userCountries = await _visasRepository.userCountries();*/
 
-    Settings settings = await _visasRepository.settings();
+    VisaSettings settings = await _visasRepository.settings();
 
-    yield VisaDetailsState.success(visa: visa, settings: settings, userCountries: userCountries);
+    _visasSubscription?.cancel();
+
+    _visasSubscription = _visasRepository.entryExits(visa.id).listen(
+          (entryExits) => add(UpdateVisaDetails(visa, entryExits, settings)),
+    );
+
+    //yield VisaDetailsState.success(visa: visa, settings: settings, userCountries: userCountries);
   }
 
   Stream<VisaDetailsState> _mapNewVisaModeToState(NewVisaMode event) async*{
     yield VisaDetailsState.loading();
 
     UserCountries userCountries = await _visasRepository.userCountries();
-    Settings settings = await _visasRepository.settings();
+    VisaSettings settings = await _visasRepository.settings();
     var userProfile = await _profileRepository.getCurrentProfile();
     List<String> members = userProfile.familyMembers;
 

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
 import 'package:traces/screens/notes/model/tag.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'bloc/note_bloc/bloc.dart';
 
@@ -10,7 +11,7 @@ class TagsFilterButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        icon: Icon(Icons.turned_in_not, color: Colors.white),
+        icon: FaIcon(FontAwesomeIcons.hashtag),
         onPressed: () {
           showDialog(
               barrierDismissible: false, context: context, builder: (_) =>

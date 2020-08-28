@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
+import 'package:traces/constants.dart';
 import 'package:traces/screens/visas/bloc/visa/visa_bloc.dart';
 import 'package:traces/screens/visas/model/visa.dart';
 import 'package:traces/screens/visas/model/visa_tab.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/screens/visas/shared.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:intl/intl.dart';
 
@@ -47,16 +49,21 @@ class _VisasViewState extends State<VisasView> {
                       itemBuilder: (context, position){
                         final visa = this.visas[position];
                         return Card(
-                          child: Container(padding: EdgeInsets.all(10.0),
-                            child: Column(children: <Widget>[
-                              Row(mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  _avatar(visa.owner),
-                                  _visaDetails(visa)
-                                ],
-                              )],
-                            )
-                          )
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, visaDetailsRoute, arguments: visa.id);
+                            },
+                              child: Container(padding: EdgeInsets.all(10.0),
+                                  child: Column(children: <Widget>[
+                                    Row(mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        _avatar(visa.owner),
+                                        _visaDetails(visa)
+                                      ],
+                                    )],
+                                  )
+                              )
+                          ),
                         );
                       }))
                     : Center(child: Container(padding: EdgeInsets.only(top: 20.0),child: Text("No items here", style: TextStyle(fontSize: 18.0))))
@@ -80,24 +87,13 @@ class _VisasViewState extends State<VisasView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(visa.countryOfIssue + ' - ' + visa.type, style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue, fontWeight: FontWeight.bold)),
-        Text(visaDuration(visa), style: TextStyle(fontSize: 15.0)),
         Text('${DateFormat.yMMMd().format(visa.startDate)} - ${DateFormat.yMMMd().format(visa.endDate)}', style: TextStyle(fontSize: 15.0)),
-        Text(isVisaActive(visa) ? 'Active' : 'Expired', style: TextStyle(color: isVisaActive(visa) ? ColorsPalette.algalFuel : ColorsPalette.carminePink, fontSize: 15.0, fontWeight: FontWeight.bold))
+        Text('${visaDuration(visa)} / ${visa.durationOfStay} days', style: TextStyle(fontSize: 15.0)),
+        isActiveLabel(visa)
       ],
     ),
   );
 
-  bool isVisaActive(Visa visa){
-    var currentDate = DateTime.now();
-    if(visa.endDate.difference(currentDate).inDays > 1) return true;
-    return false;
-  }
-
-  String visaDuration(Visa visa){
-    var visaDays = visa.endDate.difference(visa.startDate).inDays;
-    if(visaDays > 30) return (visaDays / 30).toStringAsFixed(1) + " months";
-    else return visaDays.toString() + " days";
-  }
 
 
 }

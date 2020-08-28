@@ -11,7 +11,7 @@ import 'package:traces/screens/visas/repository/visas_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseVisasRepository extends VisasRepository{
-  final visasCollection = Firestore.instance.collection('visas');
+  final visasCollection = FirebaseFirestore.instance.collection('visas');
   final String userVisas = "userVisas";
   final String visaEntries = "visaEntries";
   final String visaSettings = "settings";
@@ -20,14 +20,14 @@ class FirebaseVisasRepository extends VisasRepository{
 
   FirebaseVisasRepository() {
     _userRepository = new UserRepository();
-    Firestore.instance.settings(persistenceEnabled: true);
+    //Firestore.instance.settings(persistenceEnabled: true);
   }
 
   @override
   Stream<List<Visa>> visas() async* {
     String uid = await _userRepository.getUserId();
-    yield* visasCollection.document(uid).collection(userVisas).snapshots().map((snapshot) {
-      return snapshot.documents
+    yield* visasCollection.doc(uid).collection(userVisas).snapshots().map((snapshot) {
+      return snapshot.docs
           .map((doc) => Visa.fromEntity(VisaEntity.fromSnapshot(doc)))
           .toList();
     });
@@ -37,30 +37,30 @@ class FirebaseVisasRepository extends VisasRepository{
   Stream<List<EntryExit>> entryExits(String visaId) async* {
     String uid = await _userRepository.getUserId();
 
-    yield* visasCollection.document(uid).collection(userVisas).document(visaId).collection(visaEntries).snapshots().map((snapshot) {
-      return snapshot.documents
+    yield* visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).snapshots().map((snapshot) {
+      return snapshot.docs
           .map((doc) => EntryExit.fromEntity(EntryExitEntity.fromSnapshot(doc)))
           .toList();
     });
   }
 
   @override
-  Future<Settings> settings() async{
-    var resultSettings = await visasCollection.document(visaSettings).get();
-    return Settings.fromEntity(SettingsEntity.fromMap(resultSettings.data));
+  Future<VisaSettings> settings() async{
+    var resultSettings = await visasCollection.doc(visaSettings).get();
+    return VisaSettings.fromEntity(VisaSettingsEntity.fromMap(resultSettings.data()));
   }
 
   @override
   Future<UserCountries> userCountries() async{
     String uid = await _userRepository.getUserId();
-    var resultCountries = await visasCollection.document(uid).get();
-    return UserCountries.fromEntity(UserCountriesEntity.fromMap(resultCountries.data));
+    var resultCountries = await visasCollection.doc(uid).get();
+    return UserCountries.fromEntity(UserCountriesEntity.fromMap(resultCountries.data()));
   }
 
   @override
   Future<void> addEntryExit(EntryExit entryExit, String visaId) async {
     String uid = await _userRepository.getUserId();
-    await visasCollection.document(uid).collection(userVisas).document(visaId).collection(visaEntries).add(entryExit.toEntity().toDocument());
+    await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).add(entryExit.toEntity().toDocument());
   }
 
   @override
@@ -80,9 +80,9 @@ class FirebaseVisasRepository extends VisasRepository{
   Future<Visa> getVisaById(String id) async{
     String uid = await _userRepository.getUserId();
 
-    var resultNote = await visasCollection.document(uid).collection(userVisas).document(id).get();
+    var resultNote = await visasCollection.doc(uid).collection(userVisas).doc(id).get();
 
-    return Visa.fromEntity(VisaEntity.fromMap(resultNote.data, resultNote.documentID));
+    return Visa.fromEntity(VisaEntity.fromMap(resultNote.data(), resultNote.id));
   }
 
   @override
@@ -101,11 +101,11 @@ class FirebaseVisasRepository extends VisasRepository{
   Future<void> updateUserCountries(List<String> countries) async {
     String uid = await _userRepository.getUserId();
 
-    var userCountriesRef = await visasCollection.document(uid);
+    var userCountriesRef = await visasCollection.doc(uid);
 
     UserCountries userCountries = new UserCountries(countries);
 
-    await visasCollection.document(uid).setData(userCountries.toEntity().toDocument());
+    await visasCollection.doc(uid).set(userCountries.toEntity().toDocument());
     
     //await userCountriesRef.updateData(userCountries.toEntity().toDocument());
   }

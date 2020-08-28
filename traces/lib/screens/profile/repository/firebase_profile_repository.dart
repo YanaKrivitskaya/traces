@@ -7,24 +7,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 
 class FirebaseProfileRepository extends ProfileRepository{
-  final usersCollection = Firestore.instance.collection('users');
+  final usersCollection = FirebaseFirestore.instance.collection('users');
   final String userFamily = "family";
 
   UserRepository _userRepository;
 
   FirebaseProfileRepository() {
     _userRepository = new UserRepository();
-    Firestore.instance.settings(persistenceEnabled: true);
+    //Firestore.instance.settings(persistenceEnabled: true);
   }
 
   @override
   Future<Profile> getCurrentProfile() async {
     String uid = await _userRepository.getUserId();
 
-    var resultProfile = await usersCollection.document(uid).get();
+    var resultProfile = await usersCollection.doc(uid).get();
 
     if(resultProfile.exists){
-      return Profile.fromEntity(ProfileEntity.fromMap(resultProfile.data, resultProfile.documentID));
+      return Profile.fromEntity(ProfileEntity.fromMap(resultProfile.data(), resultProfile.documentID));
     }
 
     return null;
@@ -33,27 +33,24 @@ class FirebaseProfileRepository extends ProfileRepository{
   @override
   Future<Profile> updateProfile(Profile profile) async {
     String uid = await _userRepository.getUserId();
-    await usersCollection.document(uid)
-        .updateData(profile.toEntity().toDocument());
+    await usersCollection.doc(uid)
+        .update(profile.toEntity().toDocument());
     return await getCurrentProfile();
   }
 
   @override
   Future<void> updateUsername(String username) async{
-    FirebaseUser user = await _userRepository.getUser();
+    User user = await _userRepository.getUser();
 
-    UserUpdateInfo profileUpdate = UserUpdateInfo();
-    profileUpdate.displayName = username;
-
-    return await user.updateProfile(profileUpdate);
+    return await user.updateProfile(displayName: username);
   }
 
   @override
   Future<Profile> addNewProfile() async {
-    FirebaseUser user = await _userRepository.getUser();
+    User user = await _userRepository.getUser();
 
-    Profile newProfile = Profile(user.email, new List<String>(), displayName: user.displayName, isEmailVerified: user.isEmailVerified);
-    await usersCollection.document(user.uid).setData(newProfile.toEntity().toDocument());
+    Profile newProfile = Profile(user.email, new List<String>(), displayName: user.displayName, isEmailVerified: user.emailVerified);
+    await usersCollection.doc(user.uid).set(newProfile.toEntity().toDocument());
 
     return await getCurrentProfile();
   }

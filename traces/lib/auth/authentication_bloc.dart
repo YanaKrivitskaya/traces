@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:traces/auth/userRepository.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
@@ -25,6 +26,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async*{
+    await Firebase.initializeApp();
+
     try{
       final isSignedIn = await _userRepository.isSignedIn();
       if(isSignedIn){

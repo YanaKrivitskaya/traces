@@ -1,33 +1,37 @@
 import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SettingsEntity extends Equatable{
+class VisaSettingsEntity extends Equatable{
   final List<String> visaTypes;
   final List<String> entries;
+  final List<String> transport;
 
-  SettingsEntity(this.visaTypes, this.entries);
+  VisaSettingsEntity(this.visaTypes, this.entries, this.transport);
 
   @override
-  List<Object> get props => [visaTypes, entries];
+  List<Object> get props => [visaTypes, entries, transport];
 
   Map<String, Object> toJson(){
     return{
       "visaTypes": visaTypes,
-      "entries": entries
+      "entries": entries,
+      "transport": transport
     };
   }
 
-  static SettingsEntity fromMap(Map<dynamic, dynamic> map){
-    return SettingsEntity(
+  static VisaSettingsEntity fromMap(Map<dynamic, dynamic> map){
+    return VisaSettingsEntity(
         map["visaTypes"].cast<String>() as List<String>,
-        map["entries"].cast<String>() as List<String>
+        map["entries"].cast<String>() as List<String>,
+        map["transport"].cast<String>() as List<String>
     );
   }
 
-  static SettingsEntity fromSnapshot(DocumentSnapshot snap){
-    return SettingsEntity(
-        snap.data['visaTypes'].cast<String>(),
-        snap.data['entries'].cast<String>()
+  static VisaSettingsEntity fromSnapshot(DocumentSnapshot snap){
+    return VisaSettingsEntity(
+        snap.data()['visaTypes'].cast<String>(),
+        snap.data()['entries'].cast<String>(),
+        snap.data()['transport'].cast<String>()
     );
   }
 
@@ -35,6 +39,7 @@ class SettingsEntity extends Equatable{
     return{
       "visaTypes": visaTypes,
       "entries": entries,
+      "transport": transport
     };
   }
 

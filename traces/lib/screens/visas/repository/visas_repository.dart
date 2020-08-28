@@ -11,7 +11,7 @@ abstract class VisasRepository {
 
   Future<UserCountries> userCountries();
 
-  Future<Settings> settings();
+  Future<VisaSettings> settings();
 
   Future<void> addEntryExit(EntryExit entryExit, String visaId);
 

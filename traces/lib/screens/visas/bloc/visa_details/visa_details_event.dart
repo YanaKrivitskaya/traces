@@ -17,6 +17,17 @@ class GetVisaDetails extends VisaDetailsEvent{
   List<Object> get props => [visaId];
 }
 
+class UpdateVisaDetails extends VisaDetailsEvent {
+  final Visa visa;
+  final List<EntryExit> entryExists;
+  final VisaSettings settings;
+
+  const UpdateVisaDetails(this.visa, this.entryExists, this.settings);
+
+  @override
+  List<Object> get props => [visa, entryExists, settings];
+}
+
 class NewVisaMode extends VisaDetailsEvent{}
 
 class EditModeClicked extends VisaDetailsEvent{
