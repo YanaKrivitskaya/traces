@@ -100,6 +100,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
               Text(visa.numberOfEntries, style: TextStyle(fontSize: 15.0)),
               Text('${DateFormat.yMMMd().format(visa.startDate)} - ${DateFormat.yMMMd().format(visa.endDate)}', style: TextStyle(fontSize: 15.0)),
               Text('${visaDuration(visa)} / ${visa.durationOfStay} days', style: TextStyle(fontSize: 15.0)),
+              Text('${daysLeft(visa, entryExits)} days left', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
               Divider(color: ColorsPalette.mazarineBlue, thickness: 1.0,),
               //Text('Entries/Exits', style: TextStyle(color: ColorsPalette.mazarineBlue, fontSize: 18.0, fontWeight: FontWeight.bold),),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
