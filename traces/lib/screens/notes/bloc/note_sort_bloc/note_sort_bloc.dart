@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import './bloc.dart';
 
 class NoteSortBloc extends Bloc<NoteSortEvent, NoteSortState> {
-  NoteSortBloc(NoteSortState initialState) : super(initialState);
+  NoteSortBloc() : super(InitialNoteSortState());
 
   @override
   NoteSortState get initialState => InitialNoteSortState();
