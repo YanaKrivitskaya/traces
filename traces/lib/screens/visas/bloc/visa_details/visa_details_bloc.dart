@@ -42,6 +42,8 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapDateFromChangedToState(event);
     }else if(event is DateToChanged){
       yield* _mapDateToChangedToState(event);
+    }else if(event is EditVisaClicked){
+      yield* _mapEditVisaModeToState(event);
     }
   }
 
@@ -77,6 +79,23 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     }
 
     yield VisaDetailsState.editing(visa: null, settings: settings, userCountries: userCountries, members: members, autovalidate: false);
+  }
+
+  Stream<VisaDetailsState> _mapEditVisaModeToState(EditVisaClicked event) async*{
+    yield VisaDetailsState.loading();
+
+    UserCountries userCountries = await _visasRepository.userCountries();
+    VisaSettings settings = await _visasRepository.settings();
+    var userProfile = await _profileRepository.getCurrentProfile();
+    List<String> members = userProfile.familyMembers;
+
+    if(members.length == 0){
+      members.add(userProfile.displayName);
+    }
+
+    Visa visa = await _visasRepository.getVisaById(event.visaId);
+
+    yield VisaDetailsState.editing(visa: visa, settings: settings, userCountries: userCountries, members: members, autovalidate: false);
   }
 
   Stream<VisaDetailsState> _mapDateFromChangedToState(DateFromChanged event) async*{
@@ -121,10 +140,17 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async*{
     yield state.copyWith(isLoading: true, isSuccess: false, isFailure: false, isEditing: true);
 
-    visa = await _visasRepository.addNewVisa(visa).timeout(Duration(seconds: 3), onTimeout: (){
-      print("have timeout");
-      return visa;
-    });
+    if(visa.id != null){
+      visa = await _visasRepository.updateVisa(visa).timeout(Duration(seconds: 3), onTimeout: (){
+        print("have timeout");
+        return visa;
+      });
+    }else{
+      visa = await _visasRepository.addNewVisa(visa).timeout(Duration(seconds: 3), onTimeout: (){
+        print("have timeout");
+        return visa;
+      });
+    }
 
     UserCountries userCountries = await _visasRepository.userCountries();
 

@@ -66,8 +66,8 @@ class FirebaseVisasRepository extends VisasRepository{
   @override
   Future<Visa> addNewVisa(Visa visa) async {
     String uid = await _userRepository.getUserId();
-    final newVisa = await visasCollection.document(uid).collection(userVisas).add(visa.toEntity().toDocument());
-    return await getVisaById(newVisa.documentID);
+    final newVisa = await visasCollection.doc(uid).collection(userVisas).add(visa.toEntity().toDocument());
+    return await getVisaById(newVisa.id);
   }
 
   @override
@@ -92,9 +92,12 @@ class FirebaseVisasRepository extends VisasRepository{
   }
 
   @override
-  Future<Visa> updateVisa(Visa visa) {
-    // TODO: implement updateVisa
-    return null;
+  Future<Visa> updateVisa(Visa visa) async {
+    String uid = await _userRepository.getUserId();
+    await visasCollection.doc(uid).collection(userVisas)
+        .doc(visa.id)
+        .update(visa.toEntity().toDocument());
+    return await getVisaById(visa.id);
   }
 
   @override

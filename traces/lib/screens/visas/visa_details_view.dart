@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/constants.dart';
 import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/visas/model/entryExit.dart';
@@ -19,73 +20,40 @@ class VisaDetailsView extends StatefulWidget {
 class _VisaDetailsViewState extends State<VisaDetailsView> {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: AppBar(
-          title: Text('Visa Details', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
-          backgroundColor: ColorsPalette.mazarineBlue,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.of(context).pop(),
-          )
-      ),
-
-      body: BlocListener<VisaDetailsBloc, VisaDetailsState>(
+    return BlocListener<VisaDetailsBloc, VisaDetailsState>(
           listener: (context, state){
-            if(state.isFailure){
-              Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
-                SnackBar(
-                  backgroundColor: ColorsPalette.redPigment,
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 250,
-                        child: Text(
-                          state.errorMessage, style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 5,
-                        ),
-                      ),
-                      Icon(Icons.error)],
-                  ),
-                ),
-              );
-            }
-            if(state.isLoading && state.isEditing){
-              Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
-                SnackBar(
-                  backgroundColor: ColorsPalette.algalFuel,
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.lynxWhite),),
-                        height: 30.0,
-                        width: 30.0,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
+
           },
           child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(builder: (context, state){
-            if (state.isLoading) {
-              return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.algalFuel)));
-            }
-            if(state.isSuccess || state.isFailure){
-              return Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: _detailsForm(state.visa, state.entryExits)
-              );
-            }else{
-              return Center(child: CircularProgressIndicator());
-            }
+            return new Scaffold(
+              appBar: AppBar(
+                  title: Text('Visa Details', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
+                  backgroundColor: ColorsPalette.mazarineBlue,
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  actions: [
+                    _editAction(state)
+                  ],
+              ),
+              backgroundColor: Colors.white,
+              body: (state.isSuccess || state.isFailure)
+                      ? Container(
+                        padding: EdgeInsets.all(5.0),
+                        child: _detailsForm(state.visa, state.entryExits)
+                      )
+                      : Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.algalFuel)))
+            );
           })
-      ),
-      backgroundColor: Colors.white,
-    );
+      );
   }
+  Widget _editAction(VisaDetailsState state) => new IconButton(
+    icon: FaIcon(FontAwesomeIcons.edit),
+    onPressed: () {
+      Navigator.popAndPushNamed(context, visaEditRoute, arguments: state.visa.id);
+    },
+  );
 
   Widget _detailsForm(Visa visa, List<EntryExit> entryExits) => new Container(
       color: ColorsPalette.white,

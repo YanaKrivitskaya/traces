@@ -97,8 +97,20 @@ class RouteGenerator{
           return MaterialPageRoute(builder: (_) =>
               BlocProvider<VisaDetailsBloc>(
                 create: (context) => VisaDetailsBloc(visasRepository: FirebaseVisasRepository(), profileRepository: FirebaseProfileRepository()
-                )..add(args != '' ? GetVisaDetails(args) : NewVisaMode()),
-                child: args != '' ? VisaDetailsView() : VisaEditView(),
+                )..add(GetVisaDetails(args)),
+                child: VisaDetailsView(),
+              ),
+          );
+        }
+        return _errorRoute();
+      }
+      case visaEditRoute:{
+        if(args is String){
+          return MaterialPageRoute(builder: (_) =>
+              BlocProvider<VisaDetailsBloc>(
+                create: (context) => VisaDetailsBloc(visasRepository: FirebaseVisasRepository(), profileRepository: FirebaseProfileRepository()
+                )..add(args != '' ? EditVisaClicked(args) : NewVisaMode()),
+                child: VisaEditView(visaId: args),
               ),
           );
         }
