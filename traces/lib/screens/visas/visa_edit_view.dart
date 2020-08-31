@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/colorsPalette.dart';
+import 'package:traces/constants.dart';
 import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -19,11 +20,6 @@ class _VisaEditViewState extends State<VisaEditView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _countryController;
   TextEditingController _durationController;
-
- /* Visa newVisa = new Visa(
-      startDate: DateTime.now(),
-      endDate: DateTime.now(),
-      entryExitIds: new List<String>());*/
 
   bool _isEditMode = false;
   bool _autovalidate = false;
@@ -120,8 +116,8 @@ class _VisaEditViewState extends State<VisaEditView> {
                 ),
               ),
             );
-            Future.delayed(const Duration(seconds: 2), () {
-              Navigator.pop(context);
+            Future.delayed(const Duration(seconds: 1), () {
+              Navigator.popAndPushNamed(context, visaDetailsRoute, arguments: state.visa.id);
             });
           }
           if(state.isEditing){
@@ -131,8 +127,6 @@ class _VisaEditViewState extends State<VisaEditView> {
           }
 
           _autovalidate = state.autovalidate;
-          print("autovalidate");
-          print(state.autovalidate);
         },
         child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(builder: (context, state){
           if (state.isLoading && !state.isEditing) {
@@ -210,7 +204,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         var isFormValid = _formKey.currentState.validate();
 
         state.visa.countryOfIssue = _countryController.text.trim();
-        state.visa.durationOfStay = this._durationController.text.trim() as int;
+        state.visa.durationOfStay = int.parse(this._durationController.text.trim());
 
         context.bloc<VisaDetailsBloc>().add(VisaSubmitted(state.visa, isFormValid));
         //Navigator.pop(context);
