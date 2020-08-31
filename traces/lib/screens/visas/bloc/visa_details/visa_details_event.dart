@@ -30,13 +30,13 @@ class UpdateVisaDetails extends VisaDetailsEvent {
 
 class NewVisaMode extends VisaDetailsEvent{}
 
-class EditModeClicked extends VisaDetailsEvent{
-  final Visa visa;
+class EditVisaClicked extends VisaDetailsEvent{
+  final String visaId;
 
-  EditModeClicked(this.visa);
+  EditVisaClicked(this.visaId);
 
   @override
-  List<Object> get props => [visa];
+  List<Object> get props => [visaId];
 }
 
 class DateFromChanged extends VisaDetailsEvent{

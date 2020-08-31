@@ -12,5 +12,6 @@ const String settingsRoute = '/settings';
 const String loginSignupRoute = '/loginSignup';
 const String noteDetailsRoute = '/noteDetails';
 const String visaDetailsRoute = '/visaDetails';
+const String visaEditRoute = '/visaEdit';
 //const String registerRoute = '/register';
 //const String welcomeRoute = '/';

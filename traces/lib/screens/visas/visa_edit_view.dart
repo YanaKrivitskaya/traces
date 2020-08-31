@@ -10,7 +10,9 @@ import 'package:traces/screens/visas/model/visa.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class VisaEditView extends StatefulWidget {
-  VisaEditView({Key key}) : super(key: key);
+  final String visaId;
+
+  VisaEditView({Key key, this.visaId}) : super(key: key);
 
   @override
   _VisaEditViewState createState() => _VisaEditViewState();
@@ -42,7 +44,7 @@ class _VisaEditViewState extends State<VisaEditView> {
   Widget build(BuildContext context){
     return new Scaffold(
       appBar: AppBar(
-        title: Text('New Visa', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
+        title: Text(widget.visaId == '' ? 'New Visa' : 'Edit Visa', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
         backgroundColor: ColorsPalette.mazarineBlue,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
@@ -78,6 +80,9 @@ class _VisaEditViewState extends State<VisaEditView> {
                     startDate: DateTime.now(),
                     endDate: DateTime.now(),
                     entryExitIds: new List<String>());
+            }else{
+              _countryController.text = state.visa.countryOfIssue;
+              _durationController.text = state.visa.durationOfStay.toString();
             }
           }
           if(state.isLoading && state.isEditing){
@@ -107,7 +112,8 @@ class _VisaEditViewState extends State<VisaEditView> {
                     Container(
                       width: 250,
                       child: Text(
-                        "Visa created successfully", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),
+                        widget.visaId == '' ? "Visa created successfully" : "Visa update successfully",
+                        style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 5,
                       ),
@@ -197,7 +203,7 @@ class _VisaEditViewState extends State<VisaEditView> {
 
   Widget _submitButton(VisaDetailsState state) => new Center(
     child:RaisedButton(
-      child: Text("Create visa"),
+      child: Text(widget.visaId == '' ? 'Create visa' : 'Save'),
       textColor: ColorsPalette.lynxWhite,
       color: ColorsPalette.algalFuel,
       onPressed: (){
@@ -207,7 +213,6 @@ class _VisaEditViewState extends State<VisaEditView> {
         state.visa.durationOfStay = int.parse(this._durationController.text.trim());
 
         context.bloc<VisaDetailsBloc>().add(VisaSubmitted(state.visa, isFormValid));
-        //Navigator.pop(context);
       })
   );
 
