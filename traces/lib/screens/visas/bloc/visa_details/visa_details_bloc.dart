@@ -44,6 +44,8 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapDateToChangedToState(event);
     }else if(event is EditVisaClicked){
       yield* _mapEditVisaModeToState(event);
+    }else if(event is DeleteVisaClicked){
+      yield* _mapDeleteVisaEventToState(event);
     }
   }
 
@@ -64,6 +66,13 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     _visasSubscription = _visasRepository.entryExits(visa.id).listen(
           (entryExits) => add(UpdateVisaDetails(visa, entryExits, settings)),
     );
+  }
+
+  Stream<VisaDetailsState> _mapDeleteVisaEventToState(DeleteVisaClicked event) async*{
+
+    //yield VisaDetailsState.loading();
+
+    await _visasRepository.deleteVisa(event.visaId);
   }
 
   Stream<VisaDetailsState> _mapNewVisaModeToState(NewVisaMode event) async*{

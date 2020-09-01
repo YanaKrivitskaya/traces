@@ -9,6 +9,7 @@ import 'package:traces/screens/visas/model/visa.dart';
 import 'package:traces/screens/visas/shared.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/screens/visas/visa_delete_alert.dart';
 
 class VisaDetailsView extends StatefulWidget {
   VisaDetailsView({Key key}) : super(key: key);
@@ -34,7 +35,8 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   actions: [
-                    _editAction(state)
+                    _editAction(state),
+                    _deleteAction(state)
                   ],
               ),
               backgroundColor: Colors.white,
@@ -52,6 +54,23 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
     icon: FaIcon(FontAwesomeIcons.edit),
     onPressed: () {
       Navigator.popAndPushNamed(context, visaEditRoute, arguments: state.visa.id);
+    },
+  );
+
+  Widget _deleteAction(VisaDetailsState state) => new IconButton(
+    icon: FaIcon(FontAwesomeIcons.trashAlt),
+    onPressed: () {
+      showDialog<String>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (_) =>
+            BlocProvider.value(
+              value: context.bloc<VisaDetailsBloc>(),
+              child: VisaDeleteAlert(
+                visa: state.visa, callback: (val) => val == 'Delete' ? Navigator.of(context).pop() : '',
+              ),
+            )
+      );
     },
   );
 

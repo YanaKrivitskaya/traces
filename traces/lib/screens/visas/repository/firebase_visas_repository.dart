@@ -71,9 +71,19 @@ class FirebaseVisasRepository extends VisasRepository{
   }
 
   @override
-  Future<void> deleteVisa(Visa visa) {
-    // TODO: implement deleteVisa
-    return null;
+  Future<void> deleteVisa(String visaId) async{
+    String uid = await _userRepository.getUserId();
+    var data = await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).get();
+
+    var entriesDocs = data.docs;
+
+    for(var doc in entriesDocs){
+      await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).doc(doc.id).delete();
+    }
+
+    await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).
+
+    await visasCollection.doc(uid).collection(userVisas).doc(visaId).delete();
   }
 
   @override

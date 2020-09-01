@@ -23,7 +23,7 @@ abstract class VisasRepository {
 
   Future<Visa> updateVisa(Visa visa);
 
-  Future<void> deleteVisa(Visa visa);
+  Future<void> deleteVisa(String visaId);
 
   Future<Visa> getVisaById(String id);
 }
