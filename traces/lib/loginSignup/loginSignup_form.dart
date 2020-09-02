@@ -7,6 +7,8 @@ import 'package:traces/colorsPalette.dart';
 import 'package:traces/loginSignup/bloc/bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/loginSignup/form_types.dart';
+import 'package:traces/shared/state_types.dart';
 
 class LoginSignupForm extends StatefulWidget{
   final UserRepository _userRepository;
@@ -43,9 +45,9 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _usernameController.text.isNotEmpty;
 
   bool isButtonEnabled(LoginSignupState state){
-    bool isLoginFormValid = state.isLoginForm && state.isLoginFormValid && !state.isSubmitting && loginIsPopulated;
-    bool isRegisterFormValid = state.isRegisterForm && state.isSignupFormValid && !state.isSubmitting && registerIsPopulated;
-    bool isResetFormValid = state.isResetForm && state.isEmailValid && _emailController.text.isNotEmpty;
+    bool isLoginFormValid = state.form == FormMode.Login && state.isLoginFormValid && (state.status != StateStatus.Loading) && loginIsPopulated;
+    bool isRegisterFormValid = state.form == FormMode.Register && state.isSignupFormValid && (state.status != StateStatus.Loading) && registerIsPopulated;
+    bool isResetFormValid = state.form == FormMode.Reset && state.isEmailValid && _emailController.text.isNotEmpty;
     return  isLoginFormValid || isRegisterFormValid || isResetFormValid;
   }
 
@@ -64,7 +66,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   Widget build(BuildContext context) {
     return BlocListener<LoginSignupBloc, LoginSignupState>(
       listener: (context, state){
-        if(state.isFailure){
+        if(state.status == StateStatus.Error){
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -86,7 +88,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
               ),
             );
         }
-        if(state.isSubmitting){
+        if(state.status == StateStatus.Loading){
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -103,10 +105,30 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
               ),
             );
         }
-        if(state.isSuccess){
+        if(state.status == StateStatus.Success){
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
         }
-        if(state.isLoginForm){
+        switch(state.form){
+          case FormMode.Login:{
+            this.linkText = "Don't have an account?";
+            this.linkButtonText = "Create new";
+            this.actionText = "Login";
+            break;
+          }
+          case FormMode.Register:{
+            this.linkText = "Already have an account?";
+            this.linkButtonText = "Login";
+            this.actionText = "Register";
+            break;
+          }
+          case FormMode.Reset:{
+            this.linkText = "Already have an account?";
+            this.linkButtonText = "Login";
+            this.actionText = "Reset password";
+            break;
+          }
+        }
+        /*if(state.form == FormMode.Login){
           this.linkText = "Don't have an account?";
           this.linkButtonText = "Create new";
           this.actionText = "Login";
@@ -120,7 +142,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
           this.linkText = "Already have an account?";
           this.linkButtonText = "Login";
           this.actionText = "Reset password";
-        }
+        }*/
 
       },
       child: BlocBuilder<LoginSignupBloc, LoginSignupState>(
@@ -141,11 +163,11 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                             children: <Widget>[
                               Text(this.actionText, style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0))),
                               Divider(color: ColorsPalette.blueHorizon),
-                              state.isRegisterForm ? _usernameTextField(_usernameController, state) : Container(height: 0, width: 0,),
+                              state.form == FormMode.Register ? _usernameTextField(_usernameController, state) : Container(height: 0, width: 0,),
                               !state.isPasswordReseted ?  _emailTextField(_emailController, state) : Container(height: 0, width: 0,),
                               _passwordResetInfo(state),
-                              state.isLoginForm || state.isRegisterForm ? _passwordTextField(_passwordController, state) : Container(height: 0, width: 0,),
-                              state.isLoginForm ? _forgotPasswordLink() : Container(height: 0, width: 0,),
+                              state.form == FormMode.Login || state.form == FormMode.Register ? _passwordTextField(_passwordController, state) : Container(height: 0, width: 0,),
+                              state.form == FormMode.Login ? _forgotPasswordLink() : Container(height: 0, width: 0,),
                               _showErrorMessage(),
                               _progressIndicator(),
                               !state.isPasswordReseted ? _submitButton(state) : Container(height: 0, width: 0,),
@@ -201,7 +223,36 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
 
     if(_validateAndSave()){
       String userId = "";
-      if(state.isLoginForm){
+      switch(state.form){
+        case FormMode.Login:{
+          _loginSignupBloc.add(
+            SubmittedLogin(
+              email: _emailController.text,
+              password: _passwordController.text,
+            ),
+          );
+          break;
+        }
+        case FormMode.Register:{
+          _loginSignupBloc.add(
+              SubmittedSignup(
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                  username: _usernameController.text
+              )
+          );
+          break;
+        }
+        case FormMode.Reset:{
+          _loginSignupBloc.add(
+            SubmittedReset(
+                email: _emailController.text
+            ),
+          );
+          break;
+        }
+      }
+      /*if(state.form == FormMode.Login){
         _loginSignupBloc.add(
           SubmittedLogin(
             email: _emailController.text,
@@ -222,7 +273,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
               email: _emailController.text
           ),
         );
-      }
+      }*/
     }
   }
 
@@ -276,7 +327,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
         alignment: Alignment.centerRight,
         child: InkWell(
           onTap: (){
-            _loginSignupBloc.add(ResetPagePressed(isResetForm: true));
+            _loginSignupBloc.add(ResetPagePressed());
           },
           child: Text(
             "Forgot password?",
@@ -345,8 +396,8 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
 
   void toggleFormMode(LoginSignupState state) {
     resetForm();
-    state.isLoginForm ? _loginSignupBloc.add(RegisterPagePressed(isRegisterForm: true)):
-      _loginSignupBloc.add(LoginPagePressed(isLoginForm: true));
+    state.form == FormMode.Login ? _loginSignupBloc.add(RegisterPagePressed()):
+      _loginSignupBloc.add(LoginPagePressed());
   }
 
   void resetForm() {

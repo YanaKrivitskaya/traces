@@ -10,6 +10,7 @@ import 'package:traces/screens/visas/shared.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:traces/screens/visas/visa_delete_alert.dart';
+import 'package:traces/shared/state_types.dart';
 
 class VisaDetailsView extends StatefulWidget {
   VisaDetailsView({Key key}) : super(key: key);
@@ -40,7 +41,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                   ],
               ),
               backgroundColor: Colors.white,
-              body: (state.isSuccess || state.isFailure)
+              body: (state.status == StateStatus.Success || state.status == StateStatus.Error)
                       ? Container(
                         padding: EdgeInsets.all(5.0),
                         child: _detailsForm(state.visa, state.entryExits)

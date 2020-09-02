@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/bloc/profile/bloc.dart';
+import 'package:traces/shared/state_types.dart';
 
 class FamilyDialog extends StatefulWidget{
   final int familyMemberPosition;
@@ -34,11 +35,11 @@ class _FamilyDialogState extends State<FamilyDialog>{
     return BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
 
-          if(state.isLoading){
+          if(state.status == StateStatus.Loading){
             return new Center(child: CircularProgressIndicator());
           }else{
 
-            if(widget.familyMemberPosition != null && !state.isEditing){
+            if(widget.familyMemberPosition != null && state.mode == StateMode.View){
               _usernameController.text = state.profile.familyMembers[widget.familyMemberPosition];
             }
 

@@ -24,27 +24,26 @@ class NoteSortBloc extends Bloc<NoteSortEvent, NoteSortState> {
   }
 
   Stream<NoteSortState> _mapSortTempFieldUpdatedToState(SortTempFieldUpdated event) async*{
-    yield state.update(isLoading: true);
+    /*yield state.update(stateStatus: StateStatus.Loading);*/
 
     yield state.update(
-        isLoading: false,
+        /*stateStatus: StateStatus.Success,*/
         tempSortField: event.tempSortField
     );
   }
 
   Stream<NoteSortState> _mapSortTempDirectionUpdatedToState(SortTempDirectionUpdated event) async*{
-    yield state.update(isLoading: true);
+    //yield state.update(stateStatus: StateStatus.Loading);
 
     yield state.update(
-        isLoading: false,
+        /*stateStatus: StateStatus.Success,*/
         tempSortDirection: event.tempSortDirection
     );
   }
 
   Stream<NoteSortState> _mapSortUpdatedToState(SortUpdated event) async*{
     yield state.update(
-        isLoading: false,
-        isSuccess: true,
+        /*stateStatus: StateStatus.Success,*/
         tempSortField: event.sortField,
         tempSortDirection: event.sortDirection
     );

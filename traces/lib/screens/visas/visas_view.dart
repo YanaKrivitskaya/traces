@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/visas/shared.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/shared/state_types.dart';
 
 class VisasView extends StatefulWidget {
   final VisaTab activeTab;
@@ -29,9 +30,9 @@ class _VisasViewState extends State<VisasView> {
       child: BlocBuilder<VisaBloc, VisaState>(
         cubit: BlocProvider.of(context),
         builder: (context, state){
-          if(state.isLoading) return loadingWidget(ColorsPalette.algalFuel);
+          if(state.status == StateStatus.Loading) return loadingWidget(ColorsPalette.algalFuel);
 
-          if(state.isSuccess){
+          if(state.status == StateStatus.Success){
             widget.activeTab == VisaTab.ActiveVisas
                 ? this.visas = state.allVisas.where((visa) => isVisaActive(visa)).toList()
                 : widget.activeTab == VisaTab.ExpiredVisas

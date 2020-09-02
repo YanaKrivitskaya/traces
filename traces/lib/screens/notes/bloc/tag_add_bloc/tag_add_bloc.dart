@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
 import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/shared/state_types.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -58,11 +59,11 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
   }
 
   Stream<TagAddState> _mapTagChangedToState(TagChanged event) async*{
-    yield state.update(isLoading: true);
+    yield state.update(stateStatus: StateStatus.Loading);
 
     List<Tag> filteredTags = state.allTags.where((t) => t.name.toLowerCase().startsWith(event.tagName.toLowerCase())).toList();
 
-    yield state.update(filteredTags: filteredTags, isLoading: false);
+    yield state.update(filteredTags: filteredTags, stateStatus: StateStatus.Success);
   }
 
 }

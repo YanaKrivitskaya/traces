@@ -1,16 +1,14 @@
 import 'package:meta/meta.dart';
+import 'package:traces/loginSignup/form_types.dart';
+import 'package:traces/shared/state_types.dart';
 
 @immutable
 class LoginSignupState {
   final bool isEmailValid;
   final bool isUsernameValid;
   final bool isPasswordValid;
-  final bool isSubmitting;
-  final bool isSuccess;
-  final bool isFailure;
-  final bool isLoginForm;
-  final bool isRegisterForm;
-  final bool isResetForm;
+  final StateStatus status;
+  final FormMode form;
   final bool isPasswordReseted;
   final String errorMessage;
 
@@ -22,12 +20,8 @@ class LoginSignupState {
     @required this.isEmailValid,
     @required this.isUsernameValid,
     @required this.isPasswordValid,
-    @required this.isSubmitting,
-    @required this.isSuccess,
-    @required this.isFailure,
-    @required this.isLoginForm,
-    @required this.isRegisterForm,
-    @required this.isResetForm,
+    @required this.status,
+    @required this.form,
     @required this.isPasswordReseted,
     this.errorMessage
   });
@@ -37,58 +31,42 @@ class LoginSignupState {
       isEmailValid: true,
       isPasswordValid: true,
       isUsernameValid: true,
-      isSubmitting: false,
-      isSuccess: false,
-      isFailure: false,
-      isLoginForm: true,
-      isRegisterForm: false,
-      isResetForm: false,
+      status: StateStatus.Empty,
+      form: FormMode.Login,
       isPasswordReseted: false,
       errorMessage: ""
     );
   }
 
-  factory LoginSignupState.loading({bool isLogin, bool isRegister, bool isReset, bool isReseted}){
+  factory LoginSignupState.loading({FormMode formMode, bool isReseted}){
     return LoginSignupState(
       isEmailValid: true,
       isPasswordValid: true,
       isUsernameValid: true,
-      isSubmitting: true,
-      isSuccess: false,
-      isFailure: false,
-      isLoginForm: isLogin,
-      isRegisterForm: isRegister,
-      isResetForm: isReset,
+      status: StateStatus.Loading,
+      form: formMode,
       isPasswordReseted: isReseted
     );
   }
 
-  factory LoginSignupState.success({bool isLogin, bool isRegister, bool isReset, bool isReseted}){
+  factory LoginSignupState.success({FormMode formMode, bool isReseted}){
     return LoginSignupState(
       isEmailValid: true,
       isPasswordValid: true,
       isUsernameValid: true,
-      isSubmitting: false,
-      isSuccess: true,
-      isFailure: false,
-      isLoginForm: isLogin,
-      isRegisterForm: isRegister,
-      isResetForm: isReset,
+      status: StateStatus.Success,
+      form: formMode,
       isPasswordReseted: isReseted
     );
   }
 
-  factory LoginSignupState.failure({bool isLogin, bool isRegister, bool isReset, bool isReseted, String error}){
+  factory LoginSignupState.failure({FormMode formMode, bool isReseted, String error}){
     return LoginSignupState(
       isEmailValid: true,
       isPasswordValid: true,
       isUsernameValid: true,
-      isSubmitting: false,
-      isSuccess: false,
-      isFailure: true,
-      isLoginForm: isLogin,
-      isRegisterForm: isRegister,
-      isResetForm: isReset,
+      status: StateStatus.Error,
+      form: formMode,
       isPasswordReseted: isReseted,
       errorMessage: error
     );
@@ -98,12 +76,8 @@ class LoginSignupState {
     bool isEmailValid,
     bool isPasswordValid,
     bool isUsernameValid,
-    bool isSubmitting,
-    bool isSuccess,
-    bool isFailure,
-    bool isLoginFrom,
-    bool isRegisterForm,
-    bool isResetForm,
+    StateStatus status,
+    FormMode formMode,
     bool isPasswordReseted,
     String errorMessage
   }){
@@ -111,12 +85,8 @@ class LoginSignupState {
         isEmailValid: isEmailValid ?? this.isEmailValid,
         isPasswordValid: isPasswordValid ?? this.isPasswordValid,
         isUsernameValid: isUsernameValid ?? this.isUsernameValid,
-        isSubmitting: isSubmitting ?? this.isSubmitting,
-        isSuccess: isSuccess ?? this.isSuccess,
-        isFailure: isFailure ?? this.isFailure,
-        isLoginForm: isLoginFrom ?? this.isLoginForm,
-        isRegisterForm: isRegisterForm ?? this.isRegisterForm,
-        isResetForm: isResetForm ?? this.isResetForm,
+        status: status ?? this.status,
+        form: formMode ?? this.form,
         isPasswordReseted: isPasswordReseted ?? this.isPasswordReseted,
         errorMessage: errorMessage ?? this.errorMessage
     );
@@ -126,9 +96,7 @@ class LoginSignupState {
     bool isEmailValid,
     bool isPasswordValid,
     bool isUsernameValid,
-    bool isLoginForm,
-    bool isRegisterForm,
-    bool isResetForm,
+    FormMode formMode,
     bool isPasswordReseted,
     String errorMessage
   }){
@@ -136,12 +104,8 @@ class LoginSignupState {
         isEmailValid: isEmailValid,
         isPasswordValid: isPasswordValid,
         isUsernameValid: isUsernameValid,
-        isSubmitting: false,
-        isFailure: false,
-        isSuccess: false,
-        isLoginFrom: isLoginForm,
-        isRegisterForm: isRegisterForm,
-        isResetForm: isResetForm,
+        status: StateStatus.Empty,
+        formMode: formMode,
         isPasswordReseted: isPasswordReseted,
         errorMessage: errorMessage
     );
@@ -154,12 +118,8 @@ class LoginSignupState {
       isEmailValid: $isEmailValid,
       isPasswordValid: $isPasswordValid,
       isUsernameValid: $isUsernameValid,
-      isSubmitting: $isSubmitting,
-      isSuccess: $isSuccess,
-      isFailure: $isFailure,
-      isLoginFrom: $isLoginForm,
-      isRegisterForm: $isRegisterForm,
-      isResetForm: $isResetForm,
+      status: $status,
+      form: $form,
       isPasswordReseted: $isPasswordReseted,
       errorMessage: $errorMessage,
     }''';

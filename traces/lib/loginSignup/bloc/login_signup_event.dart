@@ -74,28 +74,22 @@ class SubmittedReset extends LoginSignupEvent{
 }
 
 class LoginPagePressed extends LoginSignupEvent{
-  final bool isLoginForm;
-
-  const LoginPagePressed({@required this.isLoginForm});
+  const LoginPagePressed();
 
   @override
-  List<Object> get props => [isLoginForm];
+  List<Object> get props => [];
 }
 
 class RegisterPagePressed extends LoginSignupEvent{
-  final bool isRegisterForm;
-
-  const RegisterPagePressed({@required this.isRegisterForm});
+  const RegisterPagePressed();
 
   @override
-  List<Object> get props => [isRegisterForm];
+  List<Object> get props => [];
 }
 
 class ResetPagePressed extends LoginSignupEvent{
-  final bool isResetForm;
-
-  const ResetPagePressed({@required this.isResetForm});
+  const ResetPagePressed();
 
   @override
-  List<Object> get props => [isResetForm];
+  List<Object> get props => [];
 }

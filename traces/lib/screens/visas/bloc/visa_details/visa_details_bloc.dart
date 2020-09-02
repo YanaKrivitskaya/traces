@@ -8,6 +8,7 @@ import 'package:traces/screens/visas/model/settings.dart';
 import 'package:traces/screens/visas/model/user_countries.dart';
 import 'package:traces/screens/visas/model/visa.dart';
 import 'package:traces/screens/visas/repository/visas_repository.dart';
+import 'package:traces/shared/state_types.dart';
 
 part 'visa_details_event.dart';
 part 'visa_details_state.dart';
@@ -69,9 +70,6 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   }
 
   Stream<VisaDetailsState> _mapDeleteVisaEventToState(DeleteVisaClicked event) async*{
-
-    //yield VisaDetailsState.loading();
-
     await _visasRepository.deleteVisa(event.visaId);
   }
 
@@ -147,7 +145,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   }
 
   Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async*{
-    yield state.copyWith(isLoading: true, isSuccess: false, isFailure: false, isEditing: true);
+    yield state.copyWith(status: StateStatus.Loading, mode: StateMode.Edit);
 
     if(visa.id != null){
       visa = await _visasRepository.updateVisa(visa).timeout(Duration(seconds: 3), onTimeout: (){
