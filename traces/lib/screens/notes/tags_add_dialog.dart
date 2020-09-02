@@ -6,6 +6,7 @@ import 'package:traces/screens/notes/bloc/tag_add_bloc/bloc.dart';
 import 'package:traces/screens/notes/model/note.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/shared/state_types.dart';
 
 class TagsAddDialog extends StatefulWidget{
 
@@ -44,7 +45,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
     return BlocBuilder<TagAddBloc, TagAddState>(
         builder: (context, state) {
 
-          if(state.isSuccess){
+          if(state.status == StateStatus.Success){
             _tags = state.filteredTags;
             if(_tags != null){
               if(_note.tagIds != null && _note.tagIds.isNotEmpty){
@@ -76,9 +77,9 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(children: <Widget>[
-                          state.isSuccess && _tags.length > 0
+                          state.status == StateStatus.Success && _tags.length > 0
                               ? _tagOptions()
-                              : state.isLoading
+                              : state.status == StateStatus.Loading
                                 ? Center(child: CircularProgressIndicator(),)
                                 : Text("No tags found")
                         ],),),

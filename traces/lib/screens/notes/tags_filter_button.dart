@@ -4,6 +4,7 @@ import 'package:traces/colorsPalette.dart';
 import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
 import 'package:traces/screens/notes/model/tag.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/shared/state_types.dart';
 
 import 'bloc/note_bloc/bloc.dart';
 
@@ -57,7 +58,7 @@ class _TagsDialogState extends State<TagsDialog>{
 
     return BlocBuilder<TagFilterBloc, TagFilterState>(
         builder: (context, state) {
-          if(state.isSuccess){
+          if(state.status == StateStatus.Success){
 
             _tags = state.allTags;
             _selectedTags = state.selectedTags ?? state.allTags;

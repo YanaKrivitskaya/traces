@@ -6,10 +6,8 @@ class VisaDetailsState {
   final UserCountries userCountries;
   final List<String> familyMembers;
   final List<EntryExit> entryExits;
-  final bool isLoading;
-  final bool isEditing;
-  final bool isSuccess;
-  final bool isFailure;
+  final StateStatus status;
+  final StateMode mode;
   final bool autovalidate;
   final String errorMessage;
 
@@ -19,10 +17,8 @@ class VisaDetailsState {
     @required this.userCountries,
     @required this.familyMembers,
     @required this.entryExits,
-    @required this.isLoading,
-    @required this.isEditing,
-    @required this.isSuccess,
-    @required this.isFailure,
+    @required this.status,
+    @required this.mode,
     this.autovalidate = false,
     this.errorMessage});
 
@@ -33,10 +29,8 @@ class VisaDetailsState {
         userCountries: null,
         familyMembers: null,
         entryExits: null,
-        isLoading: false,
-        isEditing: false,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Empty,
+        mode: StateMode.View,
         errorMessage: ""
     );
   }
@@ -48,10 +42,8 @@ class VisaDetailsState {
         userCountries: null,
         familyMembers: null,
         entryExits: null,
-        isLoading: true,
-        isEditing: false,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Loading,
+        mode: StateMode.View,
         errorMessage: ""
     );
   }
@@ -62,10 +54,8 @@ class VisaDetailsState {
         settings: settings,
         userCountries: userCountries,
         familyMembers: members,
-        isLoading: false,
-        isEditing: true,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Empty,
+        mode: StateMode.Edit,
         autovalidate: autovalidate,
         errorMessage: ""
     );
@@ -78,10 +68,8 @@ class VisaDetailsState {
         userCountries: userCountries,
         familyMembers: members,
         entryExits: entryExits,
-        isLoading: false,
-        isEditing: false,
-        isSuccess: true,
-        isFailure: false,
+        status: StateStatus.Success,
+        mode: StateMode.View,
         errorMessage: ""
     );
   }
@@ -101,10 +89,8 @@ class VisaDetailsState {
         userCountries: userCountries,
         familyMembers: members,
         entryExits: entryExits,
-        isEditing: false,
-        isLoading: false,
-        isSuccess: false,
-        isFailure: true,
+        status: StateStatus.Error,
+        mode: StateMode.View,
         autovalidate: autovalidate,
         errorMessage: error
     );
@@ -116,11 +102,8 @@ class VisaDetailsState {
     final UserCountries userCountries,
     final List<String> members,
     final List<EntryExit> entryExits,
-    bool searchEnabled,
-    bool isLoading,
-    bool isEditing,
-    bool isSuccess,
-    bool isFailure,
+    final StateStatus status,
+    final StateMode mode,
     bool autovalidate,
     String errorMessage
   }){
@@ -130,10 +113,8 @@ class VisaDetailsState {
         userCountries: userCountries ?? this.userCountries,
         familyMembers: members ?? this.familyMembers,
         entryExits: entryExits ?? this.entryExits,
-        isLoading: isLoading ?? this.isLoading,
-        isEditing: isEditing ?? this.isEditing,
-        isSuccess: isSuccess ?? this.isSuccess,
-        isFailure: isFailure ?? this.isFailure,
+        status: status ?? this.status,
+        mode: mode ?? this.mode,
         autovalidate: autovalidate ?? this.autovalidate,
         errorMessage: errorMessage ?? this.errorMessage
     );
@@ -143,10 +124,8 @@ class VisaDetailsState {
     Visa visa,
     VisaSettings settings,
     List<EntryExit> entryExits,
-    bool isLoading,
-    bool isEditing,
-    bool isSuccess,
-    bool isFailure,
+    StateStatus status,
+    StateMode mode,
     bool autovalidate,
     String errorMessage
   }){
@@ -156,10 +135,8 @@ class VisaDetailsState {
         userCountries: userCountries,
         members: familyMembers,
         entryExits: entryExits,
-        isLoading: isLoading,
-        isEditing: isEditing,
-        isSuccess: isSuccess,
-        isFailure: isFailure,
+        status: status,
+        mode: mode,
         autovalidate: autovalidate,
         errorMessage: errorMessage
     );

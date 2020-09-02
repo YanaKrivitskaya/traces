@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
 
 typedef void StringCallback(String val);
 
@@ -23,3 +22,4 @@ String getAvatarName(String profileName){
     return profileName.substring(0, 1);
   }
 }
+

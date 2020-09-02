@@ -81,8 +81,6 @@ class FirebaseVisasRepository extends VisasRepository{
       await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).doc(doc.id).delete();
     }
 
-    await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).
-
     await visasCollection.doc(uid).collection(userVisas).doc(visaId).delete();
   }
 

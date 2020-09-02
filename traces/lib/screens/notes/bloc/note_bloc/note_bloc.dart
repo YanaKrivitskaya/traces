@@ -6,6 +6,7 @@ import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
 
 import 'package:meta/meta.dart';
+import 'package:traces/shared/state_types.dart';
 
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final NoteRepository _notesRepository;
@@ -59,13 +60,13 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Stream<NoteState> _mapSearchBarToggleToState(SearchBarToggle event) async*{
-    yield state.update(isLoading: true);
+    yield state.update(stateStatus: StateStatus.Loading);
 
     List<Note> filteredNotes = new List<Note>();
 
     !state.searchEnabled ? filteredNotes.addAll(state.allNotes) :  filteredNotes.addAll(state.filteredNotes);
 
-    yield state.update(isLoading: false, searchEnabled: !state.searchEnabled, filteredNotes: filteredNotes);
+    yield state.update(stateStatus: StateStatus.Success, searchEnabled: !state.searchEnabled, filteredNotes: filteredNotes);
   }
 
   Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
@@ -84,12 +85,12 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Stream<NoteState> _mapSelectedTagsUpdatedToState(SelectedTagsUpdated event) async* {
-    yield state.update(isLoading: true);
-    yield state.update(isLoading: false);
+    yield state.update(stateStatus: StateStatus.Loading);
+    yield state.update(stateStatus: StateStatus.Success);
   }
 
   Stream<NoteState> _mapSearchTextChangedToState(SearchTextChanged event) async*{
-    yield state.update(isLoading: true);
+    yield state.update(stateStatus: StateStatus.Loading);
 
     List<Note> filteredNotes = new List<Note>();
 
@@ -97,7 +98,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         ? filteredNotes = state.allNotes.where((n) => n.title.toLowerCase().contains(event.noteName.toLowerCase())).toList()
         : filteredNotes.addAll(state.allNotes);
 
-    yield state.update(filteredNotes: filteredNotes, isLoading: false);
+    yield state.update(filteredNotes: filteredNotes, stateStatus: StateStatus.Success);
   }
 
   @override
