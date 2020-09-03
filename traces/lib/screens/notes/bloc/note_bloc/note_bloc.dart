@@ -4,7 +4,6 @@ import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
 import 'package:traces/screens/notes/model/note.dart';
 import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-
 import 'package:meta/meta.dart';
 import 'package:traces/shared/state_types.dart';
 
@@ -49,9 +48,14 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
     yield NoteState.loading();
 
-    _notesSubscription = _notesRepository.notes().listen(
-          (notes) => add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes)),
-    );
+    try{
+      _notesSubscription = _notesRepository.notes().listen(
+            (notes) => add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes)),
+      );
+    }catch(e){
+      yield NoteState.failure(error: e.message);
+    }
+
   }
 
   Stream<NoteState> _mapNotesUpdateSortFilterToState(UpdateSortFilter event) async*{
@@ -72,16 +76,20 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
 
     List<String> noteTags = event.note.tagIds;
-    _notesRepository.deleteNote(event.note);
 
-    if(noteTags.isNotEmpty){
-      noteTags.forEach((tagId) async {
-        Tag tag = await _notesRepository.getTagById(tagId);
-        Tag updatedTag = new Tag(tag.name, id: tag.id, usage: tag.usage -1);
-        _notesRepository.updateTag(updatedTag);
-      });
+    try{
+      _notesRepository.deleteNote(event.note);
+
+      if(noteTags.isNotEmpty){
+        noteTags.forEach((tagId) async {
+          Tag tag = await _notesRepository.getTagById(tagId);
+          Tag updatedTag = new Tag(tag.name, id: tag.id, usage: tag.usage -1);
+          _notesRepository.updateTag(updatedTag);
+        });
+      }
+    }catch(e){
+      yield NoteState.failure(error: e.message);
     }
-
   }
 
   Stream<NoteState> _mapSelectedTagsUpdatedToState(SelectedTagsUpdated event) async* {

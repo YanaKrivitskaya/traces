@@ -6,6 +6,7 @@ import './bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/loginSignup/validator.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
   UserRepository _userRepository;
@@ -108,12 +109,13 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
           formMode: FormMode.Login,
           isReseted: false
       );
-    } catch(e){
+    } on FirebaseAuthException catch(e){
       yield LoginSignupState.failure(
           formMode: FormMode.Login,
           isReseted: false,
           error: e.message);
     }
+
   }
 
   Stream<LoginSignupState> _mapSignupPressedToState({
@@ -132,7 +134,7 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
           formMode: FormMode.Register,
           isReseted: false
       );
-    } catch(e){
+    } on FirebaseAuthException catch(e){
       yield LoginSignupState.failure(
           formMode: FormMode.Register,
           isReseted: false,
@@ -153,7 +155,7 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
           formMode: FormMode.Reset,
           isPasswordReseted: true
       );
-    }catch(e){
+    } on FirebaseAuthException catch(e){
       yield LoginSignupState.failure(
           formMode: FormMode.Reset,
           isReseted: false,
