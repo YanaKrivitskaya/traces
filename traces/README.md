@@ -7,10 +7,10 @@ Project for trips planning.
  - Profile
  - Notes
  - Visas - *coming soon!
- *- Expense tracker
- *- Hotels
- *- Flights
- *- Maps
- *- Trips
+ - *Expense tracker
+ - *Hotels
+ - *Flights
+ - *Maps
+ - *Trips
 
 
