@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/constants.dart';
+import 'package:traces/screens/visas/add_entry_button.dart';
 import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/visas/model/entryExit.dart';
@@ -120,7 +121,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                                           child: Column(children: [
                                             Text('${DateFormat.yMMMd().format(entryExit.entryDate)}'),
                                             Text('${entryExit.entryCountry}, ${entryExit.entryCity}'),
-                                            _transportIcon(entryExit.entryTransport)
+                                            transportIcon(entryExit.entryTransport)
                                           ], crossAxisAlignment: CrossAxisAlignment.start),
                                         )],
                                       ),
@@ -131,7 +132,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                                           child: Column(children: [
                                             Text('${DateFormat.yMMMd().format(entryExit.exitDate)}'),
                                             Text('${entryExit.exitCountry}, ${entryExit.exitCity}'),
-                                            _transportIcon(entryExit.exitTransport)
+                                            transportIcon(entryExit.exitTransport)
                                           ], crossAxisAlignment: CrossAxisAlignment.start),
                                         )],
                                       ) : Container(
@@ -150,31 +151,22 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                                     Divider(color: ColorsPalette.mazarineBlue),
                                   ],),
                                 );
-                              }),
-                              entryExits.last.hasExit ? Container(child: Align( child: OutlineButton(
-                                  child: Text('Add', style: TextStyle(color: ColorsPalette.mazarineBlue),)
-                              ), alignment: Alignment.centerLeft)) : Container()
+                              })
+                        ])
+                        :  Column(
+                        children: [
+                          Container(child: Align(child: Text("No entries"), alignment: Alignment.centerLeft)),
+                          (entryExits.isNotEmpty && entryExits.last.hasExit) || entryExits.isEmpty ? Container(
+                              child: Align( child: AddEntryButton(visa: visa,), alignment: Alignment.centerLeft))
+                              : Container(),
                         ],
-                          )
-                          : Container(child: Align(child: Text("No entries"), alignment: Alignment.centerLeft)),
-                      Align(
-                          //alignment: Alignment.centerLeft,child: AddFamilyButton()
-                      ),
+                      )
                     ],
                   ),)
               )
             ],),
           )
       )
-  );
-
-  Widget _transportIcon(String transport) => new Container(
-      child: transport == 'Train' ? FaIcon(FontAwesomeIcons.train, color: ColorsPalette.mazarineBlue)
-          : transport == 'Plane' ? FaIcon(FontAwesomeIcons.plane, color: ColorsPalette.mazarineBlue)
-          : transport =='Car' ? FaIcon(FontAwesomeIcons.car, color: ColorsPalette.mazarineBlue)
-          : transport == 'Ship' ? FaIcon(FontAwesomeIcons.ship, color: ColorsPalette.mazarineBlue)
-          : transport == 'On foot' ? FaIcon(FontAwesomeIcons.walking, color: ColorsPalette.mazarineBlue)
-          : Container()
   );
 
 }

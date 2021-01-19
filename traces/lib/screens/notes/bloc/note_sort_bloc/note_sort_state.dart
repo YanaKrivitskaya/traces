@@ -4,36 +4,30 @@ import 'package:meta/meta.dart';
 class NoteSortState {
   final SortFields tempSortField;
   final SortDirections tempSortDirection;
-  //final StateStatus status;
 
   NoteSortState({
     @required SortFields tempSortField,
     @required SortDirections tempSortDirection,
-    //@required this.status
   }) : tempSortField = tempSortField ?? SortFields.DATEMODIFIED,
         tempSortDirection = tempSortDirection ?? SortDirections.ASC;
 
   NoteSortState update({
     SortFields tempSortField,
-    SortDirections tempSortDirection,
-    //StateStatus stateStatus
+    SortDirections tempSortDirection
   }){
     return copyWith(
         tempSortField: tempSortField,
-        tempSortDirection: tempSortDirection,
-        //stateStatus: stateStatus
+        tempSortDirection: tempSortDirection
     );
   }
 
   NoteSortState copyWith({
     SortFields tempSortField,
-    SortDirections tempSortDirection,
-    //StateStatus stateStatus
+    SortDirections tempSortDirection
   }){
     return NoteSortState(
         tempSortField: tempSortField ?? this.tempSortField,
-        tempSortDirection: tempSortDirection ?? this.tempSortDirection,
-        //status: stateStatus ?? this.status
+        tempSortDirection: tempSortDirection ?? this.tempSortDirection
     );
   }
 }

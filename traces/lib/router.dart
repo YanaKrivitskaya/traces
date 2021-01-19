@@ -9,6 +9,7 @@ import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 import 'package:traces/screens/profile/profile_page.dart';
 import 'package:traces/screens/profile/repository/firebase_profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/screens/visas/add_entry_form.dart';
 import 'package:traces/screens/visas/bloc/visa/visa_bloc.dart';
 import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:traces/screens/visas/bloc/visa_tab/visa_tab_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:traces/screens/visas/visas_page.dart';
 
 import 'screens/notes/bloc/note_details_bloc/bloc.dart';
 import 'screens/notes/bloc/tag_filter_bloc/bloc.dart';
+import 'screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
 
 /*class Router {
   static Map<String, WidgetBuilder> getRoutes() {
@@ -111,6 +113,18 @@ class RouteGenerator{
                 create: (context) => VisaDetailsBloc(visasRepository: FirebaseVisasRepository(), profileRepository: FirebaseProfileRepository()
                 )..add(args != '' ? EditVisaClicked(args) : NewVisaMode()),
                 child: VisaEditView(visaId: args),
+              ),
+          );
+        }
+        return _errorRoute();
+      }
+      case visaAddEntryRoute:{
+        if(args is String){
+          return MaterialPageRoute(builder: (_) =>
+              BlocProvider<EntryExitBloc>(
+                create: (context) => EntryExitBloc(visasRepository: FirebaseVisasRepository()
+                )/*..add(args != '' ? EditVisaClicked(args) : NewVisaMode())*/,
+                child: AddEntryForm(/*entryId: args*/),
               ),
           );
         }
