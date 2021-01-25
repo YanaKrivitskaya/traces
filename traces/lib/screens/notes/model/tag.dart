@@ -1,7 +1,5 @@
-import 'package:meta/meta.dart';
 import 'package:traces/screens/notes/model/tag_entity.dart';
 
-@immutable
 class Tag{
   final String id;
   final String name;

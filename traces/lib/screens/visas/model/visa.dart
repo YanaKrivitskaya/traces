@@ -1,9 +1,6 @@
-
-
-import 'package:flutter/material.dart';
 import 'package:traces/screens/visas/model/visa_entity.dart';
 
-@immutable class Visa{
+class Visa{
   final String id;
   DateTime startDate;
   DateTime endDate;

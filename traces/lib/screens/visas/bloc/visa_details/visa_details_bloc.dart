@@ -51,7 +51,6 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   }
 
   Stream<VisaDetailsState> _mapUpdateVisaDetailsListToState(UpdateVisaDetails event) async* {
-
     yield VisaDetailsState.success(visa: event.visa, entryExits: event.entryExists, settings: event.settings);
   }
 

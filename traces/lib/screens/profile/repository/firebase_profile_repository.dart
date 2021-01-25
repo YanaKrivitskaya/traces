@@ -24,7 +24,7 @@ class FirebaseProfileRepository extends ProfileRepository{
     var resultProfile = await usersCollection.doc(uid).get();
 
     if(resultProfile.exists){
-      return Profile.fromEntity(ProfileEntity.fromMap(resultProfile.data(), resultProfile.documentID));
+      return Profile.fromEntity(ProfileEntity.fromMap(resultProfile.data(), resultProfile.id));
     }
 
     return null;

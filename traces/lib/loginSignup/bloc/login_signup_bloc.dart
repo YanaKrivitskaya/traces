@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/auth/userRepository.dart';
 import 'package:traces/loginSignup/form_types.dart';
+import 'package:traces/shared/validator.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
-import 'file:///E:/Projects/Flutter/Traces/traces/lib/shared/validator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

@@ -231,9 +231,8 @@ class _VisaEditViewState extends State<VisaEditView> {
     }).toList(),
     onChanged: (String value) {
       state.visa.owner = value;
-      //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value == null ? 'Required field' : null;
     }
@@ -283,7 +282,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
     ),
     controller: _durationController,
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value.isEmpty ? 'Required field' : null;
     },
@@ -307,7 +306,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       state.visa.type = value;
       FocusScope.of(context).unfocus();
     },
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value == null ? 'Required field' : null;
     },
@@ -331,7 +330,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       FocusScope.of(context).unfocus();
       //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value == null ? 'Required field' : null;
     },
@@ -369,7 +368,7 @@ class _VisaEditViewState extends State<VisaEditView> {
           );
         },
         context: context,
-        initialDate: state.visa.startDate.add(new Duration(days: 1)),
+        initialDate: state.visa.endDate ?? state.visa.startDate.add(new Duration(days: 1)),
         firstDate: state.visa.startDate.add(new Duration(days: 1)),
         lastDate: DateTime(2101));
     if (picked != null && picked != state.visa.endDate){

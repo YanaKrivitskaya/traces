@@ -58,9 +58,10 @@ class FirebaseVisasRepository extends VisasRepository{
   }
 
   @override
-  Future<void> addEntryExit(EntryExit entryExit, String visaId) async {
+  Future<EntryExit> addEntryExit(EntryExit entryExit, String visaId) async {
     String uid = await _userRepository.getUserId();
     await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).add(entryExit.toEntity().toDocument());
+    return getEntryExitById(entryExit.id, visaId);
   }
 
   @override
@@ -88,15 +89,27 @@ class FirebaseVisasRepository extends VisasRepository{
   Future<Visa> getVisaById(String id) async{
     String uid = await _userRepository.getUserId();
 
-    var resultNote = await visasCollection.doc(uid).collection(userVisas).doc(id).get();
+    var resultVisa = await visasCollection.doc(uid).collection(userVisas).doc(id).get();
 
-    return Visa.fromEntity(VisaEntity.fromMap(resultNote.data(), resultNote.id));
+    return Visa.fromEntity(VisaEntity.fromMap(resultVisa.data(), resultVisa.id));
   }
 
   @override
-  Future<EntryExit> updateEntryExit(EntryExit entryExit) {
-    // TODO: implement updateEntryExit
-    return null;
+  Future<EntryExit> getEntryExitById(String id, String visaId) async{
+    String uid = await _userRepository.getUserId();
+
+    var resultEntry = await visasCollection.doc(uid).collection(userVisas)
+    .doc(visaId).collection(visaEntries).doc(id).get();
+
+    return EntryExit.fromEntity(EntryExitEntity.fromMap(resultEntry.data(), resultEntry.id));
+  }
+
+  @override
+  Future<EntryExit> updateEntryExit(EntryExit entryExit, String visaId) async {
+    String uid = await _userRepository.getUserId();
+    await visasCollection.doc(uid).collection(userVisas).doc(visaId)
+      .collection(visaEntries).doc(entryExit.id).update(entryExit.toEntity().toDocument());
+    return getEntryExitById(entryExit.id, visaId);
   }
 
   @override
@@ -112,7 +125,7 @@ class FirebaseVisasRepository extends VisasRepository{
   Future<void> updateUserCountries(List<String> countries) async {
     String uid = await _userRepository.getUserId();
 
-    var userCountriesRef = await visasCollection.doc(uid);
+    //var userCountriesRef = await visasCollection.doc(uid);
 
     UserCountries userCountries = new UserCountries(countries);
 

@@ -19,7 +19,7 @@ Widget transportIcon(String transport) => new Container(
 );
 
 String daysLeft(Visa visa, List<EntryExit> entries){
-  int daysLeft = visa.durationOfStay as int;
+  int daysLeft = visa.durationOfStay;
 
   for (var entry in entries){
     var duration = 0;

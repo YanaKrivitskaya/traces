@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'file:///E:/Projects/Flutter/Traces/traces/lib/shared/validator.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
 import 'package:traces/shared/state_types.dart';
+import 'package:traces/shared/validator.dart';
 import 'bloc.dart';
 import 'package:meta/meta.dart';
 
