@@ -9,6 +9,7 @@ import 'package:traces/screens/notes/note_delete_alert.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/shared/state_types.dart';
 import 'bloc/note_bloc/bloc.dart';
 
 class NotesView extends StatefulWidget{
@@ -50,10 +51,10 @@ class _NotesViewState extends State<NotesView> {
             cubit: BlocProvider.of(context),
             builder: (context, state){
 
-              if(state.isLoading || _tagBloc.state.isLoading /*|| state is NotesEmpty*/){
+              if(state.status == StateStatus.Loading || _tagBloc.state.status == StateStatus.Loading){
                 return Center(child: CircularProgressIndicator());
               }
-              if(state.isSuccess && _tagBloc.state.isSuccess){
+              if(state.status == StateStatus.Success && _tagBloc.state.status == StateStatus.Success){
                 final notes = _sortNotes(state.filteredNotes, state.sortField);
 
                 _tags = _tagBloc.state.allTags;

@@ -39,6 +39,15 @@ class EditVisaClicked extends VisaDetailsEvent{
   List<Object> get props => [visaId];
 }
 
+class DeleteVisaClicked extends VisaDetailsEvent{
+  final String visaId;
+
+  DeleteVisaClicked(this.visaId);
+
+  @override
+  List<Object> get props => [visaId];
+}
+
 class DateFromChanged extends VisaDetailsEvent{
   final DateTime dateFrom;
 

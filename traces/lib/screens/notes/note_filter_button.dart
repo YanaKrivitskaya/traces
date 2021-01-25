@@ -6,6 +6,7 @@ import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
 import 'package:traces/screens/notes/bloc/note_sort_bloc/bloc.dart';
 import 'package:traces/screens/notes/model/note.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/shared/state_types.dart';
 
 class SortField{
   final SortFields _key;
@@ -70,7 +71,7 @@ class _SortDialogState extends State<SortDialog>{
     _sortBloc = BlocProvider.of<NoteSortBloc>(context);
 
     final currentState = _noteBloc.state;
-    if(currentState.isSuccess){
+    if(currentState.status == StateStatus.Success){
       _sortBloc.add(SortUpdated(currentState.sortField, currentState.sortDirection));
     }
   }
@@ -93,11 +94,6 @@ class _SortDialogState extends State<SortDialog>{
                 },
                 textColor: ColorsPalette.greenGrass,
               ),
-              /*FlatButton(
-                child: Text('Cancel'),
-                onPressed: () {Navigator.pop(context);},
-                textColor: ColorsPalette.greenGrass,
-              ),*/
             ],
             content: SingleChildScrollView(
               child: Column(

@@ -10,6 +10,7 @@ import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/name_edit_button.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/shared/state_types.dart';
 
 class ProfileView extends StatefulWidget{
 
@@ -26,10 +27,10 @@ class _ProfileViewState extends State<ProfileView>{
     return BlocBuilder<ProfileBloc, ProfileState>(
       cubit: BlocProvider.of(context),
       builder: (context, state){
-        if(state.isLoading){
+        if(state.status == StateStatus.Loading){
           return Center(child: CircularProgressIndicator());
         }
-        if(state.isSuccess){
+        if(state.status == StateStatus.Success){
           _profile = state.profile;
 
           return Container(

@@ -9,7 +9,6 @@ import 'package:traces/auth/bloc.dart';
 import 'package:traces/auth/userRepository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/shared/shared.dart';
 import 'loginSignup/loginSignup_page.dart';
 import 'package:flutter/services.dart';
 // Import the firebase_core plugin

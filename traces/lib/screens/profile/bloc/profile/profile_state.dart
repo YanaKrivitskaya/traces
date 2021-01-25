@@ -1,32 +1,27 @@
 import 'package:meta/meta.dart';
 import 'package:traces/screens/profile/model/profile.dart';
+import 'package:traces/shared/state_types.dart';
 
 class ProfileState {
   final Profile profile;
   final bool isUsernameValid;
-  final bool isEditing;
-  final bool isLoading;
-  final bool isSuccess;
-  final bool isFailure;
+  final StateMode mode;
+  final StateStatus status;
   final String errorMessage;
 
   const ProfileState({
     @required this.profile,
     @required this.isUsernameValid,
-    @required this.isEditing,
-    @required this.isLoading,
-    @required this.isSuccess,
-    @required this.isFailure,
+    @required this.mode,
+    @required this.status,
     this.errorMessage});
 
   factory ProfileState.empty(){
     return ProfileState(
         profile: null,
         isUsernameValid: true,
-        isEditing: false,
-        isLoading: false,
-        isSuccess: false,
-        isFailure: false,
+        mode: StateMode.View,
+        status: StateStatus.Empty,
         errorMessage: ""
     );
   }
@@ -35,10 +30,8 @@ class ProfileState {
     return ProfileState(
         profile: null,
         isUsernameValid: true,
-        isEditing: false,
-        isLoading: true,
-        isSuccess: false,
-        isFailure: false,
+        mode: StateMode.View,
+        status: StateStatus.Loading,
         errorMessage: ""
     );
   }
@@ -47,10 +40,8 @@ class ProfileState {
     return ProfileState(
         profile: profile,
         isUsernameValid: true,
-        isEditing: false,
-        isLoading: false,
-        isSuccess: true,
-        isFailure: false,
+        mode: StateMode.View,
+        status: StateStatus.Success,
         errorMessage: ""
     );
   }
@@ -59,10 +50,8 @@ class ProfileState {
     return ProfileState(
         profile: profile,
         isUsernameValid: true,
-        isEditing: false,
-        isLoading: false,
-        isSuccess: false,
-        isFailure: true,
+        mode: StateMode.View,
+        status: StateStatus.Error,
         errorMessage: error
     );
   }
@@ -70,19 +59,15 @@ class ProfileState {
   ProfileState copyWith({
     final Profile profile,
     bool isUsernameValid,
-    bool isEditing,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateMode mode,
+    StateStatus stateStatus,
     String errorMessage
   }){
     return ProfileState(
         profile: profile ?? this.profile,
         isUsernameValid: isUsernameValid ?? this.isUsernameValid,
-        isEditing: isEditing ?? this.isEditing,
-        isLoading: isLoading ?? this.isLoading,
-        isSuccess: isSuccess ?? this.isSuccess,
-        isFailure: isFailure ?? this.isFailure,
+        mode: mode ?? this.mode,
+        status: stateStatus ?? this.status,
         errorMessage: errorMessage ?? this.errorMessage
     );
   }
@@ -90,19 +75,15 @@ class ProfileState {
   ProfileState update({
     Profile profile,
     bool isUsernameValid,
-    bool isEditing,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateMode mode,
+    StateStatus state,
     String errorMessage
   }){
     return copyWith(
         profile: profile,
         isUsernameValid: isUsernameValid,
-        isEditing: isEditing,
-        isLoading: isLoading,
-        isSuccess: isSuccess,
-        isFailure: isFailure,
+        mode: mode,
+        stateStatus: state,
         errorMessage: errorMessage
     );
   }

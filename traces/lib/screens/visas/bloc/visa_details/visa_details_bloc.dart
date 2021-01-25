@@ -8,6 +8,7 @@ import 'package:traces/screens/visas/model/settings.dart';
 import 'package:traces/screens/visas/model/user_countries.dart';
 import 'package:traces/screens/visas/model/visa.dart';
 import 'package:traces/screens/visas/repository/visas_repository.dart';
+import 'package:traces/shared/state_types.dart';
 
 part 'visa_details_event.dart';
 part 'visa_details_state.dart';
@@ -44,11 +45,12 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapDateToChangedToState(event);
     }else if(event is EditVisaClicked){
       yield* _mapEditVisaModeToState(event);
+    }else if(event is DeleteVisaClicked){
+      yield* _mapDeleteVisaEventToState(event);
     }
   }
 
   Stream<VisaDetailsState> _mapUpdateVisaDetailsListToState(UpdateVisaDetails event) async* {
-
     yield VisaDetailsState.success(visa: event.visa, entryExits: event.entryExists, settings: event.settings);
   }
 
@@ -64,6 +66,10 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     _visasSubscription = _visasRepository.entryExits(visa.id).listen(
           (entryExits) => add(UpdateVisaDetails(visa, entryExits, settings)),
     );
+  }
+
+  Stream<VisaDetailsState> _mapDeleteVisaEventToState(DeleteVisaClicked event) async*{
+    await _visasRepository.deleteVisa(event.visaId);
   }
 
   Stream<VisaDetailsState> _mapNewVisaModeToState(NewVisaMode event) async*{
@@ -138,7 +144,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   }
 
   Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async*{
-    yield state.copyWith(isLoading: true, isSuccess: false, isFailure: false, isEditing: true);
+    yield state.copyWith(status: StateStatus.Loading, mode: StateMode.Edit);
 
     if(visa.id != null){
       visa = await _visasRepository.updateVisa(visa).timeout(Duration(seconds: 3), onTimeout: (){

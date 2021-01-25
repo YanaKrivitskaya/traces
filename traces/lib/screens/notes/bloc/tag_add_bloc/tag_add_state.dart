@@ -1,30 +1,25 @@
 import 'package:traces/screens/notes/model/tag.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/shared/state_types.dart';
 
 class TagAddState {
   final List<Tag> allTags;
   final List<Tag> filteredTags;
-  final bool isLoading;
-  final bool isSuccess;
-  final bool isFailure;
+  final StateStatus status;
   final String errorMessage;
 
 
   const TagAddState({
     @required this.allTags,
     @required this.filteredTags,
-    @required this.isLoading,
-    @required this.isSuccess,
-    @required this.isFailure,
+    @required this.status,
     this.errorMessage});
 
   factory TagAddState.empty(){
     return TagAddState(
         allTags: null,
         filteredTags: null,
-        isLoading: false,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Empty,
         errorMessage: ""
     );
   }
@@ -33,9 +28,7 @@ class TagAddState {
     return TagAddState(
         allTags: null,
         filteredTags: null,
-        isLoading: true,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Loading,
         errorMessage: ""
     );
   }
@@ -44,9 +37,7 @@ class TagAddState {
     return TagAddState(
         allTags: allTags,
         filteredTags: filteredTags,
-        isLoading: false,
-        isSuccess: true,
-        isFailure: false,
+        status: StateStatus.Success,
         errorMessage: ""
     );
   }
@@ -55,9 +46,7 @@ class TagAddState {
     return TagAddState(
         allTags: allTags,
         filteredTags: filteredTags,
-        isLoading: false,
-        isSuccess: true,
-        isFailure: false,
+        status: StateStatus.Error,
         errorMessage: error
     );
   }
@@ -65,17 +54,13 @@ class TagAddState {
   TagAddState copyWith({
     List<Tag> allTags,
     List<Tag> filteredTags,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateStatus stateStatus,
     String errorMessage
   }){
     return TagAddState(
         allTags: allTags ?? this.allTags,
         filteredTags: filteredTags ?? this.filteredTags,
-        isLoading: isLoading ?? this.isLoading,
-        isSuccess: isSuccess ?? this.isSuccess,
-        isFailure: isFailure ?? this.isFailure,
+        status: stateStatus ?? this.status,
         errorMessage: errorMessage ?? this.errorMessage
     );
   }
@@ -83,17 +68,13 @@ class TagAddState {
   TagAddState update({
     List<Tag> allTags,
     List<Tag> filteredTags,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateStatus stateStatus,
     String errorMessage
   }){
     return copyWith(
         allTags: allTags,
         filteredTags: filteredTags,
-        isLoading: isLoading,
-        isSuccess: isSuccess,
-        isFailure: isFailure,
+        stateStatus: stateStatus,
         errorMessage: errorMessage
     );
   }

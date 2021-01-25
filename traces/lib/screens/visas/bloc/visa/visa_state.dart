@@ -2,24 +2,18 @@ part of 'visa_bloc.dart';
 
 class VisaState {
   final List<Visa> allVisas;
-  final bool isLoading;
-  final bool isSuccess;
-  final bool isFailure;
+  final StateStatus status;
   final String errorMessage;
 
   const VisaState({
     @required this.allVisas,
-    @required this.isLoading,
-    @required this.isSuccess,
-    @required this.isFailure,
+    @required this.status,
     this.errorMessage});
 
   factory VisaState.empty(){
     return VisaState(
         allVisas: null,
-        isLoading: false,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Empty,
         errorMessage: ""
     );
   }
@@ -27,9 +21,7 @@ class VisaState {
   factory VisaState.loading(){
     return VisaState(
         allVisas: null,
-        isLoading: true,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Loading,
         errorMessage: ""
     );
   }
@@ -37,9 +29,7 @@ class VisaState {
   factory VisaState.success({List<Visa> allVisas}){
     return VisaState(
         allVisas: allVisas,
-        isLoading: false,
-        isSuccess: true,
-        isFailure: false,
+        status: StateStatus.Success,
         errorMessage: ""
     );
   }
@@ -47,9 +37,7 @@ class VisaState {
   factory VisaState.failure({List<Visa> allVisas, String error}){
     return VisaState(
         allVisas: allVisas,
-        isLoading: false,
-        isSuccess: false,
-        isFailure: true,
+        status: StateStatus.Error,
         errorMessage: error
     );
   }
@@ -57,32 +45,24 @@ class VisaState {
   VisaState copyWith({
     final List<Visa> allVisas,
     bool searchEnabled,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateStatus status,
     String errorMessage
   }){
     return VisaState(
         allVisas: allVisas ?? this.allVisas,
-        isLoading: isLoading ?? this.isLoading,
-        isSuccess: isSuccess ?? this.isSuccess,
-        isFailure: isFailure ?? this.isFailure,
+        status: status ?? this.status,
         errorMessage: errorMessage ?? this.errorMessage
     );
   }
 
   VisaState update({
     List<Visa> allVisas,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateStatus status,
     String errorMessage
   }){
     return copyWith(
         allVisas: allVisas,
-        isLoading: isLoading,
-        isSuccess: isSuccess,
-        isFailure: isFailure,
+        status: status,
         errorMessage: errorMessage
     );
   }
@@ -91,9 +71,7 @@ class VisaState {
   String toString(){
     return '''VisaState{
       allVisas: $allVisas,
-      isLoading: $isLoading,
-      isSuccess: $isSuccess,
-      isFailure: $isFailure,
+      status: $status,      
       errorMessage: $errorMessage      
     }''';
   }

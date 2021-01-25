@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:traces/screens/visas/model/visa.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/shared/state_types.dart';
 
 class VisaEditView extends StatefulWidget {
   final String visaId;
@@ -23,7 +24,6 @@ class _VisaEditViewState extends State<VisaEditView> {
   TextEditingController _countryController;
   TextEditingController _durationController;
 
-  bool _isEditMode = false;
   bool _autovalidate = false;
 
   @override
@@ -54,7 +54,7 @@ class _VisaEditViewState extends State<VisaEditView> {
 
       body: BlocListener<VisaDetailsBloc, VisaDetailsState>(
         listener: (context, state){
-          if(state.isFailure){
+          if(state.status == StateStatus.Error){
             Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
               SnackBar(
                 backgroundColor: ColorsPalette.redPigment,
@@ -74,7 +74,7 @@ class _VisaEditViewState extends State<VisaEditView> {
               ),
             );
           }
-          if(state.isEditing){
+          if(state.mode == StateMode.Edit){
             if(state.visa == null){
               state.visa = new Visa(
                     startDate: DateTime.now(),
@@ -85,7 +85,7 @@ class _VisaEditViewState extends State<VisaEditView> {
               _durationController.text = state.visa.durationOfStay.toString();
             }
           }
-          if(state.isLoading && state.isEditing){
+          if(state.status == StateStatus.Loading && state.mode == StateMode.Edit){
             Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
               SnackBar(
                 backgroundColor: ColorsPalette.algalFuel,
@@ -102,7 +102,7 @@ class _VisaEditViewState extends State<VisaEditView> {
               ),
             );
           }
-          if(state.isSuccess){
+          if(state.status == StateStatus.Success){
             Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
               SnackBar(
                 backgroundColor: ColorsPalette.algalFuel,
@@ -126,7 +126,7 @@ class _VisaEditViewState extends State<VisaEditView> {
               Navigator.popAndPushNamed(context, visaDetailsRoute, arguments: state.visa.id);
             });
           }
-          if(state.isEditing){
+          if(state.mode == StateMode.Edit){
             if(state.familyMembers.length == 1) {
               state.visa.owner = state.familyMembers.first;
             }
@@ -135,10 +135,10 @@ class _VisaEditViewState extends State<VisaEditView> {
           _autovalidate = state.autovalidate;
         },
         child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(builder: (context, state){
-          if (state.isLoading && !state.isEditing) {
+          if (state.status == StateStatus.Loading && state.mode == StateMode.View) {
             return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.algalFuel)));
           }
-          if(state.isEditing || state.isSuccess || state.isFailure){
+          if(state.mode == StateMode.Edit || state.status == StateStatus.Success || state.status == StateStatus.Error){
             return Container(
                 padding: EdgeInsets.all(5.0),
                 child: _createForm(state)
@@ -180,14 +180,14 @@ class _VisaEditViewState extends State<VisaEditView> {
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                Text("Start date", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
+                Text("Start date", style: TextStyle(fontSize: 16.0, color: ColorsPalette.mazarineBlue),),
                 SizedBox(height: 30.0),
-                Text("End date", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
+                Text("End date", style: TextStyle(fontSize: 16.0, color: ColorsPalette.mazarineBlue),),
               ],),
               Column(children: <Widget>[
-                Text('${DateFormat.yMMMd().format(state.visa.startDate)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                Text('${DateFormat.yMMMd().format(state.visa.startDate)}', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
                 SizedBox(height: 30.0),
-                Text('${DateFormat.yMMMd().format(state.visa.endDate)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                Text('${DateFormat.yMMMd().format(state.visa.endDate)}', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
               ],),
               Column(children: <Widget>[
                 IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidFromDate(context, state),),
@@ -231,9 +231,8 @@ class _VisaEditViewState extends State<VisaEditView> {
     }).toList(),
     onChanged: (String value) {
       state.visa.owner = value;
-      //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value == null ? 'Required field' : null;
     }
@@ -283,7 +282,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
     ),
     controller: _durationController,
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value.isEmpty ? 'Required field' : null;
     },
@@ -307,7 +306,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       state.visa.type = value;
       FocusScope.of(context).unfocus();
     },
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value == null ? 'Required field' : null;
     },
@@ -331,7 +330,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       FocusScope.of(context).unfocus();
       //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value == null ? 'Required field' : null;
     },
@@ -351,8 +350,11 @@ class _VisaEditViewState extends State<VisaEditView> {
         initialDate: state.visa.startDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != state.visa.startDate)
+    if (picked != null && picked != state.visa.startDate){
+      state.visa.durationOfStay = int.parse(this._durationController.text.trim());
       context.bloc<VisaDetailsBloc>().add(DateFromChanged(picked));
+    }
+
   }
 
   Future<Null> _selectValidToDate(BuildContext context, VisaDetailsState state) async {
@@ -366,11 +368,13 @@ class _VisaEditViewState extends State<VisaEditView> {
           );
         },
         context: context,
-        initialDate: state.visa.startDate.add(new Duration(days: 1)),
+        initialDate: state.visa.endDate ?? state.visa.startDate.add(new Duration(days: 1)),
         firstDate: state.visa.startDate.add(new Duration(days: 1)),
         lastDate: DateTime(2101));
-    if (picked != null && picked != state.visa.endDate)
+    if (picked != null && picked != state.visa.endDate){
+      state.visa.durationOfStay = int.parse(this._durationController.text.trim());
       context.bloc<VisaDetailsBloc>().add(DateToChanged(picked));
+    }
   }
 
 }

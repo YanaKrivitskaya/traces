@@ -29,7 +29,7 @@ class NoteDeleteAlert extends StatelessWidget{
           FlatButton(
             child: Text('Delete'),
             onPressed: () {
-              context.bloc<NoteBloc>().add(DeleteNote(note));
+              //context.bloc<NoteBloc>().add(DeleteNote(note));
               callback("Delete");
               Navigator.pop(context);
             },

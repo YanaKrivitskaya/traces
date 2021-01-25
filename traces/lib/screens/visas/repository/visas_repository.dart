@@ -13,17 +13,19 @@ abstract class VisasRepository {
 
   Future<VisaSettings> settings();
 
-  Future<void> addEntryExit(EntryExit entryExit, String visaId);
+  Future<EntryExit> addEntryExit(EntryExit entryExit, String visaId);
 
   Future<void> updateUserCountries(List<String> countries);
 
-  Future<EntryExit> updateEntryExit(EntryExit entryExit);
+  Future<EntryExit> updateEntryExit(EntryExit entryExit, String visaId);
 
   Future<Visa> addNewVisa(Visa visa);
 
   Future<Visa> updateVisa(Visa visa);
 
-  Future<void> deleteVisa(Visa visa);
+  Future<void> deleteVisa(String visaId);
 
   Future<Visa> getVisaById(String id);
+
+  Future<EntryExit> getEntryExitById(String id, String visaId);
 }

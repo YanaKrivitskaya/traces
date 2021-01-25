@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/shared/state_types.dart';
 
 class NoteState{
   final List<Note> allNotes;
@@ -7,9 +8,7 @@ class NoteState{
   final SortFields sortField;
   final SortDirections sortDirection;
   final bool searchEnabled;
-  final bool isLoading;
-  final bool isSuccess;
-  final bool isFailure;
+  final StateStatus status;
   final String errorMessage;
 
 
@@ -19,9 +18,7 @@ class NoteState{
     @required this.sortField,
     @required this.sortDirection,
     @required this.searchEnabled,
-    @required this.isLoading,
-    @required this.isSuccess,
-    @required this.isFailure,
+    @required this.status,
     this.errorMessage});
 
   factory NoteState.empty(){
@@ -31,9 +28,7 @@ class NoteState{
         sortField: SortFields.DATEMODIFIED,
         sortDirection: SortDirections.ASC,
         searchEnabled: false,
-        isLoading: false,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Empty,
         errorMessage: ""
     );
   }
@@ -45,9 +40,7 @@ class NoteState{
         sortField: SortFields.DATEMODIFIED,
         sortDirection: SortDirections.ASC,
         searchEnabled: false,
-        isLoading: true,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Loading,
         errorMessage: ""
     );
   }
@@ -60,9 +53,7 @@ class NoteState{
         sortField: sortField,
         sortDirection: sortDirection,
         searchEnabled: searchEnabled,
-        isLoading: false,
-        isSuccess: true,
-        isFailure: false,
+        status: StateStatus.Success,
         errorMessage: ""
     );
   }
@@ -75,9 +66,7 @@ class NoteState{
         sortField: sortField,
         sortDirection: sortDirection,
         searchEnabled: searchEnabled,
-        isLoading: false,
-        isSuccess: false,
-        isFailure: true,
+        status: StateStatus.Error,
         errorMessage: error
     );
   }
@@ -88,9 +77,7 @@ class NoteState{
     final SortFields sortField,
     final SortDirections sortDirection,
     bool searchEnabled,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateStatus status,
     String errorMessage
   }){
     return NoteState(
@@ -99,9 +86,7 @@ class NoteState{
         sortField: sortField ?? this.sortField,
         sortDirection: sortDirection ?? this.sortDirection,
         searchEnabled: searchEnabled ?? this.searchEnabled,
-        isLoading: isLoading ?? this.isLoading,
-        isSuccess: isSuccess ?? this.isSuccess,
-        isFailure: isFailure ?? this.isFailure,
+        status: status ?? this.status,
         errorMessage: errorMessage ?? this.errorMessage
     );
   }
@@ -112,9 +97,7 @@ class NoteState{
     SortFields sortField,
     SortDirections sortDirection,
     bool searchEnabled,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateStatus stateStatus,
     String errorMessage
   }){
     return copyWith(
@@ -123,9 +106,7 @@ class NoteState{
         sortField: sortField,
         sortDirection: sortDirection,
         searchEnabled: searchEnabled,
-        isLoading: isLoading,
-        isSuccess: isSuccess,
-        isFailure: isFailure,
+        status: stateStatus,
         errorMessage: errorMessage
     );
   }

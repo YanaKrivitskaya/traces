@@ -43,9 +43,10 @@ class UpdateTagsList extends TagFilterEvent {
   final List<Tag> selectedTags;
   final bool noTagsChecked;
   final bool allTagsChecked;
+  final bool allTagsUnChecked;
 
-  const UpdateTagsList(this.allTags, {this.selectedTags, this.noTagsChecked, this.allTagsChecked});
+  const UpdateTagsList(this.allTags, {this.selectedTags, this.noTagsChecked, this.allTagsChecked, this.allTagsUnChecked});
 
   @override
-  List<Object> get props => [allTags, selectedTags, noTagsChecked, allTagsChecked];
+  List<Object> get props => [allTags, selectedTags, noTagsChecked, allTagsChecked, allTagsUnChecked];
 }

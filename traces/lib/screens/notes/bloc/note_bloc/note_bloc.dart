@@ -4,8 +4,8 @@ import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
 import 'package:traces/screens/notes/model/note.dart';
 import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-
 import 'package:meta/meta.dart';
+import 'package:traces/shared/state_types.dart';
 
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final NoteRepository _notesRepository;
@@ -48,9 +48,14 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
     yield NoteState.loading();
 
-    _notesSubscription = _notesRepository.notes().listen(
-          (notes) => add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes)),
-    );
+    try{
+      _notesSubscription = _notesRepository.notes().listen(
+            (notes) => add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes)),
+      );
+    }catch(e){
+      yield NoteState.failure(error: e.message);
+    }
+
   }
 
   Stream<NoteState> _mapNotesUpdateSortFilterToState(UpdateSortFilter event) async*{
@@ -59,37 +64,41 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Stream<NoteState> _mapSearchBarToggleToState(SearchBarToggle event) async*{
-    yield state.update(isLoading: true);
+    yield state.update(stateStatus: StateStatus.Loading);
 
     List<Note> filteredNotes = new List<Note>();
 
     !state.searchEnabled ? filteredNotes.addAll(state.allNotes) :  filteredNotes.addAll(state.filteredNotes);
 
-    yield state.update(isLoading: false, searchEnabled: !state.searchEnabled, filteredNotes: filteredNotes);
+    yield state.update(stateStatus: StateStatus.Success, searchEnabled: !state.searchEnabled, filteredNotes: filteredNotes);
   }
 
   Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
 
     List<String> noteTags = event.note.tagIds;
-    _notesRepository.deleteNote(event.note);
 
-    if(noteTags.isNotEmpty){
-      noteTags.forEach((tagId) async {
-        Tag tag = await _notesRepository.getTagById(tagId);
-        Tag updatedTag = new Tag(tag.name, id: tag.id, usage: tag.usage -1);
-        _notesRepository.updateTag(updatedTag);
-      });
+    try{
+      _notesRepository.deleteNote(event.note);
+
+      if(noteTags.isNotEmpty){
+        noteTags.forEach((tagId) async {
+          Tag tag = await _notesRepository.getTagById(tagId);
+          Tag updatedTag = new Tag(tag.name, id: tag.id, usage: tag.usage -1);
+          _notesRepository.updateTag(updatedTag);
+        });
+      }
+    }catch(e){
+      yield NoteState.failure(error: e.message);
     }
-
   }
 
   Stream<NoteState> _mapSelectedTagsUpdatedToState(SelectedTagsUpdated event) async* {
-    yield state.update(isLoading: true);
-    yield state.update(isLoading: false);
+    yield state.update(stateStatus: StateStatus.Loading);
+    yield state.update(stateStatus: StateStatus.Success);
   }
 
   Stream<NoteState> _mapSearchTextChangedToState(SearchTextChanged event) async*{
-    yield state.update(isLoading: true);
+    yield state.update(stateStatus: StateStatus.Loading);
 
     List<Note> filteredNotes = new List<Note>();
 
@@ -97,7 +106,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         ? filteredNotes = state.allNotes.where((n) => n.title.toLowerCase().contains(event.noteName.toLowerCase())).toList()
         : filteredNotes.addAll(state.allNotes);
 
-    yield state.update(filteredNotes: filteredNotes, isLoading: false);
+    yield state.update(filteredNotes: filteredNotes, stateStatus: StateStatus.Success);
   }
 
   @override

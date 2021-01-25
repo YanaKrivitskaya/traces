@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:traces/loginSignup/validator.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
+import 'package:traces/shared/state_types.dart';
+import 'package:traces/shared/validator.dart';
 import 'bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -33,12 +34,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     else if (event is FamilyUpdated) {
       yield* _mapFamilyMemberUpdatedToState(event.name, event.position);
     }
+    else if (event is ShowFamilyDialog) {
+      yield* _mapShowFamilyDialogToState();
+    }
   }
 
   Stream<ProfileState> _mapUsernameChangedToState(String username) async*{
     yield state.update(
-        isUsernameValid: LoginSignupValidator.isValidUsername(username),
-        isEditing: true
+        isUsernameValid: Validator.isValidUsername(username),
+        mode: StateMode.Edit
+    );
+  }
+
+  Stream<ProfileState> _mapShowFamilyDialogToState() async*{
+    yield state.update(
+        mode: StateMode.View
     );
   }
 

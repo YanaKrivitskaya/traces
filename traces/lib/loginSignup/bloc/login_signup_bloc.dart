@@ -1,20 +1,18 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/auth/userRepository.dart';
-import 'package:traces/screens/profile/model/profile.dart';
+import 'package:traces/loginSignup/form_types.dart';
+import 'package:traces/shared/validator.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/loginSignup/validator.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
   UserRepository _userRepository;
 
   LoginSignupBloc({@required UserRepository userRepository}) : assert (userRepository != null),
       _userRepository = userRepository, super(LoginSignupState.empty());
-
-  /*@override
-  LoginSignupState get initialState => LoginSignupState.empty();*/
 
   @override
   Stream<Transition<LoginSignupEvent, LoginSignupState>> transformEvents(
@@ -50,55 +48,49 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
     }else if(event is SubmittedReset){
       yield* _mapPasswordResetedToState(email: event.email);
     }else if(event is LoginPagePressed){
-      yield* _mapLoginPagePressedToState(event.isLoginForm);
+      yield* _mapLoginPagePressedToState();
     }else if(event is RegisterPagePressed){
-      yield* _mapRegisterPagePressedToState(event.isRegisterForm);
+      yield* _mapRegisterPagePressedToState();
     }else if(event is ResetPagePressed){
-      yield* _mapResetPagePressedToState(event.isResetForm);
+      yield* _mapResetPagePressedToState();
     }
   }
 
   Stream<LoginSignupState> _mapEmailChangedToState(String email) async*{
     yield state.update(
-        isEmailValid: LoginSignupValidator.isValidEmail(email)
+        isEmailValid: Validator.isValidEmail(email)
     );
   }
 
   Stream<LoginSignupState> _mapPasswordChangedToState(String password) async*{
     yield state.update(
-        isPasswordValid: LoginSignupValidator.isValidPassword(password)
+        isPasswordValid: Validator.isValidPassword(password)
     );
   }
 
   Stream<LoginSignupState> _mapUsernameChangedToState(String username) async*{
     yield state.update(
-        isPasswordValid: LoginSignupValidator.isValidUsername(username)
+        isPasswordValid: Validator.isValidUsername(username)
     );
   }
 
-  Stream<LoginSignupState> _mapLoginPagePressedToState(bool isLoginForm) async*{
+  Stream<LoginSignupState> _mapLoginPagePressedToState() async*{
     yield state.update(
-      isLoginForm: isLoginForm,
-      isRegisterForm: false,
-      isResetForm: false,
+      formMode: FormMode.Login,
       isPasswordReseted: false
     );
   }
 
-  Stream<LoginSignupState> _mapRegisterPagePressedToState(bool isResetForm) async*{
+  Stream<LoginSignupState> _mapRegisterPagePressedToState() async*{
     yield state.update(
-        isLoginForm: false,
-        isRegisterForm: isResetForm,
-        isResetForm: false,
+        formMode: FormMode.Register,
         isPasswordReseted: false
     );
   }
 
-  Stream<LoginSignupState> _mapResetPagePressedToState(bool isResetForm) async*{
+  Stream<LoginSignupState> _mapResetPagePressedToState() async*{
     yield state.update(
-        isLoginForm: false,
-        isRegisterForm: false,
-        isResetForm: isResetForm,
+        formMode: FormMode.Reset,
         isPasswordReseted: false
     );
   }
@@ -108,27 +100,22 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
     String password
   }) async*{
     yield LoginSignupState.loading(
-      isLogin: true,
-      isRegister: false,
-      isReset: false,
+      formMode: FormMode.Login,
       isReseted: false
     );
     try{
       await _userRepository.signInWithEmailAndPassword(email, password);
       yield LoginSignupState.success(
-          isLogin: true,
-          isRegister: false,
-          isReset: false,
+          formMode: FormMode.Login,
           isReseted: false
       );
-    } catch(e){
+    } on FirebaseAuthException catch(e){
       yield LoginSignupState.failure(
-          isLogin: true,
-          isRegister: false,
-          isReset: false,
+          formMode: FormMode.Login,
           isReseted: false,
           error: e.message);
     }
+
   }
 
   Stream<LoginSignupState> _mapSignupPressedToState({
@@ -137,25 +124,19 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
     String username
   }) async*{
     yield LoginSignupState.loading(
-        isLogin: false,
-        isRegister: true,
-        isReset: false,
+        formMode: FormMode.Register,
         isReseted: false
     );
     try{
       await _userRepository.signUp(email, password, username);
 
       yield LoginSignupState.success(
-          isLogin: false,
-          isRegister: true,
-          isReset: false,
+          formMode: FormMode.Register,
           isReseted: false
       );
-    } catch(e){
+    } on FirebaseAuthException catch(e){
       yield LoginSignupState.failure(
-          isLogin: false,
-          isRegister: true,
-          isReset: false,
+          formMode: FormMode.Register,
           isReseted: false,
           error: e.message);
     }
@@ -165,24 +146,18 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
     String email
   }) async*{
     yield LoginSignupState.loading(
-        isLogin: false,
-        isRegister: false,
-        isReset: true,
+        formMode: FormMode.Reset,
         isReseted: false
     );
     try{
       await _userRepository.resetPassword(email);
       yield state.update(
-          isLoginForm: false,
-          isRegisterForm: false,
-          isResetForm: true,
+          formMode: FormMode.Reset,
           isPasswordReseted: true
       );
-    }catch(e){
+    } on FirebaseAuthException catch(e){
       yield LoginSignupState.failure(
-          isLogin: false,
-          isRegister: false,
-          isReset: true,
+          formMode: FormMode.Reset,
           isReseted: false,
           error: e.message);
     }

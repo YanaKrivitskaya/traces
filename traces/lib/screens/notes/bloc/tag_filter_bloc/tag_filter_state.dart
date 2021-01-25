@@ -1,5 +1,6 @@
 import 'package:traces/screens/notes/model/tag.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/shared/state_types.dart';
 
 class TagFilterState{
   final List<Tag> allTags;
@@ -7,9 +8,7 @@ class TagFilterState{
   final bool noTagsChecked;
   final bool allTagsChecked;
   final bool allUnChecked;
-  final bool isLoading;
-  final bool isSuccess;
-  final bool isFailure;
+  final StateStatus status;
   final String errorMessage;
 
   const TagFilterState({
@@ -18,9 +17,7 @@ class TagFilterState{
     @required this.noTagsChecked,
     @required this.allTagsChecked,
     @required this.allUnChecked,
-    @required this.isLoading,
-    @required this.isSuccess,
-    @required this.isFailure,
+    @required this.status,
     this.errorMessage});
 
   factory TagFilterState.empty(){
@@ -30,9 +27,7 @@ class TagFilterState{
         noTagsChecked: true,
         allTagsChecked: true,
         allUnChecked: false,
-        isLoading: false,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Empty,
         errorMessage: ""
     );
   }
@@ -44,9 +39,7 @@ class TagFilterState{
         noTagsChecked: true,
         allTagsChecked: true,
         allUnChecked: false,
-        isLoading: true,
-        isSuccess: false,
-        isFailure: false,
+        status: StateStatus.Loading,
         errorMessage: ""
     );
   }
@@ -58,9 +51,7 @@ class TagFilterState{
         noTagsChecked: noTagsChecked,
         allTagsChecked: allTagsChecked,
         allUnChecked: allUnchecked,
-        isLoading: false,
-        isSuccess: true,
-        isFailure: false,
+        status: StateStatus.Success,
         errorMessage: ""
     );
   }
@@ -72,9 +63,7 @@ class TagFilterState{
         noTagsChecked: noTagsChecked,
         allTagsChecked: allTagsChecked,
         allUnChecked: allUnchecked,
-        isLoading: false,
-        isSuccess: true,
-        isFailure: false,
+        status: StateStatus.Error,
         errorMessage: error
     );
   }
@@ -85,9 +74,7 @@ class TagFilterState{
     bool noTagsChecked,
     bool allTagsChecked,
     bool allUnChecked,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateStatus stateStatus,
     String errorMessage
   }){
     return TagFilterState(
@@ -96,9 +83,7 @@ class TagFilterState{
         noTagsChecked: noTagsChecked ?? this.noTagsChecked,
         allTagsChecked: allTagsChecked ?? this.allTagsChecked,
         allUnChecked: allUnChecked ?? this.allUnChecked,
-        isLoading: isLoading ?? this.isLoading,
-        isSuccess: isSuccess ?? this.isSuccess,
-        isFailure: isFailure ?? this.isFailure,
+        status: stateStatus ?? this.status,
         errorMessage: errorMessage ?? this.errorMessage
     );
   }
@@ -109,9 +94,7 @@ class TagFilterState{
     bool noTagsChecked,
     bool allTagsChecked,
     bool allUnChecked,
-    bool isLoading,
-    bool isSuccess,
-    bool isFailure,
+    StateStatus stateStatus,
     String errorMessage
   }){
     return copyWith(
@@ -120,9 +103,7 @@ class TagFilterState{
         noTagsChecked: noTagsChecked,
         allTagsChecked: allTagsChecked,
         allUnChecked: allUnChecked,
-        isLoading: isLoading,
-        isSuccess: isSuccess,
-        isFailure: isFailure,
+        stateStatus: stateStatus,
         errorMessage: errorMessage
     );
   }

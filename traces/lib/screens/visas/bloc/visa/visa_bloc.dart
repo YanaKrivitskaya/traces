@@ -5,6 +5,7 @@ import 'package:traces/screens/visas/model/visa.dart';
 import 'package:equatable/equatable.dart';
 import 'package:traces/screens/visas/model/visa_tab.dart';
 import 'package:traces/screens/visas/repository/visas_repository.dart';
+import 'package:traces/shared/state_types.dart';
 
 part 'visa_event.dart';
 
@@ -31,7 +32,6 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
   }
 
   Stream<VisaState> _mapUpdateVisasListToState(UpdateVisasList event) async* {
-
     yield VisaState.success(allVisas: event.allVisas);
   }
 
