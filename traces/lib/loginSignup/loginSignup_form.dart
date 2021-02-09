@@ -36,8 +36,6 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
 
   LoginSignupBloc _loginSignupBloc;
 
-  UserRepository get _userRepository => widget._userRepository;
-
   bool get loginIsPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
@@ -222,7 +220,6 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   void _validateAndSubmit(LoginSignupState state) async{
 
     if(_validateAndSave()){
-      String userId = "";
       switch(state.form){
         case FormMode.Login:{
           _loginSignupBloc.add(
@@ -282,7 +279,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
         labelText: 'Email',
       ),
       keyboardType: TextInputType.emailAddress,
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (_) {
         return !state.isEmailValid ? 'Invalid Email' : null;
       },
@@ -294,7 +291,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
       labelText: 'Username',
     ),
     keyboardType: TextInputType.text,
-    autovalidate: true,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (_) {
       return !state.isUsernameValid ? 'Invalid Username' : null;
     },
@@ -314,7 +311,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
       ),
     ),
     obscureText: _obscurePassword,
-    autovalidate: true,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (_) {
     return !state.isPasswordValid ? 'Invalid Password' : null;
     },

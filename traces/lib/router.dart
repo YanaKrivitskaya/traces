@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/visas/bloc/visa/visa_bloc.dart';
 import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:traces/screens/visas/bloc/visa_tab/visa_tab_bloc.dart';
+import 'package:traces/screens/visas/entry_exit_details_view.dart';
 import 'package:traces/screens/visas/repository/firebase_visas_repository.dart';
 import 'package:traces/screens/visas/visa_edit_view.dart';
 import 'package:traces/screens/visas/visa_details_view.dart';
@@ -19,6 +20,7 @@ import 'package:traces/screens/visas/visas_page.dart';
 
 import 'screens/notes/bloc/note_details_bloc/bloc.dart';
 import 'screens/notes/bloc/tag_filter_bloc/bloc.dart';
+import 'screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
 
 /*class Router {
   static Map<String, WidgetBuilder> getRoutes() {
@@ -39,84 +41,113 @@ import 'screens/notes/bloc/tag_filter_bloc/bloc.dart';
   }
 }*/
 
-class RouteGenerator{
-  static Route<dynamic> generateRoute(RouteSettings settings){
+class RouteGenerator {
+  static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
-    switch(settings.name){
-      case homeRoute: return MaterialPageRoute(builder: (_) => HomePage());
-      case notesRoute: return MaterialPageRoute(builder: (_) =>
-          BlocProvider<NoteBloc>(
-              create: (context) => NoteBloc(notesRepository: FirebaseNotesRepository()
-            ),
+    switch (settings.name) {
+      case homeRoute:
+        return MaterialPageRoute(builder: (_) => HomePage());
+      case notesRoute:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<NoteBloc>(
+            create: (context) =>
+                NoteBloc(notesRepository: FirebaseNotesRepository()),
             child: NotesPage(),
           ),
-      );
-      case noteDetailsRoute: {
-        if(args is String){
-          return MaterialPageRoute(builder: (_) =>
-              MultiBlocProvider(
-                providers: [
-                  BlocProvider<NoteDetailsBloc>(
-                    create: (context) => NoteDetailsBloc(notesRepository: FirebaseNotesRepository(),
-                    )..add(args != '' ? GetNoteDetails(args) : NewNoteMode()),
-                  ),
-                  BlocProvider<TagFilterBloc>(
-                    create: (context) => TagFilterBloc(notesRepository: FirebaseNotesRepository(),
-                    )..add(GetTags()),
-                  ),
-                ],
-                child: NoteDetailsView(),
-              ));
+        );
+      case noteDetailsRoute:
+        {
+          if (args is String) {
+            return MaterialPageRoute(
+                builder: (_) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider<NoteDetailsBloc>(
+                          create: (context) => NoteDetailsBloc(
+                            notesRepository: FirebaseNotesRepository(),
+                          )..add(args != ''
+                              ? GetNoteDetails(args)
+                              : NewNoteMode()),
+                        ),
+                        BlocProvider<TagFilterBloc>(
+                          create: (context) => TagFilterBloc(
+                            notesRepository: FirebaseNotesRepository(),
+                          )..add(GetTags()),
+                        ),
+                      ],
+                      child: NoteDetailsView(),
+                    ));
+          }
+          return _errorRoute();
         }
-        return _errorRoute();
-      }
-      case profileRoute: return MaterialPageRoute(builder: (_) =>
-          BlocProvider<ProfileBloc>(
-              create: (context) => ProfileBloc(profileRepository: FirebaseProfileRepository()
-            ),
+      case profileRoute:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<ProfileBloc>(
+            create: (context) =>
+                ProfileBloc(profileRepository: FirebaseProfileRepository()),
             child: ProfilePage(),
           ),
-      );
-      case visasRoute: return MaterialPageRoute(builder: (_) =>
-          MultiBlocProvider(
-            providers: [
-              BlocProvider<VisaTabBloc>(
-                create: (context) => VisaTabBloc()
-              ),
-              BlocProvider<VisaBloc>(
-                create: (context) => VisaBloc(visasRepository: FirebaseVisasRepository(),
-                )..add(GetAllVisas()),
-              ),
-            ],
-            child: VisasPage(),
-          )
-      );
-      case visaDetailsRoute:{
-        if(args is String){
-          return MaterialPageRoute(builder: (_) =>
-              BlocProvider<VisaDetailsBloc>(
-                create: (context) => VisaDetailsBloc(visasRepository: FirebaseVisasRepository(), profileRepository: FirebaseProfileRepository()
-                )..add(GetVisaDetails(args)),
+        );
+      case visasRoute:
+        return MaterialPageRoute(
+            builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<VisaTabBloc>(
+                        create: (context) => VisaTabBloc()),
+                    BlocProvider<VisaBloc>(
+                      create: (context) => VisaBloc(
+                        visasRepository: FirebaseVisasRepository(),
+                      )..add(GetAllVisas()),
+                    ),
+                  ],
+                  child: VisasPage(),
+                ));
+      case visaDetailsRoute:
+        {
+          if (args is String) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<VisaDetailsBloc>(
+                create: (context) => VisaDetailsBloc(
+                    visasRepository: FirebaseVisasRepository(),
+                    profileRepository: FirebaseProfileRepository())
+                  ..add(GetVisaDetails(args)),
                 child: VisaDetailsView(),
               ),
-          );
+            );
+          }
+          return _errorRoute();
         }
-        return _errorRoute();
-      }
-      case visaEditRoute:{
-        if(args is String){
-          return MaterialPageRoute(builder: (_) =>
-              BlocProvider<VisaDetailsBloc>(
-                create: (context) => VisaDetailsBloc(visasRepository: FirebaseVisasRepository(), profileRepository: FirebaseProfileRepository()
-                )..add(args != '' ? EditVisaClicked(args) : NewVisaMode()),
+      case visaEditRoute:
+        {
+          if (args is String) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<VisaDetailsBloc>(
+                create: (context) => VisaDetailsBloc(
+                    visasRepository: FirebaseVisasRepository(),
+                    profileRepository: FirebaseProfileRepository())
+                  ..add(args != '' ? EditVisaClicked(args) : NewVisaMode()),
                 child: VisaEditView(visaId: args),
               ),
-          );
+            );
+          }
+          return _errorRoute();
         }
+      case visaAddEntryRoute:
+        {
+          if (args is String) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<EntryExitBloc>(
+                create: (context) => EntryExitBloc(
+                    visasRepository:
+                        FirebaseVisasRepository()) /*..add(args != '' ? EditVisaClicked(args) : NewVisaMode())*/,
+                child: EntryExitDetailsView(/*entryId: args*/),
+              ),
+            );
+          }
+          return _errorRoute();
+        }
+      default:
         return _errorRoute();
-      }
-      default: return _errorRoute();
     }
   }
 
@@ -132,5 +163,4 @@ class RouteGenerator{
       );
     });
   }
-
 }

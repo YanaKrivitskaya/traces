@@ -1,18 +1,16 @@
-
-import 'package:flutter/material.dart';
 import 'package:traces/screens/visas/model/entryExit_entity.dart';
 
-@immutable class EntryExit{
+class EntryExit{
   final String id;
-  final DateTime entryDate;
-  final String entryCountry;
-  final String entryCity;
-  final String entryTransport;
-  final DateTime exitDate;
-  final String exitCountry;
-  final String exitCity;
-  final String exitTransport;
-  final bool hasExit;
+  DateTime entryDate;
+  String entryCountry;
+  String entryCity;
+  String entryTransport;
+  DateTime exitDate;
+  String exitCountry;
+  String exitCity;
+  String exitTransport;
+  bool hasExit;
 
   EntryExit({DateTime entryDate, String entryCountry, String id, DateTime exitDate, bool hasExit,
     String exitCountry, String entryCity, String entryTransport, String exitCity, String exitTransport})

@@ -3,7 +3,6 @@ import 'package:traces/colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/bloc/profile/profile_bloc.dart';
 import 'package:traces/screens/profile/family_dialog.dart';
-import 'package:traces/screens/profile/repository/firebase_profile_repository.dart';
 
 class AddFamilyButton extends StatelessWidget {
   @override

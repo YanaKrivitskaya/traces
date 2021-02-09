@@ -76,7 +76,7 @@ class _NameEditDialogState extends State<NameEditDialog>{
       labelText: 'Username',
     ),
     keyboardType: TextInputType.text,
-    autovalidate: true,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (_) {
       return !state.isUsernameValid ? 'Invalid Username' : null;
     },

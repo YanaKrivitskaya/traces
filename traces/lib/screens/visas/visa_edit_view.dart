@@ -24,7 +24,6 @@ class _VisaEditViewState extends State<VisaEditView> {
   TextEditingController _countryController;
   TextEditingController _durationController;
 
-  bool _isEditMode = false;
   bool _autovalidate = false;
 
   @override
@@ -181,14 +180,14 @@ class _VisaEditViewState extends State<VisaEditView> {
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                Text("Start date", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
+                Text("Start date", style: TextStyle(fontSize: 16.0, color: ColorsPalette.mazarineBlue),),
                 SizedBox(height: 30.0),
-                Text("End date", style: TextStyle(fontSize: 15.0, color: ColorsPalette.mazarineBlue),),
+                Text("End date", style: TextStyle(fontSize: 16.0, color: ColorsPalette.mazarineBlue),),
               ],),
               Column(children: <Widget>[
-                Text('${DateFormat.yMMMd().format(state.visa.startDate)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                Text('${DateFormat.yMMMd().format(state.visa.startDate)}', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
                 SizedBox(height: 30.0),
-                Text('${DateFormat.yMMMd().format(state.visa.endDate)}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                Text('${DateFormat.yMMMd().format(state.visa.endDate)}', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
               ],),
               Column(children: <Widget>[
                 IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue,), onPressed: () => _selectValidFromDate(context, state),),
@@ -232,9 +231,8 @@ class _VisaEditViewState extends State<VisaEditView> {
     }).toList(),
     onChanged: (String value) {
       state.visa.owner = value;
-      //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value == null ? 'Required field' : null;
     }
@@ -284,7 +282,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)
     ),
     controller: _durationController,
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value.isEmpty ? 'Required field' : null;
     },
@@ -308,7 +306,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       state.visa.type = value;
       FocusScope.of(context).unfocus();
     },
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value == null ? 'Required field' : null;
     },
@@ -332,7 +330,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       FocusScope.of(context).unfocus();
       //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
     },
-    autovalidate: _autovalidate,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (value) {
       return value == null ? 'Required field' : null;
     },

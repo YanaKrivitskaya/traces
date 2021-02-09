@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/auth/userRepository.dart';
 import 'package:traces/loginSignup/form_types.dart';
+import 'package:traces/shared/validator.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/loginSignup/validator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -58,19 +58,19 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
 
   Stream<LoginSignupState> _mapEmailChangedToState(String email) async*{
     yield state.update(
-        isEmailValid: LoginSignupValidator.isValidEmail(email)
+        isEmailValid: Validator.isValidEmail(email)
     );
   }
 
   Stream<LoginSignupState> _mapPasswordChangedToState(String password) async*{
     yield state.update(
-        isPasswordValid: LoginSignupValidator.isValidPassword(password)
+        isPasswordValid: Validator.isValidPassword(password)
     );
   }
 
   Stream<LoginSignupState> _mapUsernameChangedToState(String username) async*{
     yield state.update(
-        isPasswordValid: LoginSignupValidator.isValidUsername(username)
+        isPasswordValid: Validator.isValidUsername(username)
     );
   }
 

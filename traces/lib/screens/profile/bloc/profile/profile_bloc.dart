@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:traces/loginSignup/validator.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
 import 'package:traces/shared/state_types.dart';
+import 'package:traces/shared/validator.dart';
 import 'bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -41,7 +41,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Stream<ProfileState> _mapUsernameChangedToState(String username) async*{
     yield state.update(
-        isUsernameValid: LoginSignupValidator.isValidUsername(username),
+        isUsernameValid: Validator.isValidUsername(username),
         mode: StateMode.Edit
     );
   }

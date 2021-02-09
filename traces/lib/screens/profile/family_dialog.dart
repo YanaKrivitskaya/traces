@@ -88,7 +88,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
         )
     ),
     keyboardType: TextInputType.text,
-    autovalidate: true,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
     validator: (_) {
       return !state.isUsernameValid ? 'Invalid Name' : null;
     },

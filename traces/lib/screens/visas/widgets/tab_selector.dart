@@ -23,7 +23,7 @@ class TabSelector extends StatelessWidget {
       onTap: (index) => onTabSelected(VisaTab.values[index]),
       items: VisaTab.values.map((tab) {
         return BottomNavigationBarItem(
-          title: Text(tab == VisaTab.AllVisas ? "All" : tab == VisaTab.ActiveVisas ? "Active" : "Expired"),
+          label: tab == VisaTab.AllVisas ? "All" : tab == VisaTab.ActiveVisas ? "Active" : "Expired",
           icon: getTabIcon(tab)
         );
       }).toList()

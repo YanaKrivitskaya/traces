@@ -1,5 +1,5 @@
 
-class LoginSignupValidator{
+class Validator{
 
   static final RegExp _emailRegExp = RegExp(
     r'^[a-zA-Z0-9.!#$%&’*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
@@ -13,6 +13,10 @@ class LoginSignupValidator{
     r'[a-zA-Z0-9.!#$&%`*_|-~+]+$'
   );
 
+  static final RegExp _stringValueRegExp = RegExp(
+      r'[a-zA-Z0-9.!#$&%`*_|-~+]+$'
+  );
+
   static isValidEmail(String email){
     return _emailRegExp.hasMatch(email);
   }
@@ -23,6 +27,10 @@ class LoginSignupValidator{
 
   static isValidUsername(String username){
     return _usernameRegExp.hasMatch(username);
+  }
+
+  static isValidString(String value){
+    return _stringValueRegExp.hasMatch(value);
   }
 
 }
