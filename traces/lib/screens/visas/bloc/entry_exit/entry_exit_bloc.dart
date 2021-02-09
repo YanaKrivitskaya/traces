@@ -6,7 +6,6 @@ import 'package:traces/screens/visas/model/settings.dart';
 import 'package:traces/screens/visas/model/visa.dart';
 import 'package:traces/screens/visas/repository/visas_repository.dart';
 import 'package:traces/shared/state_types.dart';
-import 'package:traces/shared/validator.dart';
 
 part 'entry_exit_event.dart';
 part 'entry_exit_state.dart';
@@ -33,6 +32,8 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
       yield* _mapEntryDateChangedToState(event);
     }else if(event is ExitDateChanged){
       yield* _mapExitDateChangedToState(event);
+    }else if(event is DeleteEntry){
+      yield* _mapDeleteEntryToState(event);
     }
   }
 
@@ -81,14 +82,9 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
         isExitEdit: event.isExitEdit*/);    
   }
 
-  /*Stream<EntryExitState> _mapCountryChangedToState(String value) async*{
-    bool isValid = Validator.isValidString(value);
-    /*yield state.update(
-        isUsernameValid: Validator.isValidUsername(username),
-        mode: StateMode.Edit
-    );*/
-    //yield EditDetailsState(visa: state.visa, entry: entry, settings: settings, isCityValid: true, isCountryValid: true);
-  }*/
+  Stream<EntryExitState> _mapDeleteEntryToState(DeleteEntry event) async* {
+    await _visasRepository.deleteEntry(event.visa.id, event.entry.id);
+  }
 
   Stream<EntryExitState> _mapEntryDateChangedToState(EntryDateChanged event) async*{
     EntryExit entry = state.entryExit;

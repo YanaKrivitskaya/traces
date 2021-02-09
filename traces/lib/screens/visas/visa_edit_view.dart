@@ -368,7 +368,7 @@ class _VisaEditViewState extends State<VisaEditView> {
           );
         },
         context: context,
-        initialDate: state.visa.endDate ?? state.visa.startDate.add(new Duration(days: 1)),
+        initialDate: state.visa.startDate.add(new Duration(days: 1)),
         firstDate: state.visa.startDate.add(new Duration(days: 1)),
         lastDate: DateTime(2101));
     if (picked != null && picked != state.visa.endDate){

@@ -30,6 +30,16 @@ class SubmitEntry extends EntryExitEvent{
   List<Object> get props => [entry, visa];
 }
 
+class DeleteEntry extends EntryExitEvent{
+  final Visa visa;
+  final EntryExit entry;
+
+  DeleteEntry(this.entry, this.visa);
+
+  @override
+  List<Object> get props => [entry, visa];
+}
+
 class EntryDateChanged extends EntryExitEvent{  
   final DateTime entryDate;
 

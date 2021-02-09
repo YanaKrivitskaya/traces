@@ -124,14 +124,24 @@ class FirebaseVisasRepository extends VisasRepository{
   @override
   Future<void> updateUserCountries(List<String> countries) async {
     String uid = await _userRepository.getUserId();
-
-    //var userCountriesRef = await visasCollection.doc(uid);
-
+    
     UserCountries userCountries = new UserCountries(countries);
 
-    await visasCollection.doc(uid).set(userCountries.toEntity().toDocument());
+    await visasCollection.doc(uid).set(userCountries.toEntity().toDocument());    
+  }
+
+  @override
+  Future<void> deleteEntry(String visaId, String entryId) async{
+    String uid = await _userRepository.getUserId();
+
+    var resultEntry = await visasCollection.doc(uid).collection(userVisas)
+    .doc(visaId).collection(visaEntries).doc(entryId).get();
+
+    await visasCollection.doc(uid).collection(userVisas)
+      .doc(visaId).collection(visaEntries).doc(entryId).delete();
+      //throw ("Test Crash");
+
     
-    //await userCountriesRef.updateData(userCountries.toEntity().toDocument());
   }
 
 }
