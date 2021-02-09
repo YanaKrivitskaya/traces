@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Widget isActiveLabel(Visa visa) => new Text(
     isVisaActive(visa) ? 'Active' : 'Expired',
-    style: TextStyle(color: isVisaActive(visa) ? ColorsPalette.algalFuel : ColorsPalette.carminePink, fontSize: 18.0, fontWeight: FontWeight.bold)
+    style: TextStyle(color: isVisaActive(visa) ? ColorsPalette.algalFuel : ColorsPalette.carminePink, fontSize: 15.0, fontWeight: FontWeight.bold)
 );
 
 Widget transportIcon(String transport) => new Container(
@@ -21,6 +21,8 @@ Widget transportIcon(String transport) => new Container(
 String daysLeft(Visa visa, List<EntryExit> entries){
   int daysLeft = visa.durationOfStay;
 
+  int daysTillExpiration = visa.endDate.difference(DateTime.now()).inDays;
+
   for (var entry in entries){
     var duration = 0;
     if(entry.hasExit){
@@ -31,7 +33,23 @@ String daysLeft(Visa visa, List<EntryExit> entries){
 
     daysLeft -=duration;
   }
+  if(daysTillExpiration < daysLeft) return daysTillExpiration.toString();
+
   return daysLeft.toString();
+}
+
+String daysUsed(Visa visa, List<EntryExit> entries){
+  int daysUsed = 0;  
+
+  for (var entry in entries){    
+    if(entry.hasExit){
+      daysUsed = entry.exitDate.difference(entry.entryDate).inDays;
+    }else{
+      daysUsed = DateTime.now().difference(entry.entryDate).inDays;
+    }    
+  } 
+
+  return daysUsed.toString();
 }
 
 bool isVisaActive(Visa visa){

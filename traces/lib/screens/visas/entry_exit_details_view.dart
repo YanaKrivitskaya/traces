@@ -3,7 +3,6 @@ import 'package:traces/colorsPalette.dart';
 import 'package:traces/screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:traces/screens/visas/shared.dart';
@@ -50,6 +49,7 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () => Navigator.of(context).pop(),
           ),
+         // actions: [_deleteAction(state)],
         ),
         backgroundColor: Colors.white,
         body: BlocListener<EntryExitBloc, EntryExitState>(
@@ -101,6 +101,23 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
           ),
         ));
   }
+
+Widget _deleteAction(EntryExitState state) => new IconButton(
+        icon: FaIcon(FontAwesomeIcons.trashAlt),
+        onPressed: () {
+          showDialog<String>(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (_) => BlocProvider.value(
+                    value: context.bloc<EntryExitBloc>(),
+                    /*child: EnttyDeleteAlert(
+                      visa: state.visa,
+                      callback: (val) =>
+                          val == 'Delete' ? Navigator.of(context).pop() : '',
+                    ),*/
+                  ));
+        },
+      );
 
 Widget _entryEditContainer(BuildContext context, EntryExitState state) => new Column(
   crossAxisAlignment: CrossAxisAlignment.start,children: <Widget>[

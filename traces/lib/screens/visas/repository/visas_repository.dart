@@ -25,6 +25,8 @@ abstract class VisasRepository {
 
   Future<void> deleteVisa(String visaId);
 
+  Future<void> deleteEntry(String visaId, String entryId);
+
   Future<Visa> getVisaById(String id);
 
   Future<EntryExit> getEntryExitById(String id, String visaId);
