@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/screens/visas/shared.dart';
-import 'package:traces/shared/state_types.dart';
+
+import '../../colorsPalette.dart';
+import '../../shared/state_types.dart';
+import 'bloc/entry_exit/entry_exit_bloc.dart';
+import 'helpers.dart';
 
 class EntryExitDetailsView extends StatefulWidget {
   @override
@@ -45,12 +46,9 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
           title: Text("Entry/Exit record",style: GoogleFonts.quicksand(
                     textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
           backgroundColor: ColorsPalette.mazarineBlue,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+          leading: IconButton(icon: Icon(Icons.arrow_back_ios),
             onPressed: () => Navigator.of(context).pop(),
-          ),
-         // actions: [_deleteAction(state)],
-        ),
+        )),
         backgroundColor: Colors.white,
         body: BlocListener<EntryExitBloc, EntryExitState>(
           listener: (context, state) {
@@ -101,23 +99,6 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
           ),
         ));
   }
-
-Widget _deleteAction(EntryExitState state) => new IconButton(
-        icon: FaIcon(FontAwesomeIcons.trashAlt),
-        onPressed: () {
-          showDialog<String>(
-              context: context,
-              barrierDismissible: false, // user must tap button!
-              builder: (_) => BlocProvider.value(
-                    value: context.bloc<EntryExitBloc>(),
-                    /*child: EnttyDeleteAlert(
-                      visa: state.visa,
-                      callback: (val) =>
-                          val == 'Delete' ? Navigator.of(context).pop() : '',
-                    ),*/
-                  ));
-        },
-      );
 
 Widget _entryEditContainer(BuildContext context, EntryExitState state) => new Column(
   crossAxisAlignment: CrossAxisAlignment.start,children: <Widget>[
@@ -185,9 +166,9 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
           );
         },
         context: context,
-        initialDate: state.entryExit.exitDate ?? state.visa.startDate,
-        firstDate: state.visa.startDate,
-        lastDate: state.visa.endDate.add(new Duration(days: -1)));
+        initialDate: state.entryExit.exitDate ?? state.entryExit.entryDate,
+        firstDate: state.entryExit.entryDate,
+        lastDate: state.visa.endDate);
     if (picked != null) {
       context.bloc<EntryExitBloc>().add(ExitDateChanged(picked));     
     }
@@ -208,11 +189,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       decoration: const InputDecoration(
           labelText: 'Country',
           labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      controller: _exitCountryController,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) {
-        return value.isEmpty ? 'Required field' : null;
-      },
+      controller: _exitCountryController,           
       keyboardType: TextInputType.text);
 
   Widget _entryCitySelector(EntryExitState state) => new TextFormField(
@@ -230,11 +207,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       decoration: const InputDecoration(
           labelText: 'City',
           labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      controller: _exitCityController,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) {
-        return value.isEmpty ? 'Required field' : null;
-      },
+      controller: _exitCityController,      
       keyboardType: TextInputType.text);
   
   Widget _entryTransportSelector(EntryExitState state) =>
@@ -290,13 +263,8 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
               ));
         }).toList(),
         onChanged: (String value) {
-          state.entryExit.exitTransport = value.trim();
-          //FocusScope.of(context).unfocus();
-        },
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: (value) {
-          return value == null ? 'Required field' : null;
-        },
+          state.entryExit.exitTransport = value.trim();          
+        },        
     );
 
   Widget _submitButton(EntryExitState state) => new Center(
@@ -305,11 +273,20 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
           textColor: ColorsPalette.lynxWhite,
           color: ColorsPalette.algalFuel,
           onPressed: () {
-            state.entryExit.entryCountry = _entryCountryController.text.trim();
-            state.entryExit.entryCity = _entryCityController.text.trim();
-            state.entryExit.exitCountry = _exitCountryController.text.trim();
-            state.entryExit.exitCity = _exitCityController.text.trim();
-            context.bloc<EntryExitBloc>().add(SubmitEntry(state.entryExit,state.visa));
+            var isFormValid = _formKey.currentState.validate();
+
+            if(isFormValid){
+              if(state.entryExit.entryTransport == null) state.entryExit.entryTransport = state.settings.transport.first;
+              if(state.entryExit.exitTransport == null) state.entryExit.exitTransport = state.settings.transport.first;
+              if(state.entryExit.exitDate == state.visa.endDate) state.entryExit.exitDate = state.entryExit.entryDate;
+              state.entryExit.entryCountry = _entryCountryController.text.trim();
+              state.entryExit.entryCity = _entryCityController.text.trim();
+              state.entryExit.exitCountry = _exitCountryController.text.trim();
+              state.entryExit.exitCity = _exitCityController.text.trim();
+              state.entryExit.duration = tripDuration(state.entryExit.entryDate, state.entryExit.exitDate);
+              context.bloc<EntryExitBloc>().add(SubmitEntry(state.entryExit,state.visa));
+            }
+            
   })));
 
 }

@@ -18,37 +18,30 @@ Widget transportIcon(String transport) => new Container(
         : Container()
 );
 
-String daysLeft(Visa visa, List<EntryExit> entries){
+int daysLeft(Visa visa, List<EntryExit> entries){
   int daysLeft = visa.durationOfStay;
 
   int daysTillExpiration = visa.endDate.difference(DateTime.now()).inDays;
 
   for (var entry in entries){
-    var duration = 0;
-    if(entry.hasExit){
-      duration = entry.exitDate.difference(entry.entryDate).inDays;
-    }else{
-      duration = DateTime.now().difference(entry.entryDate).inDays;
-    }
-
-    daysLeft -=duration;
+    daysLeft -= entry.duration;
   }
-  if(daysTillExpiration < daysLeft) return daysTillExpiration.toString();
 
-  return daysLeft.toString();
+  var days = -1;
+  if(daysTillExpiration < daysLeft) days =  daysTillExpiration;
+  else days = daysLeft;
+
+  if(days < 0) return 0;
+
+  return days;
 }
 
 String daysUsed(Visa visa, List<EntryExit> entries){
   int daysUsed = 0;  
 
   for (var entry in entries){    
-    if(entry.hasExit){
-      daysUsed = entry.exitDate.difference(entry.entryDate).inDays;
-    }else{
-      daysUsed = DateTime.now().difference(entry.entryDate).inDays;
-    }    
-  } 
-
+    daysUsed += entry.duration;
+  }
   return daysUsed.toString();
 }
 
@@ -64,9 +57,9 @@ String visaDuration(Visa visa){
   else return visaDays.toString() + " days";
 }
 
-String tripDuration(DateTime start, DateTime end){
+int tripDuration(DateTime start, DateTime end){
   if(end == null) end = DateTime.now();
-  var tripDuration = end.difference(start).inDays;
-  if(tripDuration > 30) return (tripDuration / 30).toStringAsFixed(0) + " months";
-  else return tripDuration.toString() + " days";
+  var tripDuration = end.difference(start).inDays; 
+
+  return tripDuration+=1;
 }

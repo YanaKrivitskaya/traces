@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/screens/visas/model/entryExit.dart';
-import 'package:traces/screens/visas/model/settings.dart';
-import 'package:traces/screens/visas/model/visa.dart';
-import 'package:traces/screens/visas/repository/visas_repository.dart';
-import 'package:traces/shared/state_types.dart';
-
+import '../../../../shared/state_types.dart';
+import '../../model/entryExit.dart';
+import '../../model/settings.dart';
+import '../../model/visa.dart';
+import '../../repository/visas_repository.dart';
 part 'entry_exit_event.dart';
 part 'entry_exit_state.dart';
 
@@ -27,12 +26,11 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
       yield* _mapGetEntryDetailsToState(event);
     } else if (event is SubmitEntry) {
       yield* _mapSubmitEntryToState(event);
-    }
-    else if(event is EntryDateChanged){
+    } else if (event is EntryDateChanged) {
       yield* _mapEntryDateChangedToState(event);
-    }else if(event is ExitDateChanged){
+    } else if (event is ExitDateChanged) {
       yield* _mapExitDateChangedToState(event);
-    }else if(event is DeleteEntry){
+    } else if (event is DeleteEntry) {
       yield* _mapDeleteEntryToState(event);
     }
   }
@@ -45,18 +43,14 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
 
     if (event.entry == null)
       entry =
-          new EntryExit(entryDate: DateTime.now(), exitDate: DateTime.now());
+          new EntryExit(entryDate: event.visa.startDate, exitDate: event.visa.endDate);
     else
       entry = event.entry;
 
     VisaSettings settings = await _visasRepository.settings();
 
     yield EntryExitState.editing(
-        visa: event.visa,
-        entryExit: entry,
-        settings: settings,
-        /*isEntryEdit: event.isEntryEdit,
-        isExitEdit: event.isExitEdit*/);
+        visa: event.visa, entryExit: entry, settings: settings);
   }
 
   Stream<EntryExitState> _mapSubmitEntryToState(SubmitEntry event) async* {
@@ -67,33 +61,34 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
     if (event.entry.id == null) {
       entry = await _visasRepository.addEntryExit(event.entry, event.visa.id);
     } else {
-      if(event.entry.exitCity != null && event.entry.exitCountry != null 
-        && event.entry.exitTransport != null){
+      if (event.entry.exitCity != null &&
+          event.entry.exitCity != '' &&
+          event.entry.exitCountry != null &&
+          event.entry.exitCountry != '' &&
+          event.entry.exitTransport != null) {
         event.entry.hasExit = true;
       }
-      entry = await _visasRepository.updateEntryExit(event.entry, event.visa.id);
+      entry =
+          await _visasRepository.updateEntryExit(event.entry, event.visa.id);
     }
 
-     yield EntryExitState.success(
-        visa: event.visa,
-        entryExit: entry
-        //settings: settings,
-        /*isEntryEdit: event.isEntryEdit,
-        isExitEdit: event.isExitEdit*/);    
+    yield EntryExitState.success(visa: event.visa, entryExit: entry);
   }
 
   Stream<EntryExitState> _mapDeleteEntryToState(DeleteEntry event) async* {
     await _visasRepository.deleteEntry(event.visa.id, event.entry.id);
   }
 
-  Stream<EntryExitState> _mapEntryDateChangedToState(EntryDateChanged event) async*{
+  Stream<EntryExitState> _mapEntryDateChangedToState(
+      EntryDateChanged event) async* {
     EntryExit entry = state.entryExit;
     entry.entryDate = event.entryDate;
 
     yield state.update(entryExit: entry);
   }
 
-  Stream<EntryExitState> _mapExitDateChangedToState(ExitDateChanged event) async*{
+  Stream<EntryExitState> _mapExitDateChangedToState(
+      ExitDateChanged event) async* {
     EntryExit entry = state.entryExit;
     entry.exitDate = event.exitDate;
 

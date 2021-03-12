@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/constants.dart';
-import 'package:traces/screens/visas/add_entry_button.dart';
-import 'package:traces/screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
-import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/visas/entryExit_delete_alert.dart';
-import 'package:traces/screens/visas/model/entryExit.dart';
-import 'package:traces/screens/visas/model/visa.dart';
-import 'package:traces/screens/visas/repository/visas_repository.dart';
-import 'package:traces/screens/visas/shared.dart';
-import 'package:intl/intl.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/screens/visas/visa_delete_alert.dart';
-import 'package:traces/shared/state_types.dart';
-import 'package:traces/screens/visas/repository/firebase_visas_repository.dart';
-import 'package:traces/screens/visas/entry_exit_details_view.dart';
-
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
+import '../../colorsPalette.dart';
+import '../../constants.dart';
+import '../../shared/state_types.dart';
+import 'bloc/entry_exit/entry_exit_bloc.dart';
+import 'bloc/visa_details/visa_details_bloc.dart';
+import 'entryExit_delete_alert.dart';
+import 'entry_exit_add_button.dart';
+import 'entry_exit_details_view.dart';
+import 'helpers.dart';
+import 'model/entryExit.dart';
+import 'model/visa.dart';
+import 'repository/firebase_visas_repository.dart';
+import 'visa_delete_alert.dart';
 
 class VisaDetailsView extends StatefulWidget {
   VisaDetailsView({Key key}) : super(key: key);
@@ -112,9 +111,9 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
             style: TextStyle(fontSize: 15.0)),
           Text('${visaDuration(visa)} / ${visa.durationOfStay} days',
             style: TextStyle(fontSize: 15.0)),
-          Text('Days used/left: ${daysUsed(visa, entryExits)} / ${daysLeft(visa, entryExits)}',
-            style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
-          Text('Days used: ${daysUsed(visa, entryExits)} / ${visa.durationOfStay}',
+          Text('Days used: ${daysUsed(visa, entryExits)}',
+            style: TextStyle(fontSize: 15.0)),
+          Text('Days left: ${daysLeft(visa, entryExits)}',
             style: TextStyle(fontSize: 15.0)),
           Divider(color: ColorsPalette.mazarineBlue, thickness: 1.0),            
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,9 +156,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                                     create: (context) => EntryExitBloc(visasRepository:new FirebaseVisasRepository()),
                                     child: EntryExitDeleteAlert(
                                       visa: visa,
-                                      entryExit: entryExit,
-                                      /*callback: (val) =>
-                                          val == 'Delete' ? Navigator.of(builderContext).pop() : '',*/
+                                      entryExit: entryExit                                      
                                     ),
                                   ));
                           }                        
@@ -178,9 +175,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                                     create: (context) => EntryExitBloc(visasRepository:new FirebaseVisasRepository()),
                                     child: EntryExitDeleteAlert(
                                       visa: visa,
-                                      entryExit: entryExit,
-                                      /*callback: (val) =>
-                                          val == 'Delete' ? Navigator.of(builderContext).pop() : '',*/
+                                      entryExit: entryExit                                      
                                     ),
                                   )), 
                           ), 
@@ -192,12 +187,9 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                     : Column(children: [Container(child: Align(
                       child: Text("No entries"),
                       alignment: Alignment.centerLeft)),
-                      Container(child: Align(child: AddEntryButton(
-                            visa: visa,
-                            isEntryEdit: true, isExitEdit: false),
-                          alignment: Alignment.centerLeft))]),
+                      _showAddButton(visa)]),
                 (entryExits.length > 0 && entryExits.last.hasExit) 
-                  ? Container() 
+                  ? _showAddButton(visa)
                   :Container()
                     ],
                   ),
@@ -206,9 +198,11 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
         ),
       ));
 
-      void _showSnackBar(BuildContext context, String text) {
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text(text)));
-  }  
+      Widget _showAddButton(Visa visa) => new Container(
+        child: Align(child: AddEntryButton(visa: visa),
+                          alignment: Alignment.centerLeft)
+      );
+
 }
 
 class VerticalListItem extends StatelessWidget {
@@ -220,43 +214,46 @@ class VerticalListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () =>
-          Slidable.of(context)?.renderingMode == SlidableRenderingMode.none
-              ? Slidable.of(context)?.open()
-              : Slidable.of(context)?.close(),
+        Slidable.of(context)?.renderingMode == SlidableRenderingMode.none
+          ? Slidable.of(context)?.open()
+          : Slidable.of(context)?.close(),
       child: Container(padding: EdgeInsets.only(top: 10.0),
-                        child: Column(children: [
-                          InkWell(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            //entry
-                             Column(children: [Container(width: MediaQuery.of(context).size.width * 0.3,
-                              child: Column(children: [
-                                Text('${DateFormat.yMMMd().format(item.entryDate)}'),
-                                Text('${item.entryCountry}, ${item.entryCity}'),
-                                transportIcon(item.entryTransport)],
-                                crossAxisAlignment:CrossAxisAlignment.start))]),
-                            //exit
-                            item.hasExit ? Column(children: [ Container(width: MediaQuery.of(context).size.width *0.3,
-                              child: Column(children: [
-                                Text('${DateFormat.yMMMd().format(item.exitDate)}'),
-                                Text('${item.exitCountry}, ${item.exitCity}'),
-                                transportIcon(item.exitTransport)],
-                                crossAxisAlignment: CrossAxisAlignment.start))])
-                            : Container(),
-                            Column(children: [Container(padding: EdgeInsets.only(right: 10.0), child: Column(children: [
-                              Text(tripDuration(item.entryDate, item.exitDate))],
-                              crossAxisAlignment: CrossAxisAlignment.end))])]),
-                          onTap: () {
-                            showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (_) => BlocProvider<EntryExitBloc>(
-                                  create: (context) =>
-                                      EntryExitBloc(visasRepository: new FirebaseVisasRepository())
-                                        ..add(GetEntryDetails(item, visa, true, false)),
-                                  child: EntryExitDetailsView()),
-                            );
-                          },),
-                          ]))
+        child: Column(children: [
+          InkWell(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+               //entry
+              Column(children: [Container(width: MediaQuery.of(context).size.width * 0.3,
+                child: Column(children: [
+                  Text('${DateFormat.yMMMd().format(item.entryDate)}'),
+                  Text('${item.entryCountry}, ${item.entryCity}'),
+                  transportIcon(item.entryTransport)],
+                crossAxisAlignment:CrossAxisAlignment.start))]),
+              //exit
+              item.hasExit ? Column(children: [ Container(width: MediaQuery.of(context).size.width *0.3,
+                child: Column(children: [
+                  Text('${DateFormat.yMMMd().format(item.exitDate)}'),
+                  Text('${item.exitCountry}, ${item.exitCity}'),
+                  transportIcon(item.exitTransport)],
+                crossAxisAlignment: CrossAxisAlignment.start))])
+              : Container(),
+              //duration
+              Column(children: [Container(padding: EdgeInsets.only(right: 10.0), child: Column(children: [
+                Row(children: [
+                  Text(item.duration.toString() + " days"),
+                  item.duration > visa.durationOfStay ?
+                  IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.carminePink), 
+                    tooltip: 'Trip duration is more than visa duration', onPressed: () {},) : Container()
+                ])],
+                crossAxisAlignment: CrossAxisAlignment.end))])]),
+              onTap: () {
+                showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (_) => BlocProvider<EntryExitBloc>(
+                    create: (context) => EntryExitBloc(visasRepository: new FirebaseVisasRepository())
+                      ..add(GetEntryDetails(item, visa)),
+                    child: EntryExitDetailsView()));
+              })]))
     );
   }
 }

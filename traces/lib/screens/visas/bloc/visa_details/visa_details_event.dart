@@ -8,7 +8,7 @@ abstract class VisaDetailsEvent {
   List<Object> get props => [];
 }
 
-class GetVisaDetails extends VisaDetailsEvent{
+class GetVisaDetails extends VisaDetailsEvent {
   final String visaId;
 
   GetVisaDetails(this.visaId);
@@ -28,9 +28,9 @@ class UpdateVisaDetails extends VisaDetailsEvent {
   List<Object> get props => [visa, entryExists, settings];
 }
 
-class NewVisaMode extends VisaDetailsEvent{}
+class NewVisaMode extends VisaDetailsEvent {}
 
-class EditVisaClicked extends VisaDetailsEvent{
+class EditVisaClicked extends VisaDetailsEvent {
   final String visaId;
 
   EditVisaClicked(this.visaId);
@@ -39,7 +39,7 @@ class EditVisaClicked extends VisaDetailsEvent{
   List<Object> get props => [visaId];
 }
 
-class DeleteVisaClicked extends VisaDetailsEvent{
+class DeleteVisaClicked extends VisaDetailsEvent {
   final String visaId;
 
   DeleteVisaClicked(this.visaId);
@@ -48,7 +48,7 @@ class DeleteVisaClicked extends VisaDetailsEvent{
   List<Object> get props => [visaId];
 }
 
-class DateFromChanged extends VisaDetailsEvent{
+class DateFromChanged extends VisaDetailsEvent {
   final DateTime dateFrom;
 
   DateFromChanged(this.dateFrom);
@@ -57,7 +57,7 @@ class DateFromChanged extends VisaDetailsEvent{
   List<Object> get props => [dateFrom];
 }
 
-class DateToChanged extends VisaDetailsEvent{
+class DateToChanged extends VisaDetailsEvent {
   final DateTime dateTo;
 
   DateToChanged(this.dateTo);
@@ -66,7 +66,7 @@ class DateToChanged extends VisaDetailsEvent{
   List<Object> get props => [dateTo];
 }
 
-class VisaSubmitted extends VisaDetailsEvent{
+class VisaSubmitted extends VisaDetailsEvent {
   final Visa visa;
   final bool isFormValid;
 
@@ -76,7 +76,7 @@ class VisaSubmitted extends VisaDetailsEvent{
   List<Object> get props => [visa, isFormValid];
 }
 
-class SaveVisaClicked extends VisaDetailsEvent{
+class SaveVisaClicked extends VisaDetailsEvent {
   final Visa visa;
 
   SaveVisaClicked(this.visa);

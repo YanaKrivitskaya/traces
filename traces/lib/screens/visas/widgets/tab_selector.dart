@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/visas/model/visa_tab.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../colorsPalette.dart';
+import '../model/visa_tab.dart';
 
 
 class TabSelector extends StatelessWidget {

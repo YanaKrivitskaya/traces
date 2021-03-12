@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
-import 'package:traces/screens/visas/model/entryExit.dart';
-import 'package:traces/screens/visas/model/visa.dart';
-import 'package:traces/shared/shared.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import '../../colorsPalette.dart';
+import 'bloc/entry_exit/entry_exit_bloc.dart';
+import 'model/entryExit.dart';
+import 'model/visa.dart';
 
 class EntryExitDeleteAlert extends StatelessWidget {
   final EntryExit entryExit;
   final Visa visa;
-  //final StringCallback callback;
 
   const EntryExitDeleteAlert({Key key, this.entryExit, this.visa/*, this.callback*/}) : super(key: key);
 
@@ -23,9 +22,9 @@ class EntryExitDeleteAlert extends StatelessWidget {
           title: Text("Delete Entry/Exit record?"),
           content: SingleChildScrollView(            
             child: Column( crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Entry: ${entryExit.entryCountry} - ${entryExit.entryDate}'),
-                entryExit.hasExit ? Text('Exit: ${entryExit.exitCountry} - ${entryExit.exitDate}') : Container()
+              children: [                
+                Text('Entry: ${entryExit.entryCountry} - ${DateFormat.yMMMd().format(entryExit.entryDate)}'),
+                entryExit.hasExit ? Text('Exit: ${entryExit.exitCountry} - ${DateFormat.yMMMd().format(entryExit.exitDate)}') : Container()
               ],
             )
           ),
@@ -39,9 +38,8 @@ class EntryExitDeleteAlert extends StatelessWidget {
               },
             ),
             FlatButton(
-              child: Text('Cancel', style: TextStyle(color: ColorsPalette.mazarineBlue),),
-              onPressed: () {
-                //callback("Cancel");
+              child: Text('Cancel', style: TextStyle(color: ColorsPalette.mazarineBlue)),
+              onPressed: () {                
                 Navigator.pop(context);
               },
             ),
