@@ -1,8 +1,8 @@
 
-import 'package:traces/screens/visas/model/entryExit.dart';
-import 'package:traces/screens/visas/model/settings.dart';
-import 'package:traces/screens/visas/model/user_countries.dart';
-import 'package:traces/screens/visas/model/visa.dart';
+import '../model/entryExit.dart';
+import '../model/settings.dart';
+import '../model/user_countries.dart';
+import '../model/visa.dart';
 
 abstract class VisasRepository {
   Stream<List<Visa>> visas();

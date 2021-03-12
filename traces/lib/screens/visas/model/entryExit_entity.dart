@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
 class EntryExitEntity extends Equatable{
   final String id;
@@ -11,10 +11,11 @@ class EntryExitEntity extends Equatable{
   final String exitCountry;
   final String exitCity;
   final String exitTransport;
+  final int duration;
   final bool hasExit;
 
   EntryExitEntity(this.id, this.entryDate, this.entryCountry, this.entryCity, this.entryTransport, this.exitDate,
-      this.exitCountry, this.exitCity, this.exitTransport, this.hasExit);
+      this.exitCountry, this.exitCity, this.exitTransport, this.duration, this.hasExit);
 
   Map<String, Object> toJson(){
     return{
@@ -27,12 +28,13 @@ class EntryExitEntity extends Equatable{
       "exitCountry": exitCountry,
       "exitCity": exitCity,
       "exitTransport": exitTransport,
+      "duration": duration,
       "hasExit": hasExit
     };
   }
 
   @override
-  List<Object> get props => [id, entryDate, exitDate, hasExit, entryCountry, entryDate, entryTransport, entryCity, exitTransport, exitCity];
+  List<Object> get props => [id, entryDate, exitDate, hasExit, entryCountry, entryDate, entryTransport, entryCity, exitTransport, exitCity, duration];
 
   static EntryExitEntity fromMap(Map<dynamic, dynamic> map, String documentId){
     return EntryExitEntity(
@@ -44,7 +46,8 @@ class EntryExitEntity extends Equatable{
         map["exitDate"].toDate(),
         map["exitCountry"],
         map["exitCity"],
-        map["exitTransport"],
+        map["exitTransport"], 
+        map["duration"],
         map["hasExit"]
     );
   }
@@ -60,6 +63,7 @@ class EntryExitEntity extends Equatable{
         snap.data()['exitCountry'],
         snap.data()['exitCity'],
         snap.data()['exitTransport'],
+        snap.data()['duration'],
         snap.data()['hasExit']
     );
   }
@@ -74,6 +78,7 @@ class EntryExitEntity extends Equatable{
       "exitCountry": exitCountry,
       "exitCity": exitCity,
       "exitTransport": exitTransport,
+      "duration": duration,
       "hasExit": hasExit,
     };
   }
