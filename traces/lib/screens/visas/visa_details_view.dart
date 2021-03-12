@@ -60,7 +60,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
               body: (state.status == StateStatus.Success || state.status == StateStatus.Error)
                   ? Container(
                       padding: EdgeInsets.all(5.0),
-                      child: _detailsForm(state.visa, state.entryExits))
+                      child: _detailsForm(state.visa, _sortEntries(state.entryExits)))
                   : Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.algalFuel))));
         }));
   }
@@ -257,3 +257,11 @@ class VerticalListItem extends StatelessWidget {
     );
   }
 }
+
+List<EntryExit> _sortEntries(List<EntryExit> entries) {
+    entries.sort((a, b) {
+      return b.entryDate.millisecondsSinceEpoch
+          .compareTo(a.entryDate.millisecondsSinceEpoch);
+    });
+    return entries;
+  }
