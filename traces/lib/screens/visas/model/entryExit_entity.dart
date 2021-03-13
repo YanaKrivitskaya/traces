@@ -43,7 +43,7 @@ class EntryExitEntity extends Equatable{
         map["entryCountry"],
         map["entryCity"],
         map["entryTransport"],
-        map["exitDate"].toDate(),
+        map["exitDate"] != null ? map["exitDate"].toDate() : null,
         map["exitCountry"],
         map["exitCity"],
         map["exitTransport"], 

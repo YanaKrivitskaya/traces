@@ -85,6 +85,7 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
                   _entryCityController.text = state.entryExit.entryCity;
                   _exitCountryController.text = state.entryExit.exitCountry;
                   _exitCityController.text = state.entryExit.exitCity;
+                  if(state.entryExit.exitDate == null) state.entryExit.exitDate = state.entryExit.entryDate;
                 }
                 return Container(padding: EdgeInsets.all(10.0), color: ColorsPalette.white, child: SingleChildScrollView(
                   child: Form(key: this._formKey, child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
@@ -277,13 +278,16 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
 
             if(isFormValid){
               if(state.entryExit.entryTransport == null) state.entryExit.entryTransport = state.settings.transport.first;
-              if(state.entryExit.exitTransport == null) state.entryExit.exitTransport = state.settings.transport.first;
-              if(state.entryExit.exitDate == state.visa.endDate) state.entryExit.exitDate = state.entryExit.entryDate;
+              if(state.entryExit.exitTransport == null) state.entryExit.exitTransport = state.settings.transport.first;              
               state.entryExit.entryCountry = _entryCountryController.text.trim();
               state.entryExit.entryCity = _entryCityController.text.trim();
               state.entryExit.exitCountry = _exitCountryController.text.trim();
               state.entryExit.exitCity = _exitCityController.text.trim();
-              state.entryExit.duration = tripDuration(state.entryExit.entryDate, state.entryExit.exitDate);
+              if(state.entryExit.exitCity == '' || state.entryExit.exitCountry == ''){
+                state.entryExit.duration = tripDuration(state.entryExit.entryDate, null);
+              }else{
+                state.entryExit.duration = tripDuration(state.entryExit.entryDate, state.entryExit.exitDate);
+              }              
               context.bloc<EntryExitBloc>().add(SubmitEntry(state.entryExit,state.visa));
             }
             
