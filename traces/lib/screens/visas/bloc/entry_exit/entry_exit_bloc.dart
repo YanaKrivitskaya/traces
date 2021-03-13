@@ -43,7 +43,7 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
 
     if (event.entry == null)
       entry =
-          new EntryExit(entryDate: event.visa.startDate, exitDate: event.visa.endDate);
+          new EntryExit(entryDate: event.visa.startDate, exitDate: null);
     else
       entry = event.entry;
 
