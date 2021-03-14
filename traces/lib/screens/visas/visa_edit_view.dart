@@ -87,7 +87,7 @@ class _VisaEditViewState extends State<VisaEditView> {
             state.visa = new Visa(
                 startDate: DateTime.now(),
                 endDate: DateTime.now(),
-                entryExitIds: new List<String>());
+                entryExitIds: <String>[]);
           } else {
             _countryController.text = state.visa.countryOfIssue;
             _durationController.text = state.visa.durationOfStay.toString();
@@ -273,7 +273,7 @@ class _VisaEditViewState extends State<VisaEditView> {
                 int.parse(this._durationController.text.trim());
 
             context
-                .bloc<VisaDetailsBloc>()
+                .read<VisaDetailsBloc>()
                 .add(VisaSubmitted(state.visa, isFormValid));
           }));
 
@@ -411,7 +411,7 @@ class _VisaEditViewState extends State<VisaEditView> {
     if (picked != null && picked != state.visa.startDate) {
       state.visa.durationOfStay =
           int.parse(this._durationController.text.trim());
-      context.bloc<VisaDetailsBloc>().add(DateFromChanged(picked));
+      context.read<VisaDetailsBloc>().add(DateFromChanged(picked));
     }
   }
 
@@ -431,7 +431,7 @@ class _VisaEditViewState extends State<VisaEditView> {
     if (picked != null && picked != state.visa.endDate) {
       state.visa.durationOfStay =
           int.parse(this._durationController.text.trim());
-      context.bloc<VisaDetailsBloc>().add(DateToChanged(picked));
+      context.read<VisaDetailsBloc>().add(DateToChanged(picked));
     }
   }
 }

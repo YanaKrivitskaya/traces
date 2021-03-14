@@ -12,7 +12,7 @@ class AddFamilyButton extends StatelessWidget {
       onPressed: (){
         showDialog(barrierDismissible: false, context: context,builder: (_) =>
             BlocProvider.value(
-              value: context.bloc<ProfileBloc>(),
+              value: context.read<ProfileBloc>(),
               child: FamilyDialog(null),
             )
         );

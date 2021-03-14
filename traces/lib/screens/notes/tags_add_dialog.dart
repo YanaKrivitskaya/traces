@@ -105,7 +105,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
         onPressed: (){
           if(_tagController.text != ''){
             Tag newTag = Tag(_tagController.text);
-            context.bloc<TagAddBloc>().add(AddTag(newTag));
+            context.read<TagAddBloc>().add(AddTag(newTag));
             FocusScope.of(context).requestFocus(FocusNode());
           }
         },
@@ -114,7 +114,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
   );
 
   void _onTagChanged() {
-    context.bloc<TagAddBloc>().add(TagChanged(tagName: _tagController.text));
+    context.read<TagAddBloc>().add(TagChanged(tagName: _tagController.text));
   }
 
   Widget _tagOptions() => new Column(
@@ -128,8 +128,8 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
 
           checked ? _note.tagIds.add(tag.id) : _note.tagIds.remove(tag.id);
 
-          context.bloc<NoteDetailsBloc>().add(SaveNoteClicked(_note));
-          context.bloc<TagAddBloc>().add(UpdateTag(updatedTag));
+          context.read<NoteDetailsBloc>().add(SaveNoteClicked(_note));
+          context.read<TagAddBloc>().add(UpdateTag(updatedTag));
         },
         activeColor: ColorsPalette.nycTaxi,
       )).toList()

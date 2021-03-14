@@ -21,7 +21,7 @@ class VisasView extends StatefulWidget {
 }
 
 class _VisasViewState extends State<VisasView> {
-  List<Visa> visas = new List<Visa>();
+  List<Visa> visas = <Visa>[];
 
   @override
   Widget build(BuildContext context) {

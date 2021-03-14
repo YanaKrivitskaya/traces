@@ -19,10 +19,10 @@ class TagsFilterButton extends StatelessWidget{
               MultiBlocProvider(
                 providers: [
                   BlocProvider.value(
-                      value: context.bloc<TagFilterBloc>()..add(GetTags())
+                      value: context.read<TagFilterBloc>()..add(GetTags())
                   ),
                   BlocProvider.value(
-                    value: context.bloc<NoteBloc>(),
+                    value: context.read<NoteBloc>(),
                   ),
                 ],
                 child:  TagsDialog(),
@@ -97,7 +97,7 @@ class _TagsDialogState extends State<TagsDialog>{
               FlatButton(
                 child: Text('Done'),
                 onPressed: () {
-                  context.bloc<NoteBloc>().add(SelectedTagsUpdated());
+                  context.read<NoteBloc>().add(SelectedTagsUpdated());
                   Navigator.pop(context);
                 },
                 textColor: ColorsPalette.greenGrass,
@@ -123,7 +123,7 @@ class _TagsDialogState extends State<TagsDialog>{
       title: Text(tag.name + " (" + tag.usage.toString() + ")"),
       value: tag.isChecked,
       onChanged: (val) {
-        context.bloc<TagFilterBloc>().add(TagChecked(tag, val));
+        context.read<TagFilterBloc>().add(TagChecked(tag, val));
       },
       activeColor: ColorsPalette.nycTaxi,
     )).toList()
@@ -136,7 +136,7 @@ class _TagsDialogState extends State<TagsDialog>{
           value: _selectAll.isChecked,
           onChanged: (val) {
             _selectAll.isChecked = val;
-            context.bloc<TagFilterBloc>().add(AllTagsChecked(val));
+            context.read<TagFilterBloc>().add(AllTagsChecked(val));
           },
           activeColor: ColorsPalette.nycTaxi,
         )
@@ -150,7 +150,7 @@ class _TagsDialogState extends State<TagsDialog>{
         value: _noTags.isChecked,
         onChanged: (val) {
           _noTags.isChecked = val;
-          context.bloc<TagFilterBloc>().add(NoTagsChecked(val));
+          context.read<TagFilterBloc>().add(NoTagsChecked(val));
         },
         activeColor: ColorsPalette.nycTaxi,
       )

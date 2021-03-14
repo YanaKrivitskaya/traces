@@ -15,9 +15,6 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
         _notesRepository = notesRepository, super(TagAddState.empty());
 
   @override
-  TagAddState get initialState => TagAddState.empty();
-
-  @override
   Stream<TagAddState> mapEventToState(
     TagAddEvent event,
   ) async* {
@@ -35,7 +32,7 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
   }
 
   Stream<TagAddState> _mapUpdateTagsListToState(UpdateTagsList event) async* {
-    List<Tag> filteredTags = new List<Tag>();
+    List<Tag> filteredTags = <Tag>[];
     filteredTags.addAll(event.allTags);
     yield TagAddState.success(allTags: event.allTags, filteredTags: filteredTags);
   }

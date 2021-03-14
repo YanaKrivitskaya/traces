@@ -29,7 +29,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   TextEditingController _textController;
 
   Note _note = Note('');
-  List<Tag> _noteTags = new List<Tag>();
+  List<Tag> _noteTags = <Tag>[];
   bool _isEditMode = false;
 
   @override
@@ -108,7 +108,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           MultiBlocProvider(
             providers: [
               BlocProvider.value(
-                value: context.bloc<NoteDetailsBloc>(),
+                value: context.read<NoteDetailsBloc>(),
               ),
               BlocProvider<TagAddBloc>(
                   create: (context) => TagAddBloc(notesRepository: FirebaseNotesRepository()
@@ -123,7 +123,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     icon: FaIcon(FontAwesomeIcons.edit),
     onPressed: () {
       if(state is ViewDetailsState){
-        context.bloc<NoteDetailsBloc>().add(EditModeClicked(state.note));
+        context.read<NoteDetailsBloc>().add(EditModeClicked(state.note));
       }
     },
   );
@@ -132,7 +132,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     icon: FaIcon(FontAwesomeIcons.solidSave),
     onPressed: () {
       Note noteToSave = new Note(_textController.text, title: _titleController.text, id: note.id, dateCreated: note.dateCreated, tagIds: note.tagIds);
-      context.bloc<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
+      context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
     },
   );
 
