@@ -15,7 +15,7 @@ class VisasPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<VisaTabBloc, VisaTab>(builder: (context, activeTab) {
       return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Visas',
               style: GoogleFonts.quicksand(

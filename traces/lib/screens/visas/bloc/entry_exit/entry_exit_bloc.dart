@@ -1,11 +1,15 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+
 import '../../../../shared/state_types.dart';
 import '../../model/entryExit.dart';
 import '../../model/settings.dart';
+import '../../model/user_countries.dart';
 import '../../model/visa.dart';
 import '../../repository/visas_repository.dart';
+
 part 'entry_exit_event.dart';
 part 'entry_exit_state.dart';
 
@@ -48,9 +52,10 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
       entry = event.entry;
 
     VisaSettings settings = await _visasRepository.settings();
+    UserSettings userSettings = await _visasRepository.userSettings();
 
     yield EntryExitState.editing(
-        visa: event.visa, entryExit: entry, settings: settings);
+        visa: event.visa, entryExit: entry, settings: settings, userSettings: userSettings);
   }
 
   Stream<EntryExitState> _mapSubmitEntryToState(SubmitEntry event) async* {
@@ -71,6 +76,15 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
       entry =
           await _visasRepository.updateEntryExit(event.entry, event.visa.id);
     }
+    List<String> countries = [entry.entryCountry, entry.exitCountry];
+    List<String> cities = [entry.entryCity, entry.exitCity];
+
+    await _visasRepository
+          .updateUserSettings(countries, cities)
+          .timeout(Duration(seconds: 3), onTimeout: () {
+        print("have timeout");
+        return null;
+      });  
 
     yield EntryExitState.success(visa: event.visa, entryExit: entry);
   }

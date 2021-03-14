@@ -308,7 +308,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCountries = state.userCountries.countries
+          var filteredCountries = state.userSettings.countries
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCountries.length > 0) {

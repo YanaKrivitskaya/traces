@@ -3,7 +3,7 @@ part of 'visa_details_bloc.dart';
 class VisaDetailsState {
   Visa visa;
   final VisaSettings settings;
-  final UserCountries userCountries;
+  final UserSettings userSettings;
   final List<String> familyMembers;
   final List<EntryExit> entryExits;
   final StateStatus status;
@@ -14,7 +14,7 @@ class VisaDetailsState {
   VisaDetailsState(
       {@required this.visa,
       @required this.settings,
-      @required this.userCountries,
+      @required this.userSettings,
       @required this.familyMembers,
       @required this.entryExits,
       @required this.status,
@@ -26,7 +26,7 @@ class VisaDetailsState {
     return VisaDetailsState(
         visa: null,
         settings: null,
-        userCountries: null,
+        userSettings: null,
         familyMembers: null,
         entryExits: null,
         status: StateStatus.Empty,
@@ -38,7 +38,7 @@ class VisaDetailsState {
     return VisaDetailsState(
         visa: null,
         settings: null,
-        userCountries: null,
+        userSettings: null,
         familyMembers: null,
         entryExits: null,
         status: StateStatus.Loading,
@@ -49,13 +49,13 @@ class VisaDetailsState {
   factory VisaDetailsState.editing(
       {Visa visa,
       VisaSettings settings,
-      UserCountries userCountries,
+      UserSettings userSettings,
       List<String> members,
       bool autovalidate}) {
     return VisaDetailsState(
         visa: visa,
         settings: settings,
-        userCountries: userCountries,
+        userSettings: userSettings,
         familyMembers: members,
         status: StateStatus.Empty,
         mode: StateMode.Edit,
@@ -66,13 +66,13 @@ class VisaDetailsState {
   factory VisaDetailsState.success(
       {Visa visa,
       VisaSettings settings,
-      UserCountries userCountries,
+      UserSettings userSettings,
       List<String> members,
       List<EntryExit> entryExits}) {
     return VisaDetailsState(
         visa: visa,
         settings: settings,
-        userCountries: userCountries,
+        userSettings: userSettings,
         familyMembers: members,
         entryExits: entryExits,
         status: StateStatus.Success,
@@ -83,7 +83,7 @@ class VisaDetailsState {
   factory VisaDetailsState.failure(
       {Visa visa,
       VisaSettings settings,
-      UserCountries userCountries,
+      UserSettings userSettings,
       List<String> members,
       List<EntryExit> entryExits,
       bool autovalidate,
@@ -91,7 +91,7 @@ class VisaDetailsState {
     return VisaDetailsState(
         visa: visa,
         settings: settings,
-        userCountries: userCountries,
+        userSettings: userSettings,
         familyMembers: members,
         entryExits: entryExits,
         status: StateStatus.Error,
@@ -103,7 +103,7 @@ class VisaDetailsState {
   VisaDetailsState copyWith(
       {final Visa visa,
       final VisaSettings settings,
-      final UserCountries userCountries,
+      final UserSettings userSettings,
       final List<String> members,
       final List<EntryExit> entryExits,
       final StateStatus status,
@@ -113,7 +113,7 @@ class VisaDetailsState {
     return VisaDetailsState(
         visa: visa ?? this.visa,
         settings: settings ?? this.settings,
-        userCountries: userCountries ?? this.userCountries,
+        userSettings: userSettings ?? this.userSettings,
         familyMembers: members ?? this.familyMembers,
         entryExits: entryExits ?? this.entryExits,
         status: status ?? this.status,
@@ -125,6 +125,7 @@ class VisaDetailsState {
   VisaDetailsState update(
       {Visa visa,
       VisaSettings settings,
+      UserSettings userSettings,
       List<EntryExit> entryExits,
       StateStatus status,
       StateMode mode,
@@ -133,7 +134,7 @@ class VisaDetailsState {
     return copyWith(
         visa: visa,
         settings: settings,
-        userCountries: userCountries,
+        userSettings: userSettings,
         members: familyMembers,
         entryExits: entryExits,
         status: status,

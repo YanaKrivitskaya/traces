@@ -83,7 +83,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   Stream<VisaDetailsState> _mapNewVisaModeToState(NewVisaMode event) async* {
     yield VisaDetailsState.loading();
 
-    UserCountries userCountries = await _visasRepository.userCountries();
+    UserSettings userSettings = await _visasRepository.userSettings();
     VisaSettings settings = await _visasRepository.settings();
     var userProfile = await _profileRepository.getCurrentProfile();
     List<String> members = userProfile.familyMembers;
@@ -93,7 +93,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     yield VisaDetailsState.editing(
         visa: null,
         settings: settings,
-        userCountries: userCountries,
+        userSettings: userSettings,
         members: members,
         autovalidate: false);
   }
@@ -102,7 +102,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       EditVisaClicked event) async* {
     yield VisaDetailsState.loading();
 
-    UserCountries userCountries = await _visasRepository.userCountries();
+    UserSettings userSettings = await _visasRepository.userSettings();
     VisaSettings settings = await _visasRepository.settings();
     var userProfile = await _profileRepository.getCurrentProfile();
     List<String> members = userProfile.familyMembers;
@@ -114,7 +114,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     yield VisaDetailsState.editing(
         visa: visa,
         settings: settings,
-        userCountries: userCountries,
+        userSettings: userSettings,
         members: members,
         autovalidate: false);
   }
@@ -152,7 +152,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield VisaDetailsState.failure(
           visa: event.visa,
           settings: state.settings,
-          userCountries: state.userCountries,
+          userSettings: state.userSettings,
           members: state.familyMembers,
           autovalidate: true,
           error: errorMessage);
@@ -180,23 +180,20 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       });
     }
 
-    UserCountries userCountries = await _visasRepository.userCountries();
+    List<String> countries = [visa.countryOfIssue];
 
-    if (userCountries.countries.where((c) => c == visa.countryOfIssue).length ==
-        0) {
-      userCountries.countries.add(visa.countryOfIssue);
-      await _visasRepository
-          .updateUserCountries(userCountries.countries)
+    await _visasRepository
+          .updateUserSettings(countries, null)
           .timeout(Duration(seconds: 3), onTimeout: () {
         print("have timeout");
         return null;
-      });
-    }
+      });  
+
 
     yield VisaDetailsState.success(
         visa: visa,
         settings: state.settings,
-        userCountries: state.userCountries,
+        userSettings: state.userSettings,
         members: state.familyMembers);
   }
 }

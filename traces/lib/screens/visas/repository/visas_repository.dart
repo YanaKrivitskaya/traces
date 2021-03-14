@@ -9,13 +9,13 @@ abstract class VisasRepository {
 
   Stream<List<EntryExit>> entryExits(String visaId);
 
-  Future<UserCountries> userCountries();
+  Future<UserSettings> userSettings();
 
   Future<VisaSettings> settings();
 
   Future<EntryExit> addEntryExit(EntryExit entryExit, String visaId);
 
-  Future<void> updateUserCountries(List<String> countries);
+  Future<void> updateUserSettings(List<String> countries, List<String> cities);
 
   Future<EntryExit> updateEntryExit(EntryExit entryExit, String visaId);
 

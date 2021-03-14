@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -64,12 +65,21 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
                         Container(width: 250, child: Text("Saved successfully",
                           style: GoogleFonts.quicksand(textStyle:TextStyle(color: ColorsPalette.lynxWhite)),
                           overflow: TextOverflow.ellipsis, maxLines: 2)),
-                        Icon(Icons.info)
+                        Icon(Icons.info, color: ColorsPalette.white)
                       ])));
               Future.delayed(const Duration(seconds: 1), () {
                 Navigator.pop(context);                
               });
             }
+            if(state.status == StateStatus.Success && state.mode == StateMode.Edit){
+                if(state.entryExit.id != null){
+                  _entryCountryController.text = state.entryExit.entryCountry;
+                  _entryCityController.text = state.entryExit.entryCity;
+                  _exitCountryController.text = state.entryExit.exitCountry;
+                  _exitCityController.text = state.entryExit.exitCity;
+                  if(state.entryExit.exitDate == null) state.entryExit.exitDate = state.entryExit.entryDate;
+                }                
+              }
           },
           child: BlocBuilder<EntryExitBloc, EntryExitState>(
             builder: (context, state) {
@@ -79,14 +89,7 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
                         valueColor: new AlwaysStoppedAnimation<Color>(
                             ColorsPalette.algalFuel)));
               }
-              if(state.status == StateStatus.Success && state.mode == StateMode.Edit){
-                if(state.entryExit.id != null){
-                  _entryCountryController.text = state.entryExit.entryCountry;
-                  _entryCityController.text = state.entryExit.entryCity;
-                  _exitCountryController.text = state.entryExit.exitCountry;
-                  _exitCityController.text = state.entryExit.exitCity;
-                  if(state.entryExit.exitDate == null) state.entryExit.exitDate = state.entryExit.entryDate;
-                }
+              if(state.status == StateStatus.Success && state.mode == StateMode.Edit){                
                 return Container(padding: EdgeInsets.all(10.0), color: ColorsPalette.white, child: SingleChildScrollView(
                   child: Form(key: this._formKey, child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
                     _entryEditContainer(context, state),
@@ -174,42 +177,144 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       context.bloc<EntryExitBloc>().add(ExitDateChanged(picked));     
     }
   }
-
-  Widget _entryCountrySelector(EntryExitState state) => new TextFormField(
-      decoration: const InputDecoration(
-          labelText: 'Country',
-          labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      controller: _entryCountryController,
+  
+   Widget _entryCountrySelector(EntryExitState state) => new TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: this._entryCountryController,
+        decoration: InputDecoration(
+            labelText: 'Country',
+            labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
+      ),
+      // ignore: missing_return
+      suggestionsCallback: (pattern) {
+        if (pattern.isNotEmpty) {
+          var filteredCountries = state.userSettings.countries
+              .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
+              .toList();
+          if (filteredCountries.length > 0) {
+            return filteredCountries;
+          }
+        }
+      },
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(suggestion),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (suggestion) {
+        this._entryCountryController.text = suggestion;
+        FocusScope.of(context).unfocus();
+      },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
-        return value.isEmpty ? 'Required field' : null;
+        if (value.isEmpty) {
+          return 'Required field';
+        }
+        return null;
+      });
+
+  Widget _exitCountrySelector(EntryExitState state) => new TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: this._exitCountryController,
+        decoration: InputDecoration(
+            labelText: 'Country',
+            labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
+      ),
+      // ignore: missing_return
+      suggestionsCallback: (pattern) {
+        if (pattern.isNotEmpty) {
+          var filteredCountries = state.userSettings.countries
+              .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
+              .toList();
+          if (filteredCountries.length > 0) {
+            return filteredCountries;
+          }
+        }
       },
-      keyboardType: TextInputType.text);
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(suggestion),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (suggestion) {
+        this._exitCountryController.text = suggestion;
+        FocusScope.of(context).unfocus();
+      });
 
-  Widget _exitCountrySelector(EntryExitState state) => new TextFormField(
-      decoration: const InputDecoration(
-          labelText: 'Country',
-          labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      controller: _exitCountryController,           
-      keyboardType: TextInputType.text);
-
-  Widget _entryCitySelector(EntryExitState state) => new TextFormField(
-      decoration: const InputDecoration(
-          labelText: 'City',
-          labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      controller: _entryCityController,
+  Widget _entryCitySelector(EntryExitState state) => new TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: this._entryCityController,
+        decoration: InputDecoration(
+            labelText: 'City',
+            labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
+      ),
+      // ignore: missing_return
+      suggestionsCallback: (pattern) {
+        if (pattern.isNotEmpty) {
+          var filteredCities = state.userSettings.cities
+              .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
+              .toList();
+          if (filteredCities.length > 0) {
+            return filteredCities;
+          }
+        }
+      },
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(suggestion),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (suggestion) {
+        this._entryCityController.text = suggestion;
+        FocusScope.of(context).unfocus();
+      },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
-        return value.isEmpty ? 'Required field' : null;
-      },
-      keyboardType: TextInputType.text);
+        if (value.isEmpty) {
+          return 'Required field';
+        }
+        return null;
+      });
 
-  Widget _exitCitySelector(EntryExitState state) => new TextFormField(
-      decoration: const InputDecoration(
-          labelText: 'City',
-          labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      controller: _exitCityController,      
-      keyboardType: TextInputType.text);
+  Widget _exitCitySelector(EntryExitState state) => new TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: this._exitCityController,
+        decoration: InputDecoration(
+            labelText: 'City',
+            labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
+      ),
+      // ignore: missing_return
+      suggestionsCallback: (pattern) {
+        if (pattern.isNotEmpty) {
+          var filteredCities = state.userSettings.cities
+              .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
+              .toList();
+          if (filteredCities.length > 0) {
+            return filteredCities;
+          }
+        }
+      },
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(suggestion),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (suggestion) {
+        this._exitCityController.text = suggestion;
+        FocusScope.of(context).unfocus();
+      });
   
   Widget _entryTransportSelector(EntryExitState state) =>
       new DropdownButtonFormField<String>(
