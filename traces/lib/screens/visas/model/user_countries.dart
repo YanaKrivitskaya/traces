@@ -3,52 +3,64 @@ import 'package:equatable/equatable.dart';
 
 import 'package:flutter/material.dart';
 
-class UserCountriesEntity extends Equatable{
+class UserSettingsEntity extends Equatable{
   final List<String> countries;
+  final List<String> cities;
 
-  UserCountriesEntity(this.countries);
+  UserSettingsEntity(this.countries, this.cities);
 
   @override
-  List<Object> get props => [countries];
+  List<Object> get props => [countries, cities];
 
   Map<String, Object> toJson(){
     return{
-      "countries": countries
+      "countries": countries,
+      "cities": cities
     };
   }
 
-  static UserCountriesEntity fromMap(Map<dynamic, dynamic> map){
-    return UserCountriesEntity(
-        map != null ? map["countries"].cast<String>() as List<String> : new List<String>()
-    );
+  static UserSettingsEntity fromMap(Map<dynamic, dynamic> map){
+    /*return UserSettingsEntity(
+      
+        map != null && map["countries"] != null ? map["countries"].cast<String>() as List<String> : new List<String>(),
+        map != null && map["cities"] != null ? map["cities"].cast<String>() as List<String> : new List<String>()
+    );*/
+    return UserSettingsEntity(
+        map["countries"] != null ? map["countries"].cast<String>() as List<String> : new List<String>(),
+        map["cities"] != null ? map["cities"].cast<String>() as List<String> : new List<String>()
+    );   
   }
 
-  static UserCountriesEntity fromSnapshot(DocumentSnapshot snap){
-    return UserCountriesEntity(
-        snap.data()['countries'].cast<String>()
+  static UserSettingsEntity fromSnapshot(DocumentSnapshot snap){
+    return UserSettingsEntity(
+        snap.data()['countries'].cast<String>(),
+        snap.data()['cities'].cast<String>()
     );
   }
 
   Map<String, Object> toDocument(){
     return{
       "countries": countries,
+      "cities": cities,
     };
   }
 }
 
 @immutable
-class UserCountries{
+class UserSettings{
   final List<String> countries;
+  final List<String> cities;
 
-  UserCountries(this.countries);
+  UserSettings(this.countries, this.cities);
 
-  UserCountriesEntity toEntity(){
-    return UserCountriesEntity(countries);
+  UserSettingsEntity toEntity(){
+    return UserSettingsEntity(countries, cities);
   }
 
-  static UserCountries fromEntity(UserCountriesEntity entity){
-    return UserCountries(
-        entity.countries
+  static UserSettings fromEntity(UserSettingsEntity entity){
+    return UserSettings(
+        entity.countries,
+        entity.cities
     );
   }
 }

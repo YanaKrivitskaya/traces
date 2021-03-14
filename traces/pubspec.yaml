@@ -38,7 +38,7 @@ dev_dependencies:
   equatable: ^1.0.0
   meta: ^1.1.8
   rxdart: ^0.24.0
-  flutter_typeahead: ^1.8.1
+  flutter_typeahead: ^2.0.0
   flutter_slidable: ^0.5.7
   flutter_test:
     sdk: flutter

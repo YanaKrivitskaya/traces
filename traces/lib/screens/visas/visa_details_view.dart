@@ -10,14 +10,14 @@ import '../../constants.dart';
 import '../../shared/state_types.dart';
 import 'bloc/entry_exit/entry_exit_bloc.dart';
 import 'bloc/visa_details/visa_details_bloc.dart';
-import 'entryExit_delete_alert.dart';
-import 'entry_exit_add_button.dart';
+import 'widgets/entryExit_delete_alert.dart';
+import 'widgets/entry_exit_add_button.dart';
 import 'entry_exit_details_view.dart';
 import 'helpers.dart';
 import 'model/entryExit.dart';
 import 'model/visa.dart';
 import 'repository/firebase_visas_repository.dart';
-import 'visa_delete_alert.dart';
+import 'widgets/visa_delete_alert.dart';
 
 class VisaDetailsView extends StatefulWidget {
   VisaDetailsView({Key key}) : super(key: key);

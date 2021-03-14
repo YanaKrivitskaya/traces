@@ -49,10 +49,10 @@ class FirebaseVisasRepository extends VisasRepository{
   }
 
   @override
-  Future<UserCountries> userCountries() async{
+  Future<UserSettings> userSettings() async{
     String uid = await _userRepository.getUserId();
-    var resultCountries = await visasCollection.doc(uid).get();
-    return UserCountries.fromEntity(UserCountriesEntity.fromMap(resultCountries.data()));
+    var resultSettings = await visasCollection.doc(uid).get();
+    return UserSettings.fromEntity(UserSettingsEntity.fromMap(resultSettings.data()));
   }
 
   @override
@@ -120,12 +120,26 @@ class FirebaseVisasRepository extends VisasRepository{
   }
 
   @override
-  Future<void> updateUserCountries(List<String> countries) async {
+  Future<void> updateUserSettings(List<String> countries, List<String> cities) async {
     String uid = await _userRepository.getUserId();
-    
-    UserCountries userCountries = new UserCountries(countries);
 
-    await visasCollection.doc(uid).set(userCountries.toEntity().toDocument());    
+    UserSettings userSettings = await this.userSettings();
+
+    if(countries != null){
+      countries.forEach((country) { 
+          if(userSettings.countries.where((c) => c == country).length ==
+            0) userSettings.countries.add(country);
+        });
+    }
+
+    if(cities != null){
+      cities.forEach((city) { 
+      if(userSettings.cities.where((c) => c == city).length ==
+        0) userSettings.cities.add(city);
+      });
+    }
+
+    await visasCollection.doc(uid).set(userSettings.toEntity().toDocument());    
   }
 
   @override
