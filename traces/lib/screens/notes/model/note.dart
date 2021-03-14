@@ -18,7 +18,7 @@ class Note{
       this.dateModified = dateModified ?? DateTime.now(),
       this.id = id,
       this.title = title ?? '',
-      this.tagIds = tagIds ?? new List<String>();
+      this.tagIds = tagIds ?? <String>[];
 
   Note copyWith({String title, String text, DateTime dateCreated, DateTime dateModified, String id, List<String> tagIds}){
     return Note(

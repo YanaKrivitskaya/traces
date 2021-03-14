@@ -27,9 +27,6 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
         super(VisaDetailsState.empty());
 
   @override
-  VisaDetailsState get initialState => VisaDetailsState.empty();
-
-  @override
   Stream<VisaDetailsState> mapEventToState(VisaDetailsEvent event) async* {
     if (event is GetVisaDetails) {
       yield* _mapGetVisaDetailsToState(event);

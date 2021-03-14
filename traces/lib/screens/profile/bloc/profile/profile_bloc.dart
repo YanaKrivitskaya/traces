@@ -13,10 +13,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc({@required ProfileRepository profileRepository})
       : assert(profileRepository != null),
         _profileRepository = profileRepository, super(ProfileState.empty());
-
-  @override
-  ProfileState get initialState => ProfileState.empty();
-
   @override
   Stream<ProfileState> mapEventToState(
     ProfileEvent event,

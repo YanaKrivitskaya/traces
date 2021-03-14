@@ -50,7 +50,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
                   child: Text('Done'),
                   onPressed: () {
                     if(state.isUsernameValid){
-                      context.bloc<ProfileBloc>().add(FamilyUpdated(name: _usernameController.text.trim(), position: widget.familyMemberPosition));
+                      context.read<ProfileBloc>().add(FamilyUpdated(name: _usernameController.text.trim(), position: widget.familyMemberPosition));
                     }
                     Navigator.pop(context);
                   },
@@ -97,7 +97,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
   );
 
   void _onUsernameChanged() {
-    context.bloc<ProfileBloc>().add(UsernameChanged(username: _usernameController.text.trim()));
+    context.read<ProfileBloc>().add(UsernameChanged(username: _usernameController.text.trim()));
   }
 
 }

@@ -1,21 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/auth/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/loginSignup/bloc/bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/loginSignup/form_types.dart';
-import 'package:traces/shared/state_types.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../auth/bloc.dart';
+import '../colorsPalette.dart';
+import '../shared/state_types.dart';
+import 'bloc/bloc.dart';
+import 'form_types.dart';
 
 class LoginSignupForm extends StatefulWidget{
-  final UserRepository _userRepository;
-
-  LoginSignupForm({@required UserRepository userRepository})
-    :assert (userRepository != null),
-        _userRepository = userRepository;
+  
+  LoginSignupForm();    
 
   State<LoginSignupForm> createState() => _LoginSignupFormState();
 }

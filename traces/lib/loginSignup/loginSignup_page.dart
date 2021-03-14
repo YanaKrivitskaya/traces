@@ -18,7 +18,7 @@ class LoginSignupPage extends StatelessWidget{
     return Scaffold(
       body: BlocProvider<LoginSignupBloc>(
         create: (context) => LoginSignupBloc(userRepository: _userRepository),
-        child: LoginSignupForm(userRepository: _userRepository),
+        child: LoginSignupForm(),
       ),
     );
   }

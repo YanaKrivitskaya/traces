@@ -20,9 +20,6 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
         super(VisaState.empty());
 
   @override
-  VisaState get initialState => VisaState.empty();
-
-  @override
   Stream<VisaState> mapEventToState(VisaEvent event) async* {
     if (event is GetAllVisas) {
       yield* _mapGetVisasToState(event);

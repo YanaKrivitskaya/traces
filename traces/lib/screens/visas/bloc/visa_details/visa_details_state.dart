@@ -60,7 +60,7 @@ class VisaDetailsState {
         status: StateStatus.Empty,
         mode: StateMode.Edit,
         autovalidate: autovalidate,
-        errorMessage: "");
+        errorMessage: "", entryExits: null);
   }
 
   factory VisaDetailsState.success(

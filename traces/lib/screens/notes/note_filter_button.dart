@@ -29,7 +29,7 @@ class NoteFilterButton extends StatelessWidget{
             MultiBlocProvider(
               providers: [
                 BlocProvider.value(
-                  value: context.bloc<NoteBloc>(),
+                  value: context.read<NoteBloc>(),
                 ),
                 BlocProvider<NoteSortBloc>(
                   create: (context) => NoteSortBloc(),

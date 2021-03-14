@@ -34,7 +34,7 @@ class VisaDeleteAlert extends StatelessWidget {
             FlatButton(
               child: Text('Delete', style: TextStyle(color: ColorsPalette.mazarineBlue)),
               onPressed: () {
-                context.bloc<VisaDetailsBloc>().add(DeleteVisaClicked(visa.id));
+                context.read<VisaDetailsBloc>().add(DeleteVisaClicked(visa.id));
                 callback("Delete");
                 Navigator.pop(context);
               },

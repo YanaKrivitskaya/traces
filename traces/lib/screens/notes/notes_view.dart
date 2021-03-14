@@ -41,6 +41,7 @@ class _NotesViewState extends State<NotesView> {
   void dispose(){
     _searchController.dispose();
     super.dispose();
+    _tagBloc.close();
   }
 
   @override
@@ -147,7 +148,7 @@ class _NotesViewState extends State<NotesView> {
   }
 
   void _onSearchTextChanged() {
-    context.bloc<NoteBloc>().add(SearchTextChanged(noteName: _searchController.text));
+    context.read<NoteBloc>().add(SearchTextChanged(noteName: _searchController.text));
   }
 
   Widget getChips(Note note, List<Tag> tags, bool allTagsSelected, List<Tag> selectedTags) {
@@ -190,7 +191,7 @@ class _NotesViewState extends State<NotesView> {
   }
 
   List<Note> _filterNotes(List<Note> notes, List<Tag> selectedTags, bool allTagsSelected, bool noTagsSelected){
-    List<Note> filteredNotes = new List<Note>();
+    List<Note> filteredNotes = <Note>[];
     if(allTagsSelected){
       filteredNotes = notes;
     }else{
@@ -218,7 +219,7 @@ class _NotesViewState extends State<NotesView> {
           barrierDismissible: false, // user must tap button!
           builder: (_) =>
             BlocProvider.value(
-              value: context.bloc<NoteBloc>(),
+              value: context.read<NoteBloc>(),
               child: NoteDeleteAlert(note: note, callback: (val) =>''),
             ),
         );

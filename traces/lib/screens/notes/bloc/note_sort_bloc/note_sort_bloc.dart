@@ -6,9 +6,6 @@ class NoteSortBloc extends Bloc<NoteSortEvent, NoteSortState> {
   NoteSortBloc() : super(InitialNoteSortState());
 
   @override
-  NoteSortState get initialState => InitialNoteSortState();
-
-  @override
   Stream<NoteSortState> mapEventToState(
     NoteSortEvent event,
   ) async* {

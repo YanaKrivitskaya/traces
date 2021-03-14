@@ -26,8 +26,8 @@ class UserSettingsEntity extends Equatable{
         map != null && map["cities"] != null ? map["cities"].cast<String>() as List<String> : new List<String>()
     );*/
     return UserSettingsEntity(
-        map["countries"] != null ? map["countries"].cast<String>() as List<String> : new List<String>(),
-        map["cities"] != null ? map["cities"].cast<String>() as List<String> : new List<String>()
+        map["countries"] != null ? map["countries"].cast<String>() as List<String> : <String>[],
+        map["cities"] != null ? map["cities"].cast<String>() as List<String> : <String>[]
     );   
   }
 

@@ -20,7 +20,7 @@ class NotesPage extends StatelessWidget{
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(
-          value: context.bloc<NoteBloc>()..add(GetAllNotes()),
+          value: context.read<NoteBloc>()..add(GetAllNotes()),
         ),
         BlocProvider<TagFilterBloc>(
           create: (context) => TagFilterBloc(
@@ -40,7 +40,7 @@ class NotesPage extends StatelessWidget{
             IconButton(
               icon: FaIcon(FontAwesomeIcons.search),
               onPressed: (){
-                context.bloc<NoteBloc>().add(SearchBarToggle());
+                context.read<NoteBloc>().add(SearchBarToggle());
               },
             ),
             TagsFilterButton(),

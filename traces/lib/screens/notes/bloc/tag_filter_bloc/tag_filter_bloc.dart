@@ -16,9 +16,6 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
         _notesRepository = notesRepository, super(TagFilterState.empty());
 
   @override
-  TagFilterState get initialState => TagFilterState.empty();
-
-  @override
   Stream<TagFilterState> mapEventToState(
     TagFilterEvent event,
   ) async* {
@@ -38,7 +35,7 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
   Stream<TagFilterState> _mapUpdateTagsListToState(UpdateTagsList event) async* {
     yield TagFilterState.loading();
 
-    List<Tag> selectedTags= new List<Tag>();
+    List<Tag> selectedTags= <Tag>[];
     if(event.selectedTags.isEmpty && !event.noTagsChecked && !event.allTagsUnChecked){
       selectedTags.addAll(event.allTags);
     }else{
@@ -54,7 +51,7 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
 
     _notesSubscription = _notesRepository.tags().listen(
           (tags) {
-            List<Tag> selectedTags = new List<Tag>();
+            List<Tag> selectedTags = <Tag>[];
             bool allTagsChecked = !state.allTagsChecked ? false : true;
             bool noTagsChecked = !state.noTagsChecked ? false : true;
             bool allTagsUnChecked = !state.allUnChecked ? false : true;
@@ -91,7 +88,7 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
   Stream<TagFilterState> _mapAllTagsCheckedToState(AllTagsChecked event) async* {
     yield state.update(stateStatus: StateStatus.Loading);
 
-    List<Tag> selectedTags = new List<Tag>();
+    List<Tag> selectedTags = <Tag>[];
 
     if(event.checked) {
       selectedTags.addAll(state.allTags);

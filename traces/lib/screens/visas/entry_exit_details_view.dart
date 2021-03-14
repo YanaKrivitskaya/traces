@@ -156,7 +156,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         firstDate: state.visa.startDate,
         lastDate: state.visa.endDate.add(new Duration(days: -1)));
     if (picked != null) {
-      context.bloc<EntryExitBloc>().add(EntryDateChanged(picked));     
+      context.read<EntryExitBloc>().add(EntryDateChanged(picked));     
     }
   }
 
@@ -174,7 +174,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         firstDate: state.entryExit.entryDate,
         lastDate: state.visa.endDate);
     if (picked != null) {
-      context.bloc<EntryExitBloc>().add(ExitDateChanged(picked));     
+      context.read<EntryExitBloc>().add(ExitDateChanged(picked));     
     }
   }
   
@@ -393,7 +393,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
               }else{
                 state.entryExit.duration = tripDuration(state.entryExit.entryDate, state.entryExit.exitDate);
               }              
-              context.bloc<EntryExitBloc>().add(SubmitEntry(state.entryExit,state.visa));
+              context.read<EntryExitBloc>().add(SubmitEntry(state.entryExit,state.visa));
             }
             
   })));

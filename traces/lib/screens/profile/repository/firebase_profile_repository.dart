@@ -49,7 +49,7 @@ class FirebaseProfileRepository extends ProfileRepository{
   Future<Profile> addNewProfile() async {
     User user = await _userRepository.getUser();
 
-    Profile newProfile = Profile(user.email, new List<String>(), displayName: user.displayName, isEmailVerified: user.emailVerified);
+    Profile newProfile = Profile(user.email, <String>[], displayName: user.displayName, isEmailVerified: user.emailVerified);
     await usersCollection.doc(user.uid).set(newProfile.toEntity().toDocument());
 
     return await getCurrentProfile();

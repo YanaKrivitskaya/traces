@@ -22,9 +22,6 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
         super(EntryExitState.empty());
 
   @override
-  EntryExitState get initialState => EntryExitState.empty();
-
-  @override
   Stream<EntryExitState> mapEventToState(EntryExitEvent event) async* {
     if (event is GetEntryDetails) {
       yield* _mapGetEntryDetailsToState(event);

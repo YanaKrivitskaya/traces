@@ -80,7 +80,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
               context: context,
               barrierDismissible: false, // user must tap button!
               builder: (_) => BlocProvider.value(
-                    value: context.bloc<VisaDetailsBloc>(),
+                    value: context.read<VisaDetailsBloc>(),
                     child: VisaDeleteAlert(
                       visa: state.visa,
                       callback: (val) =>
