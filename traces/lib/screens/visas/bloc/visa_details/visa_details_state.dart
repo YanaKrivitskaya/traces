@@ -10,6 +10,7 @@ class VisaDetailsState {
   final StateMode mode;
   final bool autovalidate;
   final String errorMessage;
+  final int activeTab;
 
   VisaDetailsState(
       {@required this.visa,
@@ -20,7 +21,7 @@ class VisaDetailsState {
       @required this.status,
       @required this.mode,
       this.autovalidate = false,
-      this.errorMessage});
+      this.errorMessage, this.activeTab});
 
   factory VisaDetailsState.empty() {
     return VisaDetailsState(
@@ -31,7 +32,8 @@ class VisaDetailsState {
         entryExits: null,
         status: StateStatus.Empty,
         mode: StateMode.View,
-        errorMessage: "");
+        errorMessage: "",
+        activeTab: 0);
   }
 
   factory VisaDetailsState.loading() {
@@ -43,7 +45,8 @@ class VisaDetailsState {
         entryExits: null,
         status: StateStatus.Loading,
         mode: StateMode.View,
-        errorMessage: "");
+        errorMessage: "",
+        activeTab: 0);
   }
 
   factory VisaDetailsState.editing(
@@ -60,7 +63,8 @@ class VisaDetailsState {
         status: StateStatus.Empty,
         mode: StateMode.Edit,
         autovalidate: autovalidate,
-        errorMessage: "", entryExits: null);
+        errorMessage: "", entryExits: null,
+        activeTab: 0);
   }
 
   factory VisaDetailsState.success(
@@ -77,7 +81,7 @@ class VisaDetailsState {
         entryExits: entryExits,
         status: StateStatus.Success,
         mode: StateMode.View,
-        errorMessage: "");
+        errorMessage: "", activeTab: 0);
   }
 
   factory VisaDetailsState.failure(
@@ -97,7 +101,7 @@ class VisaDetailsState {
         status: StateStatus.Error,
         mode: StateMode.View,
         autovalidate: autovalidate,
-        errorMessage: error);
+        errorMessage: error, activeTab: 0);
   }
 
   VisaDetailsState copyWith(
@@ -109,7 +113,7 @@ class VisaDetailsState {
       final StateStatus status,
       final StateMode mode,
       bool autovalidate,
-      String errorMessage}) {
+      String errorMessage, int activeTab}) {
     return VisaDetailsState(
         visa: visa ?? this.visa,
         settings: settings ?? this.settings,
@@ -119,7 +123,9 @@ class VisaDetailsState {
         status: status ?? this.status,
         mode: mode ?? this.mode,
         autovalidate: autovalidate ?? this.autovalidate,
-        errorMessage: errorMessage ?? this.errorMessage);
+        errorMessage: errorMessage ?? this.errorMessage,
+        activeTab: activeTab ?? this.activeTab
+    );
   }
 
   VisaDetailsState update(
@@ -130,7 +136,7 @@ class VisaDetailsState {
       StateStatus status,
       StateMode mode,
       bool autovalidate,
-      String errorMessage}) {
+      String errorMessage, int activeTab}) {
     return copyWith(
         visa: visa,
         settings: settings,
@@ -140,6 +146,8 @@ class VisaDetailsState {
         status: status,
         mode: mode,
         autovalidate: autovalidate,
-        errorMessage: errorMessage);
+        errorMessage: errorMessage, 
+        activeTab: activeTab
+    );
   }
 }

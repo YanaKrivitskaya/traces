@@ -46,6 +46,8 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapEditVisaModeToState(event);
     } else if (event is DeleteVisaClicked) {
       yield* _mapDeleteVisaEventToState(event);
+    } else if (event is TabUpdatedClicked) {
+      yield* _mapTabUpdatedToState(event);
     }
   }
 
@@ -192,5 +194,11 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
         settings: state.settings,
         userSettings: state.userSettings,
         members: state.familyMembers);
+  }
+
+  Stream<VisaDetailsState> _mapTabUpdatedToState(
+      TabUpdatedClicked event) async* {
+    
+    yield state.update(activeTab: event.index);
   }
 }

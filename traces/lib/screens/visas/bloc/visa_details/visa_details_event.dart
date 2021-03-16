@@ -84,3 +84,12 @@ class SaveVisaClicked extends VisaDetailsEvent {
   @override
   List<Object> get props => [visa];
 }
+
+class TabUpdatedClicked extends VisaDetailsEvent {
+  final int index;
+
+  TabUpdatedClicked(this.index);
+
+  @override
+  List<Object> get props => [index];
+}

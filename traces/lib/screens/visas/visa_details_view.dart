@@ -20,32 +20,63 @@ import 'repository/firebase_visas_repository.dart';
 import 'widgets/visa_delete_alert.dart';
 
 class VisaDetailsView extends StatefulWidget {
+
   VisaDetailsView({Key key}) : super(key: key);
 
   @override
   _VisaDetailsViewState createState() => _VisaDetailsViewState();
 }
 
-class _VisaDetailsViewState extends State<VisaDetailsView> {
+class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProviderStateMixin {
   SlidableController slidableController; 
+
+  TabController tabController;
+
+  final List<Tab> detailsTabs = <Tab>[
+    Tab(text: 'Details'),
+    Tab(text: 'Entries'),
+  ];
 
   void initState() { 
     slidableController = SlidableController(); 
+    tabController = TabController(length: detailsTabs.length, vsync: this);
+    
+    tabController.addListener(handleTabSelection);
     super.initState(); 
   } 
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
 
   // for Slidable animation
   void handleSlideIsOpenChanged(bool isOpen) { }
   void handleSlideAnimationChanged(Animation<double> slideAnimation) { }
+
+  void handleTabSelection() {    
+    if(tabController.index != tabController.previousIndex){
+      context.read<VisaDetailsBloc>().add(TabUpdatedClicked(tabController.index));
+    }    
+  }
   
   @override
   Widget build(BuildContext context) {
     return BlocListener<VisaDetailsBloc, VisaDetailsState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          tabController.index = state.activeTab;
+        },
         child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(
-            builder: (context, state) {              
-          return new Scaffold(
-              appBar: AppBar(
+          builder: (context, state) {
+            return new Scaffold(
+                appBar: AppBar(
+                  bottom: TabBar(
+                    controller: tabController,                    
+                    tabs: detailsTabs,
+                    indicatorColor: ColorsPalette.algalFuel
+                ),
                 title: Text('Visa Details',
                     style: GoogleFonts.quicksand(
                     textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
@@ -57,11 +88,38 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                 actions: [_editAction(state), _deleteAction(state)],
               ),
               backgroundColor: Colors.white,
-              body: (state.status == StateStatus.Success || state.status == StateStatus.Error)
-                  ? Container(
+              floatingActionButton: state.activeTab == 1 ? FloatingActionButton(
+                onPressed: () {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (_) => BlocProvider<EntryExitBloc>(
+                        create: (context) =>
+                            EntryExitBloc(visasRepository: new FirebaseVisasRepository())
+                              ..add(GetEntryDetails(null, state.visa)),
+                        child: EntryExitDetailsView()),
+                  );
+                },
+                tooltip: 'Add entry',
+                backgroundColor: ColorsPalette.algalFuel,
+                child: Icon(Icons.add, color: ColorsPalette.lynxWhite),
+              ): null,
+              body: (state.status == StateStatus.Success || state.status == StateStatus.Error) 
+              ? TabBarView(
+                controller: tabController,
+                  children: [
+                    Container(
                       padding: EdgeInsets.all(5.0),
-                      child: _detailsForm(state.visa, _sortEntries(state.entryExits)))
-                  : Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.algalFuel))));
+                      child: _details(state.visa, state.entryExits)
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(5.0),
+                      child: _entries(state.visa, _sortEntries(state.entryExits))
+                    )
+                  ],
+                )
+              : Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.algalFuel)))
+              );          
         }));
   }
 
@@ -90,13 +148,13 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
         },
       );
 
-  Widget _detailsForm(Visa visa, List<EntryExit> entryExits) => new Container(
+  Widget _details(Visa visa, List<EntryExit> entryExits) => new Container(
     color: ColorsPalette.white, padding: EdgeInsets.all(15.0),
     child: SingleChildScrollView(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           isActiveLabel(visa),
-          Divider(color: ColorsPalette.algalFuel),
+          Divider(color: ColorsPalette.mazarineBlue, thickness: 1.0),
           Text(visa.owner, style: TextStyle(
             color: ColorsPalette.mazarineBlue,
             fontSize: 15.0,
@@ -114,56 +172,36 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
           Text('Days used: ${daysUsed(visa, entryExits)}',
             style: TextStyle(fontSize: 15.0)),
           Text('Days left: ${daysLeft(visa, entryExits)}',
-            style: TextStyle(fontSize: 15.0)),
-          Divider(color: ColorsPalette.mazarineBlue, thickness: 1.0),            
+            style: TextStyle(fontSize: 15.0))
+        ],
+      ),
+    ));      
+
+  Widget _entries(Visa visa, List<EntryExit> entryExits) => new Container(
+    color: ColorsPalette.white, padding: EdgeInsets.all(15.0),
+    child: SingleChildScrollView(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Entry', style: TextStyle(
-                color: ColorsPalette.mazarineBlue,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold),
-                ),
-              Text('Exit', style: TextStyle(
-                color: ColorsPalette.mazarineBlue,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold)),
-              Text('Stay', style: TextStyle(
-                color: ColorsPalette.mazarineBlue,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold),
-              )
+              Text('Entry', style: TextStyle(color: ColorsPalette.mazarineBlue, fontSize: 18.0, fontWeight: FontWeight.bold)),
+              Text('Exit', style: TextStyle(color: ColorsPalette.mazarineBlue, fontSize: 18.0, fontWeight: FontWeight.bold)),
+              Text('Stay', style: TextStyle(color: ColorsPalette.mazarineBlue, fontSize: 18.0, fontWeight: FontWeight.bold))
           ]),
           Divider(color: ColorsPalette.mazarineBlue,thickness: 1.0),
-            Container(height: MediaQuery.of(context).size.height * 0.4,
-              child: SingleChildScrollView(child: Column(children: <Widget>[
-                entryExits.length > 0 ? Column(children: [
-                  ListView.builder(shrinkWrap: true, physics: NeverScrollableScrollPhysics(),
-                    itemCount: entryExits.length,
-                    itemBuilder: (builderContext, position) {
-                      final entryExit = entryExits[position];
-                      return Column(children: [
-                        Slidable(
-                        key: Key(entryExit.id),
-                        controller: slidableController,
-                        direction: Axis.horizontal,
-                        dismissal: SlidableDismissal(
-                          child: SlidableDrawerDismissal(),
-                          onDismissed: (actionType) {
-                            showDialog<String>(
-                              context: context,
-                              barrierDismissible: false, // user must tap button!
-                              builder: (_) => BlocProvider<EntryExitBloc>(                                   
-                                    create: (context) => EntryExitBloc(visasRepository:new FirebaseVisasRepository()),
-                                    child: EntryExitDeleteAlert(
-                                      visa: visa,
-                                      entryExit: entryExit                                      
-                                    ),
-                                  ));
-                          }                        
-                        ),
-                        actionPane: SlidableDrawerActionPane(),
-                        actionExtentRatio: 0.25,
-                        child: VerticalListItem(entryExits[position], visa),
+          Column(children: <Widget>[
+            entryExits.length > 0 ? Container(child:
+              ListView.builder(shrinkWrap: true, physics: NeverScrollableScrollPhysics(),
+                itemCount: entryExits.length,
+                itemBuilder: (builderContext, position) {
+                  final entryExit = entryExits[position];
+                  return Column(children: [
+                    Slidable(key: Key(entryExit.id),
+                      controller: slidableController,
+                      direction: Axis.horizontal,                      
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: VerticalListItem(entryExits[position], visa),
                         secondaryActions: <Widget>[
                           IconSlideAction(
                             color: ColorsPalette.carminePink, 
@@ -183,24 +221,18 @@ class _VisaDetailsViewState extends State<VisaDetailsView> {
                       ),
                         Divider(color: ColorsPalette.mazarineBlue)
                       ]);                      
-                    })])
+                    }))
                     : Column(children: [Container(child: Align(
                       child: Text("No entries"),
-                      alignment: Alignment.centerLeft)),
-                      _showAddButton(visa)]),
-                (entryExits.length > 0 && entryExits.last.hasExit) 
-                  ? _showAddButton(visa)
-                  :Container()
+                      alignment: Alignment.centerLeft))])
                     ],
-                  ),
-                ))
-          ],
-        ),
-      ));
-
-      Widget _showAddButton(Visa visa) => new Container(
-        child: Align(child: AddEntryButton(visa: visa),
-                          alignment: Alignment.centerLeft)
+                  )
+              /*Container(height: MediaQuery.of(context).size.height * 0.4,
+              child: SingleChildScrollView(child: ,
+                ))*/
+            ]
+          )
+        )
       );
 
 }
