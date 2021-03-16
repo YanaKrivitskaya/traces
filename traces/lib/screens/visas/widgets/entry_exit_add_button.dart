@@ -20,8 +20,12 @@ class AddEntryButton extends StatelessWidget {
     return OutlineButton(
       child: Text(
         'Add',
-        style: TextStyle(color: ColorsPalette.mazarineBlue),
+        style: TextStyle(color: ColorsPalette.algalFuel),
       ),
+      borderSide: BorderSide(
+          color: ColorsPalette.algalFuel,
+        ),
+      color: ColorsPalette.algalFuel,
       onPressed: () {
         showDialog(
           barrierDismissible: false,

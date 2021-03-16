@@ -4,6 +4,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 
 import '../../colorsPalette.dart';
 import '../../shared/state_types.dart';
@@ -54,7 +55,7 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
         body: BlocListener<EntryExitBloc, EntryExitState>(
           listener: (context, state) {
             if (state.status == StateStatus.Success && state.mode == StateMode.View) {
-              Scaffold.of(context)
+              ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
@@ -67,7 +68,7 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
                           overflow: TextOverflow.ellipsis, maxLines: 2)),
                         Icon(Icons.info, color: ColorsPalette.white)
                       ])));
-              Future.delayed(const Duration(seconds: 1), () {
+              Future.delayed(const Duration(seconds: 1), () {                
                 Navigator.pop(context);                
               });
             }
@@ -393,7 +394,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
               }else{
                 state.entryExit.duration = tripDuration(state.entryExit.entryDate, state.entryExit.exitDate);
               }              
-              context.read<EntryExitBloc>().add(SubmitEntry(state.entryExit,state.visa));
+              context.read<EntryExitBloc>().add(SubmitEntry(state.entryExit, state.visa));
             }
             
   })));
