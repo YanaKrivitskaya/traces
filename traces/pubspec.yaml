@@ -58,9 +58,21 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  #assets:
-   #- assets/traces_logo.png
+  # To add assets to your application, add an assets section, like this:  
+  assets:
+  - assets/029-credit-card.png
+  - assets/001-wallet.png
+  - assets/014-passport.png
+  - assets/020-hotel.png
+  - assets/023-map.png
+  - assets/036-plane.png
+  - assets/001-wallet.png
+  - assets/002-trekking.png
+  - assets/006-sunset.png
+  - assets/015-navigation.png
+  - assets/016-mountain.png
+  - assets/011-postcard.png
+  - assets/021-signpost.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
