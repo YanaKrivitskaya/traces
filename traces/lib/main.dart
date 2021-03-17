@@ -14,28 +14,26 @@ import 'package:flutter/services.dart';
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 
+import 'package:sentry_flutter/sentry_flutter.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.
   await Firebase.initializeApp();
   Bloc.observer = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
 
-  // Create the initilization Future outside of `build`:
-  /*Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
-  FutureBuilder(
-    // Initialize FlutterFire:
-    future: _initialization,
-    builder: ()
-  );*/
-
-  runApp(
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = 'https://27c6777d4f634e08921dc708e126a544@o553293.ingest.sentry.io/5680328';
+    },
+    appRunner: () => runApp(
     BlocProvider(
       create: (context) => AuthenticationBloc(userRepository: userRepository)
         ..add(AppStarted()),
       child: TracesApp(userRepository: userRepository)
     )
-  );
+    ),
+  );  
 }
 
 class TracesApp extends StatelessWidget{
