@@ -73,10 +73,10 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
             }
             if(state.status == StateStatus.Success && state.mode == StateMode.Edit){
                 if(state.entryExit.id != null){
-                  _entryCountryController.text = state.entryExit.entryCountry;
-                  _entryCityController.text = state.entryExit.entryCity;
-                  _exitCountryController.text = state.entryExit.exitCountry;
-                  _exitCityController.text = state.entryExit.exitCity;
+                  if(_entryCountryController.text == '') _entryCountryController.text = state.entryExit.entryCountry;
+                  if(_entryCityController.text == '') _entryCityController.text = state.entryExit.entryCity;
+                  if(_exitCountryController.text == '') _exitCountryController.text = state.entryExit.exitCountry;
+                  if(_exitCityController.text == '') _exitCityController.text = state.entryExit.exitCity;                  
                   if(state.entryExit.exitDate == null) state.entryExit.exitDate = state.entryExit.entryDate;
                 }                
               }
@@ -154,7 +154,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         context: context,
         initialDate: state.entryExit.entryDate ?? state.visa.startDate,
         firstDate: state.visa.startDate,
-        lastDate: state.visa.endDate.add(new Duration(days: -1)));
+        lastDate: DateTime.now().difference(state.visa.endDate).inDays > 0 ? state.visa.endDate : DateTime.now());
     if (picked != null) {
       context.read<EntryExitBloc>().add(EntryDateChanged(picked));     
     }
@@ -172,7 +172,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         context: context,
         initialDate: state.entryExit.exitDate ?? state.entryExit.entryDate,
         firstDate: state.entryExit.entryDate,
-        lastDate: state.visa.endDate);
+        lastDate: DateTime.now().difference(state.visa.endDate).inDays > 0 ? state.visa.endDate : DateTime.now());;
     if (picked != null) {
       context.read<EntryExitBloc>().add(ExitDateChanged(picked));     
     }
