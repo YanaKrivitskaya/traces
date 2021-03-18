@@ -87,7 +87,8 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                 actions: [_editAction(state), _deleteAction(state)],
               ),
               backgroundColor: Colors.white,
-              floatingActionButton: state.activeTab == 1 ? FloatingActionButton(
+              floatingActionButton: state.activeTab == 1 && (state.entryExits.length > 0 && state.entryExits.last.hasExit) 
+                  ? FloatingActionButton(
                 onPressed: () {
                   showDialog(
                     barrierDismissible: false,
