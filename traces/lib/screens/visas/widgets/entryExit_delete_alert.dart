@@ -29,7 +29,7 @@ class EntryExitDeleteAlert extends StatelessWidget {
             )
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text('Delete', style: TextStyle(color: ColorsPalette.mazarineBlue)),
               onPressed: () {
                 context.read<EntryExitBloc>().add(DeleteEntry(entryExit, visa));
@@ -37,7 +37,7 @@ class EntryExitDeleteAlert extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text('Cancel', style: TextStyle(color: ColorsPalette.mazarineBlue)),
               onPressed: () {                
                 Navigator.pop(context);

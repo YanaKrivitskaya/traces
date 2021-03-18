@@ -122,7 +122,7 @@ class _ProfileViewState extends State<ProfileView>{
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Divider(color: ColorsPalette.meditSea),
-                OutlineButton(
+                OutlinedButton(
                   child: ListTile(
                       leading: FaIcon(FontAwesomeIcons.signOutAlt, color: ColorsPalette.fusionRed),
                       title: Text('Sign out')),

@@ -25,8 +25,6 @@ class _VisaEditViewState extends State<VisaEditView> {
   TextEditingController _countryController;
   TextEditingController _durationController;
 
-  bool _autovalidate = false;
-
   @override
   void initState() {
     super.initState();
@@ -57,7 +55,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       body: BlocListener<VisaDetailsBloc, VisaDetailsState>(
           listener: (context, state) {
         if (state.status == StateStatus.Error) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -95,7 +93,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         }
         if (state.status == StateStatus.Loading &&
             state.mode == StateMode.Edit) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -117,7 +115,7 @@ class _VisaEditViewState extends State<VisaEditView> {
             );
         }
         if (state.status == StateStatus.Success) {
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -154,7 +152,6 @@ class _VisaEditViewState extends State<VisaEditView> {
           }
         }
 
-        _autovalidate = state.autovalidate;
       }, child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(
               builder: (context, state) {
         if (state.status == StateStatus.Loading &&
@@ -261,10 +258,13 @@ class _VisaEditViewState extends State<VisaEditView> {
       )));
 
   Widget _submitButton(VisaDetailsState state) => new Center(
-      child: RaisedButton(
-          child: Text(widget.visaId == '' ? 'Create visa' : 'Save'),
-          textColor: ColorsPalette.lynxWhite,
-          color: ColorsPalette.algalFuel,
+      child: ElevatedButton(          
+          child: Text(widget.visaId == '' ? 'Create visa' : 'Save'),          
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+            backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.algalFuel),
+            foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
+          ),
           onPressed: () {
             var isFormValid = _formKey.currentState.validate();
 
@@ -328,7 +328,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         this._countryController.text = suggestion;
         FocusScope.of(context).unfocus();
       },
-      autovalidate: _autovalidate,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
         if (value.isEmpty) {
           return 'Required field';

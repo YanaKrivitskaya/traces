@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
 
 Column _menuTile(IconData icon, String title, BuildContext context, String routeName, Color iconColor) =>Column(
     children: <Widget>[
-      FlatButton(
+      TextButton(
         onPressed: () {
           Navigator.pushNamed(
               context,
@@ -84,7 +84,9 @@ Column _menuTile(IconData icon, String title, BuildContext context, String route
               //arguments:
           );
         },
-        padding: EdgeInsets.all(10.0),
+        style: ButtonStyle(
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(10.0))     
+        ),          
         child: Column( // Replace with a Row for horizontal icon + text
           children: <Widget>[
             FaIcon(icon, color: iconColor, size: 50.0),

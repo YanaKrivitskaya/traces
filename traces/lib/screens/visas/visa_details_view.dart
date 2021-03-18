@@ -11,7 +11,6 @@ import '../../shared/state_types.dart';
 import 'bloc/entry_exit/entry_exit_bloc.dart';
 import 'bloc/visa_details/visa_details_bloc.dart';
 import 'widgets/entryExit_delete_alert.dart';
-import 'widgets/entry_exit_add_button.dart';
 import 'entry_exit_details_view.dart';
 import 'helpers.dart';
 import 'model/entryExit.dart';

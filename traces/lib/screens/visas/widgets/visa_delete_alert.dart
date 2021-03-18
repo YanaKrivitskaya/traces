@@ -31,7 +31,7 @@ class VisaDeleteAlert extends StatelessWidget {
             )
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text('Delete', style: TextStyle(color: ColorsPalette.mazarineBlue)),
               onPressed: () {
                 context.read<VisaDetailsBloc>().add(DeleteVisaClicked(visa.id));
@@ -39,7 +39,7 @@ class VisaDeleteAlert extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text('Cancel', style: TextStyle(color: ColorsPalette.mazarineBlue),),
               onPressed: () {
                 callback("Cancel");
