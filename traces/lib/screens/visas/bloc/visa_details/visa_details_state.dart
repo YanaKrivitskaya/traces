@@ -7,8 +7,7 @@ class VisaDetailsState {
   final List<String> familyMembers;
   final List<EntryExit> entryExits;
   final StateStatus status;
-  final StateMode mode;
-  final bool autovalidate;
+  final StateMode mode;  
   final String errorMessage;
   final int activeTab;
 
@@ -19,8 +18,7 @@ class VisaDetailsState {
       @required this.familyMembers,
       @required this.entryExits,
       @required this.status,
-      @required this.mode,
-      this.autovalidate = false,
+      @required this.mode,      
       this.errorMessage, this.activeTab});
 
   factory VisaDetailsState.empty() {
@@ -61,8 +59,7 @@ class VisaDetailsState {
         userSettings: userSettings,
         familyMembers: members,
         status: StateStatus.Empty,
-        mode: StateMode.Edit,
-        autovalidate: autovalidate,
+        mode: StateMode.Edit,        
         errorMessage: "", entryExits: null,
         activeTab: 0);
   }
@@ -99,8 +96,7 @@ class VisaDetailsState {
         familyMembers: members,
         entryExits: entryExits,
         status: StateStatus.Error,
-        mode: StateMode.View,
-        autovalidate: autovalidate,
+        mode: StateMode.View,        
         errorMessage: error, activeTab: 0);
   }
 
@@ -111,8 +107,7 @@ class VisaDetailsState {
       final List<String> members,
       final List<EntryExit> entryExits,
       final StateStatus status,
-      final StateMode mode,
-      bool autovalidate,
+      final StateMode mode,      
       String errorMessage, int activeTab}) {
     return VisaDetailsState(
         visa: visa ?? this.visa,
@@ -121,8 +116,7 @@ class VisaDetailsState {
         familyMembers: members ?? this.familyMembers,
         entryExits: entryExits ?? this.entryExits,
         status: status ?? this.status,
-        mode: mode ?? this.mode,
-        autovalidate: autovalidate ?? this.autovalidate,
+        mode: mode ?? this.mode,       
         errorMessage: errorMessage ?? this.errorMessage,
         activeTab: activeTab ?? this.activeTab
     );
@@ -134,8 +128,7 @@ class VisaDetailsState {
       UserSettings userSettings,
       List<EntryExit> entryExits,
       StateStatus status,
-      StateMode mode,
-      bool autovalidate,
+      StateMode mode,      
       String errorMessage, int activeTab}) {
     return copyWith(
         visa: visa,
@@ -144,8 +137,7 @@ class VisaDetailsState {
         members: familyMembers,
         entryExits: entryExits,
         status: status,
-        mode: mode,
-        autovalidate: autovalidate,
+        mode: mode,        
         errorMessage: errorMessage, 
         activeTab: activeTab
     );

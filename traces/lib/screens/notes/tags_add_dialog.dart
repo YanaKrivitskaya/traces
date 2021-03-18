@@ -61,12 +61,15 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
           return new AlertDialog(
               title: Text('Select Tags'),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Done'),
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  textColor: ColorsPalette.greenGrass,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.greenGrass)
+                  ),                  
                 ),
               ],
               content: Container(

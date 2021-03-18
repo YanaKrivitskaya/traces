@@ -4,7 +4,6 @@ part of 'visa_details_bloc.dart';
 abstract class VisaDetailsEvent {
   const VisaDetailsEvent();
 
-  @override
   List<Object> get props => [];
 }
 

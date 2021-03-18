@@ -22,10 +22,15 @@ class _SettingsPageState extends State<SettingsPage>{
         centerTitle: true,
       ),
       body: Center(
-        child: RaisedButton(
+        child: ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+            backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.gloomyPurple),
+            foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
+          ),
           child: Text('Go back!'),
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:traces/constants.dart';
 import 'package:traces/screens/home.dart';
+import 'package:traces/screens/hotels.dart';
+import 'package:traces/screens/map.dart';
 import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
 import 'package:traces/screens/notes/note_detail_view.dart';
 import 'package:traces/screens/notes/note_page.dart';
@@ -9,6 +11,7 @@ import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 import 'package:traces/screens/profile/profile_page.dart';
 import 'package:traces/screens/profile/repository/firebase_profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/screens/trips.dart';
 import 'package:traces/screens/visas/bloc/visa/visa_bloc.dart';
 import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:traces/screens/visas/bloc/visa_tab/visa_tab_bloc.dart';
@@ -18,6 +21,7 @@ import 'package:traces/screens/visas/visa_edit_view.dart';
 import 'package:traces/screens/visas/visa_details_view.dart';
 import 'package:traces/screens/visas/visas_page.dart';
 
+import 'screens/expenses.dart';
 import 'screens/notes/bloc/note_details_bloc/bloc.dart';
 import 'screens/notes/bloc/tag_filter_bloc/bloc.dart';
 import 'screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
@@ -146,6 +150,14 @@ class RouteGenerator {
           }
           return _errorRoute();
         }
+      case tripsRoute:
+        return MaterialPageRoute(builder: (_) => TripsPage());
+      case expensesRoute:
+        return MaterialPageRoute(builder: (_) => ExpensesPage());
+      case hotelsRoute:
+        return MaterialPageRoute(builder: (_) => HotelsPage());
+      case mapRoute:
+        return MaterialPageRoute(builder: (_) => MapPage());
       default:
         return _errorRoute();
     }

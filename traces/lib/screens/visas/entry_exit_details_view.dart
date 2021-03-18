@@ -4,7 +4,6 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 
 import '../../colorsPalette.dart';
 import '../../shared/state_types.dart';
@@ -376,9 +375,12 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
 
   Widget _submitButton(EntryExitState state) => new Center(
       child: Container(padding: EdgeInsets.only(top: 10.0),
-        child: RaisedButton(child: Text('Save'),
-          textColor: ColorsPalette.lynxWhite,
-          color: ColorsPalette.algalFuel,
+        child: ElevatedButton(child: Text('Save'),
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+            backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.algalFuel),
+            foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
+          ),         
           onPressed: () {
             var isFormValid = _formKey.currentState.validate();
 
