@@ -2,3 +2,5 @@
 doc/
 
 traces/android/app/google-services.json
+
+traces/.vscode/
