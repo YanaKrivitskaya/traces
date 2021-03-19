@@ -15,7 +15,7 @@ class EditFamilyButton extends StatelessWidget {
       onPressed: (){
         showDialog(barrierDismissible: false, context: context,builder: (_) =>
             BlocProvider.value(
-              value: context.bloc<ProfileBloc>()..add(ShowFamilyDialog()),
+              value: context.read<ProfileBloc>()..add(ShowFamilyDialog()),
               child: FamilyDialog(familyMemberPosition),
             )
         );

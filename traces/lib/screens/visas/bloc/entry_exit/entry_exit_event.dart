@@ -4,23 +4,20 @@ part of 'entry_exit_bloc.dart';
 abstract class EntryExitEvent {
   const EntryExitEvent();
 
-   @override
   List<Object> get props => [];
 }
 
-class GetEntryDetails extends EntryExitEvent{
+class GetEntryDetails extends EntryExitEvent {
   final Visa visa;
   final EntryExit entry;
-  final bool isEntryEdit;
-  final bool isExitEdit;
 
-  GetEntryDetails(this.entry, this.visa, this.isEntryEdit, this.isExitEdit);
+  GetEntryDetails(this.entry, this.visa);
 
   @override
-  List<Object> get props => [entry, visa, isEntryEdit, isExitEdit];
+  List<Object> get props => [entry, visa];
 }
 
-class SubmitEntry extends EntryExitEvent{
+class SubmitEntry extends EntryExitEvent {
   final Visa visa;
   final EntryExit entry;
 
@@ -30,7 +27,7 @@ class SubmitEntry extends EntryExitEvent{
   List<Object> get props => [entry, visa];
 }
 
-class DeleteEntry extends EntryExitEvent{
+class DeleteEntry extends EntryExitEvent {
   final Visa visa;
   final EntryExit entry;
 
@@ -40,7 +37,7 @@ class DeleteEntry extends EntryExitEvent{
   List<Object> get props => [entry, visa];
 }
 
-class EntryDateChanged extends EntryExitEvent{  
+class EntryDateChanged extends EntryExitEvent {
   final DateTime entryDate;
 
   EntryDateChanged(this.entryDate);
@@ -49,7 +46,7 @@ class EntryDateChanged extends EntryExitEvent{
   List<Object> get props => [entryDate];
 }
 
-class ExitDateChanged extends EntryExitEvent{  
+class ExitDateChanged extends EntryExitEvent {
   final DateTime exitDate;
 
   ExitDateChanged(this.exitDate);
@@ -57,12 +54,3 @@ class ExitDateChanged extends EntryExitEvent{
   @override
   List<Object> get props => [exitDate];
 }
-
-/*class CityChanged extends EntryExitEvent{
-  final String city;
-
-  CityChanged({@required this.city});
-
-  @override
-  List<Object> get props => [city];
-}*/

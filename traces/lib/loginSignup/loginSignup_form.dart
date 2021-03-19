@@ -1,21 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/auth/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/loginSignup/bloc/bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/loginSignup/form_types.dart';
-import 'package:traces/shared/state_types.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../auth/bloc.dart';
+import '../colorsPalette.dart';
+import '../shared/state_types.dart';
+import 'bloc/bloc.dart';
+import 'form_types.dart';
 
 class LoginSignupForm extends StatefulWidget{
-  final UserRepository _userRepository;
-
-  LoginSignupForm({@required UserRepository userRepository})
-    :assert (userRepository != null),
-        _userRepository = userRepository;
+  
+  LoginSignupForm();    
 
   State<LoginSignupForm> createState() => _LoginSignupFormState();
 }
@@ -65,7 +62,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
     return BlocListener<LoginSignupBloc, LoginSignupState>(
       listener: (context, state){
         if(state.status == StateStatus.Error){
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -87,7 +84,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             );
         }
         if(state.status == StateStatus.Loading){
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -195,10 +192,13 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   Widget _submitButton(LoginSignupState state) => new Container(
       margin: EdgeInsets.only(top: 20),
       child: Align(
-          child: RaisedButton(
-            color: isButtonEnabled(state)
-                ? ColorsPalette.blueHorizon : ColorsPalette.blueGrey,
-            textColor: ColorsPalette.lynxWhite,
+          child: ElevatedButton(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+              backgroundColor: MaterialStateProperty.all<Color>(isButtonEnabled(state)
+                  ? ColorsPalette.blueHorizon : ColorsPalette.blueGrey),
+              foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
+            ),            
             child: Text(this.actionText),
             onPressed: () =>
             isButtonEnabled(state)

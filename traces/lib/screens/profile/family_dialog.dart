@@ -46,22 +46,28 @@ class _FamilyDialogState extends State<FamilyDialog>{
             return new AlertDialog(
               title: Text('Family member'),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Done'),
                   onPressed: () {
                     if(state.isUsernameValid){
-                      context.bloc<ProfileBloc>().add(FamilyUpdated(name: _usernameController.text.trim(), position: widget.familyMemberPosition));
+                      context.read<ProfileBloc>().add(FamilyUpdated(name: _usernameController.text.trim(), position: widget.familyMemberPosition));
                     }
                     Navigator.pop(context);
                   },
-                  textColor: ColorsPalette.meditSea,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.meditSea)
+                  ),  
                 ),
-                FlatButton(
+                TextButton(
                   child: Text('Cancel'),
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  textColor: ColorsPalette.meditSea,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.meditSea)
+                  ),                  
                 ),
               ],
               content: SingleChildScrollView(
@@ -97,7 +103,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
   );
 
   void _onUsernameChanged() {
-    context.bloc<ProfileBloc>().add(UsernameChanged(username: _usernameController.text.trim()));
+    context.read<ProfileBloc>().add(UsernameChanged(username: _usernameController.text.trim()));
   }
 
 }

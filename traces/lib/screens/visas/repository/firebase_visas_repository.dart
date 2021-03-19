@@ -1,14 +1,13 @@
-import 'package:traces/auth/userRepository.dart';
-import 'package:traces/screens/visas/model/entryExit.dart';
-import 'package:traces/screens/visas/model/entryExit_entity.dart';
-import 'package:traces/screens/visas/model/settings.dart';
-import 'package:traces/screens/visas/model/settings_entity.dart';
-import 'package:traces/screens/visas/model/user_countries.dart';
-import 'package:traces/screens/visas/model/user_countries_entity.dart';
-import 'package:traces/screens/visas/model/visa.dart';
-import 'package:traces/screens/visas/model/visa_entity.dart';
-import 'package:traces/screens/visas/repository/visas_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../auth/userRepository.dart';
+import '../model/entryExit.dart';
+import '../model/entryExit_entity.dart';
+import '../model/settings.dart';
+import '../model/user_countries.dart';
+import '../model/visa.dart';
+import '../model/visa_entity.dart';
+import 'visas_repository.dart';
 
 class FirebaseVisasRepository extends VisasRepository{
   final visasCollection = FirebaseFirestore.instance.collection('visas');
@@ -19,8 +18,7 @@ class FirebaseVisasRepository extends VisasRepository{
   UserRepository _userRepository;
 
   FirebaseVisasRepository() {
-    _userRepository = new UserRepository();
-    //Firestore.instance.settings(persistenceEnabled: true);
+    _userRepository = new UserRepository();    
   }
 
   @override
@@ -51,17 +49,17 @@ class FirebaseVisasRepository extends VisasRepository{
   }
 
   @override
-  Future<UserCountries> userCountries() async{
+  Future<UserSettings> userSettings() async{
     String uid = await _userRepository.getUserId();
-    var resultCountries = await visasCollection.doc(uid).get();
-    return UserCountries.fromEntity(UserCountriesEntity.fromMap(resultCountries.data()));
+    var resultSettings = await visasCollection.doc(uid).get();
+    return UserSettings.fromEntity(UserSettingsEntity.fromMap(resultSettings.data()));
   }
 
   @override
   Future<EntryExit> addEntryExit(EntryExit entryExit, String visaId) async {
     String uid = await _userRepository.getUserId();
-    await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).add(entryExit.toEntity().toDocument());
-    return getEntryExitById(entryExit.id, visaId);
+    final newEntry = await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).add(entryExit.toEntity().toDocument());
+    return getEntryExitById(newEntry.id, visaId);
   }
 
   @override
@@ -122,26 +120,37 @@ class FirebaseVisasRepository extends VisasRepository{
   }
 
   @override
-  Future<void> updateUserCountries(List<String> countries) async {
+  Future<void> updateUserSettings(List<String> countries, List<String> cities) async {
     String uid = await _userRepository.getUserId();
-    
-    UserCountries userCountries = new UserCountries(countries);
 
-    await visasCollection.doc(uid).set(userCountries.toEntity().toDocument());    
+    UserSettings userSettings = await this.userSettings();
+
+    if(countries != null){
+      countries.forEach((country) { 
+          if(userSettings.countries.where((c) => c == country).length ==
+            0) userSettings.countries.add(country);
+        });
+    }
+
+    if(cities != null){
+      cities.forEach((city) { 
+      if(userSettings.cities.where((c) => c == city).length ==
+        0) userSettings.cities.add(city);
+      });
+    }
+
+    await visasCollection.doc(uid).set(userSettings.toEntity().toDocument());    
   }
 
   @override
   Future<void> deleteEntry(String visaId, String entryId) async{
     String uid = await _userRepository.getUserId();
 
-    var resultEntry = await visasCollection.doc(uid).collection(userVisas)
+    await visasCollection.doc(uid).collection(userVisas)
     .doc(visaId).collection(visaEntries).doc(entryId).get();
 
     await visasCollection.doc(uid).collection(userVisas)
       .doc(visaId).collection(visaEntries).doc(entryId).delete();
-      //throw ("Test Crash");
-
-    
   }
 
 }

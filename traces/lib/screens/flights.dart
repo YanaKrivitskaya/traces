@@ -22,10 +22,14 @@ class _FightsPageState extends State<FlightsPage>{
         centerTitle: true,
       ),
       body: Center(
-        child: RaisedButton(
+        child: ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
+          style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.sizzlingRed)
+                  ),  
           child: Text('Go back!'),
         ),
       ),

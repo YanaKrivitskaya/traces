@@ -37,7 +37,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Stream<NoteState> _mapUpdateNotesListToState(UpdateNotesList event) async* {
-    List<Note> filteredNotes = new List<Note>();
+    List<Note> filteredNotes = <Note>[];
     filteredNotes.addAll(event.allNotes);
     yield NoteState.success(allNotes: event.allNotes, filteredNotes: filteredNotes,
         sortField: event.sortField, sortDirection: event.sortDirection, searchEnabled: false);
@@ -66,7 +66,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   Stream<NoteState> _mapSearchBarToggleToState(SearchBarToggle event) async*{
     yield state.update(stateStatus: StateStatus.Loading);
 
-    List<Note> filteredNotes = new List<Note>();
+    List<Note> filteredNotes = <Note>[];
 
     !state.searchEnabled ? filteredNotes.addAll(state.allNotes) :  filteredNotes.addAll(state.filteredNotes);
 
@@ -100,7 +100,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   Stream<NoteState> _mapSearchTextChangedToState(SearchTextChanged event) async*{
     yield state.update(stateStatus: StateStatus.Loading);
 
-    List<Note> filteredNotes = new List<Note>();
+    List<Note> filteredNotes = <Note>[];
 
     event.noteName.length > 0
         ? filteredNotes = state.allNotes.where((n) => n.title.toLowerCase().contains(event.noteName.toLowerCase())).toList()

@@ -7,12 +7,12 @@ import 'package:traces/screens/profile/family_dialog.dart';
 class AddFamilyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return OutlineButton(
+    return OutlinedButton(
       child: Text("Add", style: TextStyle(color: ColorsPalette.fusionRed),),
       onPressed: (){
         showDialog(barrierDismissible: false, context: context,builder: (_) =>
             BlocProvider.value(
-              value: context.bloc<ProfileBloc>(),
+              value: context.read<ProfileBloc>(),
               child: FamilyDialog(null),
             )
         );

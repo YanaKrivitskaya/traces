@@ -1,4 +1,4 @@
-import 'package:traces/screens/visas/model/entryExit_entity.dart';
+import 'entryExit_entity.dart';
 
 class EntryExit{
   final String id;
@@ -10,9 +10,10 @@ class EntryExit{
   String exitCountry;
   String exitCity;
   String exitTransport;
+  int duration;
   bool hasExit;
 
-  EntryExit({DateTime entryDate, String entryCountry, String id, DateTime exitDate, bool hasExit,
+  EntryExit({DateTime entryDate, String entryCountry, String id, DateTime exitDate, int duration, bool hasExit,
     String exitCountry, String entryCity, String entryTransport, String exitCity, String exitTransport})
       : this.id = id,
         this.entryCountry = entryCountry ?? null,
@@ -23,10 +24,11 @@ class EntryExit{
         this.exitCountry = exitCountry ?? null,
         this.exitCity = exitCity ?? null,
         this.exitTransport = exitTransport ?? null,
+        this.duration = duration ?? null,
         this.hasExit = hasExit ?? false;
 
   EntryExitEntity toEntity(){
-    return EntryExitEntity(id, entryDate, entryCountry, entryCity, entryTransport, exitDate, exitCountry, exitCity, exitTransport, hasExit);
+    return EntryExitEntity(id, entryDate, entryCountry, entryCity, entryTransport, exitDate, exitCountry, exitCity, exitTransport, duration, hasExit);
   }
 
   static EntryExit fromEntity(EntryExitEntity entity){
@@ -40,7 +42,8 @@ class EntryExit{
         exitCountry: entity.exitCountry,
         exitCity: entity.exitCity,
         exitTransport: entity.exitTransport,
-      hasExit: entity.hasExit,
+        duration: entity.duration,
+        hasExit: entity.hasExit,
     );
   }
 

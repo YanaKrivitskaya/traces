@@ -16,7 +16,7 @@ class ProfileEntity extends Equatable{
   static ProfileEntity fromMap(Map<dynamic, dynamic> map, String documentId){
     return ProfileEntity(
         documentId,
-        map["familyMembers"] != null ? map["familyMembers"].cast<String>() as List<String> : new List<String>(),
+        map["familyMembers"] != null ? map["familyMembers"].cast<String>() as List<String> : <String>[],
         map["email"] as String,
         map["displayName"] as String,
         map["isEmailVerified"] as bool

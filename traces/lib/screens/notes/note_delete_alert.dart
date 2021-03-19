@@ -26,7 +26,7 @@ class NoteDeleteAlert extends StatelessWidget{
           ),
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text('Delete'),
             onPressed: () {
               //context.bloc<NoteBloc>().add(DeleteNote(note));
@@ -34,7 +34,7 @@ class NoteDeleteAlert extends StatelessWidget{
               Navigator.pop(context);
             },
           ),
-          FlatButton(
+          TextButton(
             child: Text('Cancel'),
             onPressed: () {
               callback("Cancel");

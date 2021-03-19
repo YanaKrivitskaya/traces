@@ -12,7 +12,7 @@ class NameEditButton extends StatelessWidget {
         onPressed: (){
           showDialog(barrierDismissible: false, context: context,builder: (_) =>
               BlocProvider.value(
-                value: context.bloc<ProfileBloc>(),
+                value: context.read<ProfileBloc>(),
                 child: NameEditDialog(),
               ),
           );
@@ -33,7 +33,7 @@ class _NameEditDialogState extends State<NameEditDialog>{
   void initState() {
     super.initState();
 
-    _usernameController = TextEditingController(text: context.bloc<ProfileBloc>().state.profile.displayName);
+    _usernameController = TextEditingController(text: context.read<ProfileBloc>().state.profile.displayName);
     _usernameController.addListener(_onUsernameChanged);
   }
 
@@ -51,13 +51,16 @@ class _NameEditDialogState extends State<NameEditDialog>{
       return new AlertDialog(
         title: Text('Update name'),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text('Done'),
             onPressed: () {
-              context.bloc<ProfileBloc>().add(UsernameUpdated(username: _usernameController.text));
+              context.read<ProfileBloc>().add(UsernameUpdated(username: _usernameController.text));
               Navigator.pop(context);
             },
-            textColor: ColorsPalette.meditSea,
+            style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+            foregroundColor: MaterialStateProperty.all<Color>( ColorsPalette.meditSea)
+          ),           
           ),
         ],
         content: SingleChildScrollView(
@@ -84,7 +87,7 @@ class _NameEditDialogState extends State<NameEditDialog>{
   );
 
   void _onUsernameChanged() {
-    context.bloc<ProfileBloc>().add(UsernameChanged(username: _usernameController.text));
+    context.read<ProfileBloc>().add(UsernameChanged(username: _usernameController.text));
   }
 }
 

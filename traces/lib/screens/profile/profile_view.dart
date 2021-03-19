@@ -60,8 +60,8 @@ class _ProfileViewState extends State<ProfileView>{
                     child: Row(children: <Widget>[
                       Text("Email: " + _profile.email, style: TextStyle(fontSize: 15.0)),
                       _profile.isEmailVerified
-                          ? IconButton(icon: Icon(Icons.check, color: ColorsPalette.meditSea), tooltip: 'Verified')
-                          : IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.fusionRed), tooltip: 'Not verified'),
+                          ? IconButton(icon: Icon(Icons.check, color: ColorsPalette.meditSea), tooltip: 'Verified', onPressed: () {})
+                          : IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.fusionRed), tooltip: 'Not verified', onPressed: () {}),
                     ],),
                   ),
                   /*Align(
@@ -122,7 +122,7 @@ class _ProfileViewState extends State<ProfileView>{
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Divider(color: ColorsPalette.meditSea),
-                OutlineButton(
+                OutlinedButton(
                   child: ListTile(
                       leading: FaIcon(FontAwesomeIcons.signOutAlt, color: ColorsPalette.fusionRed),
                       title: Text('Sign out')),

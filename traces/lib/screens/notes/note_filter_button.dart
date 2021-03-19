@@ -29,7 +29,7 @@ class NoteFilterButton extends StatelessWidget{
             MultiBlocProvider(
               providers: [
                 BlocProvider.value(
-                  value: context.bloc<NoteBloc>(),
+                  value: context.read<NoteBloc>(),
                 ),
                 BlocProvider<NoteSortBloc>(
                   create: (context) => NoteSortBloc(),
@@ -86,13 +86,16 @@ class _SortDialogState extends State<SortDialog>{
           return new AlertDialog(
             title: Text('Sort by'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('Done'),
                 onPressed: () {
                   _noteBloc.add(UpdateSortFilter(state.tempSortField, state.tempSortDirection));
                   Navigator.pop(context);
                 },
-                textColor: ColorsPalette.greenGrass,
+                style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.greenGrass)
+                ),
               ),
             ],
             content: SingleChildScrollView(

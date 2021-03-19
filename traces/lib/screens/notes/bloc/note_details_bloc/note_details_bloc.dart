@@ -33,7 +33,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
 
     yield LoadingDetailsState(null);
 
-    List<Tag> noteTags = new List<Tag>();
+    List<Tag> noteTags = <Tag>[];
 
     if(note.tagIds != null && note.tagIds.isNotEmpty){
       for(var i = 0; i< note.tagIds.length; i++){
@@ -47,7 +47,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
   Stream<NoteDetailsState> _mapSaveNoteToState(SaveNoteClicked event) async*{
     Note note;
 
-    List<Tag> noteTags = new List<Tag>();
+    List<Tag> noteTags = <Tag>[];
 
     if(event.note.id != null){
       note = await _notesRepository.updateNote(event.note).timeout(Duration(seconds: 3), onTimeout: (){
