@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(10.0),
                           child: Column( // Replace with a Row for horizontal icon + text
                             children: <Widget>[
-                              Image(image: AssetImage('assets/016-mountain.png'), height: 65.0, width: 65.0,),
+                              Image(image: AssetImage('assets/IconPack3/1-trips.png'), height: 65.0, width: 65.0,),
                               Text("Trips", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
                             ],
                           ),
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(10.0),
                           child: Column( // Replace with a Row for horizontal icon + text
                             children: <Widget>[
-                              Image(image: AssetImage('assets/015-navigation.png'), height: 65.0, width: 65.0,),
+                              Image(image: AssetImage('assets/IconPack3/2-map.png'), height: 65.0, width: 65.0,),
                               Text("Map", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
                             ],
                           ),
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(10.0),
                           child: Column( // Replace with a Row for horizontal icon + text
                             children: <Widget>[
-                              Image(image: AssetImage('assets/011-postcard.png'), height: 65.0, width: 65.0,),
+                              Image(image: AssetImage('assets/IconPack3/3-notes.png'), height: 65.0, width: 65.0,),
                               Text("Notes", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
                             ],
                           ),
@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(10.0),
                           child: Column( // Replace with a Row for horizontal icon + text
                             children: <Widget>[
-                              Image(image: AssetImage('assets/036-plane.png'), height: 65.0, width: 65.0,),
+                              Image(image: AssetImage('assets/IconPack3/4-flights.png'), height: 65.0, width: 65.0,),
                               Text("Flights", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
                             ],
                           ),
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(10.0),
                           child: Column( // Replace with a Row for horizontal icon + text
                             children: <Widget>[
-                              Image(image: AssetImage('assets/029-credit-card.png'), height: 65.0, width: 65.0,),
+                              Image(image: AssetImage('assets/IconPack3/5-expenses.png'), height: 65.0, width: 65.0,),
                               Text("Expenses", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
                             ],
                           ),
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(10.0),
                           child: Column( // Replace with a Row for horizontal icon + text
                             children: <Widget>[
-                              Image(image: AssetImage('assets/020-hotel.png'), height: 65.0, width: 65.0,),
+                              Image(image: AssetImage('assets/IconPack3/6-hotels.png'), height: 65.0, width: 65.0,),
                               Text("Hotels", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
                             ],
                           ),
@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(10.0),
                           child: Column( // Replace with a Row for horizontal icon + text
                             children: <Widget>[
-                              Image(image: AssetImage('assets/014-passport.png'), height: 65.0, width: 65.0,),
+                              Image(image: AssetImage('assets/IconPack3/7-visas.png'), height: 65.0, width: 65.0,),
                               Text("Visas", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
                             ],
                           ),
@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(10.0),
                           child: Column( // Replace with a Row for horizontal icon + text
                             children: <Widget>[
-                              Image(image: AssetImage('assets/002-trekking.png'), height: 65.0, width: 65.0,),
+                              Image(image: AssetImage('assets/IconPack3/8-profile.png'), height: 65.0, width: 65.0,),
                               Text("Profile", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
                             ],
                           ),
@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(10.0),
                           child: Column( // Replace with a Row for horizontal icon + text
                             children: <Widget>[
-                              Image(image: AssetImage('assets/021-signpost.png'), height: 65.0, width: 65.0,),
+                              Image(image: AssetImage('assets/IconPack3/9-settings.png'), height: 65.0, width: 65.0,),
                               Text("Settings", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
                             ],
                           ),

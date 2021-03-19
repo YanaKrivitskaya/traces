@@ -59,20 +59,26 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:  
-  assets:
-  - assets/029-credit-card.png
-  - assets/001-wallet.png
-  - assets/014-passport.png
-  - assets/020-hotel.png
-  - assets/023-map.png
-  - assets/036-plane.png
-  - assets/001-wallet.png
-  - assets/002-trekking.png
-  - assets/006-sunset.png
-  - assets/015-navigation.png
-  - assets/016-mountain.png
-  - assets/011-postcard.png
-  - assets/021-signpost.png
+  assets:  
+  - assets/IconPack1/1-trips.png
+  - assets/IconPack1/2-map.png
+  - assets/IconPack1/3-notes.png
+  - assets/IconPack1/4-flights.png
+  - assets/IconPack1/5-expenses.png 
+  - assets/IconPack1/6-hotels.png  
+  - assets/IconPack1/7-visas.png
+  - assets/IconPack1/8-profile.png
+  - assets/IconPack1/9-settings.png
+  
+  - assets/IconPack3/1-trips.png
+  - assets/IconPack3/2-map.png
+  - assets/IconPack3/3-notes.png
+  - assets/IconPack3/4-flights.png
+  - assets/IconPack3/5-expenses.png 
+  - assets/IconPack3/6-hotels.png  
+  - assets/IconPack3/7-visas.png
+  - assets/IconPack3/8-profile.png
+  - assets/IconPack3/9-settings.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

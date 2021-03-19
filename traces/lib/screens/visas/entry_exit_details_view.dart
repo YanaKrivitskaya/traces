@@ -172,7 +172,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         context: context,
         initialDate: state.entryExit.exitDate ?? state.entryExit.entryDate,
         firstDate: state.entryExit.entryDate,
-        lastDate: DateTime.now().difference(state.visa.endDate).inDays > 0 ? state.visa.endDate : DateTime.now());;
+        lastDate: DateTime.now().difference(state.visa.endDate).inDays > 0 ? state.visa.endDate : DateTime.now());
     if (picked != null) {
       context.read<EntryExitBloc>().add(ExitDateChanged(picked));     
     }
