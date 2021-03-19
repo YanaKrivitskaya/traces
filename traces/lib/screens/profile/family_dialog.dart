@@ -46,7 +46,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
             return new AlertDialog(
               title: Text('Family member'),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Done'),
                   onPressed: () {
                     if(state.isUsernameValid){
@@ -54,14 +54,20 @@ class _FamilyDialogState extends State<FamilyDialog>{
                     }
                     Navigator.pop(context);
                   },
-                  textColor: ColorsPalette.meditSea,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.meditSea)
+                  ),  
                 ),
-                FlatButton(
+                TextButton(
                   child: Text('Cancel'),
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  textColor: ColorsPalette.meditSea,
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.meditSea)
+                  ),                  
                 ),
               ],
               content: SingleChildScrollView(

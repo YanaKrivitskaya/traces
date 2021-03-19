@@ -62,7 +62,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
     return BlocListener<LoginSignupBloc, LoginSignupState>(
       listener: (context, state){
         if(state.status == StateStatus.Error){
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -84,7 +84,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             );
         }
         if(state.status == StateStatus.Loading){
-          Scaffold.of(context)
+          ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -192,10 +192,13 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   Widget _submitButton(LoginSignupState state) => new Container(
       margin: EdgeInsets.only(top: 20),
       child: Align(
-          child: RaisedButton(
-            color: isButtonEnabled(state)
-                ? ColorsPalette.blueHorizon : ColorsPalette.blueGrey,
-            textColor: ColorsPalette.lynxWhite,
+          child: ElevatedButton(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+              backgroundColor: MaterialStateProperty.all<Color>(isButtonEnabled(state)
+                  ? ColorsPalette.blueHorizon : ColorsPalette.blueGrey),
+              foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
+            ),            
             child: Text(this.actionText),
             onPressed: () =>
             isButtonEnabled(state)

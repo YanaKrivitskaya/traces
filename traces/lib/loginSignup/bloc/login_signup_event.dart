@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 abstract class LoginSignupEvent {
   const LoginSignupEvent();
 
-  @override
   List<Object> get props => [];
 }
 

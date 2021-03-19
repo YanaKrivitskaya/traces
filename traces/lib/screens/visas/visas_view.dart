@@ -28,21 +28,17 @@ class _VisasViewState extends State<VisasView> {
     return BlocListener<VisaBloc, VisaState>(
       listener: (context, state) {},
       child: BlocBuilder<VisaBloc, VisaState>(
-          cubit: BlocProvider.of(context),
-          builder: (context, state) {
-            if (state.status == StateStatus.Loading)
-              return loadingWidget(ColorsPalette.algalFuel);
+        cubit: BlocProvider.of(context),
+        builder: (context, state) {
+          if (state.status == StateStatus.Loading)
+            return loadingWidget(ColorsPalette.algalFuel);
 
-            if (state.status == StateStatus.Success) {
-              widget.activeTab == VisaTab.ActiveVisas
-                  ? this.visas = state.allVisas
-                      .where((visa) => isVisaActive(visa))
-                      .toList()
-                  : widget.activeTab == VisaTab.ExpiredVisas
-                      ? this.visas = state.allVisas
-                          .where((visa) => !isVisaActive(visa))
-                          .toList()
-                      : this.visas = state.allVisas.toList();
+          if (state.status == StateStatus.Success) {
+            widget.activeTab == VisaTab.ActiveVisas
+              ? this.visas = state.allVisas.where((visa) => isVisaActive(visa)).toList()
+                : widget.activeTab == VisaTab.ExpiredVisas
+              ? this.visas = state.allVisas.where((visa) => !isVisaActive(visa)).toList()
+              : this.visas = state.allVisas.toList();
 
               this.visas = _sortVisas(visas);
 
