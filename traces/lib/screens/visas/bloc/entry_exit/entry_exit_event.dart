@@ -4,7 +4,6 @@ part of 'entry_exit_bloc.dart';
 abstract class EntryExitEvent {
   const EntryExitEvent();
 
-  @override
   List<Object> get props => [];
 }
 

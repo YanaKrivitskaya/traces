@@ -87,7 +87,11 @@ class EntryExitBloc extends Bloc<EntryExitEvent, EntryExitState> {
   }
 
   Stream<EntryExitState> _mapDeleteEntryToState(DeleteEntry event) async* {
-    await _visasRepository.deleteEntry(event.visa.id, event.entry.id);
+    await _visasRepository.deleteEntry(event.visa.id, event.entry.id)
+      .timeout(Duration(seconds: 3), onTimeout: () {
+        print("have timeout");
+        return null;
+      });
   }
 
   Stream<EntryExitState> _mapEntryDateChangedToState(

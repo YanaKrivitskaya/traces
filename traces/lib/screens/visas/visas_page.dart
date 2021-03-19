@@ -18,9 +18,7 @@ class VisasPage extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Visas',
-              style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(
-                      color: ColorsPalette.lynxWhite, fontSize: 25.0))),
+              style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
           backgroundColor: ColorsPalette.mazarineBlue,
           leading: IconButton(
             icon: FaIcon(FontAwesomeIcons.chevronLeft),

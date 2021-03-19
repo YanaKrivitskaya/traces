@@ -22,7 +22,11 @@ class _HotelsPageState extends State<HotelsPage>{
         centerTitle: true,
       ),
       body: Center(
-        child: RaisedButton(
+        child: ElevatedButton(
+          style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juneBud)
+                  ),  
           onPressed: () {
             Navigator.pop(context);
           },

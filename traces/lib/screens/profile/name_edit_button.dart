@@ -51,13 +51,16 @@ class _NameEditDialogState extends State<NameEditDialog>{
       return new AlertDialog(
         title: Text('Update name'),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text('Done'),
             onPressed: () {
               context.read<ProfileBloc>().add(UsernameUpdated(username: _usernameController.text));
               Navigator.pop(context);
             },
-            textColor: ColorsPalette.meditSea,
+            style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
+            foregroundColor: MaterialStateProperty.all<Color>( ColorsPalette.meditSea)
+          ),           
           ),
         ],
         content: SingleChildScrollView(

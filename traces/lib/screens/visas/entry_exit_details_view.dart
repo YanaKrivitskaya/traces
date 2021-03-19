@@ -4,7 +4,6 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 
 import '../../colorsPalette.dart';
 import '../../shared/state_types.dart';
@@ -74,10 +73,10 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
             }
             if(state.status == StateStatus.Success && state.mode == StateMode.Edit){
                 if(state.entryExit.id != null){
-                  _entryCountryController.text = state.entryExit.entryCountry;
-                  _entryCityController.text = state.entryExit.entryCity;
-                  _exitCountryController.text = state.entryExit.exitCountry;
-                  _exitCityController.text = state.entryExit.exitCity;
+                  if(_entryCountryController.text == '') _entryCountryController.text = state.entryExit.entryCountry;
+                  if(_entryCityController.text == '') _entryCityController.text = state.entryExit.entryCity;
+                  if(_exitCountryController.text == '') _exitCountryController.text = state.entryExit.exitCountry;
+                  if(_exitCityController.text == '') _exitCityController.text = state.entryExit.exitCity;                  
                   if(state.entryExit.exitDate == null) state.entryExit.exitDate = state.entryExit.entryDate;
                 }                
               }
@@ -155,7 +154,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         context: context,
         initialDate: state.entryExit.entryDate ?? state.visa.startDate,
         firstDate: state.visa.startDate,
-        lastDate: state.visa.endDate.add(new Duration(days: -1)));
+        lastDate: DateTime.now().difference(state.visa.endDate).inDays > 0 ? state.visa.endDate : DateTime.now());
     if (picked != null) {
       context.read<EntryExitBloc>().add(EntryDateChanged(picked));     
     }
@@ -173,7 +172,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         context: context,
         initialDate: state.entryExit.exitDate ?? state.entryExit.entryDate,
         firstDate: state.entryExit.entryDate,
-        lastDate: state.visa.endDate);
+        lastDate: DateTime.now().difference(state.visa.endDate).inDays > 0 ? state.visa.endDate : DateTime.now());;
     if (picked != null) {
       context.read<EntryExitBloc>().add(ExitDateChanged(picked));     
     }
@@ -376,9 +375,12 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
 
   Widget _submitButton(EntryExitState state) => new Center(
       child: Container(padding: EdgeInsets.only(top: 10.0),
-        child: RaisedButton(child: Text('Save'),
-          textColor: ColorsPalette.lynxWhite,
-          color: ColorsPalette.algalFuel,
+        child: ElevatedButton(child: Text('Save'),
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+            backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.algalFuel),
+            foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
+          ),         
           onPressed: () {
             var isFormValid = _formKey.currentState.validate();
 
