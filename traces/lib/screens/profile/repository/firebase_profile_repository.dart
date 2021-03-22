@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:traces/auth/userRepository.dart';
-import 'package:traces/screens/profile/model/profile.dart';
-import 'package:traces/screens/profile/model/profile_entity.dart';
-import 'package:traces/screens/profile/repository/profile_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../../auth/userRepository.dart';
+import '../model/profile.dart';
+import '../model/profile_entity.dart';
+import 'profile_repository.dart';
 
 
 class FirebaseProfileRepository extends ProfileRepository{

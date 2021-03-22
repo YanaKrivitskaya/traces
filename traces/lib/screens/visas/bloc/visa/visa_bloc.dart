@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/screens/settings/repository/appSettings_repository.dart';
+import 'package:traces/screens/settings/repository/firebase_appSettings_repository.dart';
 import '../../../../shared/state_types.dart';
 import '../../model/visa.dart';
 import '../../model/visa_tab.dart';
@@ -12,10 +14,13 @@ part 'visa_state.dart';
 
 class VisaBloc extends Bloc<VisaEvent, VisaState> {
   final VisasRepository _visasRepository;
+  final AppSettingsRepository _settingsRepository;
   StreamSubscription _visasSubscription;
+  StreamSubscription _settingsSubscription;
 
   VisaBloc({@required VisasRepository visasRepository})
       : assert(visasRepository != null),
+      _settingsRepository = new FirebaseAppSettingsRepository(),
         _visasRepository = visasRepository,
         super(VisaState.empty());
 
@@ -36,6 +41,14 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
     yield VisaState.loading();
 
     _visasSubscription?.cancel();
+
+    _settingsSubscription?.cancel();
+
+    _settingsSubscription = _settingsRepository.appThemes().listen(
+          (theme) {
+            print(theme.toString());
+          }
+        );
 
     _visasSubscription = _visasRepository.visas().listen(
           (visas) => add(UpdateVisasList(visas)),
