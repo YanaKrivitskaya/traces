@@ -60,25 +60,25 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:  
   assets:  
-  - assets/IconPack1/1-trips.png
-  - assets/IconPack1/2-map.png
-  - assets/IconPack1/3-notes.png
-  - assets/IconPack1/4-flights.png
-  - assets/IconPack1/5-expenses.png 
-  - assets/IconPack1/6-hotels.png  
-  - assets/IconPack1/7-visas.png
-  - assets/IconPack1/8-profile.png
-  - assets/IconPack1/9-settings.png
+  - assets/Bright Blue/1-trips.png
+  - assets/Bright Blue/2-map.png
+  - assets/Bright Blue/3-notes.png
+  - assets/Bright Blue/4-flights.png
+  - assets/Bright Blue/5-expenses.png 
+  - assets/Bright Blue/6-hotels.png  
+  - assets/Bright Blue/7-visas.png
+  - assets/Bright Blue/8-profile.png
+  - assets/Bright Blue/9-settings.png
   
-  - assets/IconPack3/1-trips.png
-  - assets/IconPack3/2-map.png
-  - assets/IconPack3/3-notes.png
-  - assets/IconPack3/4-flights.png
-  - assets/IconPack3/5-expenses.png 
-  - assets/IconPack3/6-hotels.png  
-  - assets/IconPack3/7-visas.png
-  - assets/IconPack3/8-profile.png
-  - assets/IconPack3/9-settings.png
+  - assets/Calm Green/1-trips.png
+  - assets/Calm Green/2-map.png
+  - assets/Calm Green/3-notes.png
+  - assets/Calm Green/4-flights.png
+  - assets/Calm Green/5-expenses.png 
+  - assets/Calm Green/6-hotels.png  
+  - assets/Calm Green/7-visas.png
+  - assets/Calm Green/8-profile.png
+  - assets/Calm Green/9-settings.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

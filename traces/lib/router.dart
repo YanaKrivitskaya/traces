@@ -51,7 +51,10 @@ class RouteGenerator {
 
     switch (settings.name) {
       case homeRoute:
-        return MaterialPageRoute(builder: (_) => HomePage());
+      return MaterialPageRoute(
+        builder: (_) => HomePage()
+      );
+        //return MaterialPageRoute(builder: (_) => HomePage());
       case notesRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<NoteBloc>(

@@ -1,7 +1,9 @@
 
 
-import 'package:traces/screens/settings/model/theme_entity.dart';
+import 'package:traces/screens/settings/model/appSettings_entity.dart';
+import 'package:traces/screens/settings/model/appUserSettings_entity.dart';
 
 abstract class AppSettingsRepository{
-  Stream<List<Theme>> appThemes();
+  Future<AppSettings> generalSettings();
+   Future<AppUserSettings> userSettings();
 }
