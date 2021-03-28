@@ -79,6 +79,10 @@ flutter:
   - assets/Calm Green/7-visas.png
   - assets/Calm Green/8-profile.png
   - assets/Calm Green/9-settings.png
+
+  - assets/brightBlueTheme.png
+  - assets/calmGreenTheme.png
+  - assets/plainOrangeTheme.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

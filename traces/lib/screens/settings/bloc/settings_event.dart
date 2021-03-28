@@ -23,6 +23,13 @@ class GetUserSettings extends SettingsEvent{
   List<Object> get props => [];
 }
 
+class GetAppSettings extends SettingsEvent{
+  GetAppSettings();
+
+  @override
+  List<Object> get props => [];
+}
+
 class GetThemes extends SettingsEvent{
   final List<String> themes;
 

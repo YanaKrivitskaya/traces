@@ -9,6 +9,7 @@ const String hotelsRoute = '/hotels';
 const String visasRoute = '/visas';
 const String profileRoute = '/profile';
 const String settingsRoute = '/settings';
+const String themeSettingsRoute = '/themeSettings';
 const String loginSignupRoute = '/loginSignup';
 const String noteDetailsRoute = '/noteDetails';
 const String visaDetailsRoute = '/visaDetails';

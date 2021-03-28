@@ -12,7 +12,7 @@ class AppSettingsEntity extends Equatable{
 
   static AppSettingsEntity fromMap(Map<dynamic, dynamic> map){
     return AppSettingsEntity(
-      map["themes"] as List<String>
+      map["themes"].cast<String>() as List<String>
     );
   }
 

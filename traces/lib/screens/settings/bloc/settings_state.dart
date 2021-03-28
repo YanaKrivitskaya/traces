@@ -1,30 +1,30 @@
 part of 'settings_bloc.dart';
 
 abstract class SettingsState{
-  final List<String> themes;  
+  final AppSettings settings;  
 
-  const SettingsState({this.themes});
+  const SettingsState({this.settings});
 
   @override
   List<Object> get props => [];
 }
 
 class LoadingSettingsState extends SettingsState{
-  LoadingSettingsState(List<String> themes)
-    :super(themes: themes);
+  LoadingSettingsState(AppSettings settings)
+    :super(settings: settings);
 }
 
 class InitialSettingsState extends SettingsState{
-  InitialSettingsState(List<String> themes)
-    :super(themes: themes);
+  InitialSettingsState(AppSettings settings)
+    :super(settings: settings);
 }
 
 class SuccessSettingsState extends SettingsState{
-  final List<String> themes;
+  final AppSettings settings;
   
-  const SuccessSettingsState(this.themes)
-    :super(themes: themes);
+  const SuccessSettingsState(this.settings)
+    :super(settings: settings);
 
   @override
-  List<Object> get props => [themes];
+  List<Object> get props => [settings];
 }
