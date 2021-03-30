@@ -4,13 +4,13 @@ Project for trips planning.
 
 ## Modules
 
- - Profile
- - Notes
- - Visas - *coming soon!
- - *Expense tracker
- - *Hotels
- - *Flights
- - *Maps
- - *Trips
+ - [x] Profile
+ - [x] Notes
+ - [x] Visas
+ - [ ] Expense tracker
+ - [ ] Hotels
+ - [ ] Flights
+ - [ ] Maps
+ - [ ] Trips
 
 

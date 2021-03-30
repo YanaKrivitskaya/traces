@@ -42,58 +42,36 @@ class _HomePageState extends State<HomePage> {
                 color: ColorsPalette.backColor
             ),
             padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                   _menuTile(FontAwesomeIcons.route, widget._theme, '1-trips.png', 'Trips', context, tripsRoute),
-                   _menuTile(FontAwesomeIcons.globeEurope, widget._theme, '2-map.png', 'Map', context, mapRoute),
-                   _menuTile(FontAwesomeIcons.clipboard, widget._theme, '3-notes.png', 'Notes', context, notesRoute)                  
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
+            child: Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _menuTile(FontAwesomeIcons.route, widget._theme, '1-trips.png', 'Trips', context, tripsRoute),
                     _menuTile(FontAwesomeIcons.plane, widget._theme, '4-flights.png', 'Flights', context, flightsRoute),
-                    _menuTile(FontAwesomeIcons.dollarSign, widget._theme, '5-expenses.png', 'Expenses', context, expensesRoute),
-                    _menuTile(FontAwesomeIcons.hotel, widget._theme, '6-hotels.png', 'Hotels', context, hotelsRoute)                    
+                    _menuTile(FontAwesomeIcons.passport, widget._theme, '7-visas.png', 'Visas', context, visasRoute),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _menuTile(FontAwesomeIcons.passport, widget._theme, '7-visas.png', 'Visas', context, visasRoute),
+                Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _menuTile(FontAwesomeIcons.globeEurope, widget._theme, '2-map.png', 'Map', context, mapRoute),
+                    _menuTile(FontAwesomeIcons.dollarSign, widget._theme, '5-expenses.png', 'Expenses', context, expensesRoute),
                     _menuTile(FontAwesomeIcons.user, widget._theme, '8-profile.png', 'Profile', context, profileRoute),
+                  ],
+                ),
+                Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _menuTile(FontAwesomeIcons.clipboard, widget._theme, '3-notes.png', 'Notes', context, notesRoute),
+                    _menuTile(FontAwesomeIcons.hotel, widget._theme, '6-hotels.png', 'Hotels', context, hotelsRoute),
                     _menuTile(FontAwesomeIcons.cog, widget._theme, '9-settings.png', 'Settings', context, settingsRoute)
                   ],
-                ),
+                )
               ],
-            ),
+            )            
           )
       )
     );
   }
 }
-
-//Plain Orange theme
-Column _plainMenuTile(IconData icon, String title, BuildContext context, String routeName, Color iconColor) =>Column(
-    children: <Widget>[
-      TextButton(
-        onPressed: () {
-          Navigator.pushNamed(context, routeName);
-        },
-        style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(10.0))),          
-        child: Column(
-          children: <Widget>[
-            FaIcon(icon, color: iconColor, size: 50.0),            
-            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-          ],
-        ),
-      ),
-    ]
-);
 
 Column _menuTile(IconData icon, String theme, String iconName, String title, BuildContext context, String routeName) => Column(
   children: <Widget>[
@@ -103,14 +81,14 @@ Column _menuTile(IconData icon, String theme, String iconName, String title, Bui
       },
       style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(10.0))),
       child: Column(        
-        children: theme == 'Plain Orange' ?  
+        children: theme == 'calmGreen' || theme == 'brightBlue' ?  
           <Widget>[
-            FaIcon(icon, color: ColorsPalette.iconColor, size: 50.0),            
-            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
+            Image(image: AssetImage('assets/$theme/$iconName'), height: 65.0, width: 65.0,),
+            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))            
           ]
         : <Widget>[ 
-          Image(image: AssetImage('assets/${theme}/${iconName}'), height: 65.0, width: 65.0,),
-          Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
+            FaIcon(icon, color: ColorsPalette.iconColor, size: 50.0),            
+            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
         ],
       ),
     ),
