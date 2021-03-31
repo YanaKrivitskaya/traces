@@ -1,17 +1,17 @@
-import 'package:equatable/equatable.dart';
-import 'package:bloc/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
-import 'package:traces/screens/settings/model/appSettings_entity.dart';
-import 'package:traces/screens/settings/repository/appSettings_repository.dart';
-import 'package:traces/screens/settings/repository/firebase_appSettings_repository.dart';
 import 'dart:async';
 
-part 'settings_state.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+
+import '../model/appSettings_entity.dart';
+import '../repository/appSettings_repository.dart';
+import '../repository/firebase_appSettings_repository.dart';
+
 part 'settings_event.dart';
+part 'settings_state.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
   final AppSettingsRepository _settingsRepository;  
-  //StreamSubscription _settingsSubscription;
 
   SettingsBloc({AppSettingsRepository settingsRepository})
   : _settingsRepository = settingsRepository ?? new FirebaseAppSettingsRepository(),

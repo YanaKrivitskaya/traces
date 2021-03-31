@@ -1,9 +1,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:traces/auth/userRepository.dart';
-import 'package:traces/screens/settings/model/appSettings_entity.dart';
-import 'package:traces/screens/settings/model/appUserSettings_entity.dart';
 
+import '../../../auth/userRepository.dart';
+import '../model/appSettings_entity.dart';
+import '../model/appUserSettings_entity.dart';
 import 'appSettings_repository.dart';
 
 class FirebaseAppSettingsRepository extends AppSettingsRepository{

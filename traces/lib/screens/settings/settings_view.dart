@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/constants.dart';
-import 'package:traces/screens/settings/bloc/settings_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/settings/model/appSettings_entity.dart';
-import 'package:traces/shared/shared.dart';
+
+import '../../colorsPalette.dart';
+import '../../constants.dart';
+import '../../shared/shared.dart';
+import 'bloc/settings_bloc.dart';
+import 'model/appSettings_entity.dart';
 
 class SettingsView extends StatefulWidget{
 
@@ -27,8 +28,7 @@ class _SettingsStateView extends State<SettingsView>{
         }
 
         if(_settings != null){
-          return Container(
-          //padding: EdgeInsets.all(5.0),
+          return Container(         
           child: SingleChildScrollView(
             child: Column(children: [
               _settings.themes != null 

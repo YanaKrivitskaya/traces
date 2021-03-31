@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 class AppUserSettingsEntity extends Equatable{
   String theme;
@@ -27,7 +26,7 @@ class AppUserSettingsEntity extends Equatable{
   }
 }
 
-  @immutable class AppUserSettings{
+ class AppUserSettings{
   String theme;
 
   AppUserSettings(this.theme);

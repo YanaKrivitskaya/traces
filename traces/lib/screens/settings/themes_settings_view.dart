@@ -1,14 +1,14 @@
+import 'package:badges/badges.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/auth/authentication_bloc.dart';
-import 'package:traces/auth/authentication_state.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/settings/bloc/settings_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/shared/shared.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:badges/badges.dart';
+
+import '../../auth/authentication_bloc.dart';
+import '../../colorsPalette.dart';
+import '../../shared/shared.dart';
+import 'bloc/settings_bloc.dart';
 
 class ThemeSettingsView extends StatefulWidget{
 
@@ -81,7 +81,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                         badgeContent: Icon(Icons.check, color: ColorsPalette.lynxWhite),
                         badgeColor: ColorsPalette.pureApple,
                         child: Image.asset('assets/$item.jpg', fit: BoxFit.cover)
-                      ) : Image.asset('assets/$item.jpg', fit: BoxFit.cover)                      
+                      ) : Image.asset('assets/$item.jpg', fit: BoxFit.cover)
                     ),
                   )).toList()),
               Row(
@@ -109,8 +109,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
               ),
               onPressed: () {
                 var theme = state.settings.themes[_currentIndex];
-                context.read<SettingsBloc>().add(SubmitTheme(theme));
-                //context.read<SettingsBloc>().add(GetUserSettings());
+                context.read<SettingsBloc>().add(SubmitTheme(theme));                
               },
               child: Text('Select theme'),
             )
