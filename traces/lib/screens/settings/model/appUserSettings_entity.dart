@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class AppUserSettingsEntity extends Equatable{
-  final String theme;
+  String theme;
 
   AppUserSettingsEntity(this.theme);
 
@@ -28,7 +28,7 @@ class AppUserSettingsEntity extends Equatable{
 }
 
   @immutable class AppUserSettings{
-  final String theme;
+  String theme;
 
   AppUserSettings(this.theme);
 
@@ -38,8 +38,8 @@ class AppUserSettingsEntity extends Equatable{
     );
   }
 
-  AppUserSettings toEntity(){
-    return AppUserSettings(theme);
+  AppUserSettingsEntity toEntity(){
+    return AppUserSettingsEntity(theme);
   }
 
   static AppUserSettings fromEntity(AppUserSettingsEntity entity){

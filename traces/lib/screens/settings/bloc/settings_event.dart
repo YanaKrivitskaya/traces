@@ -38,3 +38,22 @@ class GetThemes extends SettingsEvent{
   @override
   List<Object> get props => [themes];
 }
+
+class ThemeSelected extends SettingsEvent{
+  final String theme;
+
+  ThemeSelected(this.theme);
+
+  @override
+  List<Object> get props => [theme];
+}
+
+class SubmitTheme extends SettingsEvent{
+  final String theme;
+
+  SubmitTheme(this.theme);
+
+  @override
+  List<Object> get props => [theme];
+}
+

@@ -21,10 +21,11 @@ class InitialSettingsState extends SettingsState{
 
 class SuccessSettingsState extends SettingsState{
   final AppSettings settings;
+  final String selectedTheme;
   
-  const SuccessSettingsState(this.settings)
+  const SuccessSettingsState(this.settings, this.selectedTheme)
     :super(settings: settings);
 
   @override
-  List<Object> get props => [settings];
+  List<Object> get props => [settings, selectedTheme];
 }

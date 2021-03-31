@@ -8,10 +8,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:badges/badges.dart';
 
 class ThemeSettingsView extends StatefulWidget{
-
-  ThemeSettingsView():super();
 
   @override
   State<ThemeSettingsView> createState() => _ThemeSettingsViewState();
@@ -22,14 +21,9 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
 
   AuthenticationBloc _authBloc;
   int _currentIndex=0;
+  String _userTheme;
 
-  List<String> imgList = <String>[];
-
-  /*final List<String> imgList = [
-    'assets/brightBlueTheme.jpg',
-    'assets/calmGreenTheme.jpg',
-    'assets/plainOrangeTheme.jpg'
-  ];*/
+  List<String> _themes;
 
    @override
   void initState() {
@@ -41,6 +35,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
   @override
   void dispose(){
     _authBloc.close();
+    super.dispose();
   }
 
   @override
@@ -48,8 +43,14 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
     return BlocBuilder<SettingsBloc, SettingsState>(
       cubit: BlocProvider.of(context),
       builder: (context, state){
-        if(state is SuccessSettingsState){
-          imgList = _createImgList(state.settings.themes);
+        if(state is SuccessSettingsState){         
+          _userTheme = (_authBloc.state as Authenticated).userSettings.theme;
+
+          _themes = state.settings.themes;
+         
+          _currentIndex = state.selectedTheme == null ? 
+            state.settings.themes.indexOf( _userTheme) : 
+            state.settings.themes.indexOf(state.selectedTheme);          
         }
         return new Scaffold(
           appBar: AppBar(
@@ -65,24 +66,29 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
             child: Column(children: [
               CarouselSlider(
                   options: CarouselOptions(
-                    height: MediaQuery.of(context).size.height*0.7,                    
-                    aspectRatio: 2.0,
+                    height: MediaQuery.of(context).size.height*0.7,
+                    initialPage: _currentIndex,
+                    enlargeCenterPage: true,
                     enableInfiniteScroll: false,
                     onPageChanged: (index, reason) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
+                      var theme = state.settings.themes[index];
+                      context.read<SettingsBloc>().add(ThemeSelected(theme)); 
                     },
                   ),
-                  items: imgList.map((item) => Container(                                        
-                    child: Center(                      
-                      child: Image.asset(item, fit: BoxFit.cover)
+                  items: _themes.map((item) => Container(   
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),                                     
+                    child: Center(
+                      child: item == _userTheme ? Badge(
+                        badgeContent: Icon(Icons.check, color: ColorsPalette.lynxWhite),
+                        badgeColor: ColorsPalette.pureApple,
+                        child: Image.asset('assets/$item.jpg', fit: BoxFit.cover)
+                      ) : Image.asset('assets/$item.jpg', fit: BoxFit.cover)                      
                     ),
                   )).toList()),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: imgList.map((url) {
-                  int index = imgList.indexOf(url);
+                children: _themes.map((img) {
+                  int index = _themes.indexOf(img);
                   return Container(
                     width: 8.0,
                     height: 8.0,
@@ -96,19 +102,23 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                   );
                 }).toList(),
               ),
+              ElevatedButton(
+              style: ButtonStyle(
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+                backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.picoVoid),
+                foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
+              ),
+              onPressed: () {
+                var theme = state.settings.themes[_currentIndex];
+                context.read<SettingsBloc>().add(SubmitTheme(theme)); 
+              },
+              child: Text('Select theme'),
+            )
             ],)  ,
           ) : loadingWidget(ColorsPalette.picoVoid)
         );
       }
     );
-  }
-
-  List<String> _createImgList(List<String> themes){
-    List<String> imgList = <String>[];
-    themes.forEach((theme) {
-      imgList.add('assets/$theme.jpg');
-    });
-    return imgList;
   }
 
 }

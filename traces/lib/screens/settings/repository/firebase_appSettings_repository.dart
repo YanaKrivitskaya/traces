@@ -22,10 +22,19 @@ class FirebaseAppSettingsRepository extends AppSettingsRepository{
     return AppSettings.fromEntity(AppSettingsEntity.fromMap(res.data()));
   }
 
-    @override
+  @override
   Future<AppUserSettings> userSettings() async{
     String uid = await _userRepository.getUserId();
     var resultSettings = await settingsCollection.doc(uid).get();
     return AppUserSettings.fromEntity(AppUserSettingsEntity.fromMap(resultSettings.data()));
+  }
+
+  @override
+  Future<AppUserSettings> updateUserSettings(AppUserSettings settings) async{
+    String uid = await _userRepository.getUserId();
+    
+    await settingsCollection.doc(uid).update(settings.toEntity().toDocument());
+    
+    return await userSettings();
   }
 }

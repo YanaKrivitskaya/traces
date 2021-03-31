@@ -81,7 +81,7 @@ Column _menuTile(IconData icon, String theme, String iconName, String title, Bui
       },
       style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(10.0))),
       child: Column(        
-        children: theme == 'calmGreen' || theme == 'brightBlue' ?  
+        children: theme == 'calmGreenTheme' || theme == 'brightBlueTheme' ?  
           <Widget>[
             Image(image: AssetImage('assets/$theme/$iconName'), height: 65.0, width: 65.0,),
             Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))            
