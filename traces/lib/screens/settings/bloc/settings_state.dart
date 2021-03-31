@@ -1,9 +1,10 @@
 part of 'settings_bloc.dart';
 
 abstract class SettingsState{
-  final AppSettings settings;  
+  final AppSettings settings;
+  final String userTheme;
 
-  const SettingsState({this.settings});
+  const SettingsState({this.settings, this.userTheme});
 
   @override
   List<Object> get props => [];
@@ -22,10 +23,11 @@ class InitialSettingsState extends SettingsState{
 class SuccessSettingsState extends SettingsState{
   final AppSettings settings;
   final String selectedTheme;
+  final String userTheme;
   
-  const SuccessSettingsState(this.settings, this.selectedTheme)
-    :super(settings: settings);
+  const SuccessSettingsState(this.settings, this.selectedTheme, this.userTheme)
+    :super(settings: settings, userTheme: userTheme);
 
   @override
-  List<Object> get props => [settings, selectedTheme];
+  List<Object> get props => [settings, selectedTheme, userTheme];
 }

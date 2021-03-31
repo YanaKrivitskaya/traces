@@ -4,24 +4,42 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/auth/authentication_bloc.dart';
 import 'package:traces/auth/authentication_event.dart';
 import 'package:traces/constants.dart';
+import 'package:traces/screens/settings/bloc/settings_bloc.dart';
+import 'package:traces/screens/settings/repository/firebase_appSettings_repository.dart';
 import '../colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
-  final String _theme;
-  HomePage({Key key, String theme}) : 
-    _theme = theme, 
-    super(key: key);
+  
+  HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  String _theme;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider<SettingsBloc>(
+      create: (context) => 
+        SettingsBloc(settingsRepository: FirebaseAppSettingsRepository())
+          ..add(GetUserSettings()),
+      child: BlocBuilder<SettingsBloc, SettingsState>(        
+        builder: (context, state){
+          if(state is SuccessSettingsState){         
+            _theme = state.userTheme;    
+          }
+          return _homeMenu(_theme, context);
+        }
+      )
+    );
+  }
+}
+
+Widget _homeMenu(String _theme, BuildContext context) => new Scaffold(
       appBar: AppBar(
         title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))),
         actions: <Widget>[
@@ -46,23 +64,23 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _menuTile(FontAwesomeIcons.route, widget._theme, '1-trips.png', 'Trips', context, tripsRoute),
-                    _menuTile(FontAwesomeIcons.plane, widget._theme, '4-flights.png', 'Flights', context, flightsRoute),
-                    _menuTile(FontAwesomeIcons.passport, widget._theme, '7-visas.png', 'Visas', context, visasRoute),
+                    _menuTile(FontAwesomeIcons.route, _theme, '1-trips.png', 'Trips', context, tripsRoute),
+                    _menuTile(FontAwesomeIcons.plane, _theme, '4-flights.png', 'Flights', context, flightsRoute),
+                    _menuTile(FontAwesomeIcons.passport, _theme, '7-visas.png', 'Visas', context, visasRoute),
                   ],
                 ),
                 Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _menuTile(FontAwesomeIcons.globeEurope, widget._theme, '2-map.png', 'Map', context, mapRoute),
-                    _menuTile(FontAwesomeIcons.dollarSign, widget._theme, '5-expenses.png', 'Expenses', context, expensesRoute),
-                    _menuTile(FontAwesomeIcons.user, widget._theme, '8-profile.png', 'Profile', context, profileRoute),
+                    _menuTile(FontAwesomeIcons.globeEurope, _theme, '2-map.png', 'Map', context, mapRoute),
+                    _menuTile(FontAwesomeIcons.dollarSign, _theme, '5-expenses.png', 'Expenses', context, expensesRoute),
+                    _menuTile(FontAwesomeIcons.user, _theme, '8-profile.png', 'Profile', context, profileRoute),
                   ],
                 ),
                 Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _menuTile(FontAwesomeIcons.clipboard, widget._theme, '3-notes.png', 'Notes', context, notesRoute),
-                    _menuTile(FontAwesomeIcons.hotel, widget._theme, '6-hotels.png', 'Hotels', context, hotelsRoute),
-                    _menuTile(FontAwesomeIcons.cog, widget._theme, '9-settings.png', 'Settings', context, settingsRoute)
+                    _menuTile(FontAwesomeIcons.clipboard, _theme, '3-notes.png', 'Notes', context, notesRoute),
+                    _menuTile(FontAwesomeIcons.hotel, _theme, '6-hotels.png', 'Hotels', context, hotelsRoute),
+                    _menuTile(FontAwesomeIcons.cog, _theme, '9-settings.png', 'Settings', context, settingsRoute)
                   ],
                 )
               ],
@@ -70,8 +88,6 @@ class _HomePageState extends State<HomePage> {
           )
       )
     );
-  }
-}
 
 Column _menuTile(IconData icon, String theme, String iconName, String title, BuildContext context, String routeName) => Column(
   children: <Widget>[

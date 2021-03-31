@@ -25,6 +25,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
       yield* _mapThemeSelectedToState(event.theme);
     }else if (event is SubmitTheme) {
       yield* _mapSubmitThemeToState(event.theme);
+    }else if (event is GetUserSettings) {
+      yield* _mapGetUserSettingsToState();
     }
   }
 
@@ -33,7 +35,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
 
     try{
       settings = await _settingsRepository.generalSettings();
-      yield SuccessSettingsState(settings, null);
+      var userSettings = await _settingsRepository.userSettings();   
+      yield SuccessSettingsState(settings, null, userSettings.theme);
 
     }catch(e){
       print(e);
@@ -42,7 +45,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
   }
 
   Stream<SettingsState> _mapThemeSelectedToState(String theme) async* {
-     yield SuccessSettingsState(state.settings, theme);
+     yield SuccessSettingsState(state.settings, theme, state.userTheme);
   }
 
   Stream<SettingsState> _mapSubmitThemeToState(String theme) async* {
@@ -51,7 +54,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
 
     await _settingsRepository.updateUserSettings(settings);
 
-     yield SuccessSettingsState(state.settings, null);
+     yield SuccessSettingsState(state.settings, theme, theme);
+  }
+
+  Stream<SettingsState> _mapGetUserSettingsToState() async* {
+    var settings = await _settingsRepository.userSettings();   
+
+     yield SuccessSettingsState(null, null, settings.theme);
   }
   
 }

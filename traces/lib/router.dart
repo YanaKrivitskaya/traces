@@ -55,10 +55,16 @@ class RouteGenerator {
 
     switch (settings.name) {
       case homeRoute:
-        return MaterialPageRoute(
+        /*return MaterialPageRoute(
           builder: (_) => HomePage()
-        );
-        //return MaterialPageRoute(builder: (_) => HomePage());
+        );*/
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<SettingsBloc>(
+            create: (context) =>
+                SettingsBloc(settingsRepository: FirebaseAppSettingsRepository()),
+            child: HomePage(),
+          ),
+      );
       case notesRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<NoteBloc>(

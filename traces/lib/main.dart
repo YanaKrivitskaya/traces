@@ -76,7 +76,7 @@ class TracesApp extends StatelessWidget{
             return LoginSignupPage(userRepository: _userRepository);
           }
           if(state is Authenticated){
-            return HomePage(theme: state.userSettings != null ? state.userSettings.theme : 'Plain Orange');
+            return HomePage();
           }
           return Container();
         },

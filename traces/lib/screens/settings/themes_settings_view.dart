@@ -44,13 +44,12 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
       cubit: BlocProvider.of(context),
       builder: (context, state){
         if(state is SuccessSettingsState){         
-          _userTheme = (_authBloc.state as Authenticated).userSettings.theme;
+          _userTheme = state.userTheme;
 
           _themes = state.settings.themes;
          
-          _currentIndex = state.selectedTheme == null ? 
-            state.settings.themes.indexOf( _userTheme) : 
-            state.settings.themes.indexOf(state.selectedTheme);          
+          _currentIndex = _userTheme == null ? 0 : 
+            state.settings.themes.indexOf(state.selectedTheme ?? state.userTheme);          
         }
         return new Scaffold(
           appBar: AppBar(
@@ -110,7 +109,8 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
               ),
               onPressed: () {
                 var theme = state.settings.themes[_currentIndex];
-                context.read<SettingsBloc>().add(SubmitTheme(theme)); 
+                context.read<SettingsBloc>().add(SubmitTheme(theme));
+                //context.read<SettingsBloc>().add(GetUserSettings());
               },
               child: Text('Select theme'),
             )

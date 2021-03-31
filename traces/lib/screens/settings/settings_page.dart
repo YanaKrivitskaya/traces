@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/constants.dart';
 
 import '../../colorsPalette.dart';
 import 'bloc/settings_bloc.dart';
@@ -24,9 +25,9 @@ class SettingsPage extends StatelessWidget{
             color: ColorsPalette.white, fontSize: 30.0))),
           leading: IconButton(
             icon: FaIcon(FontAwesomeIcons.arrowLeft, color: ColorsPalette.lynxWhite),
-            onPressed: () => Navigator.of(context).pop(),
-            )            
-        ),
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false);              
+            })        ),
       body: SettingsView()
       )
     );
