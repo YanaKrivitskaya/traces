@@ -40,6 +40,8 @@ dev_dependencies:
   rxdart: ^0.26.0
   flutter_typeahead: ^2.0.0
   flutter_slidable: ^0.5.7
+  carousel_slider: ^3.0.0
+  badges: ^1.2.0
   flutter_test:
     sdk: flutter
 
@@ -59,20 +61,31 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:  
-  assets:
-  - assets/029-credit-card.png
-  - assets/001-wallet.png
-  - assets/014-passport.png
-  - assets/020-hotel.png
-  - assets/023-map.png
-  - assets/036-plane.png
-  - assets/001-wallet.png
-  - assets/002-trekking.png
-  - assets/006-sunset.png
-  - assets/015-navigation.png
-  - assets/016-mountain.png
-  - assets/011-postcard.png
-  - assets/021-signpost.png
+  assets:  
+  - assets/brightBlueTheme/1-trips.png
+  - assets/brightBlueTheme/2-map.png
+  - assets/brightBlueTheme/3-notes.png
+  - assets/brightBlueTheme/4-flights.png
+  - assets/brightBlueTheme/5-expenses.png 
+  - assets/brightBlueTheme/6-hotels.png  
+  - assets/brightBlueTheme/7-visas.png
+  - assets/brightBlueTheme/8-profile.png
+  - assets/brightBlueTheme/9-settings.png
+  
+  - assets/calmGreenTheme/1-trips.png
+  - assets/calmGreenTheme/2-map.png
+  - assets/calmGreenTheme/3-notes.png
+  - assets/calmGreenTheme/4-flights.png
+  - assets/calmGreenTheme/5-expenses.png 
+  - assets/calmGreenTheme/6-hotels.png  
+  - assets/calmGreenTheme/7-visas.png
+  - assets/calmGreenTheme/8-profile.png
+  - assets/calmGreenTheme/9-settings.png
+
+  - assets/brightBlueTheme.jpg
+  - assets/calmGreenTheme.jpg
+  - assets/plainOrangeTheme.jpg
+
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

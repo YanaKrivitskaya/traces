@@ -4,11 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/auth/authentication_bloc.dart';
 import 'package:traces/auth/authentication_event.dart';
 import 'package:traces/constants.dart';
+import 'package:traces/screens/settings/bloc/settings_bloc.dart';
+import 'package:traces/screens/settings/repository/firebase_appSettings_repository.dart';
 import '../colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
+  
   HomePage({Key key}) : super(key: key);
 
   @override
@@ -16,9 +19,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String _theme;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider<SettingsBloc>(
+      create: (context) => 
+        SettingsBloc(settingsRepository: FirebaseAppSettingsRepository())
+          ..add(GetUserSettings()),
+      child: BlocBuilder<SettingsBloc, SettingsState>(        
+        builder: (context, state){
+          if(state is SuccessSettingsState){         
+            _theme = state.userTheme;    
+          }
+          return _homeMenu(_theme, context);
+        }
+      )
+    );
+  }
+}
+
+Widget _homeMenu(String _theme, BuildContext context) => new Scaffold(
       appBar: AppBar(
         title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))),
         actions: <Widget>[
@@ -39,213 +60,53 @@ class _HomePageState extends State<HomePage> {
                 color: ColorsPalette.backColor
             ),
             padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    /*Column(
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, tripsRoute);
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Column( // Replace with a Row for horizontal icon + text
-                            children: <Widget>[
-                              Image(image: AssetImage('assets/016-mountain.png'), height: 65.0, width: 65.0,),
-                              Text("Trips", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-                            ],
-                          ),
-                        ),
-                      ]
-                  ),
-                  Column(
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, mapRoute);
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Column( // Replace with a Row for horizontal icon + text
-                            children: <Widget>[
-                              Image(image: AssetImage('assets/015-navigation.png'), height: 65.0, width: 65.0,),
-                              Text("Map", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-                            ],
-                          ),
-                        ),
-                      ]
-                  ),
-                  Column(
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, notesRoute);
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Column( // Replace with a Row for horizontal icon + text
-                            children: <Widget>[
-                              Image(image: AssetImage('assets/011-postcard.png'), height: 65.0, width: 65.0,),
-                              Text("Notes", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-                            ],
-                          ),
-                        ),
-                      ]
-                  ),*/
-                    _menuTile(FontAwesomeIcons.route, "Trips", context, tripsRoute, ColorsPalette.iconColor),
-                    _menuTile(FontAwesomeIcons.globeEurope, "Map", context, mapRoute, ColorsPalette.iconColor),
-                    _menuTile(FontAwesomeIcons.clipboard, "Notes", context, notesRoute, ColorsPalette.iconColor)
+            child: Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _menuTile(FontAwesomeIcons.route, _theme, '1-trips.png', 'Trips', context, tripsRoute),
+                    _menuTile(FontAwesomeIcons.plane, _theme, '4-flights.png', 'Flights', context, flightsRoute),
+                    _menuTile(FontAwesomeIcons.passport, _theme, '7-visas.png', 'Visas', context, visasRoute),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _menuTile(FontAwesomeIcons.plane, "Flights", context, flightsRoute, ColorsPalette.iconColor),
-                    /*Column(
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, flightsRoute);
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Column( // Replace with a Row for horizontal icon + text
-                            children: <Widget>[
-                              Image(image: AssetImage('assets/036-plane.png'), height: 65.0, width: 65.0,),
-                              Text("Flights", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-                            ],
-                          ),
-                        ),
-                      ]
-                  ),
-                    Column(
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, expensesRoute);
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Column( // Replace with a Row for horizontal icon + text
-                            children: <Widget>[
-                              Image(image: AssetImage('assets/029-credit-card.png'), height: 65.0, width: 65.0,),
-                              Text("Expenses", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-                            ],
-                          ),
-                        ),
-                      ]
-                  ),
-                  Column(
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, hotelsRoute);
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Column( // Replace with a Row for horizontal icon + text
-                            children: <Widget>[
-                              Image(image: AssetImage('assets/020-hotel.png'), height: 65.0, width: 65.0,),
-                              Text("Hotels", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-                            ],
-                          ),
-                        ),
-                      ]
-                  ),*/
-                    _menuTile(FontAwesomeIcons.dollarSign, "Expenses", context, expensesRoute, ColorsPalette.iconColor),
-                    _menuTile(FontAwesomeIcons.hotel, "Hotels", context, hotelsRoute, ColorsPalette.iconColor)
+                Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _menuTile(FontAwesomeIcons.globeEurope, _theme, '2-map.png', 'Map', context, mapRoute),
+                    _menuTile(FontAwesomeIcons.dollarSign, _theme, '5-expenses.png', 'Expenses', context, expensesRoute),
+                    _menuTile(FontAwesomeIcons.user, _theme, '8-profile.png', 'Profile', context, profileRoute),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    /*Column(
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, visasRoute);
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Column( // Replace with a Row for horizontal icon + text
-                            children: <Widget>[
-                              Image(image: AssetImage('assets/014-passport.png'), height: 65.0, width: 65.0,),
-                              Text("Visas", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-                            ],
-                          ),
-                        ),
-                      ]
-                  ),
-                    Column(
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, profileRoute);
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Column( // Replace with a Row for horizontal icon + text
-                            children: <Widget>[
-                              Image(image: AssetImage('assets/002-trekking.png'), height: 65.0, width: 65.0,),
-                              Text("Profile", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-                            ],
-                          ),
-                        ),
-                      ]
-                  ),
-                  Column(
-                      children: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, settingsRoute);
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Column( // Replace with a Row for horizontal icon + text
-                            children: <Widget>[
-                              Image(image: AssetImage('assets/021-signpost.png'), height: 65.0, width: 65.0,),
-                              Text("Settings", style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-                            ],
-                          ),
-                        ),
-                      ]
-                  ),*/
-                    _menuTile(FontAwesomeIcons.passport, "Visas", context, visasRoute, ColorsPalette.iconColor),
-                    _menuTile(FontAwesomeIcons.user, "Profile", context, profileRoute, ColorsPalette.iconColor),
-                    _menuTile(FontAwesomeIcons.cog, "Settings", context, settingsRoute, ColorsPalette.iconColor)
-
+                Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _menuTile(FontAwesomeIcons.clipboard, _theme, '3-notes.png', 'Notes', context, notesRoute),
+                    _menuTile(FontAwesomeIcons.hotel, _theme, '6-hotels.png', 'Hotels', context, hotelsRoute),
+                    _menuTile(FontAwesomeIcons.cog, _theme, '9-settings.png', 'Settings', context, settingsRoute)
                   ],
-                ),
+                )
               ],
-            ),
+            )            
           )
       )
     );
-  }
-}
 
-Column _menuTile(IconData icon, String title, BuildContext context, String routeName, Color iconColor) =>Column(
-    children: <Widget>[
-      TextButton(
-        onPressed: () {
-          Navigator.pushNamed(
-              context,
-              routeName,
-              //arguments:
-          );
-        },
-        style: ButtonStyle(
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(10.0))     
-        ),          
-        child: Column( // Replace with a Row for horizontal icon + text
-          children: <Widget>[
-            FaIcon(icon, color: iconColor, size: 50.0),
-            /*LinearGradientMask(
-              child: FaIcon(
-                icon,
-                size: 50,
-                color: Colors.white,
-              ),
-            ),*/
-            //Icon(icon, color: color, size: 60.0),
+Column _menuTile(IconData icon, String theme, String iconName, String title, BuildContext context, String routeName) => Column(
+  children: <Widget>[
+    TextButton(
+      onPressed: () {
+        Navigator.pushNamed(context, routeName); 
+      },
+      style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(10.0))),
+      child: Column(        
+        children: theme == 'calmGreenTheme' || theme == 'brightBlueTheme' ?  
+          <Widget>[
+            Image(image: AssetImage('assets/$theme/$iconName'), height: 65.0, width: 65.0,),
+            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))            
+          ]
+        : <Widget>[ 
+            FaIcon(icon, color: ColorsPalette.iconColor, size: 50.0),            
             Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
-          ],
-        ),
+        ],
       ),
-    ]
+    ),
+  ]
 );

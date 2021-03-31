@@ -4,6 +4,8 @@ import 'package:traces/auth/simple_bloc_delegate.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:traces/router.dart';
 import 'package:traces/screens/home.dart';
+import 'package:traces/screens/settings/repository/appSettings_repository.dart';
+import 'package:traces/screens/settings/repository/firebase_appSettings_repository.dart';
 import 'package:traces/screens/welcome.dart';
 import 'package:traces/auth/bloc.dart';
 import 'package:traces/auth/userRepository.dart';
@@ -19,6 +21,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   Bloc.observer = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
+  final AppSettingsRepository settingsRepository = FirebaseAppSettingsRepository();
 
   // Create the initilization Future outside of `build`:
   /*Future<FirebaseApp> _initialization = Firebase.initializeApp();
@@ -31,7 +34,7 @@ Future<void> main() async {
 
   runApp(
     BlocProvider(
-      create: (context) => AuthenticationBloc(userRepository: userRepository)
+      create: (context) => AuthenticationBloc(userRepository: userRepository, settingsRepository: settingsRepository)
         ..add(AppStarted()),
       child: TracesApp(userRepository: userRepository)
     )

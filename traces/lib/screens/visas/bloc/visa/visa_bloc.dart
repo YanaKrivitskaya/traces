@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/screens/settings/repository/appSettings_repository.dart';
+import 'package:traces/screens/settings/repository/firebase_appSettings_repository.dart';
 import '../../../../shared/state_types.dart';
 import '../../model/visa.dart';
 import '../../model/visa_tab.dart';
@@ -15,7 +17,7 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
   StreamSubscription _visasSubscription;
 
   VisaBloc({@required VisasRepository visasRepository})
-      : assert(visasRepository != null),
+      : assert(visasRepository != null),     
         _visasRepository = visasRepository,
         super(VisaState.empty());
 
