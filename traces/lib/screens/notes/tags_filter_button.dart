@@ -12,7 +12,7 @@ class TagsFilterButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        icon: FaIcon(FontAwesomeIcons.hashtag),
+        icon: FaIcon(FontAwesomeIcons.hashtag, color: ColorsPalette.lynxWhite),
         onPressed: () {
           showDialog(
               barrierDismissible: false, context: context, builder: (_) =>

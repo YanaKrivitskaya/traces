@@ -74,14 +74,15 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                   bottom: TabBar(
                     controller: tabController,                    
                     tabs: detailsTabs,
-                    indicatorColor: ColorsPalette.algalFuel
+                    indicatorColor: ColorsPalette.algalFuel,
+                    labelColor: ColorsPalette.lynxWhite,
                 ),
                 title: Text('Visa Details',
                     style: GoogleFonts.quicksand(
                     textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
                 backgroundColor: ColorsPalette.mazarineBlue,
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
+                  icon: Icon(Icons.arrow_back_ios, color: ColorsPalette.lynxWhite),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 actions: [_editAction(state), _deleteAction(state)],
@@ -124,7 +125,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
   }
 
   Widget _editAction(VisaDetailsState state) => new IconButton(
-        icon: FaIcon(FontAwesomeIcons.edit),
+        icon: FaIcon(FontAwesomeIcons.edit, color: ColorsPalette.lynxWhite),
         onPressed: () {
           Navigator.popAndPushNamed(context, visaEditRoute,
               arguments: state.visa.id);
@@ -132,7 +133,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
       );
 
   Widget _deleteAction(VisaDetailsState state) => new IconButton(
-        icon: FaIcon(FontAwesomeIcons.trashAlt),
+        icon: FaIcon(FontAwesomeIcons.trashAlt, color: ColorsPalette.lynxWhite),
         onPressed: () {
           showDialog<String>(
               context: context,

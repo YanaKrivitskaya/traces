@@ -67,10 +67,11 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         return new Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              icon: FaIcon(FontAwesomeIcons.chevronLeft),
+              icon: FaIcon(FontAwesomeIcons.chevronLeft, color: ColorsPalette.lynxWhite),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            title: _isEditMode ? Text("Edit note") : Text("View note"),
+            title: _isEditMode ? Text("Edit note", style: TextStyle(color: ColorsPalette.lynxWhite)) 
+              : Text("View note", style: TextStyle(color: ColorsPalette.lynxWhite)),
             actions: <Widget>[
               !_isEditMode ? _tagsAction() : Container(),
               _isEditMode ? _saveAction(_note) : _editAction(state),
@@ -101,7 +102,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   }
 
   Widget _tagsAction() => new IconButton(
-    icon: FaIcon(FontAwesomeIcons.hashtag),
+    icon: FaIcon(FontAwesomeIcons.hashtag, color: ColorsPalette.lynxWhite),
     onPressed: () {
       showDialog(
           barrierDismissible: false, context: context, builder: (_) =>
@@ -120,7 +121,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   );
 
   Widget _editAction(NoteDetailsState state) => new IconButton(
-    icon: FaIcon(FontAwesomeIcons.edit),
+    icon: FaIcon(FontAwesomeIcons.edit, color: ColorsPalette.lynxWhite),
     onPressed: () {
       if(state is ViewDetailsState){
         context.read<NoteDetailsBloc>().add(EditModeClicked(state.note));
@@ -129,7 +130,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   );
 
   Widget _saveAction(Note note) => new IconButton(
-    icon: FaIcon(FontAwesomeIcons.solidSave),
+    icon: FaIcon(FontAwesomeIcons.solidSave, color: ColorsPalette.lynxWhite),
     onPressed: () {
       Note noteToSave = new Note(_textController.text, title: _titleController.text, id: note.id, dateCreated: note.dateCreated, tagIds: note.tagIds);
       context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
@@ -193,7 +194,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   );
 
   Widget _deleteAction(Note note, BuildContext context) => new IconButton(
-    icon: FaIcon(FontAwesomeIcons.trashAlt),
+    icon: FaIcon(FontAwesomeIcons.trashAlt, color: ColorsPalette.lynxWhite),
     onPressed: () {
       showDialog<String>(
         context: context,

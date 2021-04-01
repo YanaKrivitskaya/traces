@@ -44,7 +44,7 @@ Widget _homeMenu(String _theme, BuildContext context) => new Scaffold(
         title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: Icon(Icons.exit_to_app, color: ColorsPalette.lynxWhite),
             onPressed: (){
               BlocProvider.of<AuthenticationBloc>(context).add(
                 LoggedOut()
