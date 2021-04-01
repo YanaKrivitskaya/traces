@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/trips/trips_page.dart';
 
 import 'constants.dart';
 import 'screens/expenses.dart';
@@ -20,6 +19,7 @@ import 'screens/settings/bloc/settings_bloc.dart';
 import 'screens/settings/repository/firebase_appSettings_repository.dart';
 import 'screens/settings/settings_page.dart';
 import 'screens/settings/themes_settings_view.dart';
+import 'screens/trips.dart';
 import 'screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
 import 'screens/visas/bloc/visa/visa_bloc.dart';
 import 'screens/visas/bloc/visa_details/visa_details_bloc.dart';

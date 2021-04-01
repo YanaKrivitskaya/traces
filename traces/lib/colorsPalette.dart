@@ -46,7 +46,7 @@ class ColorsPalette {
   static const Color lighterPurple = const Color(0xFFA55EEA);
   static const Color gloomyPurple = const Color(0xFF8854D0);
   static const Color reptileGreen = const Color(0xFF26DE81);
-  
+  static const Color algalFuel = const Color(0xFF20BF6B);
   static const Color maxBlueGreen = const Color(0xFF2BCBBA);
   static const Color turquoiseTopaz = const Color(0xFF0FB9B1);
   static const Color blueGrey = const Color(0xFFACC1DA);
@@ -99,7 +99,7 @@ class ColorsPalette {
   static const Color riseNShine = const Color(0xFFFBC531);
   static const Color downloadProgress = const Color(0xFF4CD137);
   static const Color skirretGreen = const Color(0xFF44BD32);
-  
+  static const Color mazarineBlue = const Color(0xFF273C75); // cool
   static const Color picoVoid = const Color(0xFF192A56); // cool
   static const Color blueNights = const Color(0xFF353B48);
 
@@ -109,47 +109,6 @@ class ColorsPalette {
   static const Color mintyGreen = const Color(0xFF0BE881);
   static const Color greenTeal = const Color(0xFF05C46B);
 
-  //Color Palette #4291 - Tropical
-  static const Color tropicalYellow = const Color(0xFFFAB73D);//trips
-  static const Color tropicalLightYellow = const Color(0xFFFDDCA5);//trips
-  static const Color tropicalGreen = const Color(0xFF546747); 
-  static const Color tropicalGrey = const Color(0xFFBBC8BA); 
-  static const Color tropicalDarkGreen = const Color(0xFF2B331F); //trips
-
-  //Color Palette #4173 - Fresh
-  static const Color freshYellow = const Color(0xFFFBC11A);
-  static const Color freshLightYellow = const Color(0xFFFADE98);
-  static const Color freshGreen = const Color(0xFF5F6C11); 
-  static const Color freshBlue = const Color(0xFF4D9699);
-  static const Color freshWhite = const Color(0xFFEAE7E0);//trips
-
-  //Color Palette #4146 - Nature
-  static const Color natureDarkGreen = const Color(0xFF1F1D08);
-  static const Color natureDarkBlue = const Color(0xFF101321);
-  static const Color natureGreen = const Color(0xFF94AE3F); 
-  static const Color natureBlue = const Color(0xFF243754);
-  static const Color natureWhite = const Color(0xFFEBEBEB);//trips
-
-  //Color Palette #4088 - Juicy
-  static const Color juicyOrange = const Color(0xFFEF6101);
-  static const Color juicyYellow = const Color(0xFFFDAC07);
-  static const Color juicyGreen = const Color(0xFF47802B); 
-  static const Color juicyBlue = const Color(0xFF045658);
-  static const Color juicyDarkBlue = const Color(0xFF03161D);//trips
-
-  //Color Palette #4228 - Bulb
-  static const Color bulbOrange = const Color(0xFFCB7F07);
-  static const Color bulbYellow = const Color(0xFFFDD03B);
-  static const Color bulbBrown = const Color(0xFF291907); 
-  static const Color bulbBlue = const Color(0xFF4A9396);
-  static const Color bulbDarkBlue = const Color(0xFF00202E);//trips
-
-  //Color Palette #4128 - Christmas
-  static const Color christmasYellow = const Color(0xFFFAC57D);
-  static const Color christmasGreen = const Color(0xFF344D2F);
-  static const Color christmasRed = const Color(0xFFA81817); 
-  static const Color christmasGrey = const Color(0xFFC8BEB9);
-  static const Color christmasWhite = const Color(0xFFF0F4F7);//trips
 
 
   //notes module colors
@@ -159,12 +118,7 @@ class ColorsPalette {
   // profile module colors
   static const Color meditSea = const Color(0xFF1289A7); // profile
   static const Color fusionRed = const Color(0xFFFC5C65); //profile
-
-  //visa module
-  static const Color algalFuel = const Color(0xFF20BF6B); // visa
-  static const Color mazarineBlue = const Color(0xFF273C75); // visa
 }
-
 
 class LinearGradientMask extends StatelessWidget {
   LinearGradientMask({this.child});
