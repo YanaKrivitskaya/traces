@@ -18,17 +18,20 @@ class SettingsPage extends StatelessWidget{
       create: (context) => 
         SettingsBloc(settingsRepository: FirebaseAppSettingsRepository())
           ..add(GetAppSettings()),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text('Settings', style: GoogleFonts.quicksand(textStyle: TextStyle(
-            color: ColorsPalette.white, fontSize: 30.0))),
-          leading: IconButton(
-            icon: FaIcon(FontAwesomeIcons.arrowLeft, color: ColorsPalette.lynxWhite),
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false);              
-            })        ),
-      body: SettingsView()
+      child: WillPopScope(
+        onWillPop: ()=> Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: Text('Settings', style: GoogleFonts.quicksand(textStyle: TextStyle(
+              color: ColorsPalette.white, fontSize: 30.0))),
+            leading: IconButton(
+              icon: FaIcon(FontAwesomeIcons.arrowLeft, color: ColorsPalette.lynxWhite),
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false);              
+              })        ),
+        body: SettingsView()
+        ),
       )
     );
   }
