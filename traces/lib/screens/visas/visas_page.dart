@@ -21,7 +21,7 @@ class VisasPage extends StatelessWidget {
               style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
           backgroundColor: ColorsPalette.mazarineBlue,
           leading: IconButton(
-            icon: FaIcon(FontAwesomeIcons.chevronLeft),
+            icon: FaIcon(FontAwesomeIcons.chevronLeft, color: ColorsPalette.lynxWhite),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),

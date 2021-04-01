@@ -31,14 +31,14 @@ class NotesPage extends StatelessWidget{
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: FaIcon(FontAwesomeIcons.chevronLeft),
+            icon: FaIcon(FontAwesomeIcons.chevronLeft, color: ColorsPalette.lynxWhite),
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text('Notes', style: GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.white, fontSize: 25.0))),
           backgroundColor: ColorsPalette.greenGrass,
           actions: [
             IconButton(
-              icon: FaIcon(FontAwesomeIcons.search),
+              icon: FaIcon(FontAwesomeIcons.search, color: ColorsPalette.lynxWhite),
               onPressed: (){
                 context.read<NoteBloc>().add(SearchBarToggle());
               },

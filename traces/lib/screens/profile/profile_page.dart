@@ -27,7 +27,7 @@ class ProfilePage extends StatelessWidget{
                   color: ColorsPalette.white, fontSize: 25.0))),
           backgroundColor: ColorsPalette.meditSea,
           leading: IconButton(
-            icon: FaIcon(FontAwesomeIcons.chevronLeft),
+            icon: FaIcon(FontAwesomeIcons.chevronLeft,color: ColorsPalette.lynxWhite),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),

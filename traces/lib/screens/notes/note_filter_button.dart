@@ -23,7 +23,7 @@ class NoteFilterButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: FaIcon(FontAwesomeIcons.sortAmountDown),
+      icon: FaIcon(FontAwesomeIcons.sortAmountDown, color: ColorsPalette.lynxWhite),
       onPressed: (){
         showDialog(barrierDismissible: false, context: context,builder: (_) =>
             MultiBlocProvider(

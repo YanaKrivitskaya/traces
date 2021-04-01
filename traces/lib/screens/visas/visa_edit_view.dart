@@ -49,7 +49,7 @@ class _VisaEditViewState extends State<VisaEditView> {
                       color: ColorsPalette.lynxWhite, fontSize: 25.0))),
           backgroundColor: ColorsPalette.mazarineBlue,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(Icons.arrow_back_ios, color: ColorsPalette.lynxWhite),
             onPressed: () => Navigator.of(context).pop(),
           )),
       body: BlocListener<VisaDetailsBloc, VisaDetailsState>(
