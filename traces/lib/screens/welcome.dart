@@ -35,7 +35,7 @@ class _WelcomePageState extends State<WelcomePage>{
   @override
   Widget build(BuildContext context){
     return BlocBuilder(
-      cubit: _authenticationBloc,
+      bloc: _authenticationBloc,
       builder: (BuildContext context, AuthenticationState state){
         return _buildWaitingScreen();
       }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
 import 'package:traces/screens/trips/trips_page.dart';
 
 import 'constants.dart';
@@ -20,6 +21,7 @@ import 'screens/settings/bloc/settings_bloc.dart';
 import 'screens/settings/repository/firebase_appSettings_repository.dart';
 import 'screens/settings/settings_page.dart';
 import 'screens/settings/themes_settings_view.dart';
+import 'screens/trips/bloc/trips_bloc.dart';
 import 'screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
 import 'screens/visas/bloc/visa/visa_bloc.dart';
 import 'screens/visas/bloc/visa_details/visa_details_bloc.dart';
@@ -54,10 +56,7 @@ class RouteGenerator {
     final args = settings.arguments;
 
     switch (settings.name) {
-      case homeRoute:
-        /*return MaterialPageRoute(
-          builder: (_) => HomePage()
-        );*/
+      case homeRoute:       
         return MaterialPageRoute(
           builder: (_) => BlocProvider<SettingsBloc>(
             create: (context) =>
@@ -181,7 +180,13 @@ class RouteGenerator {
           return _errorRoute();
         }
       case tripsRoute:
-        return MaterialPageRoute(builder: (_) => TripsPage());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<TripsBloc>(
+            create: (context) =>
+                TripsBloc(FirebaseTripsRepository()),
+            child: TripsPage(),
+          ),
+      );
       case expensesRoute:
         return MaterialPageRoute(builder: (_) => ExpensesPage());
       case hotelsRoute:

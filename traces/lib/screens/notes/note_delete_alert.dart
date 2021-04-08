@@ -14,7 +14,7 @@ class NoteDeleteAlert extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NoteBloc, NoteState>(
-    cubit: BlocProvider.of(context),
+    bloc: BlocProvider.of(context),
     builder: (context, state) {
       return AlertDialog(
         title: Text('Delete note?'),
