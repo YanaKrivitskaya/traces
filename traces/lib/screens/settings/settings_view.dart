@@ -21,7 +21,7 @@ class _SettingsStateView extends State<SettingsView>{
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
-      cubit: BlocProvider.of(context),
+      bloc: BlocProvider.of(context),
       builder: (context, state){
         if(state is SuccessSettingsState){
           _settings = state.settings;
