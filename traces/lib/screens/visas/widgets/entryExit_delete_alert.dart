@@ -16,7 +16,7 @@ class EntryExitDeleteAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EntryExitBloc, EntryExitState>(
-      cubit: BlocProvider.of(context),
+      bloc: BlocProvider.of(context),
       builder: (context, state){
         return AlertDialog(
           title: Text("Delete Entry/Exit record?"),

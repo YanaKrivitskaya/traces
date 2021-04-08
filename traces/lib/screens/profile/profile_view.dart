@@ -25,7 +25,7 @@ class _ProfileViewState extends State<ProfileView>{
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
-      cubit: BlocProvider.of(context),
+      bloc: BlocProvider.of(context),
       builder: (context, state){
         if(state.status == StateStatus.Loading){
           return Center(child: CircularProgressIndicator());

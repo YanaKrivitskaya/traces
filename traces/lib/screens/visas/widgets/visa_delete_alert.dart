@@ -16,7 +16,7 @@ class VisaDeleteAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VisaDetailsBloc, VisaDetailsState>(
-      cubit: BlocProvider.of(context),
+      bloc: BlocProvider.of(context),
       builder: (context, state){
         return AlertDialog(
           title: Text("Delete Visa?"),
