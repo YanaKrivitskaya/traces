@@ -65,6 +65,8 @@ class TracesApp extends StatelessWidget{
       theme: ThemeData(
           primaryColor: ColorsPalette.mainColor,
           accentColor: ColorsPalette.iconColor,
+          scaffoldBackgroundColor: ColorsPalette.white,
+          //textTheme: GoogleFonts.patrickHandTextTheme(Theme.of(context).textTheme)
           textTheme: GoogleFonts.quicksandTextTheme(Theme.of(context).textTheme)
       ),
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
