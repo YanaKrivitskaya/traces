@@ -36,6 +36,7 @@ class _TripEditViewState extends State<TripEditView>{
     return new Theme(data: ThemeData(
       primaryColor: ColorsPalette.boyzone,
       primaryColorDark: Colors.red,
+      accentColor: ColorsPalette.,
       scaffoldBackgroundColor: ColorsPalette.white
     ), 
     child: Scaffold(
@@ -77,8 +78,7 @@ class _TripEditViewState extends State<TripEditView>{
   Widget _tripNameInput(TripDetailsState state) => new Container(
     width: MediaQuery.of(context).size.width * 0.7,
     child: Column(children: [
-      Text('Where are you going?', style: 
-        quicksandStyle(fontSize: 20.0),),
+      Text('Where are you going?', style: quicksandStyle(fontSize: 20.0),),
       TextFormField(
         decoration: InputDecoration(
           isDense: false
