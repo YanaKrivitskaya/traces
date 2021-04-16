@@ -21,6 +21,10 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   Stream<TripDetailsState> mapEventToState(TripDetailsEvent event) async* {
     if (event is NewTripMode) {
       yield* _mapNewTripModeToState(event);
+    } else if (event is DateRangeUpdated) {
+      yield* _mapDateRangeUpdatedToState(event);
+    } else if (event is StartPlanningSubmitted) {
+      yield* _mapStartPlanningSubmittedToState(event);
     }
   }
 
@@ -34,6 +38,28 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     members.add(userProfile.displayName);*/
 
     yield TripDetailsSuccessState(null);
+  }
+
+  Stream<TripDetailsState> _mapDateRangeUpdatedToState(DateRangeUpdated event) async* {
+    
+    Trip trip = (state as TripDetailsSuccessState).trip ?? new Trip();
+
+    trip.startDate = event.startDate;
+    trip.endDate = event.endDate;
+
+
+    yield TripDetailsSuccessState(trip);
+  }
+
+  Stream<TripDetailsState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
+    
+    Trip trip = event.trip;
+
+    if(trip != null){
+      yield TripDetailsSuccessState(trip);
+    }
+
+    yield TripDetailsErrorState("Trip can't be null");
   }
 
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/trips/bloc/trip_details/tripdetails_bloc.dart';
 import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
-import 'package:traces/screens/trips/trip_edit_view.dart';
+import 'package:traces/screens/trips/start_planning_view.dart';
 import 'package:traces/screens/trips/trips_page.dart';
 
 import 'constants.dart';
@@ -197,7 +197,7 @@ class RouteGenerator {
               create: (context) => TripDetailsBloc(
                   FirebaseTripsRepository())
                 ..add(NewTripMode()),
-              child: TripEditView(tripId: args),
+              child: StartPlanningView(tripId: args),
             ),
           );
         }

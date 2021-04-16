@@ -1,16 +1,11 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
 import 'package:traces/screens/trips/model/trip_entity.dart';
 
-@immutable
 class Trip {
   final String id;
   final String name;
   final String description;
-  final DateTime startDate;
-  final DateTime endDate;
+  DateTime startDate;
+  DateTime endDate;
   final List<String> photoUrls;
   final int peopleCount;
 

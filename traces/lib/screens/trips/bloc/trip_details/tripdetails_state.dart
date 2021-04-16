@@ -11,11 +11,21 @@ abstract class TripDetailsState extends Equatable{
 class TripDetailsInitial extends TripDetailsState {}
 
 class TripDetailsSuccessState extends TripDetailsState{
-  Trip trip;
+  final Trip trip;
 
   TripDetailsSuccessState(this.trip);
 
   @override
   List<Object> get props => [trip];
+
+}
+
+class TripDetailsErrorState extends TripDetailsState{
+  final String error;
+
+  TripDetailsErrorState(this.error);
+
+  @override
+  List<Object> get props => [error];
 
 }

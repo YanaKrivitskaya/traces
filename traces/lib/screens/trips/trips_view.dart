@@ -29,11 +29,15 @@ class _TripsStateView extends State<TripsView>{
                 )
               );
             }else{
-              return Container(
+              return Center(
                 child: Center(
-                  child: Text('No trips', style: 
-                  quicksandStyle(color: ColorsPalette.magentaPurple, fontSize: 30.0))
-                )
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [
+                    Image(image: AssetImage('assets/signpost.png'), height: 200.0, width: 200.0,),
+                    SizedBox(height: 15.0),
+                    Text("You don't have any trips yet", style: 
+                  quicksandStyle(color: ColorsPalette.magentaPurple, fontSize: 20.0))
+                  ]                  
+                ))
               );
             }
           }

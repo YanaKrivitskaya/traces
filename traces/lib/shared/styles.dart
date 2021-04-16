@@ -6,7 +6,7 @@ GoogleFonts.patrickHand(
   textStyle: TextStyle(
             color: color ?? Colors.black, fontSize: fontSize));
 
-TextStyle quicksandStyle({Color color, double fontSize}) => 
+TextStyle quicksandStyle({Color color, double fontSize, FontWeight weight}) => 
 GoogleFonts.quicksand(
   textStyle: TextStyle(
-            color: color ?? Colors.black, fontSize: fontSize));
+            color: color ?? Colors.black, fontSize: fontSize, fontWeight: weight ?? FontWeight.normal));
