@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/screens/trips/bloc/trip_details/tripdetails_bloc.dart';
 import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
+import 'package:traces/screens/trips/start_planning_view.dart';
 import 'package:traces/screens/trips/trips_page.dart';
 
 import 'constants.dart';
@@ -183,10 +185,24 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<TripsBloc>(
             create: (context) =>
-                TripsBloc(FirebaseTripsRepository()),
+                TripsBloc(FirebaseTripsRepository())..add(GetAllTrips()),
             child: TripsPage(),
           ),
       );
+      case tripEditRoute:
+      {
+        if (args is String) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider<TripDetailsBloc>(
+              create: (context) => TripDetailsBloc(
+                  FirebaseTripsRepository())
+                ..add(NewTripMode()),
+              child: StartPlanningView(tripId: args),
+            ),
+          );
+        }
+        return _errorRoute();
+      }
       case expensesRoute:
         return MaterialPageRoute(builder: (_) => ExpensesPage());
       case hotelsRoute:

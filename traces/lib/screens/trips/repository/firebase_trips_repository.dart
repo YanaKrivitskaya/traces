@@ -19,7 +19,8 @@ class FirebaseTripsRepository extends TripsRepository{
   @override
   Future<Trip> addnewTrip(Trip trip) async{
     String uid = await _userRepository.getUserId();
-    final newTrip = await tripsCollection.doc(uid).collection(userTrips).add(trip.toEntity().toDocument()); 
+    var tripEntity = trip.toEntity().toDocument();
+    final newTrip = await tripsCollection.doc(uid).collection(userTrips).add(tripEntity); 
     return await getTripById(newTrip.id);
   }
   @override

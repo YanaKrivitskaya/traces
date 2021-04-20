@@ -1,6 +1,7 @@
 
 const String homeRoute = '/home';
 const String tripsRoute = '/trips';
+const String tripEditRoute = '/tripEdit';
 const String mapRoute = '/map';
 const String notesRoute = '/notes';
 const String flightsRoute = '/flights';
