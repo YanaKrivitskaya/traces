@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -52,14 +53,17 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   }
 
   Stream<TripDetailsState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
-    
-    Trip trip = event.trip;
+ 
+    print(inspect(event.trip));
+
+    Trip trip = await _tripsRepository.addnewTrip(event.trip)
+    .timeout(Duration(seconds: 3), onTimeout: (){return event.trip;});
 
     if(trip != null){
       yield TripDetailsSuccessState(trip);
     }
 
-    yield TripDetailsErrorState("Trip can't be null");
+    //yield TripDetailsErrorState("Trip can't be null");
   }
 
 }

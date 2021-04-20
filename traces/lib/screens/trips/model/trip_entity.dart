@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,25 +41,27 @@ class TripEntity extends Equatable {
   }
 
   factory TripEntity.fromMap(Map<String, dynamic> map) {
+    print(inspect(map));
     return TripEntity(
       id: map['id'],
       name: map['name'],
       description: map['description'],
-      startDate: DateTime.fromMillisecondsSinceEpoch(map['startDate']),
-      endDate: DateTime.fromMillisecondsSinceEpoch(map['endDate']),
+      startDate: map['startDate'],
+      endDate: map['endDate'],
       photoUrls: List<String>.from(map['photoUrls']),
       peopleCount: map['peopleCount'],
     );
   }
 
     static TripEntity fromSnapshot(DocumentSnapshot snap){
+      print(inspect(snap.data()));
     return TripEntity(
       id: snap.id, 
       name: snap.data()['name'], 
       description: snap.data()['description'], 
       startDate: snap.data()['startDate'].toDate(), 
       endDate: snap.data()['endDate'].toDate(), 
-      photoUrls: List<String>.from(snap.data()['photoUrls']), 
+      photoUrls: List<String>.from(snap.data()['photoUrls'] ?? <String>[]), 
       peopleCount: snap.data()['peopleCount']
     );
   }

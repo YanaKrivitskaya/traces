@@ -2,7 +2,7 @@ import 'package:traces/screens/trips/model/trip_entity.dart';
 
 class Trip {
   final String id;
-  final String name;
+  String name;
   final String description;
   DateTime startDate;
   DateTime endDate;

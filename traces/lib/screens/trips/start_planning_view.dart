@@ -19,6 +19,7 @@ class StartPlanningView extends StatefulWidget{
 
 class _StartPlanningViewState extends State<StartPlanningView>{
   TextEditingController _tripNameController;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Trip newTrip;
 
   @override
@@ -85,6 +86,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
     padding: EdgeInsets.all(15.0),
     child: SingleChildScrollView(
       child: Form(
+        key: _formKey,
         child: Column(children: [
           Container(    
             padding: EdgeInsets.only(top: 50.0),
@@ -156,7 +158,12 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                     foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
                   ),
                 onPressed: (){
-                  context.read<TripDetailsBloc>().add(StartPlanningSubmitted(null));
+                  var isFormValid = _formKey.currentState.validate();
+
+                  if(isFormValid){
+                    trip.name = _tripNameController.text.trim();
+                    context.read<TripDetailsBloc>().add(StartPlanningSubmitted(trip));
+                  }                  
                 }
               )
             ],)
