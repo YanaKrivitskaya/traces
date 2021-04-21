@@ -4,6 +4,7 @@ class Trip {
   final String id;
   String name;
   final String description;
+  final String coverImageUrl;
   DateTime startDate;
   DateTime endDate;
   final List<String> photoUrls;
@@ -13,6 +14,7 @@ class Trip {
     this.id,
     this.name,
     this.description,
+    this.coverImageUrl,
     this.startDate,
     this.endDate,
     this.photoUrls,
@@ -24,6 +26,7 @@ class Trip {
       id: id, 
       name: name, 
       description: description, 
+      coverImageUrl: coverImageUrl, 
       startDate: startDate, 
       endDate: endDate, 
       photoUrls: photoUrls, 
@@ -36,6 +39,7 @@ class Trip {
       id: entity.id,
       name: entity.name,
       description: entity.description,
+      coverImageUrl: entity.coverImageUrl,
       startDate: entity.startDate,
       endDate: entity.endDate,
       photoUrls: entity.photoUrls,
@@ -44,7 +48,7 @@ class Trip {
   }
   @override
   String toString() {
-    return 'Trip(id: $id, name: $name, description: $description, startDate: $startDate, endDate: $endDate, photoUrls: $photoUrls, peopleCount: $peopleCount)';
+    return 'Trip(id: $id, name: $name, description: $description, coverImageUrl: $coverImageUrl, startDate: $startDate, endDate: $endDate, photoUrls: $photoUrls, peopleCount: $peopleCount)';
   }
 
 }

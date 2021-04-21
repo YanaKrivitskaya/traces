@@ -8,6 +8,7 @@ class TripEntity extends Equatable {
   final String id;
   final String name;
   final String description;
+  final String coverImageUrl;
   final DateTime startDate;
   final DateTime endDate;
   final List<String> photoUrls;
@@ -17,6 +18,7 @@ class TripEntity extends Equatable {
     this.id,
     this.name,
     this.description,
+    this.coverImageUrl,
     this.startDate,
     this.endDate,
     this.photoUrls,
@@ -25,7 +27,7 @@ class TripEntity extends Equatable {
 
   @override
   List<Object> get props {
-    return [id, name, description, startDate, endDate, photoUrls, peopleCount];
+    return [id, name, description, coverImageUrl, startDate, endDate, photoUrls, peopleCount];
   }
 
   Map<String, dynamic> toMap() {
@@ -33,6 +35,7 @@ class TripEntity extends Equatable {
       'id': id,
       'name': name,
       'description': description,
+      'coverImageUrl': coverImageUrl,
       'startDate': startDate.millisecondsSinceEpoch,
       'endDate': endDate.millisecondsSinceEpoch,
       'photoUrls': photoUrls,
@@ -46,6 +49,7 @@ class TripEntity extends Equatable {
       id: map['id'],
       name: map['name'],
       description: map['description'],
+      coverImageUrl: map['coverImageUrl'],
       startDate: map['startDate'],
       endDate: map['endDate'],
       photoUrls: List<String>.from(map['photoUrls']),
@@ -59,6 +63,7 @@ class TripEntity extends Equatable {
       id: snap.id, 
       name: snap.data()['name'], 
       description: snap.data()['description'], 
+      coverImageUrl: snap.data()['coverImageUrl'], 
       startDate: snap.data()['startDate'].toDate(), 
       endDate: snap.data()['endDate'].toDate(), 
       photoUrls: List<String>.from(snap.data()['photoUrls'] ?? <String>[]), 
@@ -70,6 +75,7 @@ class TripEntity extends Equatable {
     return{
       "name": name,
       "description": description!= '' ? description : 'No description',
+      "coverImageUrl": coverImageUrl,
       "startDate": startDate,
       "endDate": endDate,
       "photoUrls": photoUrls,

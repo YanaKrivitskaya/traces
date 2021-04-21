@@ -18,11 +18,11 @@ class TripsPage extends StatelessWidget{
         return Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            /*centerTitle: true,
+            centerTitle: true,
             title: Text('Trips', style: GoogleFonts.quicksand(textStyle: 
-              TextStyle(color: ColorsPalette.freshBlue, fontSize: 30.0))),*/
+              TextStyle(color: ColorsPalette.meditSea, fontSize: 30.0))),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: ColorsPalette.freshBlue),
+              icon: Icon(Icons.arrow_back, color: ColorsPalette.meditSea),
               onPressed: (){
                 Navigator.pop(context);
               },
