@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/shared/styles.dart';
 import 'package:intl/intl.dart';
-//import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../colorsPalette.dart';
 import '../../shared/shared.dart';
@@ -41,18 +41,18 @@ class _TripsStateView extends State<TripsView>{
                         children: [
                           Container(
                             padding: EdgeInsets.only(bottom: 20.0),
-                            /*child: CachedNetworkImage(
+                            child: CachedNetworkImage(
                               placeholder: (context, url) => loadingWidget(ColorsPalette.meditSea),
-                              imageUrl: 'https://picsum.photos/250?image=9',
-                            ),*/
-                            child: Image.network(                              
+                              imageUrl: "http://via.placeholder.com/350x150",
+                            ),
+                            /*child: Image.network(                              
                               trip.coverImageUrl,                              
                               fit: BoxFit.cover,
                               loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
                                 if (loadingProgress == null) return child;
                                   return loadingWidget(ColorsPalette.meditSea);
                                 },
-                              ),
+                              ),*/
                           ),
                           Positioned(
                             bottom: 0,
