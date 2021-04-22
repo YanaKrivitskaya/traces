@@ -42,8 +42,9 @@ class _TripsStateView extends State<TripsView>{
                           Container(
                             padding: EdgeInsets.only(bottom: 20.0),
                             child: CachedNetworkImage(
-                              placeholder: (context, url) => loadingWidget(ColorsPalette.meditSea),
-                              imageUrl: "http://via.placeholder.com/350x150",
+                              placeholder: (context, url) => Image.asset("assets/sunset.jpg"),
+                              //placeholder: (context, url) => loadingWidget(ColorsPalette.meditSea),
+                              imageUrl: trip.coverImageUrl,
                             ),
                             /*child: Image.network(                              
                               trip.coverImageUrl,                              
