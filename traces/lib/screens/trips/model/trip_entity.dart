@@ -50,8 +50,8 @@ class TripEntity extends Equatable {
       name: map['name'],
       description: map['description'],
       coverImageUrl: map['coverImageUrl'],
-      startDate: map['startDate'],
-      endDate: map['endDate'],
+      startDate: map['startDate'].toDate(),
+      endDate: map['endDate'].toDate(),
       photoUrls: List<String>.from(map['photoUrls']),
       peopleCount: map['peopleCount'],
     );

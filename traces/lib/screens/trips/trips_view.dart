@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/constants.dart';
 import 'package:traces/shared/styles.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -30,53 +31,49 @@ class _TripsStateView extends State<TripsView>{
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: state.allTrips.length,
                   itemBuilder: (context, position){
-                    final trip = state.allTrips[position];
-                    print(trip.coverImageUrl);
+                    final trip = state.allTrips[position];                    
                     return  Container(
                       margin: EdgeInsets.all(10),
                       width: MediaQuery.of(context).size.width * 0.8,
                       //height: MediaQuery.of(context).size.height * 0.3,
-                      child: Container(child: Stack(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(bottom: 20.0),
-                            child: CachedNetworkImage(
-                              placeholder: (context, url) => Image.asset("assets/sunset.jpg"),
-                              //placeholder: (context, url) => loadingWidget(ColorsPalette.meditSea),
-                              imageUrl: trip.coverImageUrl,
+                      child: InkWell(
+                        child: Container(child: Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(bottom: 20.0),
+                              child: trip.coverImageUrl != null ? CachedNetworkImage(
+                                placeholder: (context, url) => Image.asset("assets/sunset.jpg"),
+                                //placeholder: (context, url) => loadingWidget(ColorsPalette.meditSea),
+                                imageUrl: trip.coverImageUrl,
+                              ) : Image.asset("assets/sunset.jpg")                            
                             ),
-                            /*child: Image.network(                              
-                              trip.coverImageUrl,                              
-                              fit: BoxFit.cover,
-                              loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                  return loadingWidget(ColorsPalette.meditSea);
-                                },
-                              ),*/
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            child: Container(
-                            margin: EdgeInsets.all(10),
-                            child: Material(
-                              elevation: 10.0,
-                              borderRadius: BorderRadius.all(Radius.circular(5)),
-                              color:  ColorsPalette.white,
+                            Positioned(
+                              bottom: 0,
                               child: Container(
-                                margin: EdgeInsets.all(10),
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [                                
-                                Text(trip.name, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
-                                Text('${DateFormat.yMMMd().format(trip.startDate)} - ${DateFormat.yMMMd().format(trip.endDate)}',
-                                  style: quicksandStyle(fontSize: 15.0)),
-                              ],),
-                            ),
-                            ),                            
-                          )
-                          ),                         
-                        ],
-                      ))                                     
+                              margin: EdgeInsets.all(10),
+                              child: Material(
+                                elevation: 10.0,
+                                borderRadius: BorderRadius.all(Radius.circular(5)),
+                                color:  ColorsPalette.white,
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [                                
+                                  Text(trip.name, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
+                                  Text('${DateFormat.yMMMd().format(trip.startDate)} - ${DateFormat.yMMMd().format(trip.endDate)}',
+                                    style: quicksandStyle(fontSize: 15.0)),
+                                ],),
+                              ),
+                              ),                            
+                            )
+                            ),                         
+                          ],
+                        )),
+                        onTap: (){
+                          Navigator.pushNamed(context, tripDetailsRoute, arguments: trip.id);
+                        },
+                      )                                    
                     );                    
                   },
                 )),

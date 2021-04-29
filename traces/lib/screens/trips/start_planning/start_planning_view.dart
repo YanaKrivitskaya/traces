@@ -1,17 +1,15 @@
-import 'package:traces/screens/trips/bloc/trip_details/tripdetails_bloc.dart';
+import 'bloc/startplanning_bloc.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:traces/shared/styles.dart';
 import 'package:intl/intl.dart';
 
-import 'model/trip.dart';
+import '../model/trip.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../colorsPalette.dart';
+import '../../../colorsPalette.dart';
 import 'package:flutter/material.dart';
 
-class StartPlanningView extends StatefulWidget{
-  final String tripId;
-
-  StartPlanningView({this.tripId});
+class StartPlanningView extends StatefulWidget{  
+  StartPlanningView();
 
   @override
   _StartPlanningViewState createState() => _StartPlanningViewState();
@@ -39,7 +37,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.tripId == '' ? 'Plan a new trip' : 'Edit Trip',
+        title: Text('Plan a new trip',
           style: quicksandStyle(fontSize: 30.0)),
         backgroundColor: ColorsPalette.white,
         elevation: 0,
@@ -47,9 +45,9 @@ class _StartPlanningViewState extends State<StartPlanningView>{
           icon: Icon(Icons.close_rounded, color: ColorsPalette.meditSea),
           onPressed: ()=> Navigator.pop(context)
       )),
-      body: BlocListener<TripDetailsBloc, TripDetailsState>(
+      body: BlocListener<StartPlanningBloc, StartPlanningState>(
         listener: (context, state){
-          if(state is TripDetailsErrorState){
+          if(state is StartPlanningErrorState){
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
@@ -69,9 +67,9 @@ class _StartPlanningViewState extends State<StartPlanningView>{
               ));
           }
         },
-        child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
+        child: BlocBuilder<StartPlanningBloc, StartPlanningState>(
           builder: (context, state){
-            if(state is TripDetailsSuccessState){
+            if(state is StartPlanningSuccessState){
               newTrip = state.trip;
               return _createForm(state, newTrip);
             }
@@ -82,7 +80,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
     );
   }
 
-  Widget _createForm(TripDetailsState state, Trip trip) => new Container(
+  Widget _createForm(StartPlanningState state, Trip trip) => new Container(
     padding: EdgeInsets.all(15.0),
     child: SingleChildScrollView(
       child: Form(
@@ -162,7 +160,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
 
                   if(isFormValid){
                     trip.name = _tripNameController.text.trim();
-                    context.read<TripDetailsBloc>().add(StartPlanningSubmitted(trip));
+                    context.read<StartPlanningBloc>().add(StartPlanningSubmitted(trip));
                   }                  
                 }
               )
@@ -176,7 +174,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
   );
 
   Future<Null> _selectValidFromDate(
-    BuildContext context, TripDetailsState state) async {
+    BuildContext context, StartPlanningState state) async {
     final DateTimeRange picked = await showDateRangePicker (        
         context: context,
         //initialDateRange: DatDateTime.now(),
@@ -185,7 +183,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
     if (picked != null) {
       /*print(picked.start);
       print(picked.end);*/
-      context.read<TripDetailsBloc>().add(DateRangeUpdated(picked.start, picked.end));
+      context.read<StartPlanningBloc>().add(DateRangeUpdated(picked.start, picked.end));
       /*state.visa.durationOfStay =
           int.parse(this._durationController.text.trim());
       context.read<VisaDetailsBloc>().add(DateFromChanged(picked));*/

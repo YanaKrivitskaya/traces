@@ -1,15 +1,15 @@
-part of 'tripdetails_bloc.dart';
+part of 'startplanning_bloc.dart';
 
 @immutable
-abstract class TripDetailsEvent {
-  const TripDetailsEvent();
+abstract class StartPlanningEvent {
+  const StartPlanningEvent();
 
   List<Object> get props => [];
 }
 
-class NewTripMode extends TripDetailsEvent {}
+class NewTripMode extends StartPlanningEvent {}
 
-class DateRangeUpdated extends TripDetailsEvent {
+class DateRangeUpdated extends StartPlanningEvent {
   final DateTime startDate;
   final DateTime endDate;
 
@@ -18,7 +18,7 @@ class DateRangeUpdated extends TripDetailsEvent {
   List<Object> get props => [startDate, endDate];
 }
 
-class StartPlanningSubmitted extends TripDetailsEvent {
+class StartPlanningSubmitted extends StartPlanningEvent {
   final Trip trip;
   
   StartPlanningSubmitted(this.trip);
