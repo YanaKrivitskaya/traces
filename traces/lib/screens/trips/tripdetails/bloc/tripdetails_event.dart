@@ -7,21 +7,11 @@ abstract class TripDetailsEvent {
   List<Object> get props => [];
 }
 
-//class NewTripMode extends TripDetailsEvent {}
+class GetTripDetails extends TripDetailsEvent {
+  final String tripId;
 
-class DateRangeUpdated extends TripDetailsEvent {
-  final DateTime startDate;
-  final DateTime endDate;
+  GetTripDetails(this.tripId);
 
-  DateRangeUpdated(this.startDate, this.endDate);
-
-  List<Object> get props => [startDate, endDate];
-}
-
-class StartPlanningSubmitted extends TripDetailsEvent {
-  final Trip trip;
-  
-  StartPlanningSubmitted(this.trip);
-
-  List<Object> get props => [trip];
+  @override
+  List<Object> get props => [tripId];
 }

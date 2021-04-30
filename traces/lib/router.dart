@@ -208,7 +208,7 @@ class RouteGenerator {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<TripDetailsBloc>(
                 create: (context) => TripDetailsBloc(
-                    FirebaseTripsRepository()),
+                    FirebaseTripsRepository())..add(GetTripDetails(args)),
                 child: TripDetailsView(tripId: args),
               ),
             );

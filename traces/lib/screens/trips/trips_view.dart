@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../colorsPalette.dart';
 import '../../shared/shared.dart';
 import 'bloc/trips_bloc.dart';
+import 'package:timelines/timelines.dart';
 
 class TripsView extends StatefulWidget{
   TripsView();
@@ -25,8 +26,30 @@ class _TripsStateView extends State<TripsView>{
         builder: (context, state){
           if(state is TripsSuccessState){
             if(state.allTrips.length > 0){
-              return SingleChildScrollView(
-                child: Container(child: ListView.builder(
+              return Column(children: [
+                /*Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  child: Timeline.tileBuilder(
+                    theme: TimelineThemeData(
+                      direction: Axis.horizontal,
+                      connectorTheme: ConnectorThemeData(                        
+                        thickness: 3.0,
+                      ),
+                    ),
+                    builder: TimelineTileBuilder.fromStyle(
+                      itemExtentBuilder: (_, __) =>
+              MediaQuery.of(context).size.width / 5,                      
+                      indicatorStyle: IndicatorStyle.outlined,
+                      contentsAlign: ContentsAlign.basic,
+                      contentsBuilder: (context, index) => Text('2021'),                      
+                      itemCount: 5,
+                    ),
+                  ),),*/                 
+                
+                SingleChildScrollView(
+                child: Column(children: [
+                  ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: state.allTrips.length,
@@ -76,8 +99,9 @@ class _TripsStateView extends State<TripsView>{
                       )                                    
                     );                    
                   },
-                )),
-              );
+                )]),
+              )
+              ],);
             }else{
               return Center(
                 child: Center(

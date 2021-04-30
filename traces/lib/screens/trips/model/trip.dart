@@ -8,7 +8,7 @@ class Trip {
   DateTime startDate;
   DateTime endDate;
   final List<String> photoUrls;
-  final int peopleCount;
+  final List<String> tripMembers;
 
   Trip({
     this.id,
@@ -18,7 +18,7 @@ class Trip {
     this.startDate,
     this.endDate,
     this.photoUrls,
-    this.peopleCount,
+    this.tripMembers,
   });
 
  TripEntity toEntity(){
@@ -30,7 +30,7 @@ class Trip {
       startDate: startDate, 
       endDate: endDate, 
       photoUrls: photoUrls, 
-      peopleCount: peopleCount
+      tripMembers: tripMembers
     );
   }
 
@@ -43,12 +43,12 @@ class Trip {
       startDate: entity.startDate,
       endDate: entity.endDate,
       photoUrls: entity.photoUrls,
-      peopleCount: entity.peopleCount
+      tripMembers: entity.tripMembers
     );
   }
   @override
   String toString() {
-    return 'Trip(id: $id, name: $name, description: $description, coverImageUrl: $coverImageUrl, startDate: $startDate, endDate: $endDate, photoUrls: $photoUrls, peopleCount: $peopleCount)';
+    return 'Trip(id: $id, name: $name, description: $description, coverImageUrl: $coverImageUrl, startDate: $startDate, endDate: $endDate, photoUrls: $photoUrls, tripMembers: $tripMembers)';
   }
 
 }

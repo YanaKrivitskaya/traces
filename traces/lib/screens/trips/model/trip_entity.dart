@@ -12,7 +12,7 @@ class TripEntity extends Equatable {
   final DateTime startDate;
   final DateTime endDate;
   final List<String> photoUrls;
-  final int peopleCount;
+  final List<String> tripMembers;
 
   TripEntity({
     this.id,
@@ -22,12 +22,12 @@ class TripEntity extends Equatable {
     this.startDate,
     this.endDate,
     this.photoUrls,
-    this.peopleCount,
+    this.tripMembers,
   });
 
   @override
   List<Object> get props {
-    return [id, name, description, coverImageUrl, startDate, endDate, photoUrls, peopleCount];
+    return [id, name, description, coverImageUrl, startDate, endDate, photoUrls, tripMembers];
   }
 
   Map<String, dynamic> toMap() {
@@ -39,7 +39,7 @@ class TripEntity extends Equatable {
       'startDate': startDate.millisecondsSinceEpoch,
       'endDate': endDate.millisecondsSinceEpoch,
       'photoUrls': photoUrls,
-      'peopleCount': peopleCount,
+      'tripMembers': tripMembers,
     };
   }
 
@@ -52,8 +52,8 @@ class TripEntity extends Equatable {
       coverImageUrl: map['coverImageUrl'],
       startDate: map['startDate'].toDate(),
       endDate: map['endDate'].toDate(),
-      photoUrls: List<String>.from(map['photoUrls']),
-      peopleCount: map['peopleCount'],
+      photoUrls: List<String>.from(map['photoUrls'] ?? <String>[]),
+      tripMembers: List<String>.from(map['tripMembers'] ?? <String>[]),
     );
   }
 
@@ -67,7 +67,7 @@ class TripEntity extends Equatable {
       startDate: snap.data()['startDate'].toDate(), 
       endDate: snap.data()['endDate'].toDate(), 
       photoUrls: List<String>.from(snap.data()['photoUrls'] ?? <String>[]), 
-      peopleCount: snap.data()['peopleCount']
+      tripMembers: List<String>.from(snap.data()['tripMembers'] ?? <String>[]), 
     );
   }
 
@@ -79,7 +79,7 @@ class TripEntity extends Equatable {
       "startDate": startDate,
       "endDate": endDate,
       "photoUrls": photoUrls,
-      "peopleCount": peopleCount
+      "tripMembers": tripMembers
     };
   }
 
