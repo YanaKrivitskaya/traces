@@ -8,18 +8,18 @@ import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
 import 'package:traces/screens/trips/repository/trips_repository.dart';
 
-part 'tripdetails_event.dart';
-part 'tripdetails_state.dart';
+part 'startplanning_event.dart';
+part 'startplanning_state.dart';
 
-class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
+class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
   final TripsRepository _tripsRepository;
   
-  TripDetailsBloc(TripsRepository tripsRepository) : 
+  StartPlanningBloc(TripsRepository tripsRepository) : 
   _tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
-  super(TripDetailsInitial());
+  super(StartPlanningInitial());
 
   @override
-  Stream<TripDetailsState> mapEventToState(TripDetailsEvent event) async* {
+  Stream<StartPlanningState> mapEventToState(StartPlanningEvent event) async* {
     if (event is NewTripMode) {
       yield* _mapNewTripModeToState(event);
     } else if (event is DateRangeUpdated) {
@@ -29,7 +29,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     }
   }
 
-  Stream<TripDetailsState> _mapNewTripModeToState(NewTripMode event) async* {
+  Stream<StartPlanningState> _mapNewTripModeToState(NewTripMode event) async* {
     
     /*UserSettings userSettings = await _visasRepository.userSettings();
     VisaSettings settings = await _visasRepository.settings();*/
@@ -38,21 +38,21 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
 
     members.add(userProfile.displayName);*/
 
-    yield TripDetailsSuccessState(null);
+    yield StartPlanningSuccessState(null);
   }
 
-  Stream<TripDetailsState> _mapDateRangeUpdatedToState(DateRangeUpdated event) async* {
+  Stream<StartPlanningState> _mapDateRangeUpdatedToState(DateRangeUpdated event) async* {
     
-    Trip trip = (state as TripDetailsSuccessState).trip ?? new Trip();
+    Trip trip = (state as StartPlanningSuccessState).trip ?? new Trip();
 
     trip.startDate = event.startDate;
     trip.endDate = event.endDate;
 
 
-    yield TripDetailsSuccessState(trip);
+    yield StartPlanningSuccessState(trip);
   }
 
-  Stream<TripDetailsState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
+  Stream<StartPlanningState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
  
     print(inspect(event.trip));
 
@@ -60,10 +60,10 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     .timeout(Duration(seconds: 3), onTimeout: (){return event.trip;});
 
     if(trip != null){
-      yield TripDetailsSuccessState(trip);
+      yield StartPlanningSuccessState(trip);
     }
 
-    //yield TripDetailsErrorState("Trip can't be null");
+    //yield StartPlanningErrorState("Trip can't be null");
   }
 
 }

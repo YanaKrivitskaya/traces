@@ -45,6 +45,7 @@ dev_dependencies:
   badges: ^1.2.0
   cached_network_image: ^3.0.0
   flutter_cache_manager: ^3.0.1
+  timelines: ^0.1.0
   flutter_test:
     sdk: flutter
 
@@ -91,6 +92,8 @@ flutter:
 
   - assets/signpost.png
   - assets/sunset.jpg
+  - assets/Traces.png
+  - assets/white.jpg
 
   #  - images/a_dot_ham.jpeg
 

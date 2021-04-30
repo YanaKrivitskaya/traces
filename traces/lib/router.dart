@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/trips/bloc/trip_details/tripdetails_bloc.dart';
 import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
-import 'package:traces/screens/trips/start_planning_view.dart';
+import 'package:traces/screens/trips/start_planning/start_planning_view.dart';
 import 'package:traces/screens/trips/trips_page.dart';
 
 import 'constants.dart';
@@ -33,6 +32,9 @@ import 'screens/visas/repository/firebase_visas_repository.dart';
 import 'screens/visas/visa_details_view.dart';
 import 'screens/visas/visa_edit_view.dart';
 import 'screens/visas/visas_page.dart';
+import 'screens/trips/start_planning/bloc/startplanning_bloc.dart';
+import 'screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
+import 'screens/trips/tripdetails/tripdetails_view.dart';
 
 /*class Router {
   static Map<String, WidgetBuilder> getRoutes() {
@@ -189,20 +191,30 @@ class RouteGenerator {
             child: TripsPage(),
           ),
       );
-      case tripEditRoute:
+      case tripStartPlanningRoute:
       {
-        if (args is String) {
-          return MaterialPageRoute(
-            builder: (_) => BlocProvider<TripDetailsBloc>(
-              create: (context) => TripDetailsBloc(
+        return MaterialPageRoute(
+            builder: (_) => BlocProvider<StartPlanningBloc>(
+              create: (context) => StartPlanningBloc(
                   FirebaseTripsRepository())
                 ..add(NewTripMode()),
-              child: StartPlanningView(tripId: args),
+              child: StartPlanningView(),
             ),
           );
-        }
-        return _errorRoute();
       }
+      case tripDetailsRoute:
+        {
+          if (args is String) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<TripDetailsBloc>(
+                create: (context) => TripDetailsBloc(
+                    FirebaseTripsRepository())..add(GetTripDetails(args)),
+                child: TripDetailsView(tripId: args),
+              ),
+            );
+          }
+          return _errorRoute();
+        }
       case expensesRoute:
         return MaterialPageRoute(builder: (_) => ExpensesPage());
       case hotelsRoute:
