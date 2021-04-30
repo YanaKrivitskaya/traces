@@ -130,7 +130,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
     ),
     child:  CircleAvatar(
       backgroundColor: ColorsPalette.lynxWhite,
-      child: Text(name, style: TextStyle(color: ColorsPalette.meditSea, fontSize: 10.0, fontWeight: FontWeight.w300),),
+      child: Text(getAvatarName(name), style: TextStyle(color: ColorsPalette.meditSea, fontSize: 10.0, fontWeight: FontWeight.w300),),
       radius: 15.0
     ),
   );

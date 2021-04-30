@@ -4,6 +4,8 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
+import 'package:traces/screens/profile/repository/firebase_profile_repository.dart';
+import 'package:traces/screens/profile/repository/profile_repository.dart';
 import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
 import 'package:traces/screens/trips/repository/trips_repository.dart';
@@ -13,9 +15,11 @@ part 'startplanning_state.dart';
 
 class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
   final TripsRepository _tripsRepository;
+  final ProfileRepository _profileRepository;
   
   StartPlanningBloc(TripsRepository tripsRepository) : 
   _tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
+  _profileRepository = new FirebaseProfileRepository(),
   super(StartPlanningInitial());
 
   @override
@@ -53,8 +57,9 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
   }
 
   Stream<StartPlanningState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
- 
-    print(inspect(event.trip));
+
+     var userProfile = await _profileRepository.getCurrentProfile();
+     event.trip.tripMembers = [userProfile.displayName];
 
     Trip trip = await _tripsRepository.addnewTrip(event.trip)
     .timeout(Duration(seconds: 3), onTimeout: (){return event.trip;});
