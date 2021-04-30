@@ -8,7 +8,7 @@ class Trip {
   DateTime startDate;
   DateTime endDate;
   final List<String> photoUrls;
-  final List<String> tripMembers;
+  List<String> tripMembers;
 
   Trip({
     this.id,

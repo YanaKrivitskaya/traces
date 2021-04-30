@@ -26,28 +26,9 @@ class _TripsStateView extends State<TripsView>{
         builder: (context, state){
           if(state is TripsSuccessState){
             if(state.allTrips.length > 0){
-              return Column(children: [
-                /*Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: Timeline.tileBuilder(
-                    theme: TimelineThemeData(
-                      direction: Axis.horizontal,
-                      connectorTheme: ConnectorThemeData(                        
-                        thickness: 3.0,
-                      ),
-                    ),
-                    builder: TimelineTileBuilder.fromStyle(
-                      itemExtentBuilder: (_, __) =>
-              MediaQuery.of(context).size.width / 5,                      
-                      indicatorStyle: IndicatorStyle.outlined,
-                      contentsAlign: ContentsAlign.basic,
-                      contentsBuilder: (context, index) => Text('2021'),                      
-                      itemCount: 5,
-                    ),
-                  ),),*/                 
-                
-                SingleChildScrollView(
+              return Container(
+                padding: EdgeInsets.only(bottom: 15.0),
+                child: SingleChildScrollView(
                 child: Column(children: [
                   ListView.builder(
                   shrinkWrap: true,
@@ -100,8 +81,31 @@ class _TripsStateView extends State<TripsView>{
                     );                    
                   },
                 )]),
-              )
-              ],);
+              ),
+              );
+              /*Column(children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  child: Timeline.tileBuilder(
+                    theme: TimelineThemeData(
+                      direction: Axis.horizontal,
+                      connectorTheme: ConnectorThemeData(                        
+                        thickness: 3.0,
+                      ),
+                    ),
+                    builder: TimelineTileBuilder.fromStyle(
+                      itemExtentBuilder: (_, __) =>
+              MediaQuery.of(context).size.width / 5,                      
+                      indicatorStyle: IndicatorStyle.outlined,
+                      contentsAlign: ContentsAlign.basic,
+                      contentsBuilder: (context, index) => Text('2021'),                      
+                      itemCount: 5,
+                    ),
+                  ),),                
+                
+                
+              ],);*/ 
             }else{
               return Center(
                 child: Center(
