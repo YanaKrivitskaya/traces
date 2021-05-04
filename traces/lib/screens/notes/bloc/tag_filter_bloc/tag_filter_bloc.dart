@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
 import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/shared/state_types.dart';

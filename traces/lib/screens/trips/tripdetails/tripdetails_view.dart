@@ -1,6 +1,9 @@
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:traces/screens/trips/bloc/trips_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/tripMembers/bloc/tripmembers_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/tripMembers/tripMembers_dialog.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:traces/shared/styles.dart';
 import '../../../colorsPalette.dart';
@@ -63,7 +66,19 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
                                     Text(state.trip.name, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
                                     Text('${DateFormat.yMMMd().format(state.trip.startDate)} - ${DateFormat.yMMMd().format(state.trip.endDate)}', style: quicksandStyle(fontSize: 15.0))                                    
                                   ],),
-                                  _tripMembers(state.trip.tripMembers)
+                                  InkWell(
+                                    child: _tripMembers(state.trip.tripMembers),
+                                    onTap: (){
+                                      showDialog(
+                                        barrierDismissible: false, context: context, builder: (_) =>
+                                        BlocProvider<TripMembersBloc>(
+                                          create: (context) => TripMembersBloc()
+                                            ..add(GetMembers()),
+                                          child: TripMembersDialog(trip: state.trip)
+                                        ),                                        
+                                      );
+                                    },
+                                  )                                  
                                 ],),
                               ),
                               ),                            
