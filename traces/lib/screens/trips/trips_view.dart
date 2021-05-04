@@ -8,7 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../colorsPalette.dart';
 import '../../shared/shared.dart';
 import 'bloc/trips_bloc.dart';
-import 'package:timelines/timelines.dart';
+//import 'package:timelines/timelines.dart';
 
 class TripsView extends StatefulWidget{
   TripsView();
