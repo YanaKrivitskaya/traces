@@ -5,6 +5,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/profile/model/member.dart';
 
 import '../../colorsPalette.dart';
 import '../../constants.dart';
@@ -147,9 +148,9 @@ class _VisaEditViewState extends State<VisaEditView> {
                 arguments: state.visa.id);
           });
         }
-        if (state.mode == StateMode.Edit) {
+        if (state.mode == StateMode.Edit) {          
           if (state.familyMembers.length == 1) {
-            state.visa.owner = state.familyMembers.first;
+            state.visa.owner = state.familyMembers.first.id;            
           }
         }
 
@@ -285,10 +286,10 @@ class _VisaEditViewState extends State<VisaEditView> {
           decoration: InputDecoration(
               labelText: "Visa owner",
               labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-          items: state.familyMembers.map((String value) {
+          items: state.familyMembers.map((Member member) {
             return new DropdownMenuItem<String>(
-              value: value,
-              child: new Text(value),
+              value: member.id,
+              child: new Text(member.name),
             );
           }).toList(),
           onChanged: (String value) {
@@ -314,9 +315,12 @@ class _VisaEditViewState extends State<VisaEditView> {
               .toList();
           if (filteredCountries.length > 0) {
             return filteredCountries;
-          }
+          }          
         }
+        return [];
       },
+      hideOnLoading: true,
+      hideOnEmpty: true,
       itemBuilder: (context, suggestion) {
         return ListTile(
           title: Text(suggestion),

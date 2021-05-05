@@ -5,18 +5,16 @@ class ProfileEntity extends Equatable{
   final String email;
   final String displayName;
   final bool isEmailVerified;
-  final String id;
-  final List<String> familyMembers;
+  final String id;  
 
-  ProfileEntity(this.id, this.familyMembers, this.email, this.displayName, this.isEmailVerified);
+  ProfileEntity(this.id, this.email, this.displayName, this.isEmailVerified);
 
   @override
-  List<Object> get props => [id, familyMembers, email, displayName, isEmailVerified];
+  List<Object> get props => [id, email, displayName, isEmailVerified];
 
   static ProfileEntity fromMap(Map<dynamic, dynamic> map, String documentId){
     return ProfileEntity(
-        documentId,
-        map["familyMembers"] != null ? map["familyMembers"].cast<String>() as List<String> : <String>[],
+        documentId,        
         map["email"] as String,
         map["displayName"] as String,
         map["isEmailVerified"] as bool
@@ -25,8 +23,7 @@ class ProfileEntity extends Equatable{
 
   static ProfileEntity fromSnapshot(DocumentSnapshot snap){
     return ProfileEntity(
-        snap.id,
-        snap.data()["familyMembers"].cast<String>(),
+        snap.id,        
         snap.data()["email"],
         snap.data()["displayName"],
         snap.data()["isEmailVerified"]
@@ -37,8 +34,7 @@ class ProfileEntity extends Equatable{
     return{
       "email": email,
       "displayName": displayName,
-      "isEmailVerified": isEmailVerified ?? false,
-      "familyMembers": familyMembers,
+      "isEmailVerified": isEmailVerified ?? false
     };
   }
 }

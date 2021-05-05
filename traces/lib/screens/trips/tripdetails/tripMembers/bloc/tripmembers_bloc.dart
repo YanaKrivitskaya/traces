@@ -27,12 +27,9 @@ class TripMembersBloc extends Bloc<TripMembersEvent, TripMembersState>{
   }
 
   Stream<TripMembersState> _mapGetTripMembersToState() async*{
-    var userProfile = await _profileRepository.getCurrentProfile();
+    /*var family = await _profileRepository.addNewProfile();    
 
-    List<String> members = [userProfile.displayName];
-    members.addAll(userProfile.familyMembers);
-
-    yield SuccessTripMembersState(members);
+    yield SuccessTripMembersState(family);*/
   }
 
 }
