@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
+import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 
 
@@ -15,7 +16,7 @@ class GetProfile extends ProfileEvent {}
 class ShowFamilyDialog extends ProfileEvent {}
 
 class UpdateProfileState extends ProfileEvent {
-  final List<String> familyMembers;
+  final List<Member> familyMembers;
 
   final Profile profile;
 
@@ -35,13 +36,13 @@ class UsernameChanged extends ProfileEvent{
 }
 
 class FamilyUpdated extends ProfileEvent{
+  final String id;
   final String name;
-  final int position;
 
-  const FamilyUpdated({@required this.name, @required this.position});
+  const FamilyUpdated({@required this.id, @required this.name});
 
   @override
-  List<Object> get props => [name, position];
+  List<Object> get props => [id, name];
 }
 
 class UsernameUpdated extends ProfileEvent{

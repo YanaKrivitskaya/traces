@@ -3,10 +3,10 @@ import 'package:traces/screens/profile/model/member_entity.dart';
 
 @immutable
 class Member{  
-  final String id;
+  String id;
   final String name;
 
-  Member(this.id, this.name);
+  Member({this.id, this.name});
 
   MemberEntity toEntity(){
     return MemberEntity(id,  name);
@@ -14,8 +14,8 @@ class Member{
 
   static Member fromEntity(MemberEntity entity){
     return Member(
-      entity.id,
-      entity.name
+      id: entity.id,
+      name: entity.name
     );
   }
 }

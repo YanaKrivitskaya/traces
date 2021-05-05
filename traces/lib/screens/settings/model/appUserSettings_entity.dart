@@ -11,7 +11,7 @@ class AppUserSettingsEntity extends Equatable{
 
   static AppUserSettingsEntity fromMap(Map<dynamic, dynamic> map){
     return AppUserSettingsEntity(
-      map["theme"] as String
+      map!= null ? map["theme"] as String : null
     );
   }
 

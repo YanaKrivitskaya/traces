@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:traces/colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/bloc/profile/bloc.dart';
+import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/shared/state_types.dart';
 
 class FamilyDialog extends StatefulWidget{
-  final int familyMemberPosition;
+  final Member familyMember;
 
-  FamilyDialog(this.familyMemberPosition);
+  FamilyDialog(this.familyMember);
 
   @override
   _FamilyDialogState createState() => new _FamilyDialogState();
@@ -39,8 +40,8 @@ class _FamilyDialogState extends State<FamilyDialog>{
             return new Center(child: CircularProgressIndicator());
           }else{
 
-            if(widget.familyMemberPosition != null && state.mode == StateMode.View){
-              _usernameController.text = state.profile.familyMembers[widget.familyMemberPosition];
+            if(widget.familyMember != null && state.mode == StateMode.View){
+              _usernameController.text = widget.familyMember.name;
             }
 
             return new AlertDialog(
@@ -50,7 +51,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
                   child: Text('Done'),
                   onPressed: () {
                     if(state.isUsernameValid){
-                      context.read<ProfileBloc>().add(FamilyUpdated(name: _usernameController.text.trim(), position: widget.familyMemberPosition));
+                      context.read<ProfileBloc>().add(FamilyUpdated(name: _usernameController.text.trim(), id: widget.familyMember?.id ?? null));
                     }
                     Navigator.pop(context);
                   },

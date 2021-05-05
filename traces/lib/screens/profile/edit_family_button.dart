@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/family_dialog.dart';
 import 'package:traces/screens/profile/bloc/profile/bloc.dart';
+import 'package:traces/screens/profile/model/member.dart';
 
 class EditFamilyButton extends StatelessWidget {
-  final int familyMemberPosition;
+  final Member familyMember;
 
-  EditFamilyButton(this.familyMemberPosition);
+  EditFamilyButton(this.familyMember);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class EditFamilyButton extends StatelessWidget {
         showDialog(barrierDismissible: false, context: context,builder: (_) =>
             BlocProvider.value(
               value: context.read<ProfileBloc>()..add(ShowFamilyDialog()),
-              child: FamilyDialog(familyMemberPosition),
+              child: FamilyDialog(familyMember),
             )
         );
       },

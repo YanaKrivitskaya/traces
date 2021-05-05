@@ -19,15 +19,10 @@ class UserSettingsEntity extends Equatable{
     };
   }
 
-  static UserSettingsEntity fromMap(Map<dynamic, dynamic> map){
-    /*return UserSettingsEntity(
-      
-        map != null && map["countries"] != null ? map["countries"].cast<String>() as List<String> : new List<String>(),
-        map != null && map["cities"] != null ? map["cities"].cast<String>() as List<String> : new List<String>()
-    );*/
+  static UserSettingsEntity fromMap(Map<dynamic, dynamic> map){    
     return UserSettingsEntity(
-        map["countries"] != null ? map["countries"].cast<String>() as List<String> : <String>[],
-        map["cities"] != null ? map["cities"].cast<String>() as List<String> : <String>[]
+        map != null && map["countries"] != null ? map["countries"].cast<String>() as List<String> : <String>[],
+        map != null && map["cities"] != null ? map["cities"].cast<String>() as List<String> : <String>[]
     );   
   }
 

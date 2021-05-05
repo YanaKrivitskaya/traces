@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/repository/profile_repository.dart';
 import 'package:traces/shared/state_types.dart';
@@ -9,6 +10,7 @@ import 'package:meta/meta.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository _profileRepository;
+  StreamSubscription _profileSubscription;
 
   ProfileBloc({@required ProfileRepository profileRepository})
       : assert(profileRepository != null),
@@ -28,7 +30,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield* _mapUsernameUpdatedToState(event.username);
     }
     else if (event is FamilyUpdated) {
-      yield* _mapFamilyMemberUpdatedToState(event.name, event.position);
+      yield* _mapFamilyMemberUpdatedToState(event.id, event.name);
     }
     else if (event is ShowFamilyDialog) {
       yield* _mapShowFamilyDialogToState();
@@ -52,30 +54,28 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     await _profileRepository.updateUsername(username);
 
-    Profile profile = Profile(state.profile.email, state.profile.familyMembers, displayName: username, isEmailVerified: state.profile.isEmailVerified);
+    Profile profile = Profile(state.profile.email, displayName: username, isEmailVerified: state.profile.isEmailVerified);
 
     Profile updProfile = await _profileRepository.updateProfile(profile);
 
     yield state.update(profile: updProfile);
   }
 
-  Stream<ProfileState> _mapFamilyMemberUpdatedToState(String name, int position) async*{
+  Stream<ProfileState> _mapFamilyMemberUpdatedToState(String id, String name) async*{
 
-    if(position != null){
-      state.profile.familyMembers[position] = name;
-    }else{
-      state.profile.familyMembers.add(name);
+    Member updMember = Member(name: name);
+    if(id != null){
+      updMember.id = id;
+      await _profileRepository.updateMember(updMember);   
     }
 
-    Profile profile = Profile(state.profile.email, state.profile.familyMembers, displayName: state.profile.displayName, isEmailVerified: state.profile.isEmailVerified);
+    await _profileRepository.addNewMember(updMember);        
 
-    Profile updProfile = await _profileRepository.updateProfile(profile);
-
-    yield state.update(profile: updProfile);
+    yield state.update(profile: state.profile);
   }
 
   Stream<ProfileState> _mapUpdateProfileStateToState(UpdateProfileState event) async* {
-    yield ProfileState.success(profile: event.profile);
+    yield ProfileState.success(profile: event.profile, members: event.familyMembers);
   }
 
   Stream<ProfileState> _mapGetProfileToState(GetProfile event) async*{
@@ -87,7 +87,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       profile = await _profileRepository.addNewProfile();
     }
 
-    yield ProfileState.success(profile: profile);
+    _profileSubscription?.cancel();
+
+    _profileSubscription = _profileRepository.familyMembers().listen(
+      (members) => add(UpdateProfileState(members, profile))
+    );    
+
+    //yield ProfileState.success(profile: profile);
   }
 
 }

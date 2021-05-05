@@ -4,7 +4,7 @@ class VisaDetailsState {
   Visa visa;
   final VisaSettings settings;
   final UserSettings userSettings;
-  final List<String> familyMembers;
+  final List<Member> familyMembers;
   final List<EntryExit> entryExits;
   final StateStatus status;
   final StateMode mode;  
@@ -51,7 +51,7 @@ class VisaDetailsState {
       {Visa visa,
       VisaSettings settings,
       UserSettings userSettings,
-      List<String> members,
+      List<Member> members,
       bool autovalidate}) {
     return VisaDetailsState(
         visa: visa,
@@ -68,7 +68,7 @@ class VisaDetailsState {
       {Visa visa,
       VisaSettings settings,
       UserSettings userSettings,
-      List<String> members,
+      List<Member> members,
       List<EntryExit> entryExits}) {
     return VisaDetailsState(
         visa: visa,
@@ -85,7 +85,7 @@ class VisaDetailsState {
       {Visa visa,
       VisaSettings settings,
       UserSettings userSettings,
-      List<String> members,
+      List<Member> members,
       List<EntryExit> entryExits,
       bool autovalidate,
       String error}) {
@@ -104,7 +104,7 @@ class VisaDetailsState {
       {final Visa visa,
       final VisaSettings settings,
       final UserSettings userSettings,
-      final List<String> members,
+      final List<Member> members,
       final List<EntryExit> entryExits,
       final StateStatus status,
       final StateMode mode,      
