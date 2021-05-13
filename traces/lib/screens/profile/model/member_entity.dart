@@ -10,9 +10,9 @@ class MemberEntity extends Equatable{
   @override
   List<Object> get props => [id, name];
 
-  static MemberEntity fromMap(Map<dynamic, dynamic> map, String documentId){
+  static MemberEntity fromMap(Map<dynamic, dynamic> map){
     return MemberEntity(
-      documentId,
+      map['id'],
       map["name"] as String
     );
   }

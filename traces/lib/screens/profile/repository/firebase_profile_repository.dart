@@ -88,8 +88,12 @@ class FirebaseProfileRepository extends ProfileRepository{
       .update(member.toEntity().toDocument());
   }
 
+  @override
+  Future<Member> getMemberById(String id) async {
+    String uid = await _userRepository.getUserId();
+    
+    var member = await usersCollection.doc(uid).collection(userFamily).doc(id).get();
 
-
-
-
+    return Member.fromEntity(MemberEntity.fromMap(member.data()));
+  }
 }
