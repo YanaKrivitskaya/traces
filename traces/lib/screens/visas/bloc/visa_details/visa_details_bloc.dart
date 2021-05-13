@@ -76,6 +76,10 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       GetVisaDetails event) async* {
     Visa visa = await _visasRepository.getVisaById(event.visaId);
 
+    var member = await _profileRepository.getMemberById(visa.owner);
+
+    visa.owner = member.name;
+
     yield VisaDetailsState.loading();
 
     VisaSettings settings = await _visasRepository.settings();
