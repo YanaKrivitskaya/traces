@@ -2,30 +2,40 @@ part of 'startplanning_bloc.dart';
 
 @immutable
 abstract class StartPlanningState extends Equatable{
-  const StartPlanningState();
-
-  @override
-  List<Object> get props => [];
-}
-
-class StartPlanningInitial extends StartPlanningState {}
-
-class StartPlanningSuccessState extends StartPlanningState{
   final Trip trip;
 
-  StartPlanningSuccessState(this.trip);
+  const StartPlanningState(this.trip);
 
   @override
   List<Object> get props => [trip];
-
 }
 
-class StartPlanningErrorState extends StartPlanningState{
-  final String error;
+class StartPlanningInitial extends StartPlanningState {
+  StartPlanningInitial(Trip trip) : super(trip);
+}
 
-  StartPlanningErrorState(this.error);
+class StartPlanningSuccessState extends StartPlanningState{
+  final bool loading;
+
+  StartPlanningSuccessState(Trip trip, this.loading) : super(trip);
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => [trip, loading];
+}
+
+class StartPlanningErrorState extends StartPlanningState{  
+  final String error;
+
+  StartPlanningErrorState(Trip trip, this.error) : super(trip);
+
+  @override
+  List<Object> get props => [trip, error];
+}
+
+class StartPlanningCreatedState extends StartPlanningState{
+  StartPlanningCreatedState(Trip trip) : super(trip);
+
+  @override
+  List<Object> get props => [trip];
 
 }

@@ -77,9 +77,8 @@ class _TripsStateView extends State<TripsView>{
                         onTap: (){
                           Navigator.pushNamed(context, tripDetailsRoute, arguments: trip.id);
                         },
-                      )                                    
-                    );                    
-                  },
+                      )
+                    );},
                 )]),
               ),
               );

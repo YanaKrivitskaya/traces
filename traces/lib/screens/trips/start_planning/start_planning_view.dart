@@ -1,3 +1,5 @@
+import 'package:traces/constants.dart';
+
 import 'bloc/startplanning_bloc.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:traces/shared/styles.dart';
@@ -47,6 +49,40 @@ class _StartPlanningViewState extends State<StartPlanningView>{
       )),
       body: BlocListener<StartPlanningBloc, StartPlanningState>(
         listener: (context, state){
+          if(state is StartPlanningSuccessState && state.loading){
+            ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(
+              backgroundColor: ColorsPalette.meditSea,
+              content: Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: [SizedBox(
+                      child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                            ColorsPalette.lynxWhite),
+                      ),
+                      height: 30.0,
+                      width: 30.0,
+                    ),
+                ],
+                ),
+              ));
+          }
+          if(state is StartPlanningCreatedState){
+            ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(
+              backgroundColor: ColorsPalette.meditSea,
+              content: Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: [ 
+                    Icon(Icons.check, color: ColorsPalette.lynxWhite,)
+                ],
+                ),
+              ));
+              Future.delayed(const Duration(seconds: 1), () {
+                Navigator.popAndPushNamed(context, tripDetailsRoute,
+                    arguments: state.trip.id);
+              });
+          }
           if(state is StartPlanningErrorState){
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -56,12 +92,12 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                 children: [Container(width: 250,
                   child: Text(
                     state.error,
-                    style: quicksandStyle(),
+                    style: quicksandStyle(color: ColorsPalette.lynxWhite),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 5,
                   ),
                 ),
-                Icon(Icons.error)
+                Icon(Icons.error, color: ColorsPalette.lynxWhite)
                 ],
                 ),
               ));
@@ -69,11 +105,12 @@ class _StartPlanningViewState extends State<StartPlanningView>{
         },
         child: BlocBuilder<StartPlanningBloc, StartPlanningState>(
           builder: (context, state){
-            if(state is StartPlanningSuccessState){
-              newTrip = state.trip;
-              return _createForm(state, newTrip);
+            if (state is StartPlanningInitial){
+              return loadingWidget(ColorsPalette.boyzone);
             }
-            return loadingWidget(ColorsPalette.boyzone);
+            newTrip = state.trip;            
+            return _createForm(state, newTrip);
+            //return loadingWidget(ColorsPalette.boyzone);
           },
         ),
       )  
@@ -98,26 +135,23 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                   child: TextFormField(
                     decoration: InputDecoration(
                       isDense: true,                      
-                      //border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                      hintText: "e.g., Hawaii, Summer trip",
-                      
+                      hintText: "e.g., Hawaii, Summer trip"                      
                     ),
                     style:  quicksandStyle(fontSize: 18.0),
                     controller: _tripNameController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                        /*if (int.tryParse(value) == null) return 'Should be a number';*/
+                    validator: (value) {                        
                       return value.isEmpty ? 'Required field' : null;
                     },
                   ),
-                ),        
+                ),
                 SizedBox(height: 15.0),
                 Row(children: [
                   Text('Dates?', style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)),
                   /*Text('(optional)', style: quicksandStyle(fontSize: 13.0)),*/
                 ],),
                 SizedBox(height: 10.0)
-              ],)           
+              ],)
             ]),
             Container(width:  MediaQuery.of(context).size.width * 0.7, child:
               InkWell(      
@@ -136,30 +170,24 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                     : Text("End Date", style:  quicksandStyle(fontSize: 18.0)),
                   ],
                 ),
-                onTap: () => _selectValidFromDate(context, state),
+                onTap: () => _selectDates(context, state),
               )
             ),
-            SizedBox(height: 10.0),
-            /*Container(width:  MediaQuery.of(context).size.width * 0.7, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-              Text('Cover photo', style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)),
-              Text('(optional)', style: quicksandStyle(fontSize: 13.0)),
-            ],)
-            ],),),  */  
-            SizedBox(height: 20.0),
+            SizedBox(height: 30.0),           
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               ElevatedButton(
                 child: Text("Start planning"), 
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
-                    backgroundColor: MaterialStateProperty.all<Color>(/*ColorsPalette.juicyYellow*/ColorsPalette.meditSea),
+                    backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.meditSea),
                     foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
                   ),
                 onPressed: (){
-                  var isFormValid = _formKey.currentState.validate();
+                  var isFormValid = _formKey.currentState.validate();                 
 
                   if(isFormValid){
-                    trip.name = _tripNameController.text.trim();
+                    print(trip.toString());
+                    trip.name = _tripNameController.text.trim();                    
                     context.read<StartPlanningBloc>().add(StartPlanningSubmitted(trip));
                   }                  
                 }
@@ -173,20 +201,16 @@ class _StartPlanningViewState extends State<StartPlanningView>{
     ),
   );
 
-  Future<Null> _selectValidFromDate(
+  Future<Null> _selectDates(
     BuildContext context, StartPlanningState state) async {
     final DateTimeRange picked = await showDateRangePicker (        
-        context: context,
-        //initialDateRange: DatDateTime.now(),
+        context: context,        
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null) {
-      /*print(picked.start);
-      print(picked.end);*/
-      context.read<StartPlanningBloc>().add(DateRangeUpdated(picked.start, picked.end));
-      /*state.visa.durationOfStay =
-          int.parse(this._durationController.text.trim());
-      context.read<VisaDetailsBloc>().add(DateFromChanged(picked));*/
+        lastDate: DateTime(2101),
+        helpText: 'Trip dates'
+      );
+    if (picked != null) {      
+      context.read<StartPlanningBloc>().add(DateRangeUpdated(picked.start, picked.end));      
     }
   }
 
