@@ -43,10 +43,9 @@ class TripEntity extends Equatable {
     };
   }
 
-  factory TripEntity.fromMap(Map<String, dynamic> map) {
-    print(inspect(map));
+  factory TripEntity.fromMap(Map<String, dynamic> map, String documentId) {
     return TripEntity(
-      id: map['id'],
+      id: documentId,
       name: map['name'],
       description: map['description'],
       coverImageUrl: map['coverImageUrl'],
@@ -85,7 +84,7 @@ class TripEntity extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  factory TripEntity.fromJson(String source) => TripEntity.fromMap(json.decode(source));
+  //factory TripEntity.fromJson(String source) => TripEntity.fromMap(json.decode(source));
 
   @override
   bool get stringify => true;

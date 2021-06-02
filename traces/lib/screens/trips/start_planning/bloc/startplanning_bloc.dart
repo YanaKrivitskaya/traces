@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
@@ -20,7 +18,7 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
   StartPlanningBloc(TripsRepository tripsRepository) : 
   _tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
   _profileRepository = new FirebaseProfileRepository(),
-  super(StartPlanningInitial());
+  super(StartPlanningInitial(null));
 
   @override
   Stream<StartPlanningState> mapEventToState(StartPlanningEvent event) async* {
@@ -34,41 +32,41 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
   }
 
   Stream<StartPlanningState> _mapNewTripModeToState(NewTripMode event) async* {
-    
-    /*UserSettings userSettings = await _visasRepository.userSettings();
-    VisaSettings settings = await _visasRepository.settings();*/
-    /*var userProfile = await _profileRepository.getCurrentProfile();
-    List<String> members = userProfile.familyMembers;
-
-    members.add(userProfile.displayName);*/
-
-    yield StartPlanningSuccessState(null);
+    yield StartPlanningSuccessState(new Trip(), false);
   }
 
   Stream<StartPlanningState> _mapDateRangeUpdatedToState(DateRangeUpdated event) async* {
     
-    Trip trip = (state as StartPlanningSuccessState).trip ?? new Trip();
+    Trip trip = state.trip ?? new Trip();
 
     trip.startDate = event.startDate;
     trip.endDate = event.endDate;
 
 
-    yield StartPlanningSuccessState(trip);
+    yield StartPlanningSuccessState(trip, false);
   }
 
   Stream<StartPlanningState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
+    yield StartPlanningSuccessState(event.trip, true);
 
-     var userProfile = await _profileRepository.getCurrentProfile();
-     event.trip.tripMembers = [userProfile.displayName];
-
-    Trip trip = await _tripsRepository.addnewTrip(event.trip)
-    .timeout(Duration(seconds: 3), onTimeout: (){return event.trip;});
-
-    if(trip != null){
-      yield StartPlanningSuccessState(trip);
+    if(event.trip.startDate == null || event.trip.endDate == null){
+      var error = 'Please choose the dates';
+      yield StartPlanningErrorState(event.trip, error);
     }
+    else{
+      var userProfile = await _profileRepository.getCurrentProfile(); 
+      event.trip.tripMembers = [userProfile.displayName];
 
-    //yield StartPlanningErrorState("Trip can't be null");
+      Trip trip = await _tripsRepository.addnewTrip(event.trip)
+      .timeout(Duration(seconds: 5), onTimeout: (){
+          print("have timeout");
+          return event.trip;
+        });
+
+      if(trip != null && trip.id != null){
+        yield StartPlanningCreatedState(trip);
+      }
+    }    
   }
 
 }
