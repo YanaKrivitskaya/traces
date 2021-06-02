@@ -34,7 +34,7 @@ class FirebaseTripsRepository extends TripsRepository{
 
     var trip = await tripsCollection.doc(uid).collection(userTrips).doc(id).get();
 
-    return Trip.fromEntity(TripEntity.fromMap(trip.data()));
+    return Trip.fromEntity(TripEntity.fromMap(trip.data(), trip.id));
   }
   
   @override

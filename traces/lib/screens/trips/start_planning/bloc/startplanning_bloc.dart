@@ -54,16 +54,16 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
       yield StartPlanningErrorState(event.trip, error);
     }
     else{
-      var userProfile = await _profileRepository.getCurrentProfile();
+      var userProfile = await _profileRepository.getCurrentProfile(); 
       event.trip.tripMembers = [userProfile.displayName];
 
       Trip trip = await _tripsRepository.addnewTrip(event.trip)
       .timeout(Duration(seconds: 5), onTimeout: (){
-        print("have timeout");
-        return event.trip;
+          print("have timeout");
+          return event.trip;
         });
 
-      if(trip != null){
+      if(trip != null && trip.id != null){
         yield StartPlanningCreatedState(trip);
       }
     }    
