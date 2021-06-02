@@ -58,7 +58,7 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
       event.trip.tripMembers = [userProfile.displayName];
 
       Trip trip = await _tripsRepository.addnewTrip(event.trip)
-      .timeout(Duration(seconds: 3), onTimeout: (){
+      .timeout(Duration(seconds: 5), onTimeout: (){
         print("have timeout");
         return event.trip;
         });
