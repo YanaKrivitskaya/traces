@@ -32,8 +32,8 @@ class FirebaseAppSettingsRepository extends AppSettingsRepository{
   @override
   Future<AppUserSettings> updateUserSettings(AppUserSettings settings) async{
     String uid = await _userRepository.getUserId();
-    
-    await settingsCollection.doc(uid).update(settings.toEntity().toDocument());
+       
+    await settingsCollection.doc(uid).set(settings.toEntity().toDocument());
     
     return await userSettings();
   }

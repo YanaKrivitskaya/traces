@@ -47,9 +47,12 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
           _userTheme = state.userTheme;
 
           _themes = state.settings.themes;
+
+          if(_userTheme == null){
+            _userTheme = _themes[0];
+          }
          
-          _currentIndex = _userTheme == null ? 0 : 
-            state.settings.themes.indexOf(state.selectedTheme ?? state.userTheme);          
+          _currentIndex = _themes.indexOf(state.selectedTheme ?? state.userTheme);          
         }
         return new Scaffold(
           appBar: AppBar(
