@@ -1,7 +1,7 @@
 part of 'startplanning_bloc.dart';
 
 @immutable
-abstract class StartPlanningState extends Equatable{
+abstract class StartPlanningState{
   final Trip trip;
 
   const StartPlanningState(this.trip);

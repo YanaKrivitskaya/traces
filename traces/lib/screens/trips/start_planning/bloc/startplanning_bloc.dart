@@ -42,7 +42,6 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
     trip.startDate = event.startDate;
     trip.endDate = event.endDate;
 
-
     yield StartPlanningSuccessState(trip, false);
   }
 

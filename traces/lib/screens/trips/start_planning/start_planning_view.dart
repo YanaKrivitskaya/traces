@@ -203,6 +203,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
 
   Future<Null> _selectDates(
     BuildContext context, StartPlanningState state) async {
+    FocusScope.of(context).unfocus();
     final DateTimeRange picked = await showDateRangePicker (        
         context: context,        
         firstDate: DateTime(2015, 8),
