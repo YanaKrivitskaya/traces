@@ -7,4 +7,5 @@ abstract class TripsRepository{
   Stream<List<Trip>> trips();
   Future<Trip> updateTrip(Trip updTrip);
   Future<Trip> updateTripMembers(String tripId, List<String> members);
+  Future<void> deleteTrip(String tripId);
 }

@@ -29,6 +29,8 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       yield* _mapGetTripDetailsToState(event);
     } else if (event is UpdateTripDetailsSuccess){
       yield* _mapUpdateTripDetailsToSuccessState(event);
+    } else if (event is DeleteTripClicked){
+      yield* _mapDeleteTripToState(event);
     }
   }
 
@@ -48,11 +50,12 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     
     _profileSubscription = _profileRepository.familyMembers().listen(
       (members) => add(UpdateTripDetailsSuccess(members, trip))
-    );
-
-    //yield TripDetailsSuccessState(trip);    
+    );    
   }
 
-  
+  Stream<TripDetailsState> _mapDeleteTripToState(
+      DeleteTripClicked event) async* {
+    await _tripsRepository.deleteTrip(event.tripId);
+  }
 
 }

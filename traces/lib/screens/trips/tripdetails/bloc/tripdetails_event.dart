@@ -25,3 +25,12 @@ class UpdateTripDetailsSuccess extends TripDetailsEvent{
   @override
   List<Object> get props => [members, trip];
 }
+
+class DeleteTripClicked extends TripDetailsEvent{
+  final String tripId;
+
+  const DeleteTripClicked(this.tripId);
+
+  @override
+  List<Object> get props => [tripId];
+}

@@ -1,8 +1,10 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:traces/screens/profile/model/member.dart';
+import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/bloc/tripmembers_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/tripMembers_dialog.dart';
+import 'package:traces/screens/trips/widgets/trip_delete_alert.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:traces/shared/styles.dart';
 import '../../../colorsPalette.dart';
@@ -43,10 +45,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
                       ),
                     ),
                     Positioned(top: 25, right: 10,
-                      child: InkWell(
-                        onTap: (){},
-                        child:Icon(Icons.more_vert, color: ColorsPalette.white)
-                      ),
+                      child: _popupMenu(state.trip)
                     ),
                     Positioned(
                       bottom: 0,
@@ -143,11 +142,34 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
     ),
     child:  CircleAvatar(
       backgroundColor: ColorsPalette.lynxWhite,
-      child: Text(getAvatarName(familyMembers.firstWhere((m) => m.id == memberId).name), 
-        style: TextStyle(color: ColorsPalette.meditSea, fontSize: 10.0, fontWeight: FontWeight.w300),),
+      child:Text(getAvatarName(familyMembers.firstWhere((m) => m.id == memberId).name), 
+        style: TextStyle(color: ColorsPalette.meditSea, fontSize: 10.0, fontWeight: FontWeight.w300)),
       radius: 15.0
     ),
   );
+
+  Widget _popupMenu(Trip trip) => PopupMenuButton<int>(
+    itemBuilder: (context) => [
+      PopupMenuItem(
+        value: 1,
+        child: Text("Change Cover",style: TextStyle(color: ColorsPalette.blueHorizon))),
+      PopupMenuItem(
+        value: 2,
+        child: Text("Delete",style: TextStyle(color: ColorsPalette.meditSea)))],
+    onSelected: (value) async{
+      if(value == 2){
+        showDialog<String>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (_) => BlocProvider.value(
+            value: context.read<TripDetailsBloc>(),
+            child: TripDeleteAlert(
+              trip: trip,
+              callback: (val) =>
+                val == 'Delete' ? Navigator.of(context).pop() : '',
+            ),
+          ));
+      }},);
 
 }
 
