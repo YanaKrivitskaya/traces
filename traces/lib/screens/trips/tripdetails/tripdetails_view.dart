@@ -73,7 +73,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
                                         barrierDismissible: false, context: context, builder: (_) =>
                                         BlocProvider<TripMembersBloc>(
                                           create: (context) => TripMembersBloc()
-                                            ..add(GetMembers()),
+                                            ..add(GetMembers(state.trip.id)),
                                           child: TripMembersDialog(trip: state.trip)
                                         ),                                        
                                       );

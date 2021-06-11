@@ -33,7 +33,6 @@ class FirebaseTripsRepository extends TripsRepository{
     String uid = await _userRepository.getUserId();
 
     var trip = await tripsCollection.doc(uid).collection(userTrips).doc(id).get();
-
     return Trip.fromEntity(TripEntity.fromMap(trip.data(), trip.id));
   }
   
@@ -51,5 +50,25 @@ class FirebaseTripsRepository extends TripsRepository{
         .map((doc) => Trip.fromEntity(TripEntity.fromSnapshot(doc)))
         .toList();
     });
+  }
+
+  @override
+  Future<Trip> updateTrip(Trip updTrip) async{
+    String uid = await _userRepository.getUserId();
+
+    await tripsCollection.doc(uid).collection(userTrips).doc(updTrip.id)
+      .update(updTrip.toEntity().toDocument());
+
+    return await getTripById(updTrip.id);
+  }
+
+  @override
+  Future<Trip> updateTripMembers(String tripId, List<String> members) async{
+    String uid = await _userRepository.getUserId();
+
+    await tripsCollection.doc(uid).collection(userTrips).doc(tripId)
+      .update({"tripMembers": members});
+
+    return await getTripById(tripId);
   }
 }
