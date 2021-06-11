@@ -1,20 +1,24 @@
 part of 'tripmembers_bloc.dart';
 
 @immutable
-abstract class TripMembersState extends Equatable{
-  const TripMembersState();
+abstract class TripMembersState{
+  final List<Member> members;
+  final List<String> selectedMembers;
+
+  const TripMembersState(this.members, this.selectedMembers);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [members, selectedMembers];
 }
 
-class InitialTripMembersState extends TripMembersState {}
+class LoadingTripMembersState extends TripMembersState{
+  LoadingTripMembersState() : super(List.empty(), List.empty());
+}
 
-class SuccessTripMembersState  extends TripMembersState {
-  final List<String> members;
+class SuccessTripMembersState  extends TripMembersState {  
+  SuccessTripMembersState(List<Member> members, List<String> selectedMembers) : super(members, selectedMembers);  
+}
 
-  SuccessTripMembersState(this.members);
-
-  @override
-  List<Object> get props => [members];
+class SubmittedTripMembersState  extends TripMembersState {  
+  SubmittedTripMembersState(List<Member> members, List<String> selectedMembers) : super(members, selectedMembers);  
 }

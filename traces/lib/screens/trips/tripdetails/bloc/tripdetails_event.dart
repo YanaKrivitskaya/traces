@@ -15,3 +15,13 @@ class GetTripDetails extends TripDetailsEvent {
   @override
   List<Object> get props => [tripId];
 }
+
+class UpdateTripDetailsSuccess extends TripDetailsEvent{
+  final List<Member> members;
+  final Trip trip;
+
+  const UpdateTripDetailsSuccess(this.members, this.trip);
+
+  @override
+  List<Object> get props => [members, trip];
+}

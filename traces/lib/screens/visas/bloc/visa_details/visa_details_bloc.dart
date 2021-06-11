@@ -71,7 +71,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
         userSettings: event.userSettings,
         members: event.members);
   }
-
+  
   Stream<VisaDetailsState> _mapGetVisaDetailsToState(
       GetVisaDetails event) async* {
     Visa visa = await _visasRepository.getVisaById(event.visaId);
