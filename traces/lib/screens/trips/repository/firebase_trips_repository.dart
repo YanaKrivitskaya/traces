@@ -71,4 +71,11 @@ class FirebaseTripsRepository extends TripsRepository{
 
     return await getTripById(tripId);
   }
+
+  @override
+  Future<void> deleteTrip(String tripId) async{
+    String uid = await _userRepository.getUserId();
+
+    await tripsCollection.doc(uid).collection(userTrips).doc(tripId).delete();
+  }
 }
