@@ -12,11 +12,12 @@ class TripDetailsInitial extends TripDetailsState {}
 
 class TripDetailsSuccessState extends TripDetailsState{
   final Trip trip;
+  final List<Member> familyMembers;
 
-  TripDetailsSuccessState(this.trip);
+  TripDetailsSuccessState(this.trip, this.familyMembers);
 
   @override
-  List<Object> get props => [trip];
+  List<Object> get props => [trip, familyMembers];
 
 }
 

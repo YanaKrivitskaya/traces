@@ -23,7 +23,8 @@ class _TripMembersDialogState extends State<TripMembersDialog>{
   @override
   Widget build(BuildContext context) {
    return BlocListener<TripMembersBloc, TripMembersState>(
-     listener: (context, state){       
+     listener: (context, state){
+          
        if(state is SubmittedTripMembersState){
           Navigator.pop(context);
         }

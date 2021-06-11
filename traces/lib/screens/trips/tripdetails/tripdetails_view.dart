@@ -1,14 +1,12 @@
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/screens/trips/bloc/trips_bloc.dart';
+import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/bloc/tripmembers_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/tripMembers_dialog.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:traces/shared/styles.dart';
 import '../../../colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../model/trip.dart';
 import 'bloc/tripdetails_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -67,7 +65,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
                                     Text('${DateFormat.yMMMd().format(state.trip.startDate)} - ${DateFormat.yMMMd().format(state.trip.endDate)}', style: quicksandStyle(fontSize: 15.0))                                    
                                   ],),
                                   InkWell(
-                                    child: _tripMembers(state.trip.tripMembers),
+                                    child: _tripMembers(state.trip.tripMembers, state.familyMembers),
                                     onTap: (){
                                       showDialog(
                                         barrierDismissible: false, context: context, builder: (_) =>
@@ -119,22 +117,22 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
         );
   }
 
-  Widget _tripMembers(List<String> tripMembers){   
+  Widget _tripMembers(List<String> tripMembers, List<Member> familyMembers){   
 
     if (tripMembers != null && tripMembers.length > 0){
       return Container(        
         child: Stack(children: [
-          _tripMemberAvatar(tripMembers.first),
+          _tripMemberAvatar(tripMembers.first, familyMembers),
           tripMembers.length > 1 ? 
           Positioned(top: 0, right: 10,
-            child:_tripMemberAvatar(tripMembers.last)                                        )
+            child:_tripMemberAvatar(tripMembers.last, familyMembers)                                        )
         : Container()
         ],),
       );
     } return Container();
   }
 
-  Widget _tripMemberAvatar(String name) => Container(
+  Widget _tripMemberAvatar(String memberId, List<Member> familyMembers) => Container(
     margin: EdgeInsets.only(left: 10.0),
     decoration: new BoxDecoration(
       shape: BoxShape.circle,
@@ -145,7 +143,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
     ),
     child:  CircleAvatar(
       backgroundColor: ColorsPalette.lynxWhite,
-      child: Text(getAvatarName(name), style: TextStyle(color: ColorsPalette.meditSea, fontSize: 10.0, fontWeight: FontWeight.w300),),
+      child: Text(getAvatarName(familyMembers.firstWhere((m) => m.id == memberId).name), 
+        style: TextStyle(color: ColorsPalette.meditSea, fontSize: 10.0, fontWeight: FontWeight.w300),),
       radius: 15.0
     ),
   );
