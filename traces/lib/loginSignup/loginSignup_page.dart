@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/auth/userRepository.dart';
+import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/loginSignup/bloc/bloc.dart';
 
 import 'loginSignup_form.dart';
 
 class LoginSignupPage extends StatelessWidget{
-  final UserRepository _userRepository;
+  final FirebaseUserRepository _userRepository;
 
-  LoginSignupPage({@required UserRepository userRepository})
+  LoginSignupPage({@required FirebaseUserRepository userRepository})
     :assert (userRepository != null),
     _userRepository = userRepository;
 

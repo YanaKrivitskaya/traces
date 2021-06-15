@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/screens/profile/model/member_entity.dart';
 
-import '../../../auth/userRepository.dart';
+import '../../../auth/firebaseUserRepository.dart';
 import '../model/profile.dart';
 import '../model/profile_entity.dart';
 import 'profile_repository.dart';
@@ -13,10 +13,10 @@ class FirebaseProfileRepository extends ProfileRepository{
   final usersCollection = FirebaseFirestore.instance.collection('users');
   final String userFamily = "family";
 
-  UserRepository _userRepository;
+  FirebaseUserRepository _userRepository;
 
   FirebaseProfileRepository() {
-    _userRepository = new UserRepository();
+    _userRepository = new FirebaseUserRepository();
   }
 
   @override

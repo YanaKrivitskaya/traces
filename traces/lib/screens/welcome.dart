@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:traces/auth/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
+import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WelcomePage extends StatefulWidget{
@@ -13,7 +13,7 @@ class WelcomePage extends StatefulWidget{
 
 class _WelcomePageState extends State<WelcomePage>{
 
-  final UserRepository _userRepository = UserRepository();
+  final FirebaseUserRepository _userRepository = FirebaseUserRepository();
   AuthenticationBloc _authenticationBloc;
 
   @override

@@ -8,7 +8,7 @@ import 'package:traces/screens/settings/repository/appSettings_repository.dart';
 import 'package:traces/screens/settings/repository/firebase_appSettings_repository.dart';
 import 'package:traces/screens/welcome.dart';
 import 'package:traces/auth/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
+import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'loginSignup/loginSignup_page.dart';
@@ -20,7 +20,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.
   await Firebase.initializeApp();
   Bloc.observer = SimpleBlocDelegate();
-  final UserRepository userRepository = UserRepository();
+  final FirebaseUserRepository userRepository = FirebaseUserRepository();
   final AppSettingsRepository settingsRepository = FirebaseAppSettingsRepository();
 
   // Create the initilization Future outside of `build`:
@@ -45,9 +45,9 @@ class TracesApp extends StatelessWidget{
   // Create the initilization Future outside of `build`:
   //Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
-  final UserRepository _userRepository;
+  final FirebaseUserRepository _userRepository;
 
-  TracesApp({Key key, @required UserRepository userRepository})
+  TracesApp({Key key, @required FirebaseUserRepository userRepository})
     :assert(userRepository != null),
     _userRepository = userRepository,
     super(key: key);

@@ -1,18 +1,23 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
+import 'package:traces/auth/firebaseUserRepository.dart';
+import 'package:traces/auth/model/user.dart';
+import 'package:traces/auth/repository/apiUserRepository.dart';
 import 'package:traces/loginSignup/form_types.dart';
 import 'package:traces/shared/validator.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
-  UserRepository _userRepository;
+  FirebaseUserRepository _userRepository;
+  ApiUserRepository _apiUserRepository;
 
-  LoginSignupBloc({@required UserRepository userRepository}) : assert (userRepository != null),
-      _userRepository = userRepository, super(LoginSignupState.empty());
+  LoginSignupBloc({@required FirebaseUserRepository userRepository}) : assert (userRepository != null),
+      _userRepository = userRepository, 
+      _apiUserRepository = new ApiUserRepository(),
+      super(LoginSignupState.empty());
 
   @override
   Stream<Transition<LoginSignupEvent, LoginSignupState>> transformEvents(
@@ -109,11 +114,11 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
           formMode: FormMode.Login,
           isReseted: false
       );
-    } on FirebaseAuthException catch(e){
+    } on Exception /*on FirebaseAuthException*/ catch(e){
       yield LoginSignupState.failure(
           formMode: FormMode.Login,
           isReseted: false,
-          error: e.message);
+          error: e.toString());
     }
 
   }
@@ -128,17 +133,25 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
         isReseted: false
     );
     try{
-      await _userRepository.signUp(email, password, username);
+      final user = User(
+        name: username,
+        email: email,
+        password: password
+      );
+
+      await _apiUserRepository.signUp(user);
+
+      //await _userRepository.signUp(email, password, username);
 
       yield LoginSignupState.success(
           formMode: FormMode.Register,
           isReseted: false
       );
-    } on FirebaseAuthException catch(e){
+    } on Exception /*on FirebaseAuthException*/ catch(e){
       yield LoginSignupState.failure(
-          formMode: FormMode.Register,
+          formMode: FormMode.Login,
           isReseted: false,
-          error: e.message);
+          error: e.toString());
     }
   }
 
@@ -155,11 +168,11 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
           formMode: FormMode.Reset,
           isPasswordReseted: true
       );
-    } on FirebaseAuthException catch(e){
+    } on Exception /*on FirebaseAuthException*/ catch(e){
       yield LoginSignupState.failure(
-          formMode: FormMode.Reset,
+          formMode: FormMode.Login,
           isReseted: false,
-          error: e.message);
+          error: e.toString());
     }
   }
 }

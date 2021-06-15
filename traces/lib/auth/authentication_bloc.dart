@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
+import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:traces/screens/settings/repository/appSettings_repository.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
@@ -8,10 +8,10 @@ import 'package:firebase_core/firebase_core.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
-  final UserRepository _userRepository;
+  final FirebaseUserRepository _userRepository;
   final AppSettingsRepository _appSettingsRepository;
 
-  AuthenticationBloc({@required UserRepository userRepository, @required AppSettingsRepository settingsRepository})
+  AuthenticationBloc({@required FirebaseUserRepository userRepository, @required AppSettingsRepository settingsRepository})
     : assert (userRepository != null),
       _userRepository = userRepository, 
       _appSettingsRepository = settingsRepository,
