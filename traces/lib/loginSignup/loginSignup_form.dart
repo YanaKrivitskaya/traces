@@ -39,13 +39,6 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   bool get registerIsPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && _usernameController.text.isNotEmpty;
 
-  bool isButtonEnabled(LoginSignupState state){
-    bool isLoginFormValid = state.form == FormMode.Login && state.isLoginFormValid && (state.status != StateStatus.Loading) && loginIsPopulated;
-    bool isRegisterFormValid = state.form == FormMode.Register && state.isSignupFormValid && (state.status != StateStatus.Loading) && registerIsPopulated;
-    bool isResetFormValid = state.form == FormMode.Reset && state.isEmailValid && _emailController.text.isNotEmpty;
-    return  isLoginFormValid || isRegisterFormValid || isResetFormValid;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -101,7 +94,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             );
         }
         if(state.status == StateStatus.Success){
-          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
+          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn(state.user));
         }
         switch(state.form){
           case FormMode.Login:{
@@ -123,22 +116,6 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             break;
           }
         }
-        /*if(state.form == FormMode.Login){
-          this.linkText = "Don't have an account?";
-          this.linkButtonText = "Create new";
-          this.actionText = "Login";
-        }
-        if(state.isRegisterForm){
-          this.linkText = "Already have an account?";
-          this.linkButtonText = "Login";
-          this.actionText = "Register";
-        }
-        if(state.isResetForm){
-          this.linkText = "Already have an account?";
-          this.linkButtonText = "Login";
-          this.actionText = "Reset password";
-        }*/
-
       },
       child: BlocBuilder<LoginSignupBloc, LoginSignupState>(
         builder: (context, state){
@@ -162,7 +139,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                               !state.isPasswordReseted ?  _emailTextField(_emailController, state) : Container(height: 0, width: 0,),
                               _passwordResetInfo(state),
                               state.form == FormMode.Login || state.form == FormMode.Register ? _passwordTextField(_passwordController, state) : Container(height: 0, width: 0,),
-                              state.form == FormMode.Login ? _forgotPasswordLink() : Container(height: 0, width: 0,),
+                              //state.form == FormMode.Login ? _forgotPasswordLink() : Container(height: 0, width: 0,),
                               _showErrorMessage(),
                               _progressIndicator(),
                               !state.isPasswordReseted ? _submitButton(state) : Container(height: 0, width: 0,),
@@ -195,15 +172,12 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
           child: ElevatedButton(
             style: ButtonStyle(
               padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
-              backgroundColor: MaterialStateProperty.all<Color>(isButtonEnabled(state)
-                  ? ColorsPalette.blueHorizon : ColorsPalette.blueGrey),
+              backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.blueHorizon),
               foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
             ),            
             child: Text(this.actionText),
             onPressed: () =>
-            isButtonEnabled(state)
-                  ? _validateAndSubmit(state)
-                  : null
+            _validateAndSubmit(state)
           )
       )
   );
@@ -218,6 +192,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   }
 
   void _validateAndSubmit(LoginSignupState state) async{
+    FocusScope.of(context).unfocus();
 
     if(_validateAndSave()){
       switch(state.form){
@@ -249,28 +224,6 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
           break;
         }
       }
-      /*if(state.form == FormMode.Login){
-        _loginSignupBloc.add(
-          SubmittedLogin(
-            email: _emailController.text,
-            password: _passwordController.text,
-          ),
-        );
-      }else if (state.isRegisterForm){
-        _loginSignupBloc.add(
-            SubmittedSignup(
-                email: _emailController.text,
-                password: _passwordController.text,
-                username: _usernameController.text
-            )
-        );
-      }else if(state.isResetForm){
-        _loginSignupBloc.add(
-          SubmittedReset(
-              email: _emailController.text
-          ),
-        );
-      }*/
     }
   }
 

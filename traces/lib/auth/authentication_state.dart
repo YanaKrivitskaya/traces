@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/auth/model/user.dart';
 import 'package:traces/screens/settings/model/appUserSettings_entity.dart';
 
 @immutable
@@ -16,16 +17,16 @@ class Uninitialized extends AuthenticationState {
 }
 
 class Authenticated extends AuthenticationState{
-  final String uid;
+  final User user;
   final AppUserSettings userSettings;
 
-  const Authenticated(this.uid, this.userSettings);
+  const Authenticated(this.user, this.userSettings);
 
   @override
-  List<Object> get props => [uid, userSettings];
+  List<Object> get props => [user, userSettings];
 
   @override
-  String toString() => 'Authenticated { displayName: $uid }';
+  String toString() => 'Authenticated { user: ${user.toString()} }';
 }
 
 class Unauthenticated extends AuthenticationState {

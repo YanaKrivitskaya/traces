@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:traces/auth/userRepository.dart';
+import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/model/trip_entity.dart';
 import 'package:traces/screens/trips/repository/trips_repository.dart';
@@ -14,10 +14,10 @@ class FirebaseTripsRepository extends TripsRepository{
 
   final storage = firebase_storage.FirebaseStorage.instance;
 
-  UserRepository _userRepository;
+  FirebaseUserRepository _userRepository;
 
   FirebaseTripsRepository() {
-    _userRepository = new UserRepository();    
+    _userRepository = new FirebaseUserRepository();    
   }
 
   @override

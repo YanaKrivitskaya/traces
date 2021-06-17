@@ -1,15 +1,16 @@
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/auth/authentication_bloc.dart';
-import 'package:traces/auth/authentication_event.dart';
-import 'package:traces/constants.dart';
-import 'package:traces/screens/settings/bloc/settings_bloc.dart';
-import 'package:traces/screens/settings/repository/firebase_appSettings_repository.dart';
-import 'package:traces/shared/shared.dart';
-import '../colorsPalette.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../auth/authentication_bloc.dart';
+import '../auth/authentication_event.dart';
+import '../colorsPalette.dart';
+import '../constants.dart';
+import '../shared/shared.dart';
+import 'settings/bloc/settings_bloc.dart';
+import 'settings/repository/firebase_appSettings_repository.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
 Widget _homeMenu(String _theme, BuildContext context) => new Scaffold(
       appBar: AppBar(
         title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))),
-        /*actions: <Widget>[
+        actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app, color: ColorsPalette.lynxWhite),
             onPressed: (){
@@ -53,7 +54,7 @@ Widget _homeMenu(String _theme, BuildContext context) => new Scaffold(
               );
             },
           )
-        ],*/
+        ]
       ),
       body: Center(
           child: Container(

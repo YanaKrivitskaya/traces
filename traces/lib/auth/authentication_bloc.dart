@@ -1,20 +1,21 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
-import 'package:traces/screens/settings/repository/appSettings_repository.dart';
-import './bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+import '../screens/settings/repository/appSettings_repository.dart';
+import '../screens/settings/repository/firebase_appSettings_repository.dart';
+import 'bloc.dart';
+import 'repository/apiUserRepository.dart';
 
-  final UserRepository _userRepository;
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+  
+  final ApiUserRepository _userRepository;
   final AppSettingsRepository _appSettingsRepository;
 
-  AuthenticationBloc({@required UserRepository userRepository, @required AppSettingsRepository settingsRepository})
-    : assert (userRepository != null),
-      _userRepository = userRepository, 
-      _appSettingsRepository = settingsRepository,
+  AuthenticationBloc(): 
+      _userRepository = new ApiUserRepository(),
+      _appSettingsRepository = new FirebaseAppSettingsRepository(),
       super(Uninitialized());
 
   @override
@@ -22,7 +23,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     AuthenticationEvent event,
   ) async* {
     if(event is AppStarted) yield* _mapAppStartedToState();
-    else if(event is LoggedIn) yield* _mapLoggedInToState();
+    else if(event is LoggedIn) yield* _mapLoggedInToState(event);
     else if(event is LoggedOut) yield* _mapLoggedOutToState();
   }
 
@@ -30,19 +31,18 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     await Firebase.initializeApp();
 
     try{
-      final isSignedIn = await _userRepository.isSignedIn();
-      if(isSignedIn){
-        final uid = await _userRepository.getUserId();
-        final userSettings = await _appSettingsRepository.userSettings();
-        yield Authenticated(uid, userSettings);
+      final user = await _userRepository.getAccessToken();
+      if(user != null){        
+        //final userSettings = await _appSettingsRepository.userSettings();
+        yield Authenticated(user/*, userSettings*/, null);
       }else yield Unauthenticated();
     }catch(_){
       yield Unauthenticated();
     }
   }
 
-  Stream<AuthenticationState> _mapLoggedInToState() async*{
-    yield Authenticated(await _userRepository.getUserId(), await _appSettingsRepository.userSettings());
+  Stream<AuthenticationState> _mapLoggedInToState(event) async*{
+    yield Authenticated(event.user, /*await _appSettingsRepository.userSettings()*/null);
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
