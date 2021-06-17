@@ -28,7 +28,7 @@ class _VisasViewState extends State<VisasView> {
     return BlocListener<VisaBloc, VisaState>(
       listener: (context, state) {},
       child: BlocBuilder<VisaBloc, VisaState>(
-        cubit: BlocProvider.of(context),
+        bloc: BlocProvider.of(context),
         builder: (context, state) {
           if (state.status == StateStatus.Loading)
             return loadingWidget(ColorsPalette.algalFuel);

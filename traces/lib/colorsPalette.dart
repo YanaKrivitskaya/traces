@@ -31,7 +31,7 @@ class ColorsPalette {
   static const Color mainColor = pureApple;
   static const Color calmGreen = pureApple;
   static const Color brightBlue = blueHorizon;
-  static const Color backColor = back;
+  static const Color backColor = white;
 
 ///de palette
 

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/add_family_button.dart';
 import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 import 'package:traces/screens/profile/edit_family_button.dart';
+import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/name_edit_button.dart';
 import 'package:traces/shared/shared.dart';
@@ -21,17 +22,19 @@ class ProfileView extends StatefulWidget{
 class _ProfileViewState extends State<ProfileView>{
 
   Profile _profile;
+  List<Member> _familyMembers;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
-      cubit: BlocProvider.of(context),
+      bloc: BlocProvider.of(context),
       builder: (context, state){
         if(state.status == StateStatus.Loading){
           return Center(child: CircularProgressIndicator());
         }
         if(state.status == StateStatus.Success){
           _profile = state.profile;
+          _familyMembers = state.familyMembers;
 
           return Container(
             padding: EdgeInsets.all(10.0),
@@ -77,22 +80,21 @@ class _ProfileViewState extends State<ProfileView>{
                     alignment: Alignment.centerLeft,child: Text("Family", style: TextStyle(fontSize: 20.0, color: ColorsPalette.meditSea)),
                   ),
                   Container(
-                    padding: EdgeInsets.only(right: 10.0),
-                   //alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.only(right: 10.0),                   
                     height: MediaQuery.of(context).size.height * 0.4,
                     child: SingleChildScrollView(child: Column(
                       children: <Widget>[
-                        _profile.familyMembers.length > 0
+                        _familyMembers.length > 0
                             ? Container(
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: _profile.familyMembers.length,
+                              itemCount: _familyMembers.length,
                               itemBuilder: (context, position){
-                                final member = _profile.familyMembers[position];
+                                final member = _familyMembers[position];
                                 return ListTile(
-                                  title: Text(member),
-                                  trailing: EditFamilyButton(position),
+                                  title: Text(member.name),
+                                  trailing: EditFamilyButton(member),
                                 );
                               }),
                         )

@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UserRepository{
+class FirebaseUserRepository{
   final FirebaseAuth _firebaseAuth;
 
-  UserRepository({FirebaseAuth firebaseAuth})
+  FirebaseUserRepository({FirebaseAuth firebaseAuth})
     : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   Future<void> signInWithEmailAndPassword(String email, String password) async{

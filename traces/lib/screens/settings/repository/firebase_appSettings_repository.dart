@@ -1,7 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../auth/userRepository.dart';
+import '../../../auth/firebaseUserRepository.dart';
 import '../model/appSettings_entity.dart';
 import '../model/appUserSettings_entity.dart';
 import 'appSettings_repository.dart';
@@ -9,10 +9,10 @@ import 'appSettings_repository.dart';
 class FirebaseAppSettingsRepository extends AppSettingsRepository{
   final settingsCollection = FirebaseFirestore.instance.collection('appSettings');
   final String appSettingsRef = "general";
-  UserRepository _userRepository;
+  FirebaseUserRepository _userRepository;
 
   FirebaseAppSettingsRepository(){
-    _userRepository = new UserRepository();    
+    _userRepository = new FirebaseUserRepository();    
   }
 
   @override 
@@ -32,8 +32,8 @@ class FirebaseAppSettingsRepository extends AppSettingsRepository{
   @override
   Future<AppUserSettings> updateUserSettings(AppUserSettings settings) async{
     String uid = await _userRepository.getUserId();
-    
-    await settingsCollection.doc(uid).update(settings.toEntity().toDocument());
+       
+    await settingsCollection.doc(uid).set(settings.toEntity().toDocument());
     
     return await userSettings();
   }

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:traces/auth/userRepository.dart';
+import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:traces/screens/notes/model/tag.dart';
 import 'package:traces/screens/notes/model/tag_entity.dart';
 import 'package:traces/screens/notes/model/note_entity.dart';
@@ -12,10 +12,10 @@ class FirebaseNotesRepository extends NoteRepository{
   final String userNotes = "userNotes";
   final String userTags = "userTags";
   
-  UserRepository _userRepository;
+  FirebaseUserRepository _userRepository;
 
   FirebaseNotesRepository() {
-    _userRepository = new UserRepository();
+    _userRepository = new FirebaseUserRepository();
     //FirebaseFirestore.instance.settings(persistenceEnabled: true);
   }
 

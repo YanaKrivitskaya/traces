@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../auth/userRepository.dart';
+import '../../../auth/firebaseUserRepository.dart';
 import '../model/entryExit.dart';
 import '../model/entryExit_entity.dart';
 import '../model/settings.dart';
@@ -15,10 +15,10 @@ class FirebaseVisasRepository extends VisasRepository{
   final String visaEntries = "visaEntries";
   final String visaSettings = "settings";
 
-  UserRepository _userRepository;
+  FirebaseUserRepository _userRepository;
 
   FirebaseVisasRepository() {
-    _userRepository = new UserRepository();    
+    _userRepository = new FirebaseUserRepository();    
   }
 
   @override

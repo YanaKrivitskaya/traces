@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:traces/auth/bloc.dart';
-import 'package:traces/auth/userRepository.dart';
+//import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/auth/repository/apiUserRepository.dart';
 
 class WelcomePage extends StatefulWidget{
 
@@ -12,14 +13,15 @@ class WelcomePage extends StatefulWidget{
 }
 
 class _WelcomePageState extends State<WelcomePage>{
+  final userRepository = new ApiUserRepository();
 
-  final UserRepository _userRepository = UserRepository();
+  //final FirebaseUserRepository _userRepository = FirebaseUserRepository();
   AuthenticationBloc _authenticationBloc;
 
   @override
   void initState() {
     super.initState();
-    _authenticationBloc = AuthenticationBloc(userRepository: _userRepository);
+    _authenticationBloc = AuthenticationBloc();
     _authenticationBloc.add(AppStarted());
   }
 
@@ -35,7 +37,7 @@ class _WelcomePageState extends State<WelcomePage>{
   @override
   Widget build(BuildContext context){
     return BlocBuilder(
-      cubit: _authenticationBloc,
+      bloc: _authenticationBloc,
       builder: (BuildContext context, AuthenticationState state){
         return _buildWaitingScreen();
       }

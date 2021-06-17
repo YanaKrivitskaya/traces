@@ -41,15 +41,18 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
-      cubit: BlocProvider.of(context),
+      bloc: BlocProvider.of(context),
       builder: (context, state){
         if(state is SuccessSettingsState){         
           _userTheme = state.userTheme;
 
           _themes = state.settings.themes;
+
+          if(_userTheme == null){
+            _userTheme = _themes[0];
+          }
          
-          _currentIndex = _userTheme == null ? 0 : 
-            state.settings.themes.indexOf(state.selectedTheme ?? state.userTheme);          
+          _currentIndex = _themes.indexOf(state.selectedTheme ?? state.userTheme);          
         }
         return new Scaffold(
           appBar: AppBar(
