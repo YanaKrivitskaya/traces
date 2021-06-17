@@ -22,7 +22,6 @@ import 'screens/settings/bloc/settings_bloc.dart';
 import 'screens/settings/repository/firebase_appSettings_repository.dart';
 import 'screens/settings/settings_page.dart';
 import 'screens/settings/themes_settings_view.dart';
-import 'screens/trips.dart';
 import 'screens/trips/bloc/trips_bloc.dart';
 import 'screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
 import 'screens/visas/bloc/visa/visa_bloc.dart';

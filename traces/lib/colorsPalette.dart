@@ -109,7 +109,47 @@ class ColorsPalette {
   static const Color mintyGreen = const Color(0xFF0BE881);
   static const Color greenTeal = const Color(0xFF05C46B);
 
+   //Color Palette #4291 - Tropical
+  static const Color tropicalYellow = const Color(0xFFFAB73D);//trips
+  static const Color tropicalLightYellow = const Color(0xFFFDDCA5);//trips
+  static const Color tropicalGreen = const Color(0xFF546747); 
+  static const Color tropicalGrey = const Color(0xFFBBC8BA); 
+  static const Color tropicalDarkGreen = const Color(0xFF2B331F); //trips
 
+  //Color Palette #4173 - Fresh
+  static const Color freshYellow = const Color(0xFFFBC11A);
+  static const Color freshLightYellow = const Color(0xFFFADE98);
+  static const Color freshGreen = const Color(0xFF5F6C11); 
+  static const Color freshBlue = const Color(0xFF4D9699);
+  static const Color freshWhite = const Color(0xFFEAE7E0);//trips
+
+  //Color Palette #4146 - Nature
+  static const Color natureDarkGreen = const Color(0xFF1F1D08);
+  static const Color natureDarkBlue = const Color(0xFF101321);
+  static const Color natureGreen = const Color(0xFF94AE3F); 
+  static const Color natureBlue = const Color(0xFF243754);
+  static const Color natureWhite = const Color(0xFFEBEBEB);//trips
+
+  //Color Palette #4088 - Juicy
+  static const Color juicyOrange = const Color(0xFFEF6101);
+  static const Color juicyYellow = const Color(0xFFFDAC07);
+  static const Color juicyGreen = const Color(0xFF47802B); 
+  static const Color juicyBlue = const Color(0xFF045658);
+  static const Color juicyDarkBlue = const Color(0xFF03161D);//trips
+
+  //Color Palette #4228 - Bulb
+  static const Color bulbOrange = const Color(0xFFCB7F07);
+  static const Color bulbYellow = const Color(0xFFFDD03B);
+  static const Color bulbBrown = const Color(0xFF291907); 
+  static const Color bulbBlue = const Color(0xFF4A9396);
+  static const Color bulbDarkBlue = const Color(0xFF00202E);//trips
+
+  //Color Palette #4128 - Christmas
+  static const Color christmasYellow = const Color(0xFFFAC57D);
+  static const Color christmasGreen = const Color(0xFF344D2F);
+  static const Color christmasRed = const Color(0xFFA81817); 
+  static const Color christmasGrey = const Color(0xFFC8BEB9);
+  static const Color christmasWhite = const Color(0xFFF0F4F7);//trips
 
   //notes module colors
   static const Color nycTaxi = const Color(0xFFF7B731); //note
