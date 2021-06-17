@@ -1,21 +1,20 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:traces/auth/firebaseUserRepository.dart';
-import 'package:traces/auth/model/user.dart';
-import 'package:traces/auth/repository/apiUserRepository.dart';
-import 'package:traces/loginSignup/form_types.dart';
-import 'package:traces/shared/validator.dart';
-import './bloc.dart';
-import 'package:meta/meta.dart';
-import 'package:rxdart/rxdart.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
-  FirebaseUserRepository _userRepository;
+import 'package:bloc/bloc.dart';
+import 'package:rxdart/rxdart.dart';
+
+import '../../auth/model/login.model.dart';
+import '../../auth/model/user.dart';
+import '../../auth/repository/apiUserRepository.dart';
+import '../../helpers/customException.dart';
+import '../../shared/validator.dart';
+import '../form_types.dart';
+import 'bloc.dart';
+
+class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> { 
   ApiUserRepository _apiUserRepository;
 
-  LoginSignupBloc({@required FirebaseUserRepository userRepository}) : assert (userRepository != null),
-      _userRepository = userRepository, 
+  LoginSignupBloc():      
       _apiUserRepository = new ApiUserRepository(),
       super(LoginSignupState.empty());
 
@@ -108,13 +107,14 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
       formMode: FormMode.Login,
       isReseted: false
     );
+    LoginModel loginModel = LoginModel(email: email, password: password);
     try{
-      await _userRepository.signInWithEmailAndPassword(email, password);
+      await _apiUserRepository.signInWithEmailAndPassword(loginModel);
       yield LoginSignupState.success(
           formMode: FormMode.Login,
           isReseted: false
       );
-    } on Exception /*on FirebaseAuthException*/ catch(e){
+    } on CustomException catch(e){      
       yield LoginSignupState.failure(
           formMode: FormMode.Login,
           isReseted: false,
@@ -141,13 +141,20 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
 
       await _apiUserRepository.signUp(user);
 
-      //await _userRepository.signUp(email, password, username);
+      LoginModel loginModel = LoginModel(email: email, password: password);
+
+      await _apiUserRepository.signInWithEmailAndPassword(loginModel);
 
       yield LoginSignupState.success(
           formMode: FormMode.Register,
           isReseted: false
       );
-    } on Exception /*on FirebaseAuthException*/ catch(e){
+    } on CustomException catch(e){      
+      yield LoginSignupState.failure(
+          formMode: FormMode.Login,
+          isReseted: false,
+          error: e.toString());
+    }on Exception catch(e){      
       yield LoginSignupState.failure(
           formMode: FormMode.Login,
           isReseted: false,
@@ -163,12 +170,12 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
         isReseted: false
     );
     try{
-      await _userRepository.resetPassword(email);
+      //await _userRepository.resetPassword(email);
       yield state.update(
           formMode: FormMode.Reset,
           isPasswordReseted: true
       );
-    } on Exception /*on FirebaseAuthException*/ catch(e){
+    } on CustomException catch(e){
       yield LoginSignupState.failure(
           formMode: FormMode.Login,
           isReseted: false,

@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:traces/auth/model/user.dart';
 import 'package:traces/loginSignup/form_types.dart';
 import 'package:traces/shared/state_types.dart';
 
@@ -10,6 +11,7 @@ class LoginSignupState {
   final StateStatus status;
   final FormMode form;
   final bool isPasswordReseted;
+  final User user;
   final String errorMessage;
 
   bool get isSignupFormValid => isEmailValid & isPasswordValid & isUsernameValid;
@@ -23,6 +25,7 @@ class LoginSignupState {
     @required this.status,
     @required this.form,
     @required this.isPasswordReseted,
+    this.user,
     this.errorMessage
   });
 
@@ -49,14 +52,15 @@ class LoginSignupState {
     );
   }
 
-  factory LoginSignupState.success({FormMode formMode, bool isReseted}){
+  factory LoginSignupState.success({FormMode formMode, bool isReseted, User user}){
     return LoginSignupState(
       isEmailValid: true,
       isPasswordValid: true,
       isUsernameValid: true,
       status: StateStatus.Success,
       form: formMode,
-      isPasswordReseted: isReseted
+      isPasswordReseted: isReseted,
+      user: user
     );
   }
 

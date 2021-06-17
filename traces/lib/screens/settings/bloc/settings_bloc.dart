@@ -49,18 +49,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
   }
 
   Stream<SettingsState> _mapSubmitThemeToState(String theme) async* {
-    var settings = await _settingsRepository.userSettings();
+    /*var settings = await _settingsRepository.userSettings();
     settings.theme = theme;
 
-    await _settingsRepository.updateUserSettings(settings);
+    await _settingsRepository.updateUserSettings(settings);*/
 
-     yield SuccessSettingsState(state.settings, theme, theme);
+     yield SuccessSettingsState(null, null, null/*state.settings, theme, theme*/);
   }
 
   Stream<SettingsState> _mapGetUserSettingsToState() async* {
-    var settings = await _settingsRepository.userSettings();   
+    //var settings = await _settingsRepository.userSettings();   
 
-     yield SuccessSettingsState(null, null, settings.theme);
+     yield SuccessSettingsState(null, null, null/*settings.theme*/);
   }
   
 }

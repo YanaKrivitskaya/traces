@@ -1,27 +1,22 @@
 class CustomException implements Exception{
-  final _message;
-  final _prefix;
+  final _message; 
 
-  CustomException([this._message, this._prefix]);
+  CustomException([this._message]);
 
   String toString() {
-    return "$_prefix$_message";
+    return "$_message";
   }  
 }
 
 class FetchDataException extends CustomException {
   FetchDataException([String message])
-      : super(message, "Error During Communication: ");
+      : super("Server error: $message");
 }
 
 class BadRequestException extends CustomException {
-  BadRequestException([message]) : super(message, "Invalid Request: ");
+  BadRequestException([message]) : super("Invalid Request: $message");
 }
 
 class UnauthorisedException extends CustomException {
-  UnauthorisedException([message]) : super(message, "Unauthorised: ");
-}
-
-class InvalidInputException extends CustomException {
-  InvalidInputException([String message]) : super(message, "Invalid Input: ");
+  UnauthorisedException([message]) : super("Unauthorised: $message");
 }

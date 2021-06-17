@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 
 @immutable
 class User {
-  final String id;
+  final int id;
   final String name;
   final String email;
   final String password;
@@ -41,16 +41,18 @@ class User {
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
+    var map1 = map;
+    print(map1);
     return User(
       id: map['id'],
       name: map['name'],
       email: map['email'],
       password: map['password'],
       emailVerified: map['emailVerified'],
-      createdDate: DateTime.fromMillisecondsSinceEpoch(map['createdDate']),
-      updatedDate: DateTime.fromMillisecondsSinceEpoch(map['updatedDate']),
+      createdDate: DateTime.parse(map['createdDate']),
+      updatedDate: DateTime.parse(map['updatedDate']),
       disabled: map['disabled'],
-      disabledDate: DateTime.fromMillisecondsSinceEpoch(map['disabledDate']),
+      disabledDate: map['disabledDate'] != null ? DateTime.parse(map['disabledDate']) : null
     );
   }
 
