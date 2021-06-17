@@ -1,14 +1,14 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/constants.dart';
+import 'package:traces/constants/color_constants.dart';
+import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
-import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/screens/notes/model/__tag.dart';
 import 'package:traces/screens/notes/note_delete_alert.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/model/note.model.dart';
 import 'package:traces/shared/state_types.dart';
 import 'bloc/note_bloc/bloc.dart';
 
@@ -89,10 +89,10 @@ class _NotesViewState extends State<NotesView> {
                                         ListTile(
                                           leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
                                           title: Text('${note.title}'),
-                                          subtitle: (note.dateCreated.day.compareTo(note.dateModified.day) == 0) ?
-                                          Text('${DateFormat.yMMMd().format(note.dateModified)}',
+                                          subtitle: (note.createdDate.day.compareTo(note.updatedDate.day) == 0) ?
+                                          Text('${DateFormat.yMMMd().format(note.updatedDate)}',
                                               style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
-                                          Text('${DateFormat.yMMMd().format(note.dateModified)} / ${DateFormat.yMMMd().format(note.dateCreated)}',
+                                          Text('${DateFormat.yMMMd().format(note.updatedDate)} / ${DateFormat.yMMMd().format(note.createdDate)}',
                                               style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
                                           trailing: _popupMenu(note, position),
                                           onTap: (){
@@ -102,7 +102,7 @@ class _NotesViewState extends State<NotesView> {
                                         Container(
                                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
                                           alignment: Alignment.centerLeft,
-                                          child: note.tagIds != null && _tags != null ? getChips(note, _tags, _allTagsSelected, _selectedTags): Container(),
+                                          //child: note.tagIds != null && _tags != null ? getChips(note, _tags, _allTagsSelected, _selectedTags): Container(),
                                         )
                                       ],
                                     ),
@@ -151,7 +151,7 @@ class _NotesViewState extends State<NotesView> {
     context.read<NoteBloc>().add(SearchTextChanged(noteName: _searchController.text));
   }
 
-  Widget getChips(Note note, List<Tag> tags, bool allTagsSelected, List<Tag> selectedTags) {
+ /* Widget getChips(Note note, List<Tag> tags, bool allTagsSelected, List<Tag> selectedTags) {
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -166,7 +166,7 @@ class _NotesViewState extends State<NotesView> {
               .toList(),
         ));
   }
-
+*/
   bool _isTagSelected(Tag tag, bool allTagsSelected, List<Tag> selectedTags){
     if(selectedTags != null && selectedTags.any((t) => t.id == tag.id) && !allTagsSelected) return true;
     return false;
@@ -176,10 +176,10 @@ class _NotesViewState extends State<NotesView> {
     notes.sort((a, b){
       switch(sortOption){
         case SortFields.DATECREATED:{
-          return a.dateCreated.millisecondsSinceEpoch.compareTo(b.dateCreated.millisecondsSinceEpoch);
+          return a.createdDate.millisecondsSinceEpoch.compareTo(b.createdDate.millisecondsSinceEpoch);
         }
         case SortFields.DATEMODIFIED:{
-          return a.dateModified.millisecondsSinceEpoch.compareTo(b.dateModified.millisecondsSinceEpoch);
+          return a.updatedDate.millisecondsSinceEpoch.compareTo(b.updatedDate.millisecondsSinceEpoch);
         }
         case SortFields.TITLE:{
           return a.title.toUpperCase().compareTo(b.title.toUpperCase());
@@ -192,7 +192,7 @@ class _NotesViewState extends State<NotesView> {
 
   List<Note> _filterNotes(List<Note> notes, List<Tag> selectedTags, bool allTagsSelected, bool noTagsSelected){
     List<Note> filteredNotes = <Note>[];
-    if(allTagsSelected){
+    /*if(allTagsSelected){
       filteredNotes = notes;
     }else{
       if(noTagsSelected){
@@ -203,8 +203,9 @@ class _NotesViewState extends State<NotesView> {
           if(!filteredNotes.any((note) => note.id == n.id)) filteredNotes.add(n);
         });
       });
-    }
-    return filteredNotes;
+    }*/
+    return notes;
+    //return filteredNotes;
   }
 
   Widget _popupMenu(Note note, int position) => PopupMenuButton<int>(

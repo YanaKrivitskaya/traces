@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
+import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import 'package:traces/shared/shared.dart';

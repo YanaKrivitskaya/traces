@@ -4,8 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../auth/model/login.model.dart';
-import '../../auth/model/user.dart';
-import '../../auth/repository/apiUserRepository.dart';
+import '../../auth/model/user.model.dart';
+import '../../auth/repository/api_user_repository.dart';
 import '../../helpers/customException.dart';
 import '../../shared/validator.dart';
 import '../form_types.dart';

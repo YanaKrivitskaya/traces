@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import '../screens/settings/repository/appSettings_repository.dart';
 import '../screens/settings/repository/firebase_appSettings_repository.dart';
 import 'bloc.dart';
-import 'repository/apiUserRepository.dart';
+import 'repository/api_user_repository.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   

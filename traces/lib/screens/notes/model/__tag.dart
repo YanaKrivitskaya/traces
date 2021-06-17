@@ -1,4 +1,4 @@
-import 'package:traces/screens/notes/model/tag_entity.dart';
+import 'package:traces/screens/notes/model/__tag_entity.dart';
 
 class Tag{
   final String id;

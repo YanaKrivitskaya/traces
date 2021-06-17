@@ -1,4 +1,4 @@
-import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/model/note.model.dart';
 import 'package:meta/meta.dart';
 
 class NoteSortState {

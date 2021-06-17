@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/auth/model/user.dart';
+import 'package:traces/auth/model/user.model.dart';
 
 abstract class AuthenticationEvent extends Equatable {
   @override

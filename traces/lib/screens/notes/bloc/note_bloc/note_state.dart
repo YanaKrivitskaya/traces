@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/model/note.model.dart';
 import 'package:traces/shared/state_types.dart';
 
 class NoteState{

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/model/note.model.dart';
 import 'package:meta/meta.dart';
 
 abstract class NoteEvent extends Equatable {

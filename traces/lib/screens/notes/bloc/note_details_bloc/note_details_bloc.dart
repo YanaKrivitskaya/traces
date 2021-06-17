@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/model/note.model.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/screens/notes/model/__tag.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -29,7 +29,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
   }
 
   Stream<NoteDetailsState> _mapGetNoteDetailsToState(GetNoteDetails event) async*{
-    Note note = await _notesRepository.getNoteById(event.noteId);
+   /* Note note = await _notesRepository.getNoteById(event.noteId);
 
     yield LoadingDetailsState(null);
 
@@ -41,11 +41,11 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
         noteTags.add(tag);
       }
     }
-    yield ViewDetailsState(note, noteTags);
+    yield ViewDetailsState(note, noteTags);*/
   }
 
   Stream<NoteDetailsState> _mapSaveNoteToState(SaveNoteClicked event) async*{
-    Note note;
+   /* Note note;
 
     List<Tag> noteTags = <Tag>[];
 
@@ -69,11 +69,11 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
       }
     }
 
-    yield ViewDetailsState(note, noteTags);
+    yield ViewDetailsState(note, noteTags);*/
   }
 
   Stream<NoteDetailsState> _mapNewNoteModeToState(NewNoteMode event) async*{
-    yield EditDetailsState(new Note(''));
+    //yield EditDetailsState(new Note(''));
   }
 
   Stream<NoteDetailsState> _mapEditModeToState(EditModeClicked event) async*{

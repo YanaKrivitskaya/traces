@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../colorsPalette.dart';
-import '../../constants.dart';
+import '../../constants/color_constants.dart';
+import '../../constants/route_constants.dart';
 import '../../shared/shared.dart';
 import '../../shared/state_types.dart';
 import 'bloc/visa/visa_bloc.dart';

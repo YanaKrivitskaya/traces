@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
+import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/notes/bloc/note_details_bloc/bloc.dart';
 import 'package:traces/screens/notes/bloc/tag_add_bloc/bloc.dart';
-import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/model/__note.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/screens/notes/model/__tag.dart';
 import 'package:traces/shared/state_types.dart';
 
 class TagsAddDialog extends StatefulWidget{
@@ -30,7 +30,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
     _tagController = new TextEditingController(text: '');
     _tagController.addListener(_onTagChanged);
 
-    _note = BlocProvider.of<NoteDetailsBloc>(context).state.note;
+    //_note = BlocProvider.of<NoteDetailsBloc>(context).state.note;
   }
 
   @override
@@ -131,7 +131,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
 
           checked ? _note.tagIds.add(tag.id) : _note.tagIds.remove(tag.id);
 
-          context.read<NoteDetailsBloc>().add(SaveNoteClicked(_note));
+          //context.read<NoteDetailsBloc>().add(SaveNoteClicked(_note));
           context.read<TagAddBloc>().add(UpdateTag(updatedTag));
         },
         activeColor: ColorsPalette.nycTaxi,

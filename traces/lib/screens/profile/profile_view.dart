@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:traces/auth/bloc.dart';
-import 'package:traces/colorsPalette.dart';
+import 'package:traces/constants/color_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/add_family_button.dart';
 import 'package:traces/screens/profile/bloc/profile/bloc.dart';

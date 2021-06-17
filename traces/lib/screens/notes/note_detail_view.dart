@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
+import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/notes/bloc/note_details_bloc/bloc.dart';
 import 'package:traces/screens/notes/bloc/tag_add_bloc/bloc.dart';
 import 'package:traces/screens/notes/note_delete_alert.dart';
-import 'package:traces/screens/notes/model/note.dart';
+import 'package:traces/screens/notes/model/note.model.dart';
 import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
-import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/screens/notes/model/__tag.dart';
 import 'package:traces/screens/notes/tags_add_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +28,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   TextEditingController _titleController;
   TextEditingController _textController;
 
-  Note _note = Note('');
+  Note _note = Note();
   List<Tag> _noteTags = <Tag>[];
   bool _isEditMode = false;
 
@@ -36,7 +36,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   void initState() {
     super.initState();
     _titleController = new TextEditingController(text: _note.title);
-    _textController = new TextEditingController(text: _note.text);
+    _textController = new TextEditingController(text: _note.content);
   }
 
   @override
@@ -62,7 +62,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           _note = state.note;
           _isEditMode = true;
           _titleController.text = state.note.title;
-          _textController.text = state.note.text;
+          _textController.text = state.note.content;
         }
         return new Scaffold(
           appBar: AppBar(
@@ -111,10 +111,10 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               BlocProvider.value(
                 value: context.read<NoteDetailsBloc>(),
               ),
-              BlocProvider<TagAddBloc>(
+              /*BlocProvider<TagAddBloc>(
                   create: (context) => TagAddBloc(notesRepository: FirebaseNotesRepository()
                 )..add(GetTags()),
-              ),
+              ),*/
             ],
             child:  TagsAddDialog(),
           ));},
@@ -132,8 +132,8 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   Widget _saveAction(Note note) => new IconButton(
     icon: FaIcon(FontAwesomeIcons.solidSave, color: ColorsPalette.lynxWhite),
     onPressed: () {
-      Note noteToSave = new Note(_textController.text, title: _titleController.text, id: note.id, dateCreated: note.dateCreated, tagIds: note.tagIds);
-      context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
+      //Note noteToSave = new Note(_textController.text, title: _titleController.text, id: note.id, dateCreated: note.dateCreated, tagIds: note.tagIds);
+      //context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
     },
   );
 
@@ -156,13 +156,13 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
       Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      Text('Created: ${DateFormat.yMMMd().format(_note.dateCreated)} | Modified: ${DateFormat.yMMMd().format(_note.dateModified)}',
+      Text('Created: ${DateFormat.yMMMd().format(_note.createdDate)} | Modified: ${DateFormat.yMMMd().format(_note.updatedDate)}',
           style: new TextStyle(fontSize: 12.0
           )),
       _noteTags.length > 0 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
       _getTags(tags),
       Divider(color: ColorsPalette.nycTaxi),
-      Text('${_note.text}', style: new TextStyle(fontSize: 16),),
+      Text('${_note.content}', style: new TextStyle(fontSize: 16),),
     ],
   );
 
@@ -201,7 +201,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         barrierDismissible: false, // user must tap button!
         builder: (_) =>
             BlocProvider<NoteBloc>(
-              create: (context) => NoteBloc(notesRepository: FirebaseNotesRepository(),
+              create: (context) => NoteBloc(/*notesRepository: FirebaseNotesRepository(),*/
               ),
               child: NoteDeleteAlert(note: note,
                   callback: (val) =>

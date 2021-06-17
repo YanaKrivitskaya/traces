@@ -1,19 +1,20 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
-import 'package:traces/screens/notes/model/note.dart';
-import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/screens/notes/model/note.model.dart';
+import 'package:traces/screens/notes/model/__tag.dart';
+import 'package:traces/screens/notes/repository/api_notes_repository.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/shared/state_types.dart';
 
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
-  final NoteRepository _notesRepository;
+  final ApiNotesRepository _notesRepository;
+  //final NoteRepository _notesRepository;
   StreamSubscription _notesSubscription;
 
-  NoteBloc({@required NoteRepository notesRepository})
-      : assert(notesRepository != null),
-        _notesRepository = notesRepository, super(NoteState.empty());
+  NoteBloc():
+    _notesRepository = new ApiNotesRepository(), super(NoteState.empty());
 
   @override
   Stream<NoteState> mapEventToState(
@@ -44,7 +45,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Stream<NoteState> _mapGetAllNotesToState() async* {
-    _notesSubscription?.cancel();
+    /*_notesSubscription?.cancel();
 
     yield NoteState.loading();
 
@@ -54,7 +55,12 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       );
     }catch(e){
       yield NoteState.failure(error: e.message);
-    }
+    }*/
+
+    var notes = await _notesRepository.getNotes();
+    
+    add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes));
+
 
   }
 
@@ -75,7 +81,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
 
-    List<String> noteTags = event.note.tagIds;
+    /*List<String> noteTags = event.note.tagIds;
 
     try{
       _notesRepository.deleteNote(event.note);
@@ -89,7 +95,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       }
     }catch(e){
       yield NoteState.failure(error: e.message);
-    }
+    }*/
   }
 
   Stream<NoteState> _mapSelectedTagsUpdatedToState(SelectedTagsUpdated event) async* {

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/auth/model/user.dart';
+import 'package:traces/auth/model/user.model.dart';
 import 'package:traces/screens/settings/model/appUserSettings_entity.dart';
 
 @immutable

@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../colorsPalette.dart';
-import '../../constants.dart';
+import '../../constants/color_constants.dart';
+import '../../constants/route_constants.dart';
 import '../../shared/shared.dart';
 import 'bloc/settings_bloc.dart';
 import 'model/appSettings_entity.dart';

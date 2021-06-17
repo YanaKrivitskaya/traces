@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/model/tag.dart';
+import 'package:traces/screens/notes/model/__tag.dart';
 import 'package:traces/shared/state_types.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';

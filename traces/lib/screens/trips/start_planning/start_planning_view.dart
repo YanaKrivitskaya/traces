@@ -1,4 +1,4 @@
-import 'package:traces/constants.dart';
+import 'package:traces/constants/route_constants.dart';
 
 import 'bloc/startplanning_bloc.dart';
 import 'package:traces/shared/shared.dart';
@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../model/trip.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../colorsPalette.dart';
+import '../../../constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
 class StartPlanningView extends StatefulWidget{  

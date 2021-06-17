@@ -4,7 +4,7 @@ import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
 import 'package:traces/screens/trips/start_planning/start_planning_view.dart';
 import 'package:traces/screens/trips/trips_page.dart';
 
-import 'constants.dart';
+import 'constants/route_constants.dart';
 import 'screens/expenses.dart';
 import 'screens/home.dart';
 import 'screens/hotels.dart';
@@ -72,7 +72,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<NoteBloc>(
             create: (context) =>
-                NoteBloc(notesRepository: FirebaseNotesRepository()),
+                NoteBloc(/*notesRepository: FirebaseNotesRepository()*/),
             child: NotesPage(),
           ),
         );
