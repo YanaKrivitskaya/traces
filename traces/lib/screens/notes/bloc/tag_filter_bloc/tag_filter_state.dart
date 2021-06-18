@@ -1,4 +1,4 @@
-import 'package:traces/screens/notes/model/__tag.dart';
+import 'package:traces/screens/notes/model/tag.model.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/shared/state_types.dart';
 

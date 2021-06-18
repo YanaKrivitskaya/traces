@@ -91,7 +91,7 @@ class RouteGenerator {
                         ),
                         BlocProvider<TagFilterBloc>(
                           create: (context) => TagFilterBloc(
-                            notesRepository: FirebaseNotesRepository(),
+                            /*notesRepository: FirebaseNotesRepository(),*/
                           )..add(GetTags()),
                         ),
                       ],

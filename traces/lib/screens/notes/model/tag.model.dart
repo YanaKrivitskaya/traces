@@ -57,8 +57,8 @@ class Tag {
       id: map['id'],
       userId: map['userId'],
       name: map['name'],
-      createdDate: DateTime.fromMillisecondsSinceEpoch(map['createdDate']),
-      updatedDate: DateTime.fromMillisecondsSinceEpoch(map['updatedDate']),
+      createdDate: DateTime.parse(map['createdDate']),
+      updatedDate: DateTime.parse(map['updatedDate']),
       deleted: map['deleted'],
       isChecked: map['isChecked'],
     );
@@ -83,8 +83,7 @@ class Tag {
       other.name == name &&
       other.createdDate == createdDate &&
       other.updatedDate == updatedDate &&
-      other.deleted == deleted &&
-      other.isChecked == isChecked;
+      other.deleted == deleted;
   }
 
   @override

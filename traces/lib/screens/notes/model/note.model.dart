@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
+import 'package:traces/screens/notes/model/tag.model.dart';
 
 @immutable
 class Note {
@@ -11,6 +12,8 @@ class Note {
   final DateTime createdDate;
   final DateTime updatedDate;
   final bool deleted;
+  List<Tag> tags;
+
   Note({
     this.id,
     this.userId,
@@ -19,6 +22,7 @@ class Note {
     this.createdDate,
     this.updatedDate,
     this.deleted,
+    this.tags
   });
 
   /*Note copyWith({
@@ -53,15 +57,18 @@ class Note {
     };
   }
 
-  factory Note.fromMap(Map<String, dynamic> map) {
+  factory Note.fromMap(Map<String, dynamic> map) {  
+
     return Note(
       id: map['id'],
       userId: map['userId'],
       title: map['title'],
       content: map['content'],
-      createdDate: DateTime.fromMillisecondsSinceEpoch(map['createdDate']),
-      updatedDate: DateTime.fromMillisecondsSinceEpoch(map['updatedDate']),
+      createdDate: DateTime.parse(map['createdDate']),
+      updatedDate: DateTime.parse(map['updatedDate']),
       deleted: map['deleted'],
+      tags: map["tags"]!= null ? 
+        map['tags'].map<Tag>((map) => Tag.fromMap(map)).toList() : null
     );
   }
 

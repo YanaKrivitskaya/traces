@@ -2,21 +2,15 @@
 import 'package:traces/helpers/api.provider.dart';
 import 'package:traces/screens/notes/model/note.model.dart';
 
-import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 class ApiNotesRepository{
   ApiProvider apiProvider = ApiProvider();
   String notesUrl = 'notes/';
-  final _storage = FlutterSecureStorage();
 
   Future<List<Note>> getNotes( )async{
     final response = await apiProvider.getSecure(notesUrl);
-
-    /*Iterable l = json.decode(response.body);
-List<Post> posts = List<Post>.from(l.map((model)=> Post.fromJson(model)));*/
+      
     var notes = response["notes"] != null ? 
-      response['notes'].map<Note>((json) => Note.fromJson(json)).toList() : null;
+      response['notes'].map<Note>((map) => Note.fromMap(map)).toList() : null;
     return notes;
   }
 

@@ -1,19 +1,23 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:traces/screens/notes/repository/api_notes_repository.dart';
+import 'package:traces/screens/notes/repository/api_tags_repository.dart';
 import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/model/__tag.dart';
+import 'package:traces/screens/notes/model/tag.model.dart';
 import 'package:traces/shared/state_types.dart';
 import './bloc.dart';
 import 'package:meta/meta.dart';
 
 class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
-  final NoteRepository _notesRepository;
-  StreamSubscription _notesSubscription;
+  final ApiNotesRepository _notesRepository;
+  final ApiTagsRepository _tagsRepository;
+  //StreamSubscription _notesSubscription;
 
-  TagFilterBloc({@required NoteRepository notesRepository})
-      : assert(notesRepository != null),
-        _notesRepository = notesRepository, super(TagFilterState.empty());
+  TagFilterBloc(): 
+    _notesRepository = new ApiNotesRepository(), 
+    _tagsRepository = new ApiTagsRepository(), 
+    super(TagFilterState.empty());
 
   @override
   Stream<TagFilterState> mapEventToState(
@@ -47,9 +51,22 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
   }
 
   Stream<TagFilterState> _mapGetTagsToState() async* {
-    _notesSubscription?.cancel();
+    //_notesSubscription?.cancel();
 
-    _notesSubscription = _notesRepository.tags().listen(
+    var tags = await _tagsRepository.getTags();
+
+    List<Tag> selectedTags = <Tag>[];
+    bool allTagsChecked = !state.allTagsChecked ? false : true;
+    bool noTagsChecked = !state.noTagsChecked ? false : true;
+    bool allTagsUnChecked = !state.allUnChecked ? false : true;
+
+    if(state.selectedTags != null){
+      selectedTags = state.selectedTags;
+    }
+
+    add(UpdateTagsList(tags, selectedTags: selectedTags, allTagsChecked: allTagsChecked, noTagsChecked: noTagsChecked, allTagsUnChecked: allTagsUnChecked));
+
+    /*_notesSubscription = _notesRepository.tags().listen(
           (tags) {
             List<Tag> selectedTags = <Tag>[];
             bool allTagsChecked = !state.allTagsChecked ? false : true;
@@ -61,7 +78,7 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
             }
             add(UpdateTagsList(tags, selectedTags: selectedTags, allTagsChecked: allTagsChecked, noTagsChecked: noTagsChecked, allTagsUnChecked: allTagsUnChecked));
           }
-    );
+    );*/
   }
 
   Stream<TagFilterState> _mapTagCheckedToState(TagChecked event) async* {

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/constants/route_constants.dart';
-import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
-import 'package:traces/screens/notes/note_filter_button.dart';
-import 'package:traces/screens/notes/notes_view.dart';
-import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/screens/notes/tags_filter_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../constants/color_constants.dart';
+import '../../constants/route_constants.dart';
 import 'bloc/note_bloc/bloc.dart';
+import 'bloc/tag_filter_bloc/bloc.dart';
+import 'note_filter_button.dart';
+import 'notes_view.dart';
+import 'tags_filter_button.dart';
 
 class NotesPage extends StatelessWidget{
   NotesPage();
@@ -22,11 +22,9 @@ class NotesPage extends StatelessWidget{
         BlocProvider.value(
           value: context.read<NoteBloc>()..add(GetAllNotes()),
         ),
-        /*BlocProvider<TagFilterBloc>(
-          create: (context) => TagFilterBloc(
-              notesRepository: FirebaseNotesRepository()
-          )..add(GetTags()),
-        ),*/
+        BlocProvider<TagFilterBloc>(
+          create: (context) => TagFilterBloc()..add(GetTags()),
+        ),
       ],
       child: Scaffold(
         appBar: AppBar(

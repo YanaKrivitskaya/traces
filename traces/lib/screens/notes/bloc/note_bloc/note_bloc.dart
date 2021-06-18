@@ -11,7 +11,7 @@ import 'package:traces/shared/state_types.dart';
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final ApiNotesRepository _notesRepository;
   //final NoteRepository _notesRepository;
-  StreamSubscription _notesSubscription;
+ // StreamSubscription _notesSubscription;
 
   NoteBloc():
     _notesRepository = new ApiNotesRepository(), super(NoteState.empty());
@@ -57,11 +57,8 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       yield NoteState.failure(error: e.message);
     }*/
 
-    var notes = await _notesRepository.getNotes();
-    
+    var notes = await _notesRepository.getNotes();    
     add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes));
-
-
   }
 
   Stream<NoteState> _mapNotesUpdateSortFilterToState(UpdateSortFilter event) async*{
@@ -115,9 +112,9 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     yield state.update(filteredNotes: filteredNotes, stateStatus: StateStatus.Success);
   }
 
-  @override
+  /*@override
   Future<void> close() {
     _notesSubscription?.cancel();
     return super.close();
-  }
+  }*/
 }

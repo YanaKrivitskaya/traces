@@ -1,16 +1,17 @@
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:traces/constants/route_constants.dart';
-import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
-import 'package:traces/screens/notes/model/__tag.dart';
-import 'package:traces/screens/notes/note_delete_alert.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/screens/notes/model/note.model.dart';
-import 'package:traces/shared/state_types.dart';
+import 'package:intl/intl.dart';
+
+import '../../constants/color_constants.dart';
+import '../../constants/route_constants.dart';
+import '../../shared/state_types.dart';
 import 'bloc/note_bloc/bloc.dart';
+import 'bloc/tag_filter_bloc/bloc.dart';
+import 'model/note.model.dart';
+import 'model/tag.model.dart';
+import 'note_delete_alert.dart';
 
 class NotesView extends StatefulWidget{
   NotesView();
@@ -102,7 +103,7 @@ class _NotesViewState extends State<NotesView> {
                                         Container(
                                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
                                           alignment: Alignment.centerLeft,
-                                          //child: note.tagIds != null && _tags != null ? getChips(note, _tags, _allTagsSelected, _selectedTags): Container(),
+                                          child: note.tags.isNotEmpty && _tags != null ? getChips(note,/* _tags,*/ _allTagsSelected, _selectedTags): Container(),
                                         )
                                       ],
                                     ),
@@ -151,11 +152,12 @@ class _NotesViewState extends State<NotesView> {
     context.read<NoteBloc>().add(SearchTextChanged(noteName: _searchController.text));
   }
 
- /* Widget getChips(Note note, List<Tag> tags, bool allTagsSelected, List<Tag> selectedTags) {
+  Widget getChips(Note note/*, List<Tag> tags*/, bool allTagsSelected, List<Tag> selectedTags) {
+    //var selectedTags = tags.where((t) => note.tags.contains(t));
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: tags.where((t) => note.tagIds.contains(t.id))
+          children: note.tags
               .map((tag) => Padding(
               padding: EdgeInsets.all(3.0),
               child: Text("#"+tag.name, style: GoogleFonts.quicksand(
@@ -166,7 +168,7 @@ class _NotesViewState extends State<NotesView> {
               .toList(),
         ));
   }
-*/
+
   bool _isTagSelected(Tag tag, bool allTagsSelected, List<Tag> selectedTags){
     if(selectedTags != null && selectedTags.any((t) => t.id == tag.id) && !allTagsSelected) return true;
     return false;
@@ -192,20 +194,22 @@ class _NotesViewState extends State<NotesView> {
 
   List<Note> _filterNotes(List<Note> notes, List<Tag> selectedTags, bool allTagsSelected, bool noTagsSelected){
     List<Note> filteredNotes = <Note>[];
-    /*if(allTagsSelected){
+    if(allTagsSelected){
       filteredNotes = notes;
     }else{
       if(noTagsSelected){
-        filteredNotes.addAll(notes.where((n) => n.tagIds.isEmpty).toList());
+        filteredNotes.addAll(notes.where((n) => n.tags.isEmpty).toList());
       }
       selectedTags.forEach((t){
-        notes.where((n) => n.tagIds.isNotEmpty && n.tagIds.contains(t.id)).forEach((n){
+        print(t.name);
+        notes.where((n) => n.tags.isNotEmpty && n.tags.contains(t)).forEach((n){
+          print(n.title);
           if(!filteredNotes.any((note) => note.id == n.id)) filteredNotes.add(n);
         });
       });
-    }*/
-    return notes;
-    //return filteredNotes;
+    }
+    //return notes;
+    return filteredNotes;
   }
 
   Widget _popupMenu(Note note, int position) => PopupMenuButton<int>(

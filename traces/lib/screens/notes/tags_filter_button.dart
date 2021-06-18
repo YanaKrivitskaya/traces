@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
-import 'package:traces/screens/notes/model/__tag.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/shared/state_types.dart';
 
+import '../../constants/color_constants.dart';
+import '../../shared/state_types.dart';
 import 'bloc/note_bloc/bloc.dart';
+import 'bloc/tag_filter_bloc/bloc.dart';
+import 'model/tag.model.dart';
 
 class TagsFilterButton extends StatelessWidget{
   @override
@@ -25,7 +25,7 @@ class TagsFilterButton extends StatelessWidget{
                     value: context.read<NoteBloc>(),
                   ),
                 ],
-                child:  TagsDialog(),
+                child: TagsDialog(),
               )
           );
         }
@@ -45,8 +45,8 @@ class _TagsDialogState extends State<TagsDialog>{
 
   List<Tag> _tags;
   List<Tag> _selectedTags;
-  Tag _selectAll = Tag("All", isChecked: true);
-  Tag _noTags = Tag("No tags", isChecked: true);
+  Tag _selectAll = Tag(name: "All", isChecked: true);
+  Tag _noTags = Tag(name: "No tags", isChecked: true);
 
   @override
   void initState() {
@@ -123,7 +123,7 @@ class _TagsDialogState extends State<TagsDialog>{
   Widget _tagOptions() => new Column(
     children:
     _tags.map((Tag tag) => CheckboxListTile(
-      title: Text(tag.name + " (" + tag.usage.toString() + ")"),
+      title: Text(tag.name),
       value: tag.isChecked,
       onChanged: (val) {
         context.read<TagFilterBloc>().add(TagChecked(tag, val));
