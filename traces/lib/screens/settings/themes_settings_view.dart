@@ -19,11 +19,11 @@ class ThemeSettingsView extends StatefulWidget{
 
 class _ThemeSettingsViewState extends State<ThemeSettingsView>{
 
-  AuthenticationBloc _authBloc;
+  late AuthenticationBloc _authBloc;
   int _currentIndex=0;
-  String _userTheme;
+  String? _userTheme;
 
-  List<String> _themes;
+  List<String?>? _themes;
 
    @override
   void initState() {
@@ -46,13 +46,13 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
         if(state is SuccessSettingsState){         
           _userTheme = state.userTheme;
 
-          _themes = state.settings.themes;
+          _themes = state.settings!.themes;
 
           if(_userTheme == null){
-            _userTheme = _themes[0];
+            _userTheme = _themes![0];
           }
          
-          _currentIndex = _themes.indexOf(state.selectedTheme ?? state.userTheme);          
+          _currentIndex = _themes!.indexOf(state.selectedTheme ?? state.userTheme);          
         }
         return new Scaffold(
           appBar: AppBar(
@@ -73,11 +73,11 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                     enlargeCenterPage: true,
                     enableInfiniteScroll: false,
                     onPageChanged: (index, reason) {
-                      var theme = state.settings.themes[index];
+                      var theme = state.settings!.themes![index];
                       context.read<SettingsBloc>().add(ThemeSelected(theme)); 
                     },
                   ),
-                  items: _themes.map((item) => Container(   
+                  items: _themes!.map((item) => Container(   
                     padding: EdgeInsets.symmetric(horizontal: 5.0),                                     
                     child: Center(
                       child: item == _userTheme ? Badge(
@@ -89,8 +89,8 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                   )).toList()),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: _themes.map((img) {
-                  int index = _themes.indexOf(img);
+                children: _themes!.map((img) {
+                  int index = _themes!.indexOf(img);
                   return Container(
                     width: 8.0,
                     height: 8.0,
@@ -111,7 +111,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                 foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
               ),
               onPressed: () {
-                var theme = state.settings.themes[_currentIndex];
+                var theme = state.settings!.themes![_currentIndex];
                 context.read<SettingsBloc>().add(SubmitTheme(theme));                
               },
               child: Text('Select theme'),

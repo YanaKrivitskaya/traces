@@ -4,7 +4,7 @@ part of 'visa_details_bloc.dart';
 abstract class VisaDetailsEvent {
   const VisaDetailsEvent();
 
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class GetVisaDetails extends VisaDetailsEvent {
@@ -28,7 +28,7 @@ class UpdateVisaDetailsSuccess extends VisaDetailsEvent {
 }
 
 class UpdateVisaDetailsEditing extends VisaDetailsEvent {
-  final Visa visa;
+  final Visa? visa;
   final VisaSettings settings;
   final List<Member> members;
   final UserSettings userSettings;
@@ -36,7 +36,7 @@ class UpdateVisaDetailsEditing extends VisaDetailsEvent {
   const UpdateVisaDetailsEditing(this.visa, this.settings, this.members, this.userSettings);
 
   @override
-  List<Object> get props => [visa, settings, members, userSettings];
+  List<Object?> get props => [visa, settings, members, userSettings];
 }
 
 class NewVisaMode extends VisaDetailsEvent {}
@@ -51,12 +51,12 @@ class EditVisaClicked extends VisaDetailsEvent {
 }
 
 class DeleteVisaClicked extends VisaDetailsEvent {
-  final String visaId;
+  final String? visaId;
 
   DeleteVisaClicked(this.visaId);
 
   @override
-  List<Object> get props => [visaId];
+  List<Object?> get props => [visaId];
 }
 
 class DateFromChanged extends VisaDetailsEvent {
@@ -78,22 +78,22 @@ class DateToChanged extends VisaDetailsEvent {
 }
 
 class VisaSubmitted extends VisaDetailsEvent {
-  final Visa visa;
+  final Visa? visa;
   final bool isFormValid;
 
   VisaSubmitted(this.visa, this.isFormValid);
 
   @override
-  List<Object> get props => [visa, isFormValid];
+  List<Object?> get props => [visa, isFormValid];
 }
 
 class SaveVisaClicked extends VisaDetailsEvent {
-  final Visa visa;
+  final Visa? visa;
 
   SaveVisaClicked(this.visa);
 
   @override
-  List<Object> get props => [visa];
+  List<Object?> get props => [visa];
 }
 
 class TabUpdatedClicked extends VisaDetailsEvent {

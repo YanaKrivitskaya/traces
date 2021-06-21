@@ -5,14 +5,14 @@ import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TripEntity extends Equatable {
-  final String id;
-  final String name;
-  final String description;
-  final String coverImageUrl;
-  final DateTime startDate;
-  final DateTime endDate;
-  final List<String> photoUrls;
-  final List<String> tripMembers;
+  final String? id;
+  final String? name;
+  final String? description;
+  final String? coverImageUrl;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final List<String>? photoUrls;
+  final List<String>? tripMembers;
 
   TripEntity({
     this.id,
@@ -26,7 +26,7 @@ class TripEntity extends Equatable {
   });
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [id, name, description, coverImageUrl, startDate, endDate, photoUrls, tripMembers];
   }
 
@@ -36,8 +36,8 @@ class TripEntity extends Equatable {
       'name': name,
       'description': description,
       'coverImageUrl': coverImageUrl,
-      'startDate': startDate.millisecondsSinceEpoch,
-      'endDate': endDate.millisecondsSinceEpoch,
+      'startDate': startDate!.millisecondsSinceEpoch,
+      'endDate': endDate!.millisecondsSinceEpoch,
       'photoUrls': photoUrls,
       'tripMembers': tripMembers,
     };
@@ -56,21 +56,20 @@ class TripEntity extends Equatable {
     );
   }
 
-    static TripEntity fromSnapshot(DocumentSnapshot snap){
-      print(inspect(snap.data()));
+    static TripEntity fromSnapshot(DocumentSnapshot snap){      
     return TripEntity(
       id: snap.id, 
-      name: snap.data()['name'], 
-      description: snap.data()['description'], 
-      coverImageUrl: snap.data()['coverImageUrl'], 
-      startDate: snap.data()['startDate'].toDate(), 
-      endDate: snap.data()['endDate'].toDate(), 
-      photoUrls: List<String>.from(snap.data()['photoUrls'] ?? <String>[]), 
-      tripMembers: List<String>.from(snap.data()['tripMembers'] ?? <String>[]), 
+      name: snap['name'], 
+      description: snap['description'], 
+      coverImageUrl: snap['coverImageUrl'], 
+      startDate: snap['startDate'].toDate(), 
+      endDate: snap['endDate'].toDate(), 
+      photoUrls: List<String>.from(snap['photoUrls'] ?? <String>[]), 
+      tripMembers: List<String>.from(snap['tripMembers'] ?? <String>[]), 
     );
   }
 
-  Map<String, Object> toDocument(){
+  Map<String, Object?> toDocument(){
     return{
       "name": name,
       "description": description!= '' ? description : 'No description',

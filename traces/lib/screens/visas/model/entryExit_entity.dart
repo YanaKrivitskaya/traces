@@ -2,22 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class EntryExitEntity extends Equatable{
-  final String id;
-  final DateTime entryDate;
-  final String entryCountry;
-  final String entryCity;
-  final String entryTransport;
-  final DateTime exitDate;
-  final String exitCountry;
-  final String exitCity;
-  final String exitTransport;
-  final int duration;
-  final bool hasExit;
+  final String? id;
+  final DateTime? entryDate;
+  final String? entryCountry;
+  final String? entryCity;
+  final String? entryTransport;
+  final DateTime? exitDate;
+  final String? exitCountry;
+  final String? exitCity;
+  final String? exitTransport;
+  final int? duration;
+  final bool? hasExit;
 
   EntryExitEntity(this.id, this.entryDate, this.entryCountry, this.entryCity, this.entryTransport, this.exitDate,
       this.exitCountry, this.exitCity, this.exitTransport, this.duration, this.hasExit);
 
-  Map<String, Object> toJson(){
+  Map<String, Object?> toJson(){
     return{
       "id": id,
       "entryDate": entryDate,
@@ -34,7 +34,7 @@ class EntryExitEntity extends Equatable{
   }
 
   @override
-  List<Object> get props => [id, entryDate, exitDate, hasExit, entryCountry, entryDate, entryTransport, entryCity, exitTransport, exitCity, duration];
+  List<Object?> get props => [id, entryDate, exitDate, hasExit, entryCountry, entryDate, entryTransport, entryCity, exitTransport, exitCity, duration];
 
   static EntryExitEntity fromMap(Map<dynamic, dynamic> map, String documentId){
     return EntryExitEntity(
@@ -55,20 +55,20 @@ class EntryExitEntity extends Equatable{
   static EntryExitEntity fromSnapshot(DocumentSnapshot snap){
     return EntryExitEntity(
         snap.id,
-        snap.data()['entryDate'].toDate(),
-        snap.data()['entryCountry'],
-        snap.data()['entryCity'],
-        snap.data()['entryTransport'],
-        snap.data()['exitDate'] != null ? snap.data()['exitDate'].toDate() : null,
-        snap.data()['exitCountry'],
-        snap.data()['exitCity'],
-        snap.data()['exitTransport'],
-        snap.data()['duration'],
-        snap.data()['hasExit']
+        snap['entryDate'].toDate(),
+        snap['entryCountry'],
+        snap['entryCity'],
+        snap['entryTransport'],
+        snap['exitDate'] != null ? snap['exitDate'].toDate() : null,
+        snap['exitCountry'],
+        snap['exitCity'],
+        snap['exitTransport'],
+        snap['duration'],
+        snap['hasExit']
     );
   }
 
-  Map<String, Object> toDocument(){
+  Map<String, Object?> toDocument(){
     return{
       "entryDate": entryDate,
       "entryCountry": entryCountry,

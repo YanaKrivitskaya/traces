@@ -7,17 +7,17 @@ import '../bloc/note_bloc/bloc.dart';
 import '../models/note.model.dart';
 
 class NoteDeleteAlert extends StatelessWidget{
-  final Note note;
-  final StringCallback callback;
+  final Note? note;
+  final StringCallback? callback;
 
-  const NoteDeleteAlert({Key key, this.note, this.callback}) : super(key: key);
+  const NoteDeleteAlert({Key? key, this.note, this.callback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<NoteBloc, NoteState>(
       listener: (context, state){
-        if(state.noteDeleted){
-          callback("Delete");
+        if(state.noteDeleted!){
+          callback!("Delete");
           Navigator.pop(context);
         }
       },
@@ -29,7 +29,7 @@ class NoteDeleteAlert extends StatelessWidget{
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('${note.title}'),
+                  Text('${note!.title}'),
                 ],
               ),
             ),
@@ -43,7 +43,7 @@ class NoteDeleteAlert extends StatelessWidget{
               TextButton(
                 child: Text('Cancel'),
                 onPressed: () {
-                  callback("Cancel");
+                  callback!("Cancel");
                   Navigator.pop(context);
                 },
               ),

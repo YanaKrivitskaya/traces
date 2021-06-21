@@ -17,10 +17,10 @@ class EntryExitDetailsView extends StatefulWidget {
 
 class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _entryCountryController;
-  TextEditingController _entryCityController;
-  TextEditingController _exitCountryController;
-  TextEditingController _exitCityController;
+  TextEditingController? _entryCountryController;
+  TextEditingController? _entryCityController;
+  TextEditingController? _exitCountryController;
+  TextEditingController? _exitCityController;
 
   @override
   void initState() {
@@ -33,10 +33,10 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
 
   @override
   void dispose() {
-    _entryCountryController.dispose();
-    _entryCityController.dispose();
-    _exitCountryController.dispose();
-    _exitCityController.dispose();
+    _entryCountryController!.dispose();
+    _entryCityController!.dispose();
+    _exitCountryController!.dispose();
+    _exitCityController!.dispose();
     super.dispose();
   }
 
@@ -72,12 +72,12 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
               });
             }
             if(state.status == StateStatus.Success && state.mode == StateMode.Edit){
-                if(state.entryExit.id != null){
-                  if(_entryCountryController.text == '') _entryCountryController.text = state.entryExit.entryCountry;
-                  if(_entryCityController.text == '') _entryCityController.text = state.entryExit.entryCity;
-                  if(_exitCountryController.text == '') _exitCountryController.text = state.entryExit.exitCountry;
-                  if(_exitCityController.text == '') _exitCityController.text = state.entryExit.exitCity;                  
-                  if(state.entryExit.exitDate == null) state.entryExit.exitDate = state.entryExit.entryDate;
+                if(state.entryExit!.id != null){
+                  if(_entryCountryController!.text == '') _entryCountryController!.text = state.entryExit!.entryCountry!;
+                  if(_entryCityController!.text == '') _entryCityController!.text = state.entryExit!.entryCity!;
+                  if(_exitCountryController!.text == '') _exitCountryController!.text = state.entryExit!.exitCountry!;
+                  if(_exitCityController!.text == '') _exitCityController!.text = state.entryExit!.exitCity!;                  
+                  if(state.entryExit!.exitDate == null) state.entryExit!.exitDate = state.entryExit!.entryDate;
                 }                
               }
           },
@@ -93,7 +93,7 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
                 return Container(padding: EdgeInsets.all(10.0), color: ColorsPalette.white, child: SingleChildScrollView(
                   child: Form(key: this._formKey, child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
                     _entryEditContainer(context, state),
-                    state.entryExit.id !=null ? _exitEditContainer(context, state) : Container(),
+                    state.entryExit!.id !=null ? _exitEditContainer(context, state) : Container(),
                     _submitButton(state)
                   ],)),
                 ));
@@ -112,7 +112,7 @@ Widget _entryEditContainer(BuildContext context, EntryExitState state) => new Co
   Divider(color: ColorsPalette.algalFuel),
   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
     Text('Date', style: TextStyle(fontSize: 16.0, color: ColorsPalette.mazarineBlue)),
-    Text('${DateFormat.yMMMd().format(state.entryExit.entryDate)}', style: TextStyle(
+    Text('${DateFormat.yMMMd().format(state.entryExit!.entryDate!)}', style: TextStyle(
           fontSize: 16.0,fontWeight: FontWeight.bold)),
     IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue), 
       onPressed: ()=> _selectEntryDate(context, state))
@@ -132,7 +132,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
     Divider(color: ColorsPalette.algalFuel),
     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
       Text('Date', style: TextStyle(fontSize: 16.0, color: ColorsPalette.mazarineBlue)),
-      Text('${DateFormat.yMMMd().format(state.entryExit.exitDate)}', style: TextStyle(
+      Text('${DateFormat.yMMMd().format(state.entryExit!.exitDate!)}', style: TextStyle(
             fontSize: 16.0,fontWeight: FontWeight.bold)),
       IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue), 
         onPressed: ()=> _selectExitDate(context, state))
@@ -144,17 +144,17 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
 
   Future<Null> _selectEntryDate(
     BuildContext context, EntryExitState state) async {
-    final DateTime picked = await showDatePicker(
-        builder: (BuildContext context, Widget child) {
+    final DateTime? picked = await showDatePicker(
+        builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData(primarySwatch: ColorsPalette.matVisaCalendarColor),
-            child: child,
+            child: child!,
           );
         },
         context: context,
-        initialDate: state.entryExit.entryDate ?? state.visa.startDate,
-        firstDate: state.visa.startDate,
-        lastDate: DateTime.now().difference(state.visa.endDate).inDays > 0 ? state.visa.endDate : DateTime.now());
+        initialDate: state.entryExit!.entryDate ?? state.visa!.startDate!,
+        firstDate: state.visa!.startDate!,
+        lastDate: DateTime.now().difference(state.visa!.endDate!).inDays > 0 ? state.visa!.endDate! : DateTime.now());
     if (picked != null) {
       context.read<EntryExitBloc>().add(EntryDateChanged(picked));     
     }
@@ -162,17 +162,17 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
 
   Future<Null> _selectExitDate(
       BuildContext context, EntryExitState state) async {
-    final DateTime picked = await showDatePicker(
-        builder: (BuildContext context, Widget child) {
+    final DateTime? picked = await showDatePicker(
+        builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData(primarySwatch: ColorsPalette.matVisaCalendarColor),
-            child: child,
+            child: child!,
           );
         },
         context: context,
-        initialDate: state.entryExit.exitDate ?? state.entryExit.entryDate,
-        firstDate: state.entryExit.entryDate,
-        lastDate: DateTime.now().difference(state.visa.endDate).inDays > 0 ? state.visa.endDate : DateTime.now());
+        initialDate: state.entryExit!.exitDate ?? state.entryExit!.entryDate!,
+        firstDate: state.entryExit!.entryDate!,
+        lastDate: DateTime.now().difference(state.visa!.endDate!).inDays > 0 ? state.visa!.endDate! : DateTime.now());
     if (picked != null) {
       context.read<EntryExitBloc>().add(ExitDateChanged(picked));     
     }
@@ -188,15 +188,16 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCountries = state.userSettings.countries
+          var filteredCountries = state.userSettings!.countries!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCountries.length > 0) {
             return filteredCountries;
           }
         }
+        return List.empty();
       },
-      itemBuilder: (context, suggestion) {
+      itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion),
         );
@@ -204,13 +205,13 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
       },
-      onSuggestionSelected: (suggestion) {
-        this._entryCountryController.text = suggestion;
+      onSuggestionSelected: (dynamic suggestion) {
+        this._entryCountryController!.text = suggestion;
         FocusScope.of(context).unfocus();
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
-        if (value.isEmpty) {
+        if (value!.isEmpty) {
           return 'Required field';
         }
         return null;
@@ -226,15 +227,16 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCountries = state.userSettings.countries
+          var filteredCountries = state.userSettings!.countries!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCountries.length > 0) {
             return filteredCountries;
           }
         }
+        return List.empty();
       },
-      itemBuilder: (context, suggestion) {
+      itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion),
         );
@@ -242,8 +244,8 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
       },
-      onSuggestionSelected: (suggestion) {
-        this._exitCountryController.text = suggestion;
+      onSuggestionSelected: (dynamic suggestion) {
+        this._exitCountryController!.text = suggestion;
         FocusScope.of(context).unfocus();
       });
 
@@ -257,15 +259,16 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCities = state.userSettings.cities
+          var filteredCities = state.userSettings!.cities!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCities.length > 0) {
             return filteredCities;
           }
         }
+         return List.empty();
       },
-      itemBuilder: (context, suggestion) {
+      itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion),
         );
@@ -273,13 +276,13 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
       },
-      onSuggestionSelected: (suggestion) {
-        this._entryCityController.text = suggestion;
+      onSuggestionSelected: (dynamic suggestion) {
+        this._entryCityController!.text = suggestion;
         FocusScope.of(context).unfocus();
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
-        if (value.isEmpty) {
+        if (value!.isEmpty) {
           return 'Required field';
         }
         return null;
@@ -295,15 +298,16 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCities = state.userSettings.cities
+          var filteredCities = state.userSettings!.cities!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCities.length > 0) {
             return filteredCities;
           }
         }
+        return List.empty();
       },
-      itemBuilder: (context, suggestion) {
+      itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion),
         );
@@ -311,20 +315,20 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
       },
-      onSuggestionSelected: (suggestion) {
-        this._exitCityController.text = suggestion;
+      onSuggestionSelected: (dynamic suggestion) {
+        this._exitCityController!.text = suggestion;
         FocusScope.of(context).unfocus();
       });
   
   Widget _entryTransportSelector(EntryExitState state) =>
       new DropdownButtonFormField<String>(
-        value: state.entryExit.entryTransport??state.settings.transport.first,
+        value: state.entryExit!.entryTransport??state.settings!.transport!.first,
         isExpanded: true,
         decoration: InputDecoration(
             labelText: "Transport",
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
         items:
-            state.settings.transport.map((String value) {
+            state.settings!.transport!.map((String value) {
           return new DropdownMenuItem<String>(
               value: value,
               child: Row(
@@ -337,8 +341,8 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
                 ],
               ));
         }).toList(),
-        onChanged: (String value) {
-          state.entryExit.entryTransport = value.trim();
+        onChanged: (String? value) {
+          state.entryExit!.entryTransport = value!.trim();
           FocusScope.of(context).unfocus();
         },
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -349,13 +353,13 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
 
   Widget _exitTransportSelector(EntryExitState state) =>
       new DropdownButtonFormField<String>(
-        value: state.entryExit.exitTransport??state.settings.transport.first,
+        value: state.entryExit!.exitTransport??state.settings!.transport!.first,
         isExpanded: true,
         decoration: InputDecoration(
             labelText: "Transport",
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
         items:
-            state.settings.transport.map((String value) {
+            state.settings!.transport!.map((String value) {
           return new DropdownMenuItem<String>(
               value: value,
               child: Row(
@@ -368,8 +372,8 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
                 ],
               ));
         }).toList(),
-        onChanged: (String value) {
-          state.entryExit.exitTransport = value.trim();          
+        onChanged: (String? value) {
+          state.entryExit!.exitTransport = value!.trim();          
         },        
     );
 
@@ -382,19 +386,19 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
             foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
           ),         
           onPressed: () {
-            var isFormValid = _formKey.currentState.validate();
+            var isFormValid = _formKey.currentState!.validate();
 
             if(isFormValid){
-              if(state.entryExit.entryTransport == null) state.entryExit.entryTransport = state.settings.transport.first;
-              if(state.entryExit.exitTransport == null) state.entryExit.exitTransport = state.settings.transport.first;              
-              state.entryExit.entryCountry = _entryCountryController.text.trim();
-              state.entryExit.entryCity = _entryCityController.text.trim();
-              state.entryExit.exitCountry = _exitCountryController.text.trim();
-              state.entryExit.exitCity = _exitCityController.text.trim();
-              if(state.entryExit.exitCity == '' || state.entryExit.exitCountry == ''){
-                state.entryExit.duration = tripDuration(state.entryExit.entryDate, null);
+              if(state.entryExit!.entryTransport == null) state.entryExit!.entryTransport = state.settings!.transport!.first;
+              if(state.entryExit!.exitTransport == null) state.entryExit!.exitTransport = state.settings!.transport!.first;              
+              state.entryExit!.entryCountry = _entryCountryController!.text.trim();
+              state.entryExit!.entryCity = _entryCityController!.text.trim();
+              state.entryExit!.exitCountry = _exitCountryController!.text.trim();
+              state.entryExit!.exitCity = _exitCityController!.text.trim();
+              if(state.entryExit!.exitCity == '' || state.entryExit!.exitCountry == ''){
+                state.entryExit!.duration = tripDuration(state.entryExit!.entryDate!, null);
               }else{
-                state.entryExit.duration = tripDuration(state.entryExit.entryDate, state.entryExit.exitDate);
+                state.entryExit!.duration = tripDuration(state.entryExit!.entryDate!, state.entryExit!.exitDate);
               }              
               context.read<EntryExitBloc>().add(SubmitEntry(state.entryExit, state.visa));
             }

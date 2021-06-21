@@ -12,7 +12,7 @@ import '../models/note.model.dart';
 import '../models/tag.model.dart';
 
 class TagsAddDialog extends StatefulWidget{
-  final StringCallback callback;
+  final StringCallback? callback;
 
   const TagsAddDialog({this.callback});
 
@@ -21,25 +21,25 @@ class TagsAddDialog extends StatefulWidget{
 }
 
 class _TagsAddDialogState extends State<TagsAddDialog>{
-  List<Tag> _tags;
+  List<Tag>? _tags;
 
-  Note _note;
+  Note? _note;
 
-  TextEditingController _tagController;
+  TextEditingController? _tagController;
 
   @override
   void initState() {
     super.initState();
 
     _tagController = new TextEditingController(text: '');
-    _tagController.addListener(_onTagChanged);
+    _tagController!.addListener(_onTagChanged);
 
     _note = BlocProvider.of<NoteDetailsBloc>(context).state.note;
   }
 
   @override
   void dispose(){
-    _tagController.dispose();
+    _tagController!.dispose();
     super.dispose();
   }
 
@@ -52,12 +52,12 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
           if(state.status == StateStatus.Success){
             _tags = state.filteredTags;
             if(_tags != null){
-              if(_note.tags != null && _note.tags.isNotEmpty){
-                _tags.forEach((t){
-                  _note.tags.contains(t) ? t.isChecked = true : t.isChecked = false;
+              if(_note!.tags != null && _note!.tags!.isNotEmpty){
+                _tags!.forEach((t){
+                  _note!.tags!.contains(t) ? t.isChecked = true : t.isChecked = false;
                 });
               }else{
-                _tags.forEach((t) => t.isChecked = false);
+                _tags!.forEach((t) => t.isChecked = false);
               }
             }
           }
@@ -68,7 +68,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
                 TextButton(
                   child: Text('Done'),
                   onPressed: () {
-                    widget.callback("Ok");
+                    widget.callback!("Ok");
                     Navigator.pop(context);
                   },
                   style: ButtonStyle(
@@ -85,7 +85,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(children: <Widget>[
-                          state.status == StateStatus.Success && _tags.length > 0
+                          state.status == StateStatus.Success && _tags!.length > 0
                               ? _tagOptions()
                               : state.status == StateStatus.Loading
                                 ? Center(child: CircularProgressIndicator(),)
@@ -111,8 +111,8 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
       IconButton(
         icon: Icon(Icons.add, color: ColorsPalette.greenGrass),
         onPressed: (){
-          if(_tagController.text != ''){
-            CreateTagModel newTag = CreateTagModel(_tagController.text);
+          if(_tagController!.text != ''){
+            CreateTagModel newTag = CreateTagModel(_tagController!.text);
             context.read<TagAddBloc>().add(AddTag(newTag));
             FocusScope.of(context).requestFocus(FocusNode());
           }
@@ -122,21 +122,21 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
   );
 
   void _onTagChanged() {
-    context.read<TagAddBloc>().add(TagChanged(tagName: _tagController.text));
+    context.read<TagAddBloc>().add(TagChanged(tagName: _tagController!.text));
   }
 
   Widget _tagOptions() => new Column(
       children:
-      _tags.map((Tag tag) => CheckboxListTile(
-        title: Text(tag.name),
+      _tags!.map((Tag tag) => CheckboxListTile(
+        title: Text(tag.name!),
         value: tag.isChecked,
         onChanged: (checked) {
 
           Tag updatedTag = new Tag(name: tag.name, id: tag.id, isChecked: checked);
 
-          checked ? _note.tags.add(tag) : _note.tags.remove(tag);
+          checked! ? _note!.tags!.add(tag) : _note!.tags!.remove(tag);
 
-          context.read<TagAddBloc>().add(UpdateNoteTag(_note.id, updatedTag.id, checked));
+          context.read<TagAddBloc>().add(UpdateNoteTag(_note!.id, updatedTag.id, checked));
         },
         activeColor: ColorsPalette.nycTaxi,
       )).toList()

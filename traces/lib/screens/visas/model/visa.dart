@@ -1,29 +1,29 @@
 import 'package:traces/screens/visas/model/visa_entity.dart';
 
 class Visa{
-  final String id;
-  DateTime startDate;
-  DateTime endDate;
-  String countryOfIssue;
-  int durationOfStay;
-  String numberOfEntries;
-  String owner;
-  String type;
+  final String? id;
+  DateTime? startDate;
+  DateTime? endDate;
+  String? countryOfIssue;
+  int? durationOfStay;
+  String? numberOfEntries;
+  String? owner;
+  String? type;
   final DateTime dateCreated;
   final DateTime dateModified;
 
   Visa({
-    DateTime startDate,
-    DateTime endDate,
-    String countryOfIssue,
-    int durationOfStay,
-    String numberOfEntries,
-    String owner,
-    String id,
-    List<String> entryExitIds,
-    String type,
-    DateTime dateCreated,
-    DateTime dateModified}) :
+    DateTime? startDate,
+    DateTime? endDate,
+    String? countryOfIssue,
+    int? durationOfStay,
+    String? numberOfEntries,
+    String? owner,
+    String? id,
+    List<String>? entryExitIds,
+    String? type,
+    DateTime? dateCreated,
+    DateTime? dateModified}) :
         this.id = id,
         this.startDate = startDate,
         this.endDate = endDate,

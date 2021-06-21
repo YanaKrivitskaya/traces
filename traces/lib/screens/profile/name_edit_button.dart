@@ -27,19 +27,19 @@ class NameEditDialog extends StatefulWidget{
 }
 
 class _NameEditDialogState extends State<NameEditDialog>{
-  TextEditingController _usernameController;
+  TextEditingController? _usernameController;
 
   @override
   void initState() {
     super.initState();
 
-    _usernameController = TextEditingController(text: context.read<ProfileBloc>().state.profile.displayName);
-    _usernameController.addListener(_onUsernameChanged);
+    _usernameController = TextEditingController(text: context.read<ProfileBloc>().state.profile!.displayName);
+    _usernameController!.addListener(_onUsernameChanged);
   }
 
   @override
   void dispose(){
-    _usernameController.dispose();
+    _usernameController!.dispose();
     super.dispose();
   }
 
@@ -54,7 +54,7 @@ class _NameEditDialogState extends State<NameEditDialog>{
           TextButton(
             child: Text('Done'),
             onPressed: () {
-              context.read<ProfileBloc>().add(UsernameUpdated(username: _usernameController.text));
+              context.read<ProfileBloc>().add(UsernameUpdated(username: _usernameController!.text));
               Navigator.pop(context);
             },
             style: ButtonStyle(
@@ -74,7 +74,7 @@ class _NameEditDialogState extends State<NameEditDialog>{
     });
   }
 
-  Widget _usernameTextField(TextEditingController usernameController, ProfileState state) => new TextFormField(
+  Widget _usernameTextField(TextEditingController? usernameController, ProfileState state) => new TextFormField(
     decoration: const InputDecoration(
       labelText: 'Username',
     ),
@@ -87,7 +87,7 @@ class _NameEditDialogState extends State<NameEditDialog>{
   );
 
   void _onUsernameChanged() {
-    context.read<ProfileBloc>().add(UsernameChanged(username: _usernameController.text));
+    context.read<ProfileBloc>().add(UsernameChanged(username: _usernameController!.text));
   }
 }
 

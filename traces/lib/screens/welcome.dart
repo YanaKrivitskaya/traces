@@ -17,13 +17,13 @@ class _WelcomePageState extends State<WelcomePage>{
   final userRepository = new ApiUserRepository();
 
   //final FirebaseUserRepository _userRepository = FirebaseUserRepository();
-  AuthenticationBloc _authenticationBloc;
+  AuthenticationBloc? _authenticationBloc;
 
   @override
   void initState() {
     super.initState();
     _authenticationBloc = AuthenticationBloc();
-    _authenticationBloc.add(AppStarted());
+    _authenticationBloc!.add(AppStarted());
   }
 
   Widget _buildWaitingScreen() {
@@ -48,7 +48,7 @@ class _WelcomePageState extends State<WelcomePage>{
 
   @override
   void dispose(){
-    _authenticationBloc.close();
+    _authenticationBloc!.close();
     super.dispose();
   }
 }

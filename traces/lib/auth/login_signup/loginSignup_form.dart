@@ -23,15 +23,15 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   final TextEditingController _usernameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  String _errorMessage;
-  bool _isLoading;
-  bool _obscurePassword;
+  String? _errorMessage;
+  bool? _isLoading;
+  late bool _obscurePassword;
 
   String linkText = "Don't have an account?";
   String linkButtonText = "Create new";
   String actionText = "Login";
 
-  LoginSignupBloc _loginSignupBloc;
+  late LoginSignupBloc _loginSignupBloc;
 
   bool get loginIsPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
@@ -65,7 +65,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                     Container(
                       width: 250,
                       child: Text(
-                        state.errorMessage, style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),
+                        state.errorMessage!, style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 5,
                       ),
@@ -94,7 +94,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             );
         }
         if(state.status == StateStatus.Success){
-          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn(state.user));
+          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn(state.user!));
         }
         switch(state.form){
           case FormMode.Login:{
@@ -136,13 +136,13 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                               Text(this.actionText, style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon, fontSize: 30.0))),
                               Divider(color: ColorsPalette.blueHorizon),
                               state.form == FormMode.Register ? _usernameTextField(_usernameController, state) : Container(height: 0, width: 0,),
-                              !state.isPasswordReseted ?  _emailTextField(_emailController, state) : Container(height: 0, width: 0,),
+                              !state.isPasswordReseted! ?  _emailTextField(_emailController, state) : Container(height: 0, width: 0,),
                               _passwordResetInfo(state),
                               state.form == FormMode.Login || state.form == FormMode.Register ? _passwordTextField(_passwordController, state) : Container(height: 0, width: 0,),
                               //state.form == FormMode.Login ? _forgotPasswordLink() : Container(height: 0, width: 0,),
                               _showErrorMessage(),
                               _progressIndicator(),
-                              !state.isPasswordReseted ? _submitButton(state) : Container(height: 0, width: 0,),
+                              !state.isPasswordReseted! ? _submitButton(state) : Container(height: 0, width: 0,),
                               _footerLink(state)
                             ],
                           ),
@@ -183,7 +183,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   );
 
   bool _validateAndSave(){
-    final form = _formKey.currentState;
+    final form = _formKey.currentState!;
     if (form.validate()) {
       form.save();
       return true;
@@ -288,7 +288,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   );
 
   Widget _passwordResetInfo(LoginSignupState state){
-    if(state.isPasswordReseted){
+    if(state.isPasswordReseted!){
       return Center(
           child: Column(children: <Widget>[
             Icon(Icons.check, size: 60.0, color: ColorsPalette.beniukonBronze),
@@ -301,11 +301,11 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
 
   Widget _showErrorMessage() {
     print(_errorMessage);
-    if (_errorMessage != null && _errorMessage.length > 0) {
+    if (_errorMessage != null && _errorMessage!.length > 0) {
       return new Container(
         margin: const EdgeInsets.only(top: 10),
         child: new Text(
-          _errorMessage,
+          _errorMessage!,
           style: TextStyle(
               color: ColorsPalette.redPigment,
               height: 1.0,
@@ -351,12 +351,12 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   }
 
   void resetForm() {
-    _formKey.currentState.reset();
+    _formKey.currentState!.reset();
     _errorMessage = "";
   }
 
   Widget _progressIndicator() {
-    if (_isLoading != null && _isLoading) {
+    if (_isLoading != null && _isLoading!) {
       return Center(child: CircularProgressIndicator());
     }
     return Container(height: 0.0,width: 0.0,);

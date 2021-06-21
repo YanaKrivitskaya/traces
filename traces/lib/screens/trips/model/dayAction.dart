@@ -4,13 +4,13 @@ import 'dayAction_entity.dart';
 
 @immutable
 class DayAction {
-  final String id;
-  final String name;
-  final String description;
-  final DateTime date;
-  final bool isPlanned;
-  final bool isCompleted;
-  final String photoUrl;
+  final String? id;
+  final String? name;
+  final String? description;
+  final DateTime? date;
+  final bool? isPlanned;
+  final bool? isCompleted;
+  final String? photoUrl;
 
   DayAction({
     this.id,

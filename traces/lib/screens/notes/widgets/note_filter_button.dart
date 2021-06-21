@@ -52,8 +52,8 @@ class SortDialog extends StatefulWidget {
 }
 
 class _SortDialogState extends State<SortDialog>{
-  NoteBloc _noteBloc;
-  NoteSortBloc _sortBloc;
+  late NoteBloc _noteBloc;
+  late NoteSortBloc _sortBloc;
 
   final _sortFieldsList = [
     SortField(SortFields.TITLE, "Title"),
@@ -72,7 +72,7 @@ class _SortDialogState extends State<SortDialog>{
     _noteBloc = BlocProvider.of<NoteBloc>(context);
     _sortBloc = BlocProvider.of<NoteSortBloc>(context);
 
-    final currentState = _noteBloc.state;
+    final NoteState currentState = _noteBloc.state;
     if(currentState.status == StateStatus.Success){
       _sortBloc.add(SortUpdated(currentState.sortField, currentState.sortDirection));
     }
@@ -120,7 +120,7 @@ class _SortDialogState extends State<SortDialog>{
       groupValue: state.tempSortField,
       title: Text(option._value),
       value: option._key,
-      onChanged: (val) {
+      onChanged: (dynamic val) {
         _sortBloc.add(SortTempFieldUpdated(val));
       },
     )).toList(),
@@ -133,7 +133,7 @@ class _SortDialogState extends State<SortDialog>{
       groupValue: state.tempSortDirection,
       title: Text(option._value),
       value: option._key,
-      onChanged: (val) {
+      onChanged: (dynamic val) {
         _sortBloc.add(SortTempDirectionUpdated(val));
       },
     )).toList(),

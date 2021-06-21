@@ -3,8 +3,8 @@ import 'package:traces/screens/profile/model/member_entity.dart';
 
 @immutable
 class Member{  
-  String id;
-  final String name;
+  String? id;
+  final String? name;
 
   Member({this.id, this.name});
 

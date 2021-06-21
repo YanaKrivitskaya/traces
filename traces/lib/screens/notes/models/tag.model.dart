@@ -2,14 +2,14 @@ import 'dart:convert';
 
 
 class Tag {
-  final int id;
-  final int userId;
-  final String name;
-  final DateTime createdDate;
-  final DateTime updatedDate;
-  final bool deleted;
-  final DateTime deletedDate;
-  bool isChecked;
+  final int? id;
+  final int? userId;
+  final String? name;
+  final DateTime? createdDate;
+  final DateTime? updatedDate;
+  final bool? deleted;
+  final DateTime? deletedDate;
+  bool? isChecked;
   Tag({
     this.id,
     this.userId,

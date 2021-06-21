@@ -8,10 +8,10 @@ import '../model/entryExit.dart';
 import '../model/visa.dart';
 
 class EntryExitDeleteAlert extends StatelessWidget {
-  final EntryExit entryExit;
-  final Visa visa;
+  final EntryExit? entryExit;
+  final Visa? visa;
 
-  const EntryExitDeleteAlert({Key key, this.entryExit, this.visa/*, this.callback*/}) : super(key: key);
+  const EntryExitDeleteAlert({Key? key, this.entryExit, this.visa/*, this.callback*/}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class EntryExitDeleteAlert extends StatelessWidget {
           content: SingleChildScrollView(            
             child: Column( crossAxisAlignment: CrossAxisAlignment.start,
               children: [                
-                Text('Entry: ${entryExit.entryCountry} - ${DateFormat.yMMMd().format(entryExit.entryDate)}'),
-                entryExit.hasExit ? Text('Exit: ${entryExit.exitCountry} - ${DateFormat.yMMMd().format(entryExit.exitDate)}') : Container()
+                Text('Entry: ${entryExit!.entryCountry} - ${DateFormat.yMMMd().format(entryExit!.entryDate!)}'),
+                entryExit!.hasExit ? Text('Exit: ${entryExit!.exitCountry} - ${DateFormat.yMMMd().format(entryExit!.exitDate!)}') : Container()
               ],
             )
           ),

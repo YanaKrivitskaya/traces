@@ -43,8 +43,8 @@ class TagsDialog extends StatefulWidget{
 
 class _TagsDialogState extends State<TagsDialog>{
 
-  List<Tag> _tags;
-  List<Tag> _selectedTags;
+  List<Tag>? _tags;
+  List<Tag>? _selectedTags;
   Tag _selectAll = Tag(name: "All", isChecked: true);
   Tag _noTags = Tag(name: "No tags", isChecked: true);
 
@@ -66,27 +66,27 @@ class _TagsDialogState extends State<TagsDialog>{
             _selectAll.isChecked = state.allTagsChecked;
 
             // uncheck all
-            if(state.allUnChecked){
-              _tags.forEach((t) => t.isChecked = false);
+            if(state.allUnChecked!){
+              _tags!.forEach((t) => t.isChecked = false);
               _noTags.isChecked = false;
             }
 
             //check all
-            else if(_selectAll.isChecked){
-              _tags.forEach((t) => t.isChecked = true);
+            else if(_selectAll.isChecked!){
+              _tags!.forEach((t) => t.isChecked = true);
               _noTags.isChecked = true;
             }
 
             //check selected
-            else if (_tags != null && !_selectAll.isChecked) {
+            else if (_tags != null && !_selectAll.isChecked!) {
               if (_selectedTags != null) {
-                for(var i=0; i< _tags.length; i++){
-                  if(_selectedTags.where((tag) => tag.id == _tags[i].id).toList().length > 0){
-                    _tags[i].isChecked = true;
-                  }else _tags[i].isChecked = false;
+                for(var i=0; i< _tags!.length; i++){
+                  if(_selectedTags!.where((tag) => tag.id == _tags![i].id).toList().length > 0){
+                    _tags![i].isChecked = true;
+                  }else _tags![i].isChecked = false;
                 }
               } else {
-                _tags.forEach((t) => t.isChecked = true);
+                _tags!.forEach((t) => t.isChecked = true);
               }
             }
 
@@ -122,8 +122,8 @@ class _TagsDialogState extends State<TagsDialog>{
 
   Widget _tagOptions() => new Column(
     children:
-    _tags.map((Tag tag) => CheckboxListTile(
-      title: Text(tag.name),
+    _tags!.map((Tag tag) => CheckboxListTile(
+      title: Text(tag.name!),
       value: tag.isChecked,
       onChanged: (val) {
         context.read<TagFilterBloc>().add(TagChecked(tag, val));
@@ -135,7 +135,7 @@ class _TagsDialogState extends State<TagsDialog>{
   Widget _selectAllOptions() => new Column(
       children: <Widget>[
         CheckboxListTile(
-          title: Text(_selectAll.name),
+          title: Text(_selectAll.name!),
           value: _selectAll.isChecked,
           onChanged: (val) {
             _selectAll.isChecked = val;
@@ -149,7 +149,7 @@ class _TagsDialogState extends State<TagsDialog>{
   Widget _selectNoTags() => new Column(
     children: <Widget>[
       CheckboxListTile(
-        title: Text(_noTags.name),
+        title: Text(_noTags.name!),
         value: _noTags.isChecked,
         onChanged: (val) {
           _noTags.isChecked = val;

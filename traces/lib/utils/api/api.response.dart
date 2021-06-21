@@ -1,7 +1,7 @@
 class Response<T> {
   Status status;
-  T data;
-  String message;
+  T? data;
+  String? message;
 
   Response.loading(this.message) : status = Status.LOADING;
   Response.success(this.data) : status = Status.SUCCESS;

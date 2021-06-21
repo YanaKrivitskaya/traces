@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants/color_constants.dart';
 
-import 'package:mapbox_gl/mapbox_gl.dart';
 
 class MapPage extends StatefulWidget{
 
@@ -13,8 +12,13 @@ class MapPage extends StatefulWidget{
 }
 
 class _MapPageState extends State<MapPage>{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
 
-  final CameraPosition _kInitialPosition;
+ /* final CameraPosition _kInitialPosition;
   //final CameraTargetBounds _cameraTargetBounds;
   static double defaultZoom = 12.0;
 
@@ -140,5 +144,5 @@ class _MapPageState extends State<MapPage>{
 
       ),
     );
-  }*/
+  }*/*/
 }

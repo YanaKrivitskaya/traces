@@ -11,10 +11,10 @@ part 'settings_event.dart';
 part 'settings_state.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
-  final AppSettingsRepository _settingsRepository;  
+  //final AppSettingsRepository _settingsRepository;  
 
-  SettingsBloc({AppSettingsRepository settingsRepository})
-  : _settingsRepository = settingsRepository ?? new FirebaseAppSettingsRepository(),
+  SettingsBloc(/*{AppSettingsRepository? settingsRepository}*/)
+  : /*_settingsRepository = settingsRepository ?? new FirebaseAppSettingsRepository(),*/
       super(InitialSettingsState(null));
 
   @override
@@ -34,9 +34,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
      AppSettings settings;
 
     try{
-      settings = await _settingsRepository.generalSettings();
+      /*settings = await _settingsRepository.generalSettings();
       var userSettings = await _settingsRepository.userSettings();   
-      yield SuccessSettingsState(settings, null, userSettings.theme);
+      yield SuccessSettingsState(settings, null, userSettings.theme);*/
 
     }catch(e){
       print(e);
@@ -44,11 +44,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
     }    
   }
 
-  Stream<SettingsState> _mapThemeSelectedToState(String theme) async* {
+  Stream<SettingsState> _mapThemeSelectedToState(String? theme) async* {
      yield SuccessSettingsState(state.settings, theme, state.userTheme);
   }
 
-  Stream<SettingsState> _mapSubmitThemeToState(String theme) async* {
+  Stream<SettingsState> _mapSubmitThemeToState(String? theme) async* {
     /*var settings = await _settingsRepository.userSettings();
     settings.theme = theme;
 

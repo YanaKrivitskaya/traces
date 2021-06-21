@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 class CreateNoteModel {
-  final String title;
-  final String content;
+  final String? title;
+  final String? content;
 
   CreateNoteModel({
     this.title,

@@ -4,15 +4,15 @@ import 'package:meta/meta.dart';
 
 @immutable
 class User {
-  final int id;
-  final String name;
-  final String email;
-  final String password;
-  final bool emailVerified;
-  final DateTime createdDate;
-  final DateTime updatedDate;
-  final bool disabled;
-  final DateTime disabledDate;
+  final int? id;
+  final String? name;
+  final String? email;
+  final String? password;
+  final bool? emailVerified;
+  final DateTime? createdDate;
+  final DateTime? updatedDate;
+  final bool? disabled;
+  final DateTime? disabledDate;
 
   User({    
     this.id, 

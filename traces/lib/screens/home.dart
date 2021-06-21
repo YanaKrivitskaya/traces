@@ -14,20 +14,20 @@ import 'settings/repository/firebase_appSettings_repository.dart';
 
 class HomePage extends StatefulWidget {
   
-  HomePage({Key key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  String _theme;
+  String? _theme;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SettingsBloc>(
       create: (context) => 
-        SettingsBloc(settingsRepository: FirebaseAppSettingsRepository())
+        SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/)
           ..add(GetUserSettings()),
       child: BlocBuilder<SettingsBloc, SettingsState>(        
         builder: (context, state){
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _homeMenu(String _theme, BuildContext context) => new Scaffold(
+Widget _homeMenu(String? _theme, BuildContext context) => new Scaffold(
       appBar: AppBar(
         title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))),
         actions: <Widget>[
@@ -90,7 +90,7 @@ Widget _homeMenu(String _theme, BuildContext context) => new Scaffold(
       )
     );
 
-Column _menuTile(IconData icon, String theme, String iconName, String title, BuildContext context, String routeName) => Column(
+Column _menuTile(IconData icon, String? theme, String iconName, String title, BuildContext context, String routeName) => Column(
   children: <Widget>[
     TextButton(
       onPressed: () {

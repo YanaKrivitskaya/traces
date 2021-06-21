@@ -4,7 +4,7 @@ abstract class SettingsEvent extends Equatable{
   const SettingsEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class UpdateThemesList extends SettingsEvent{
@@ -40,20 +40,20 @@ class GetThemes extends SettingsEvent{
 }
 
 class ThemeSelected extends SettingsEvent{
-  final String theme;
+  final String? theme;
 
   ThemeSelected(this.theme);
 
   @override
-  List<Object> get props => [theme];
+  List<Object?> get props => [theme];
 }
 
 class SubmitTheme extends SettingsEvent{
-  final String theme;
+  final String? theme;
 
   SubmitTheme(this.theme);
 
   @override
-  List<Object> get props => [theme];
+  List<Object?> get props => [theme];
 }
 

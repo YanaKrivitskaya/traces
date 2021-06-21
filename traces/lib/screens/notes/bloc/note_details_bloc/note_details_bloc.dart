@@ -34,7 +34,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
     yield LoadingDetailsState(null);
 
     try{
-      Note note = await _notesRepository.getNoteById(event.noteId);
+      Note? note = await _notesRepository.getNoteById(event.noteId);
       yield ViewDetailsState(note);
     } on CustomException catch(e){
       yield ErrorDetailsState(e.toString());
@@ -42,7 +42,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
   }
 
   Stream<NoteDetailsState> _mapSaveNoteToState(SaveNoteClicked event) async*{
-    Note note;    
+    Note? note;    
 
     if(event.note.id != null){
       note = await _notesRepository.updateNote(event.note);/*.timeout(Duration(seconds: 3), onTimeout: (){

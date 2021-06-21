@@ -4,7 +4,7 @@ part of 'tripdetails_bloc.dart';
 abstract class TripDetailsEvent {
   const TripDetailsEvent();
 
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class GetTripDetails extends TripDetailsEvent {
@@ -27,10 +27,10 @@ class UpdateTripDetailsSuccess extends TripDetailsEvent{
 }
 
 class DeleteTripClicked extends TripDetailsEvent{
-  final String tripId;
+  final String? tripId;
 
   const DeleteTripClicked(this.tripId);
 
   @override
-  List<Object> get props => [tripId];
+  List<Object?> get props => [tripId];
 }

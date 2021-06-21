@@ -45,7 +45,7 @@ class TracesApp extends StatelessWidget{
 
   //final FirebaseUserRepository _userRepository;
 
-  TracesApp({Key key}/*, @required FirebaseUserRepository userRepository}*/)
+  TracesApp({Key? key}/*, @required FirebaseUserRepository userRepository}*/)
     /*:assert(userRepository != null),
     _userRepository = userRepository,*/
     :super(key: key);

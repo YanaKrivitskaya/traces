@@ -15,17 +15,17 @@ part 'visa_details_event.dart';
 part 'visa_details_state.dart';
 
 class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
-  final VisasRepository _visasRepository;
-  final ProfileRepository _profileRepository;
-  StreamSubscription _visasSubscription;
-  StreamSubscription _profileSubscription;
+  /*final VisasRepository _visasRepository;
+  final ProfileRepository _profileRepository;*/
+  StreamSubscription? _visasSubscription;
+  StreamSubscription? _profileSubscription;
 
   VisaDetailsBloc(
-      {@required VisasRepository visasRepository,
-      @required ProfileRepository profileRepository})
-      : assert(visasRepository != null),
+      /*{required VisasRepository visasRepository,
+      required ProfileRepository profileRepository}*/)
+      : /*assert(visasRepository != null),
         _visasRepository = visasRepository,
-        _profileRepository = profileRepository,
+        _profileRepository = profileRepository,*/
         super(VisaDetailsState.empty());
 
   @override
@@ -35,7 +35,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     } else if (event is NewVisaMode) {
       yield* _mapNewVisaModeToState(event);
     } else if (event is SaveVisaClicked) {
-      yield* _mapSaveVisaClickedToState(event.visa);
+      yield* _mapSaveVisaClickedToState(event.visa!);
     } else if (event is VisaSubmitted) {
       yield* _mapVisaSubmittedToState(event);
     } else if (event is UpdateVisaDetailsSuccess) {
@@ -74,7 +74,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   
   Stream<VisaDetailsState> _mapGetVisaDetailsToState(
       GetVisaDetails event) async* {
-    Visa visa = await _visasRepository.getVisaById(event.visaId);
+   /* Visa visa = await _visasRepository.getVisaById(event.visaId);
 
     var member = await _profileRepository.getMemberById(visa.owner);
 
@@ -90,18 +90,18 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
           (entryExits) => add(UpdateVisaDetailsSuccess(
               visa, entryExits, settings
             )),
-        );
+        );*/
   }
 
   Stream<VisaDetailsState> _mapDeleteVisaEventToState(
       DeleteVisaClicked event) async* {
-    await _visasRepository.deleteVisa(event.visaId);
+   // await _visasRepository.deleteVisa(event.visaId);
   }
 
   Stream<VisaDetailsState> _mapNewVisaModeToState(NewVisaMode event) async* {
     yield VisaDetailsState.loading();
 
-    UserSettings userSettings = await _visasRepository.userSettings();
+   /* UserSettings userSettings = await _visasRepository.userSettings();
     VisaSettings settings = await _visasRepository.settings();
 
     _profileSubscription?.cancel();
@@ -115,14 +115,14 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
         settings: settings,
         userSettings: userSettings,
         members: members,
-        autovalidate: false);*/
+        autovalidate: false);*/*/
   }
 
   Stream<VisaDetailsState> _mapEditVisaModeToState(
       EditVisaClicked event) async* {
     yield VisaDetailsState.loading();
 
-    UserSettings userSettings = await _visasRepository.userSettings();
+   /* UserSettings userSettings = await _visasRepository.userSettings();
     VisaSettings settings = await _visasRepository.settings();
     
     Visa visa = await _visasRepository.getVisaById(event.visaId);
@@ -131,7 +131,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     
     _profileSubscription = _profileRepository.familyMembers().listen(
       (members) => add(UpdateVisaDetailsEditing(visa, settings, members, userSettings))
-    );   
+    );   */
 
 
     /*yield VisaDetailsState.editing(
@@ -144,7 +144,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
   Stream<VisaDetailsState> _mapDateFromChangedToState(
       DateFromChanged event) async* {
-    Visa updVisa = state.visa;
+    Visa updVisa = state.visa!;
     updVisa.startDate = event.dateFrom;
 
     yield state.update(visa: updVisa);
@@ -152,7 +152,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
   Stream<VisaDetailsState> _mapDateToChangedToState(
       DateToChanged event) async* {
-    Visa updVisa = state.visa;
+    Visa updVisa = state.visa!;
     updVisa.endDate = event.dateTo;
 
     yield state.update(visa: updVisa);
@@ -167,7 +167,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     }
 
     //validate dates
-    if (event.visa.endDate.difference(event.visa.startDate).inDays < 1) {
+    if (event.visa!.endDate!.difference(event.visa!.startDate!).inDays < 1) {
       errorMessage += "\nEnd date should be greater than Start date";
     }
 
@@ -185,7 +185,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   }
 
   Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async* {
-    yield state.copyWith(status: StateStatus.Loading, mode: StateMode.Edit);
+    /*yield state.copyWith(status: StateStatus.Loading, mode: StateMode.Edit);
 
     if (visa.id != null) {
       visa = await _visasRepository
@@ -203,7 +203,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       });
     }
 
-    List<String> countries = [visa.countryOfIssue];
+    List<String?> countries = [visa.countryOfIssue];
 
     await _visasRepository
           .updateUserSettings(countries, null)
@@ -217,7 +217,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
         visa: visa,
         settings: state.settings,
         userSettings: state.userSettings,
-        members: state.familyMembers);
+        members: state.familyMembers);*/
   }
 
   Stream<VisaDetailsState> _mapTabUpdatedToState(

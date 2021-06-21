@@ -14,9 +14,9 @@ import 'bloc/visa_details/visa_details_bloc.dart';
 import 'model/visa.dart';
 
 class VisaEditView extends StatefulWidget {
-  final String visaId;
+  final String? visaId;
 
-  VisaEditView({Key key, this.visaId}) : super(key: key);
+  VisaEditView({Key? key, this.visaId}) : super(key: key);
 
   @override
   _VisaEditViewState createState() => _VisaEditViewState();
@@ -24,8 +24,8 @@ class VisaEditView extends StatefulWidget {
 
 class _VisaEditViewState extends State<VisaEditView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _countryController;
-  TextEditingController _durationController;
+  TextEditingController? _countryController;
+  TextEditingController? _durationController;
 
   @override
   void initState() {
@@ -36,8 +36,8 @@ class _VisaEditViewState extends State<VisaEditView> {
 
   @override
   void dispose() {
-    _countryController.dispose();
-    _durationController.dispose();
+    _countryController!.dispose();
+    _durationController!.dispose();
     super.dispose();
   }
 
@@ -68,7 +68,7 @@ class _VisaEditViewState extends State<VisaEditView> {
                     Container(
                       width: 250,
                       child: Text(
-                        state.errorMessage,
+                        state.errorMessage!,
                         style: GoogleFonts.quicksand(
                             textStyle:
                                 TextStyle(color: ColorsPalette.lynxWhite)),
@@ -89,8 +89,8 @@ class _VisaEditViewState extends State<VisaEditView> {
                 endDate: DateTime.now(),
                 entryExitIds: <String>[]);
           } else {
-            _countryController.text = state.visa.countryOfIssue;
-            _durationController.text = state.visa.durationOfStay.toString();
+            _countryController!.text = state.visa!.countryOfIssue!;
+            _durationController!.text = state.visa!.durationOfStay.toString();
           }
         }
         if (state.status == StateStatus.Loading &&
@@ -145,12 +145,12 @@ class _VisaEditViewState extends State<VisaEditView> {
             );
           Future.delayed(const Duration(seconds: 1), () {
             Navigator.popAndPushNamed(context, visaDetailsRoute,
-                arguments: state.visa.id);
+                arguments: state.visa!.id);
           });
         }
         if (state.mode == StateMode.Edit) {          
-          if (state.familyMembers.length == 1) {
-            state.visa.owner = state.familyMembers.first.id;            
+          if (state.familyMembers!.length == 1) {
+            state.visa!.owner = state.familyMembers!.first.id;            
           }
         }
 
@@ -224,11 +224,11 @@ class _VisaEditViewState extends State<VisaEditView> {
                 ),
                 Column(
                   children: <Widget>[
-                    Text('${DateFormat.yMMMd().format(state.visa.startDate)}',
+                    Text('${DateFormat.yMMMd().format(state.visa!.startDate!)}',
                         style: TextStyle(
                             fontSize: 16.0, fontWeight: FontWeight.bold)),
                     SizedBox(height: 30.0),
-                    Text('${DateFormat.yMMMd().format(state.visa.endDate)}',
+                    Text('${DateFormat.yMMMd().format(state.visa!.endDate!)}',
                         style: TextStyle(
                             fontSize: 16.0, fontWeight: FontWeight.bold)),
                   ],
@@ -268,11 +268,11 @@ class _VisaEditViewState extends State<VisaEditView> {
             foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
           ),
           onPressed: () {
-            var isFormValid = _formKey.currentState.validate();
+            var isFormValid = _formKey.currentState!.validate();
 
-            state.visa.countryOfIssue = _countryController.text.trim();
-            state.visa.durationOfStay =
-                int.parse(this._durationController.text.trim());
+            state.visa!.countryOfIssue = _countryController!.text.trim();
+            state.visa!.durationOfStay =
+                int.parse(this._durationController!.text.trim());
 
             context
                 .read<VisaDetailsBloc>()
@@ -281,19 +281,19 @@ class _VisaEditViewState extends State<VisaEditView> {
 
   Widget _ownerSelector(VisaDetailsState state) =>
       new DropdownButtonFormField<String>(
-          value: state.visa.owner,
+          value: state.visa!.owner,
           isExpanded: true,
           decoration: InputDecoration(
               labelText: "Visa owner",
               labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-          items: state.familyMembers.map((Member member) {
+          items: state.familyMembers!.map((Member member) {
             return new DropdownMenuItem<String>(
               value: member.id,
-              child: new Text(member.name),
+              child: new Text(member.name!),
             );
           }).toList(),
-          onChanged: (String value) {
-            state.visa.owner = value;
+          onChanged: (String? value) {
+            state.visa!.owner = value;
           },
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
@@ -310,7 +310,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCountries = state.userSettings.countries
+          var filteredCountries = state.userSettings!.countries!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCountries.length > 0) {
@@ -321,7 +321,7 @@ class _VisaEditViewState extends State<VisaEditView> {
       },
       hideOnLoading: true,
       hideOnEmpty: true,
-      itemBuilder: (context, suggestion) {
+      itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion),
         );
@@ -329,13 +329,13 @@ class _VisaEditViewState extends State<VisaEditView> {
       transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
       },
-      onSuggestionSelected: (suggestion) {
-        this._countryController.text = suggestion;
+      onSuggestionSelected: (dynamic suggestion) {
+        this._countryController!.text = suggestion;
         FocusScope.of(context).unfocus();
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
-        if (value.isEmpty) {
+        if (value!.isEmpty) {
           return 'Required field';
         }
         return null;
@@ -348,26 +348,26 @@ class _VisaEditViewState extends State<VisaEditView> {
       controller: _durationController,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
-        if (int.tryParse(value) == null) return 'Should be a number';
+        if (int.tryParse(value!) == null) return 'Should be a number';
         return value.isEmpty ? 'Required field' : null;
       },
       keyboardType: TextInputType.number);
 
   Widget _typeSelector(VisaDetailsState state) =>
       new DropdownButtonFormField<String>(
-        value: state.visa.type,
+        value: state.visa!.type,
         isExpanded: true,
         decoration: InputDecoration(
             labelText: "Type",
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-        items: state.settings.visaTypes.map((String value) {
+        items: state.settings!.visaTypes!.map((String value) {
           return new DropdownMenuItem<String>(
             value: value,
             child: new Text(value),
           );
         }).toList(),
-        onChanged: (String value) {
-          state.visa.type = value;
+        onChanged: (String? value) {
+          state.visa!.type = value;
           FocusScope.of(context).unfocus();
         },
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -378,19 +378,19 @@ class _VisaEditViewState extends State<VisaEditView> {
 
   Widget _entriesNumberSelector(VisaDetailsState state) =>
       new DropdownButtonFormField<String>(
-        value: state.visa.numberOfEntries,
+        value: state.visa!.numberOfEntries,
         isExpanded: true,
         decoration: InputDecoration(
             labelText: "Entries",
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-        items: state.settings.entries.map((String value) {
+        items: state.settings!.entries!.map((String value) {
           return new DropdownMenuItem<String>(
             value: value,
             child: new Text(value),
           );
         }).toList(),
-        onChanged: (String value) {
-          state.visa.numberOfEntries = value;
+        onChanged: (String? value) {
+          state.visa!.numberOfEntries = value;
           FocusScope.of(context).unfocus();
           //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
         },
@@ -402,40 +402,40 @@ class _VisaEditViewState extends State<VisaEditView> {
 
   Future<Null> _selectValidFromDate(
       BuildContext context, VisaDetailsState state) async {
-    final DateTime picked = await showDatePicker(
-        builder: (BuildContext context, Widget child) {
+    final DateTime? picked = await showDatePicker(
+        builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData(primarySwatch: ColorsPalette.matVisaCalendarColor),
-            child: child,
+            child: child!,
           );
         },
         context: context,
-        initialDate: state.visa.startDate,
+        initialDate: state.visa!.startDate!,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != state.visa.startDate) {
-      state.visa.durationOfStay =
-          int.parse(this._durationController.text.trim());
+    if (picked != null && picked != state.visa!.startDate) {
+      state.visa!.durationOfStay =
+          int.parse(this._durationController!.text.trim());
       context.read<VisaDetailsBloc>().add(DateFromChanged(picked));
     }
   }
 
   Future<Null> _selectValidToDate(
       BuildContext context, VisaDetailsState state) async {
-    final DateTime picked = await showDatePicker(
-        builder: (BuildContext context, Widget child) {
+    final DateTime? picked = await showDatePicker(
+        builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData(primarySwatch: ColorsPalette.matVisaCalendarColor),
-            child: child,
+            child: child!,
           );
         },
         context: context,
-        initialDate: state.visa.startDate.add(new Duration(days: 1)),
-        firstDate: state.visa.startDate.add(new Duration(days: 1)),
+        initialDate: state.visa!.startDate!.add(new Duration(days: 1)),
+        firstDate: state.visa!.startDate!.add(new Duration(days: 1)),
         lastDate: DateTime(2101));
-    if (picked != null && picked != state.visa.endDate) {
-      state.visa.durationOfStay =
-          int.parse(this._durationController.text.trim());
+    if (picked != null && picked != state.visa!.endDate) {
+      state.visa!.durationOfStay =
+          int.parse(this._durationController!.text.trim());
       context.read<VisaDetailsBloc>().add(DateToChanged(picked));
     }
   }

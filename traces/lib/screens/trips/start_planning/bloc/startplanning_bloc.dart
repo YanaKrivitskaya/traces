@@ -12,12 +12,12 @@ part 'startplanning_event.dart';
 part 'startplanning_state.dart';
 
 class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
-  final TripsRepository _tripsRepository;
-  final ProfileRepository _profileRepository;
+  /*final TripsRepository _tripsRepository;
+  final ProfileRepository _profileRepository;*/
   
-  StartPlanningBloc(TripsRepository tripsRepository) : 
-  _tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
-  _profileRepository = new FirebaseProfileRepository(),
+  StartPlanningBloc(/*TripsRepository tripsRepository*/) : 
+  /*_tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
+  _profileRepository = new FirebaseProfileRepository(),*/
   super(StartPlanningInitial(null));
 
   @override
@@ -48,23 +48,23 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
   Stream<StartPlanningState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
     yield StartPlanningSuccessState(event.trip, true);
 
-    if(event.trip.startDate == null || event.trip.endDate == null){
+    if(event.trip!.startDate == null || event.trip!.endDate == null){
       var error = 'Please choose the dates';
       yield StartPlanningErrorState(event.trip, error);
     }
     else{
-      var userProfile = await _profileRepository.getCurrentProfile(); 
-      event.trip.tripMembers = [userProfile.displayName];
+      /*var userProfile = await _profileRepository.getCurrentProfile(); 
+      event.trip!.tripMembers = [userProfile.displayName];
 
       Trip trip = await _tripsRepository.addnewTrip(event.trip)
       .timeout(Duration(seconds: 5), onTimeout: (){
           print("have timeout");
-          return event.trip;
+          return event.trip!;
         });
 
       if(trip != null && trip.id != null){
         yield StartPlanningCreatedState(trip);
-      }
+      }*/
     }    
   }
 

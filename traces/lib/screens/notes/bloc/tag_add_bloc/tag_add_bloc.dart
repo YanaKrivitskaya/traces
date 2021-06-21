@@ -36,7 +36,7 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
 
   Stream<TagAddState> _mapUpdateTagsListToState(UpdateTagsList event) async* {
     List<Tag> filteredTags = <Tag>[];
-    filteredTags.addAll(event.allTags);
+    filteredTags.addAll(event.allTags!);
     yield TagAddState.success(allTags: event.allTags, filteredTags: filteredTags);
   }
 
@@ -50,14 +50,14 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
   Stream<TagAddState> _mapAddTagToState(AddTag event) async* {
     yield state.update(stateStatus: StateStatus.Loading);
 
-    Tag tag = await _tagsRepository.createTag(event.tag);
-    state.allTags.add(tag);
+    Tag tag = await (_tagsRepository.createTag(event.tag) as FutureOr<Tag>);
+    state.allTags!.add(tag);
 
     add(TagChanged(tagName: tag.name));    
   }
 
   Stream<TagAddState> _mapUpdateNoteTagToState(UpdateNoteTag event) async* {
-    event.isChecked      
+    event.isChecked!      
       ? await _notesRepository.addNoteTag(event.noteId, event.tagId)
       : await _notesRepository.deleteNoteTag(event.noteId, event.tagId);
     yield TagAddState.success(allTags: state.allTags, filteredTags: state.filteredTags);
@@ -66,7 +66,7 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
   Stream<TagAddState> _mapTagChangedToState(TagChanged event) async*{
     yield state.update(stateStatus: StateStatus.Loading);
 
-    List<Tag> filteredTags = state.allTags.where((t) => t.name.toLowerCase().contains(event.tagName.toLowerCase())).toList();
+    List<Tag> filteredTags = state.allTags!.where((t) => t.name!.toLowerCase().contains(event.tagName!.toLowerCase())).toList();
 
     yield state.update(filteredTags: filteredTags, stateStatus: StateStatus.Success);
   }

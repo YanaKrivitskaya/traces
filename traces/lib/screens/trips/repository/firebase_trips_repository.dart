@@ -5,7 +5,7 @@ import 'package:traces/screens/trips/repository/trips_repository.dart';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class FirebaseTripsRepository extends TripsRepository{
+class FirebaseTripsRepository{
   final tripsCollection = FirebaseFirestore.instance.collection('trips');
   final String userTrips = "userTrips";
   final String tripsDays = "tripDays";
@@ -20,7 +20,7 @@ class FirebaseTripsRepository extends TripsRepository{
   }
 
   @override
-  Future<Trip> addnewTrip(Trip trip) async{
+  Future<void> addnewTrip(Trip? trip) async{
     /*String uid = await _userRepository.getUserId();
     var tripEntity = trip.toEntity().toDocument();
     final newTrip = await tripsCollection.doc(uid).collection(userTrips).add(tripEntity);
@@ -28,7 +28,7 @@ class FirebaseTripsRepository extends TripsRepository{
   }
   
   @override
-  Future<Trip> getTripById(String id) async{
+  Future<void> getTripById(String? id) async{
    /* String uid = await _userRepository.getUserId();
 
     var trip = await tripsCollection.doc(uid).collection(userTrips).doc(id).get();
@@ -52,7 +52,7 @@ class FirebaseTripsRepository extends TripsRepository{
   }
 
   @override
-  Future<Trip> updateTrip(Trip updTrip) async{
+  Future<void> updateTrip(Trip updTrip) async{
     /*String uid = await _userRepository.getUserId();
 
     await tripsCollection.doc(uid).collection(userTrips).doc(updTrip.id)
@@ -62,7 +62,7 @@ class FirebaseTripsRepository extends TripsRepository{
   }
 
   @override
-  Future<Trip> updateTripMembers(String tripId, List<String> members) async{
+  Future<void> updateTripMembers(String? tripId, List<String?> members) async{
     /*String uid = await _userRepository.getUserId();
 
     await tripsCollection.doc(uid).collection(userTrips).doc(tripId)
@@ -72,7 +72,7 @@ class FirebaseTripsRepository extends TripsRepository{
   }
 
   @override
-  Future<void> deleteTrip(String tripId) async{
+  Future<void> deleteTrip(String? tripId) async{
    /* String uid = await _userRepository.getUserId();
 
     await tripsCollection.doc(uid).collection(userTrips).doc(tripId).delete();*/

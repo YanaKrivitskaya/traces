@@ -6,8 +6,8 @@ abstract class NoteSortEvent extends Equatable {
 }
 
 class SortUpdated extends NoteSortEvent{
-  final SortFields sortField;
-  final SortDirections sortDirection;
+  final SortFields? sortField;
+  final SortDirections? sortDirection;
 
   SortUpdated(
       this.sortField,
@@ -15,25 +15,25 @@ class SortUpdated extends NoteSortEvent{
       );
 
   @override
-  List<Object> get props => [sortField, sortDirection];
+  List<Object?> get props => [sortField, sortDirection];
 }
 
 class SortTempFieldUpdated extends NoteSortEvent{
-  final SortFields tempSortField;
+  final SortFields? tempSortField;
 
   SortTempFieldUpdated(this.tempSortField);
 
   @override
-  List<Object> get props => [tempSortField];
+  List<Object?> get props => [tempSortField];
 
 }
 
 class SortTempDirectionUpdated extends NoteSortEvent{
-  final SortDirections tempSortDirection;
+  final SortDirections? tempSortDirection;
 
   SortTempDirectionUpdated(this.tempSortDirection);
 
   @override
-  List<Object> get props => [tempSortDirection];
+  List<Object?> get props => [tempSortDirection];
 
 }

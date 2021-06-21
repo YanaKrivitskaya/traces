@@ -4,16 +4,16 @@ import '../../../../utils/misc/state_types.dart';
 import '../../models/tag.model.dart';
 
 class TagAddState {
-  final List<Tag> allTags;
-  final List<Tag> filteredTags;
+  final List<Tag>? allTags;
+  final List<Tag>? filteredTags;
   final StateStatus status;
-  final String errorMessage;
+  final String? errorMessage;
 
 
   const TagAddState({
-    @required this.allTags,
-    @required this.filteredTags,
-    @required this.status,
+    required this.allTags,
+    required this.filteredTags,
+    required this.status,
     this.errorMessage});
 
   factory TagAddState.empty(){
@@ -34,7 +34,7 @@ class TagAddState {
     );
   }
 
-  factory TagAddState.success({List<Tag> allTags, List<Tag> filteredTags}){
+  factory TagAddState.success({List<Tag>? allTags, List<Tag>? filteredTags}){
     return TagAddState(
         allTags: allTags,
         filteredTags: filteredTags,
@@ -43,7 +43,7 @@ class TagAddState {
     );
   }
 
-  factory TagAddState.failure({List<Tag> allTags, List<Tag> filteredTags, String error}){
+  factory TagAddState.failure({List<Tag>? allTags, List<Tag>? filteredTags, String? error}){
     return TagAddState(
         allTags: allTags,
         filteredTags: filteredTags,
@@ -53,10 +53,10 @@ class TagAddState {
   }
 
   TagAddState copyWith({
-    List<Tag> allTags,
-    List<Tag> filteredTags,
-    StateStatus stateStatus,
-    String errorMessage
+    List<Tag>? allTags,
+    List<Tag>? filteredTags,
+    StateStatus? stateStatus,
+    String? errorMessage
   }){
     return TagAddState(
         allTags: allTags ?? this.allTags,
@@ -67,10 +67,10 @@ class TagAddState {
   }
 
   TagAddState update({
-    List<Tag> allTags,
-    List<Tag> filteredTags,
-    StateStatus stateStatus,
-    String errorMessage
+    List<Tag>? allTags,
+    List<Tag>? filteredTags,
+    StateStatus? stateStatus,
+    String? errorMessage
   }){
     return copyWith(
         allTags: allTags,
@@ -81,4 +81,6 @@ class TagAddState {
   }
 }
 
-class InitialTagAddState extends TagAddState {}
+class InitialTagAddState extends TagAddState {
+  InitialTagAddState() : super(filteredTags: null, allTags: null, status: StateStatus.Empty);
+}

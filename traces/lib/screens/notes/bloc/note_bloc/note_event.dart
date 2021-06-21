@@ -7,7 +7,7 @@ abstract class NoteEvent extends Equatable {
   const NoteEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class GetAllNotes extends NoteEvent {}
@@ -15,9 +15,9 @@ class GetAllNotes extends NoteEvent {}
 class SearchBarToggle extends NoteEvent {}
 
 class UpdateNotesList extends NoteEvent {
-  final List<Note> allNotes;
+  final List<Note>? allNotes;
 
-  final List<Note> filteredNotes;
+  final List<Note>? filteredNotes;
 
   final SortFields sortField;
   final SortDirections sortDirection;
@@ -25,7 +25,7 @@ class UpdateNotesList extends NoteEvent {
   const UpdateNotesList(this.allNotes, this.sortField, this.sortDirection, this.filteredNotes);
 
   @override
-  List<Object> get props => [allNotes, sortField, sortDirection, filteredNotes];
+  List<Object?> get props => [allNotes, sortField, sortDirection, filteredNotes];
 }
 
 class UpdateSortFilter extends NoteEvent{
@@ -41,18 +41,18 @@ class UpdateSortFilter extends NoteEvent{
 class SelectedTagsUpdated extends NoteEvent{}
 
 class DeleteNote extends NoteEvent {
-  final Note note;
+  final Note? note;
 
   const DeleteNote(this.note);
 
   @override
-  List<Object> get props => [note];
+  List<Object?> get props => [note];
 }
 
 class SearchTextChanged extends NoteEvent{
   final String noteName;
 
-  const SearchTextChanged({@required this.noteName});
+  const SearchTextChanged({required this.noteName});
 
   @override
   List<Object> get props => [noteName];

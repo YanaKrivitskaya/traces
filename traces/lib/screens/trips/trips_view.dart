@@ -49,7 +49,7 @@ class _TripsStateView extends State<TripsView>{
                               child: trip.coverImageUrl != null ? CachedNetworkImage(
                                 placeholder: (context, url) => Image.asset("assets/sunset.jpg"),
                                 //placeholder: (context, url) => loadingWidget(ColorsPalette.meditSea),
-                                imageUrl: trip.coverImageUrl,
+                                imageUrl: trip.coverImageUrl!,
                               ) : Image.asset("assets/sunset.jpg")                            
                             ),
                             Positioned(
@@ -64,8 +64,8 @@ class _TripsStateView extends State<TripsView>{
                                   margin: EdgeInsets.all(10),
                                   width: MediaQuery.of(context).size.width * 0.6,
                                   child: Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [                                
-                                  Text(trip.name, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
-                                  Text('${DateFormat.yMMMd().format(trip.startDate)} - ${DateFormat.yMMMd().format(trip.endDate)}',
+                                  Text(trip.name!, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
+                                  Text('${DateFormat.yMMMd().format(trip.startDate!)} - ${DateFormat.yMMMd().format(trip.endDate!)}',
                                     style: quicksandStyle(fontSize: 15.0)),
                                 ],),
                               ),

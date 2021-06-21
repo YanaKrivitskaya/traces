@@ -14,7 +14,7 @@ import 'model/visa_tab.dart';
 class VisasView extends StatefulWidget {
   final VisaTab activeTab;
 
-  VisasView({Key key, @required this.activeTab}) : super(key: key);
+  VisasView({Key? key, required this.activeTab}) : super(key: key);
 
   @override
   _VisasViewState createState() => _VisasViewState();
@@ -35,10 +35,10 @@ class _VisasViewState extends State<VisasView> {
 
           if (state.status == StateStatus.Success) {
             widget.activeTab == VisaTab.ActiveVisas
-              ? this.visas = state.allVisas.where((visa) => isVisaActive(visa)).toList()
+              ? this.visas = state.allVisas!.where((visa) => isVisaActive(visa)).toList()
                 : widget.activeTab == VisaTab.ExpiredVisas
-              ? this.visas = state.allVisas.where((visa) => !isVisaActive(visa)).toList()
-              : this.visas = state.allVisas.toList();
+              ? this.visas = state.allVisas!.where((visa) => !isVisaActive(visa)).toList()
+              : this.visas = state.allVisas!.toList();
 
               this.visas = _sortVisas(visas);
 
@@ -65,7 +65,7 @@ class _VisasViewState extends State<VisasView> {
                                               children: <Widget>[
                                                 Row( mainAxisAlignment: MainAxisAlignment.start,
                                                   children: <Widget>[
-                                                    _avatar(visa.owner),
+                                                    _avatar(visa.owner!),
                                                     _visaDetails(visa)
                                                   ],
                                                 )
@@ -101,13 +101,13 @@ class _VisasViewState extends State<VisasView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(visa.countryOfIssue + ' - ' + visa.type,
+            Text(visa.countryOfIssue! + ' - ' + visa.type!,
                 style: TextStyle(
                     fontSize: 15.0,
                     color: ColorsPalette.mazarineBlue,
                     fontWeight: FontWeight.bold)),
             Text(
-                '${DateFormat.yMMMd().format(visa.startDate)} - ${DateFormat.yMMMd().format(visa.endDate)}',
+                '${DateFormat.yMMMd().format(visa.startDate!)} - ${DateFormat.yMMMd().format(visa.endDate!)}',
                 style: TextStyle(fontSize: 15.0)),
             Text('${visaDuration(visa)} / ${visa.durationOfStay} days',
                 style: TextStyle(fontSize: 15.0)),
@@ -118,8 +118,8 @@ class _VisasViewState extends State<VisasView> {
 
   List<Visa> _sortVisas(List<Visa> visas) {
     visas.sort((a, b) {
-      return b.startDate.millisecondsSinceEpoch
-          .compareTo(a.startDate.millisecondsSinceEpoch);
+      return b.startDate!.millisecondsSinceEpoch
+          .compareTo(a.startDate!.millisecondsSinceEpoch);
     });
     return visas;
   }

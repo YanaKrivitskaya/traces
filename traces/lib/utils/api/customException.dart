@@ -9,7 +9,7 @@ class CustomException implements Exception{
 }
 
 class FetchDataException extends CustomException {
-  FetchDataException([String message])
+  FetchDataException([String? message])
       : super("Server error: $message");
 }
 

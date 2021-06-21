@@ -11,11 +11,11 @@ import 'bloc.dart';
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   
   final ApiUserRepository _userRepository;
-  final AppSettingsRepository _appSettingsRepository;
+  /*final AppSettingsRepository _appSettingsRepository;*/
 
   AuthenticationBloc(): 
       _userRepository = new ApiUserRepository(),
-      _appSettingsRepository = new FirebaseAppSettingsRepository(),
+      /*_appSettingsRepository = new FirebaseAppSettingsRepository(),*/
       super(Uninitialized());
 
   @override

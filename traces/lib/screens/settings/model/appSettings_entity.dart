@@ -3,16 +3,16 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class AppSettingsEntity extends Equatable{
-  final List<String> themes;
+  final List<String?>? themes;
 
   AppSettingsEntity(this.themes);
 
   @override
-  List<Object> get props => [themes];
+  List<Object?> get props => [themes];
 
   static AppSettingsEntity fromMap(Map<dynamic, dynamic> map){
     return AppSettingsEntity(
-      map["themes"].cast<String>() as List<String>
+      map["themes"].cast<String>() as List<String>?
     );
   }
 
@@ -20,7 +20,7 @@ class AppSettingsEntity extends Equatable{
     return AppSettingsEntity(snap["themes"]);
   }
 
-  Map<String, Object> toDocument(){
+  Map<String, Object?> toDocument(){
     return {
       "themes": themes
     };
@@ -28,11 +28,11 @@ class AppSettingsEntity extends Equatable{
 }
 
   @immutable class AppSettings{
-  final List<String> themes;
+  final List<String?>? themes;
 
   AppSettings(this.themes);
 
-  AppSettings copyWith({List<String> themes}){
+  AppSettings copyWith({List<String>? themes}){
     return AppSettings(      
       themes ?? this.themes
     );

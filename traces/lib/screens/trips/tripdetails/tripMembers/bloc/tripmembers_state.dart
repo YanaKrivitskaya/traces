@@ -3,7 +3,7 @@ part of 'tripmembers_bloc.dart';
 @immutable
 abstract class TripMembersState{
   final List<Member> members;
-  final List<String> selectedMembers;
+  final List<String?> selectedMembers;
 
   const TripMembersState(this.members, this.selectedMembers);
 
@@ -16,9 +16,9 @@ class LoadingTripMembersState extends TripMembersState{
 }
 
 class SuccessTripMembersState  extends TripMembersState {  
-  SuccessTripMembersState(List<Member> members, List<String> selectedMembers) : super(members, selectedMembers);  
+  SuccessTripMembersState(List<Member> members, List<String?> selectedMembers) : super(members, selectedMembers);  
 }
 
 class SubmittedTripMembersState  extends TripMembersState {  
-  SubmittedTripMembersState(List<Member> members, List<String> selectedMembers) : super(members, selectedMembers);  
+  SubmittedTripMembersState(List<Member> members, List<String?> selectedMembers) : super(members, selectedMembers);  
 }

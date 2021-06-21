@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:traces/screens/profile/model/profile_entity.dart';
 
 @immutable class Profile{
-  final String email;
+  final String? email;
   final String displayName;
-  final bool isEmailVerified;
-  final String id;
+  final bool? isEmailVerified;
+  final String? id;
   
-  Profile(this.email, {String displayName, String id, bool isEmailVerified})
+  Profile(this.email, {String? displayName, String? id, bool? isEmailVerified})
       : this.id = id,
         this.isEmailVerified = isEmailVerified,
         this.displayName = displayName ?? '';
 
-  Profile copyWith({String email, String displayName, bool isEmailVerified}){
+  Profile copyWith({String? email, String? displayName, bool? isEmailVerified}){
     return Profile(
       email ?? this.email,      
       displayName: displayName ?? this.displayName,

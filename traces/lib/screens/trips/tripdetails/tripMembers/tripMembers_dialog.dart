@@ -10,7 +10,7 @@ import 'package:traces/widgets/widgets.dart';
 class TripMembersDialog extends StatefulWidget{
   Trip trip;
   
-  TripMembersDialog({@required this.trip});
+  TripMembersDialog({required this.trip});
 
   @override
   _TripMembersDialogState createState() => new _TripMembersDialogState();
@@ -80,7 +80,7 @@ class _TripMembersDialogState extends State<TripMembersDialog>{
         height: 40.0,        
         child:  CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
-          title: Text(member.name),
+          title: Text(member.name!),
           value: state.selectedMembers.contains(member.id),
           onChanged: (checked) {
             context.read<TripMembersBloc>().add(MemberChecked(member.id, checked));
