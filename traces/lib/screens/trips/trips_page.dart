@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/trips/bloc/trips_bloc.dart';
 
-import '../../colorsPalette.dart';
-import '../../constants.dart';
+import '../../constants/color_constants.dart';
+import '../../constants/route_constants.dart';
 import 'trips_view.dart';
 
 class TripsPage extends StatelessWidget{

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import '../model/login.model.dart';
-import '../model/user.dart';
+import '../model/user.model.dart';
 
 abstract class UserRepository{
   Future<User> signInWithEmailAndPassword(LoginModel loginModel);

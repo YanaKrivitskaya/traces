@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../colorsPalette.dart';
-import '../../constants.dart';
+import '../../constants/color_constants.dart';
+import '../../constants/route_constants.dart';
 import 'bloc/visa_tab/visa_tab_bloc.dart';
 import 'model/visa_tab.dart';
 import 'visas_view.dart';

@@ -1,16 +1,20 @@
 
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/notes/bloc/note_details_bloc/bloc.dart';
-import 'package:traces/screens/notes/bloc/tag_add_bloc/bloc.dart';
-import 'package:traces/screens/notes/model/note.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/notes/model/tag.dart';
-import 'package:traces/shared/state_types.dart';
+
+import '../../constants/color_constants.dart';
+import '../../shared/shared.dart';
+import '../../shared/state_types.dart';
+import 'bloc/note_details_bloc/bloc.dart';
+import 'bloc/tag_add_bloc/bloc.dart';
+import 'model/create_tag.model.dart';
+import 'model/note.model.dart';
+import 'model/tag.model.dart';
 
 class TagsAddDialog extends StatefulWidget{
+  final StringCallback callback;
 
-  const TagsAddDialog();
+  const TagsAddDialog({this.callback});
 
   @override
   _TagsAddDialogState createState() => new _TagsAddDialogState();
@@ -48,9 +52,9 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
           if(state.status == StateStatus.Success){
             _tags = state.filteredTags;
             if(_tags != null){
-              if(_note.tagIds != null && _note.tagIds.isNotEmpty){
+              if(_note.tags != null && _note.tags.isNotEmpty){
                 _tags.forEach((t){
-                  _note.tagIds.contains(t.id) ? t.isChecked = true : t.isChecked = false;
+                  _note.tags.contains(t) ? t.isChecked = true : t.isChecked = false;
                 });
               }else{
                 _tags.forEach((t) => t.isChecked = false);
@@ -64,12 +68,13 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
                 TextButton(
                   child: Text('Done'),
                   onPressed: () {
+                    widget.callback("Ok");
                     Navigator.pop(context);
                   },
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
                     foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.greenGrass)
-                  ),                  
+                  ),
                 ),
               ],
               content: Container(
@@ -107,7 +112,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
         icon: Icon(Icons.add, color: ColorsPalette.greenGrass),
         onPressed: (){
           if(_tagController.text != ''){
-            Tag newTag = Tag(_tagController.text);
+            CreateTagModel newTag = CreateTagModel(_tagController.text);
             context.read<TagAddBloc>().add(AddTag(newTag));
             FocusScope.of(context).requestFocus(FocusNode());
           }
@@ -123,16 +128,15 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
   Widget _tagOptions() => new Column(
       children:
       _tags.map((Tag tag) => CheckboxListTile(
-        title: Text(tag.name + " (" + tag.usage.toString() + ")"),
+        title: Text(tag.name),
         value: tag.isChecked,
         onChanged: (checked) {
 
-          Tag updatedTag = new Tag(tag.name, id: tag.id, usage: checked ? tag.usage +1 : tag.usage -1, isChecked: checked);
+          Tag updatedTag = new Tag(name: tag.name, id: tag.id, isChecked: checked);
 
-          checked ? _note.tagIds.add(tag.id) : _note.tagIds.remove(tag.id);
+          checked ? _note.tags.add(tag) : _note.tags.remove(tag);
 
-          context.read<NoteDetailsBloc>().add(SaveNoteClicked(_note));
-          context.read<TagAddBloc>().add(UpdateTag(updatedTag));
+          context.read<TagAddBloc>().add(UpdateNoteTag(_note.id, updatedTag.id, checked));
         },
         activeColor: ColorsPalette.nycTaxi,
       )).toList()

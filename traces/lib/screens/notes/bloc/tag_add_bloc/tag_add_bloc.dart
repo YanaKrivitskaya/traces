@@ -1,18 +1,21 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/model/tag.dart';
-import 'package:traces/shared/state_types.dart';
-import './bloc.dart';
-import 'package:meta/meta.dart';
+
+import '../../../../shared/state_types.dart';
+import '../../model/tag.model.dart';
+import '../../repository/api_notes_repository.dart';
+import '../../repository/api_tags_repository.dart';
+import 'bloc.dart';
 
 class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
-  final NoteRepository _notesRepository;
-  StreamSubscription _notesSubscription;
+  final ApiNotesRepository _notesRepository;
+  final ApiTagsRepository _tagsRepository;
 
-  TagAddBloc({@required NoteRepository notesRepository})
-      : assert(notesRepository != null),
-        _notesRepository = notesRepository, super(TagAddState.empty());
+  TagAddBloc()
+      : _notesRepository = new ApiNotesRepository(), 
+        _tagsRepository = new ApiTagsRepository(), 
+        super(TagAddState.empty());
 
   @override
   Stream<TagAddState> mapEventToState(
@@ -22,8 +25,8 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
       yield* _mapGetTagsToState();
     } else if (event is AddTag) {
       yield* _mapAddTagToState(event);
-    } else if (event is UpdateTag) {
-      yield* _mapUpdateTagToState(event);
+    } else if (event is UpdateNoteTag) {
+      yield* _mapUpdateNoteTagToState(event);
     } else if (event is TagChanged) {
       yield* _mapTagChangedToState(event);
     }else if (event is UpdateTagsList) {
@@ -38,27 +41,32 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
   }
 
   Stream<TagAddState> _mapGetTagsToState() async* {
-    _notesSubscription?.cancel();
-
     yield TagAddState.loading();
 
-    _notesSubscription = _notesRepository.tags().listen(
-          (tags) => add(UpdateTagsList(tags, tags)),
-    );
+    var tags = await _tagsRepository.getTags();
+    add(UpdateTagsList(tags, tags));
   }
 
   Stream<TagAddState> _mapAddTagToState(AddTag event) async* {
-    _notesRepository.addNewTag(event.tag);
+    yield state.update(stateStatus: StateStatus.Loading);
+
+    Tag tag = await _tagsRepository.createTag(event.tag);
+    state.allTags.add(tag);
+
+    add(TagChanged(tagName: tag.name));    
   }
 
-  Stream<TagAddState> _mapUpdateTagToState(UpdateTag event) async* {
-    _notesRepository.updateTag(event.tag);
+  Stream<TagAddState> _mapUpdateNoteTagToState(UpdateNoteTag event) async* {
+    event.isChecked      
+      ? await _notesRepository.addNoteTag(event.noteId, event.tagId)
+      : await _notesRepository.deleteNoteTag(event.noteId, event.tagId);
+    yield TagAddState.success(allTags: state.allTags, filteredTags: state.filteredTags);
   }
 
   Stream<TagAddState> _mapTagChangedToState(TagChanged event) async*{
     yield state.update(stateStatus: StateStatus.Loading);
 
-    List<Tag> filteredTags = state.allTags.where((t) => t.name.toLowerCase().startsWith(event.tagName.toLowerCase())).toList();
+    List<Tag> filteredTags = state.allTags.where((t) => t.name.toLowerCase().contains(event.tagName.toLowerCase())).toList();
 
     yield state.update(filteredTags: filteredTags, stateStatus: StateStatus.Success);
   }

@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../auth/authentication_bloc.dart';
 import '../auth/authentication_event.dart';
-import '../colorsPalette.dart';
-import '../constants.dart';
+import '../constants/color_constants.dart';
+import '../constants/route_constants.dart';
 import '../shared/shared.dart';
 import 'settings/bloc/settings_bloc.dart';
 import 'settings/repository/firebase_appSettings_repository.dart';

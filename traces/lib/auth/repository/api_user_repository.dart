@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../helpers/api.provider.dart';
 import '../../helpers/customException.dart';
 import '../model/login.model.dart';
-import '../model/user.dart';
+import '../model/user.model.dart';
 import 'userRepository.dart';
 
 

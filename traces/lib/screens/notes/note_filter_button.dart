@@ -1,12 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
-import 'package:traces/screens/notes/bloc/note_sort_bloc/bloc.dart';
-import 'package:traces/screens/notes/model/note.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/shared/state_types.dart';
+
+import '../../constants/color_constants.dart';
+import '../../shared/state_types.dart';
+import 'bloc/note_bloc/bloc.dart';
+import 'bloc/note_sort_bloc/bloc.dart';
+import 'model/note.model.dart';
 
 class SortField{
   final SortFields _key;

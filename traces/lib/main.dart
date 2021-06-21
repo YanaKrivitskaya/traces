@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/auth/simple_bloc_delegate.dart';
-import 'package:traces/colorsPalette.dart';
+import 'package:traces/constants/color_constants.dart';
 import 'package:traces/router.dart';
 import 'package:traces/screens/home.dart';
 import 'package:traces/screens/settings/repository/appSettings_repository.dart';

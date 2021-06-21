@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../auth/bloc.dart';
-import '../colorsPalette.dart';
+import '../constants/color_constants.dart';
 import '../shared/state_types.dart';
 import 'bloc/bloc.dart';
 import 'form_types.dart';

@@ -1,16 +1,17 @@
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
-import 'package:traces/constants.dart';
-import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
-import 'package:traces/screens/notes/model/tag.dart';
-import 'package:traces/screens/notes/note_delete_alert.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/screens/notes/model/note.dart';
-import 'package:traces/shared/state_types.dart';
+import 'package:intl/intl.dart';
+
+import '../../constants/color_constants.dart';
+import '../../constants/route_constants.dart';
+import '../../shared/state_types.dart';
 import 'bloc/note_bloc/bloc.dart';
+import 'bloc/tag_filter_bloc/bloc.dart';
+import 'model/note.model.dart';
+import 'model/tag.model.dart';
+import 'note_delete_alert.dart';
 
 class NotesView extends StatefulWidget{
   NotesView();
@@ -47,7 +48,9 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<NoteBloc, NoteState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+         
+        },
         child: BlocBuilder<NoteBloc, NoteState>(
             bloc: BlocProvider.of(context),
             builder: (context, state){
@@ -89,20 +92,23 @@ class _NotesViewState extends State<NotesView> {
                                         ListTile(
                                           leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
                                           title: Text('${note.title}'),
-                                          subtitle: (note.dateCreated.day.compareTo(note.dateModified.day) == 0) ?
-                                          Text('${DateFormat.yMMMd().format(note.dateModified)}',
+                                          subtitle: (note.createdDate.day.compareTo(note.updatedDate.day) == 0) ?
+                                          Text('${DateFormat.yMMMd().format(note.updatedDate)}',
                                               style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
-                                          Text('${DateFormat.yMMMd().format(note.dateModified)} / ${DateFormat.yMMMd().format(note.dateCreated)}',
+                                          Text('${DateFormat.yMMMd().format(note.updatedDate)} / ${DateFormat.yMMMd().format(note.createdDate)}',
                                               style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
                                           trailing: _popupMenu(note, position),
                                           onTap: (){
-                                            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id);
+                                            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
+                                            {
+                                              context.read<NoteBloc>().add(GetAllNotes());
+                                            });
                                           },
                                         ),
                                         Container(
                                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
                                           alignment: Alignment.centerLeft,
-                                          child: note.tagIds != null && _tags != null ? getChips(note, _tags, _allTagsSelected, _selectedTags): Container(),
+                                          child: note.tags.isNotEmpty && _tags != null ? getChips(note,/* _tags,*/ _allTagsSelected, _selectedTags): Container(),
                                         )
                                       ],
                                     ),
@@ -151,11 +157,12 @@ class _NotesViewState extends State<NotesView> {
     context.read<NoteBloc>().add(SearchTextChanged(noteName: _searchController.text));
   }
 
-  Widget getChips(Note note, List<Tag> tags, bool allTagsSelected, List<Tag> selectedTags) {
+  Widget getChips(Note note/*, List<Tag> tags*/, bool allTagsSelected, List<Tag> selectedTags) {
+    //var selectedTags = tags.where((t) => note.tags.contains(t));
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: tags.where((t) => note.tagIds.contains(t.id))
+          children: note.tags
               .map((tag) => Padding(
               padding: EdgeInsets.all(3.0),
               child: Text("#"+tag.name, style: GoogleFonts.quicksand(
@@ -176,10 +183,10 @@ class _NotesViewState extends State<NotesView> {
     notes.sort((a, b){
       switch(sortOption){
         case SortFields.DATECREATED:{
-          return a.dateCreated.millisecondsSinceEpoch.compareTo(b.dateCreated.millisecondsSinceEpoch);
+          return a.createdDate.millisecondsSinceEpoch.compareTo(b.createdDate.millisecondsSinceEpoch);
         }
         case SortFields.DATEMODIFIED:{
-          return a.dateModified.millisecondsSinceEpoch.compareTo(b.dateModified.millisecondsSinceEpoch);
+          return a.updatedDate.millisecondsSinceEpoch.compareTo(b.updatedDate.millisecondsSinceEpoch);
         }
         case SortFields.TITLE:{
           return a.title.toUpperCase().compareTo(b.title.toUpperCase());
@@ -196,14 +203,17 @@ class _NotesViewState extends State<NotesView> {
       filteredNotes = notes;
     }else{
       if(noTagsSelected){
-        filteredNotes.addAll(notes.where((n) => n.tagIds.isEmpty).toList());
+        filteredNotes.addAll(notes.where((n) => n.tags.isEmpty).toList());
       }
       selectedTags.forEach((t){
-        notes.where((n) => n.tagIds.isNotEmpty && n.tagIds.contains(t.id)).forEach((n){
+        print(t.name);
+        notes.where((n) => n.tags.isNotEmpty && n.tags.contains(t)).forEach((n){
+          print(n.title);
           if(!filteredNotes.any((note) => note.id == n.id)) filteredNotes.add(n);
         });
       });
     }
+    //return notes;
     return filteredNotes;
   }
 

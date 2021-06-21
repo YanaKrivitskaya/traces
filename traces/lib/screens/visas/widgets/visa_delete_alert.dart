@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/colorsPalette.dart';
+import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:traces/screens/visas/model/visa.dart';
 import 'package:traces/shared/shared.dart';

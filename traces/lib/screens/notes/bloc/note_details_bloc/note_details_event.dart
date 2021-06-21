@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/model/note.dart';
+
+import '../../model/note.model.dart';
 
 abstract class NoteDetailsEvent extends Equatable {
   const NoteDetailsEvent();
@@ -9,7 +10,7 @@ abstract class NoteDetailsEvent extends Equatable {
 }
 
 class GetNoteDetails extends NoteDetailsEvent{
-  final String noteId;
+  final int noteId;
 
   GetNoteDetails(this.noteId);
 

@@ -1,19 +1,18 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:traces/screens/notes/bloc/note_bloc/bloc.dart';
-import 'package:traces/screens/notes/model/note.dart';
-import 'package:traces/screens/notes/model/tag.dart';
-import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:meta/meta.dart';
-import 'package:traces/shared/state_types.dart';
+
+import '../../../../helpers/customException.dart';
+import '../../../../shared/state_types.dart';
+import '../../model/note.model.dart';
+import '../../repository/api_notes_repository.dart';
+import 'bloc.dart';
 
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
-  final NoteRepository _notesRepository;
-  StreamSubscription _notesSubscription;
+  final ApiNotesRepository _notesRepository;
 
-  NoteBloc({@required NoteRepository notesRepository})
-      : assert(notesRepository != null),
-        _notesRepository = notesRepository, super(NoteState.empty());
+  NoteBloc():
+    _notesRepository = new ApiNotesRepository(), super(NoteState.empty());
 
   @override
   Stream<NoteState> mapEventToState(
@@ -40,22 +39,18 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     List<Note> filteredNotes = <Note>[];
     filteredNotes.addAll(event.allNotes);
     yield NoteState.success(allNotes: event.allNotes, filteredNotes: filteredNotes,
-        sortField: event.sortField, sortDirection: event.sortDirection, searchEnabled: false);
+        sortField: event.sortField, sortDirection: event.sortDirection, searchEnabled: false, noteDeleted: false);
   }
 
-  Stream<NoteState> _mapGetAllNotesToState() async* {
-    _notesSubscription?.cancel();
-
+  Stream<NoteState> _mapGetAllNotesToState() async* {   
     yield NoteState.loading();
 
     try{
-      _notesSubscription = _notesRepository.notes().listen(
-            (notes) => add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes)),
-      );
-    }catch(e){
-      yield NoteState.failure(error: e.message);
-    }
-
+      var notes = await _notesRepository.getNotes();
+      add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes));
+    }on CustomException catch(e){
+      yield NoteState.failure(error: e.toString());
+    }    
   }
 
   Stream<NoteState> _mapNotesUpdateSortFilterToState(UpdateSortFilter event) async*{
@@ -75,21 +70,14 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
 
-    List<String> noteTags = event.note.tagIds;
-
     try{
-      _notesRepository.deleteNote(event.note);
-
-      if(noteTags.isNotEmpty){
-        noteTags.forEach((tagId) async {
-          Tag tag = await _notesRepository.getTagById(tagId);
-          Tag updatedTag = new Tag(tag.name, id: tag.id, usage: tag.usage -1);
-          _notesRepository.updateTag(updatedTag);
-        });
-      }
-    }catch(e){
-      yield NoteState.failure(error: e.message);
-    }
+      await _notesRepository.deleteNote(event.note.id);
+      state.allNotes?.removeWhere((n) => n.id == event.note.id);
+      state.filteredNotes?.removeWhere((n) => n.id == event.note.id);
+      yield state.update(allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: true);
+    }on CustomException catch(e){
+      yield NoteState.failure(error: e.toString());
+    }   
   }
 
   Stream<NoteState> _mapSelectedTagsUpdatedToState(SelectedTagsUpdated event) async* {
@@ -107,11 +95,5 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         : filteredNotes.addAll(state.allNotes);
 
     yield state.update(filteredNotes: filteredNotes, stateStatus: StateStatus.Success);
-  }
-
-  @override
-  Future<void> close() {
-    _notesSubscription?.cancel();
-    return super.close();
   }
 }

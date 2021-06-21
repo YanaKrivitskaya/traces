@@ -4,7 +4,7 @@ import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
 import 'package:traces/screens/trips/start_planning/start_planning_view.dart';
 import 'package:traces/screens/trips/trips_page.dart';
 
-import 'constants.dart';
+import 'constants/route_constants.dart';
 import 'screens/expenses.dart';
 import 'screens/home.dart';
 import 'screens/hotels.dart';
@@ -72,26 +72,24 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<NoteBloc>(
             create: (context) =>
-                NoteBloc(notesRepository: FirebaseNotesRepository()),
+                NoteBloc()..add(GetAllNotes()),
             child: NotesPage(),
           ),
         );
       case noteDetailsRoute:
         {
-          if (args is String) {
+          if (args is int) {
             return MaterialPageRoute(
                 builder: (_) => MultiBlocProvider(
                       providers: [
                         BlocProvider<NoteDetailsBloc>(
-                          create: (context) => NoteDetailsBloc(
-                            notesRepository: FirebaseNotesRepository(),
-                          )..add(args != ''
+                          create: (context) => NoteDetailsBloc()..add(args != 0
                               ? GetNoteDetails(args)
                               : NewNoteMode()),
                         ),
                         BlocProvider<TagFilterBloc>(
                           create: (context) => TagFilterBloc(
-                            notesRepository: FirebaseNotesRepository(),
+                            /*notesRepository: FirebaseNotesRepository(),*/
                           )..add(GetTags()),
                         ),
                       ],

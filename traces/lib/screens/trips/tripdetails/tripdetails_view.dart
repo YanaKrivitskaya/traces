@@ -7,7 +7,7 @@ import 'package:traces/screens/trips/tripdetails/tripMembers/tripMembers_dialog.
 import 'package:traces/screens/trips/widgets/trip_delete_alert.dart';
 import 'package:traces/shared/shared.dart';
 import 'package:traces/shared/styles.dart';
-import '../../../colorsPalette.dart';
+import '../../../constants/color_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/tripdetails_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';

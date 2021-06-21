@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:traces/auth/bloc.dart';
 //import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/auth/repository/apiUserRepository.dart';
+import 'package:traces/auth/repository/api_user_repository.dart';
 
 class WelcomePage extends StatefulWidget{
 

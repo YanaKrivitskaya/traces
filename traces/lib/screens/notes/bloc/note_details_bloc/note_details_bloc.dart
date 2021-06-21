@@ -1,17 +1,19 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:traces/screens/notes/model/note.dart';
-import 'package:traces/screens/notes/repository/note_repository.dart';
-import 'package:traces/screens/notes/model/tag.dart';
-import './bloc.dart';
-import 'package:meta/meta.dart';
+
+import '../../../../helpers/customException.dart';
+import '../../model/create_note.model.dart';
+import '../../model/note.model.dart';
+import '../../repository/api_notes_repository.dart';
+import 'bloc.dart';
 
 class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
-  final NoteRepository _notesRepository;
+  final ApiNotesRepository _notesRepository;
 
-  NoteDetailsBloc({@required NoteRepository notesRepository})
-      : assert(notesRepository != null),
-        _notesRepository = notesRepository, super(InitialNoteDetailsState(null));
+  NoteDetailsBloc():
+    _notesRepository = new ApiNotesRepository(), 
+    super(InitialNoteDetailsState(null));
 
   @override
   Stream<NoteDetailsState> mapEventToState(
@@ -29,51 +31,40 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
   }
 
   Stream<NoteDetailsState> _mapGetNoteDetailsToState(GetNoteDetails event) async*{
-    Note note = await _notesRepository.getNoteById(event.noteId);
-
     yield LoadingDetailsState(null);
 
-    List<Tag> noteTags = <Tag>[];
-
-    if(note.tagIds != null && note.tagIds.isNotEmpty){
-      for(var i = 0; i< note.tagIds.length; i++){
-        final tag = await _notesRepository.getTagById(note.tagIds[i]);
-        noteTags.add(tag);
-      }
+    try{
+      Note note = await _notesRepository.getNoteById(event.noteId);
+      yield ViewDetailsState(note);
+    } on CustomException catch(e){
+      yield ErrorDetailsState(e.toString());
     }
-    yield ViewDetailsState(note, noteTags);
   }
 
   Stream<NoteDetailsState> _mapSaveNoteToState(SaveNoteClicked event) async*{
-    Note note;
-
-    List<Tag> noteTags = <Tag>[];
+    Note note;    
 
     if(event.note.id != null){
-      note = await _notesRepository.updateNote(event.note).timeout(Duration(seconds: 3), onTimeout: (){
+      note = await _notesRepository.updateNote(event.note);/*.timeout(Duration(seconds: 3), onTimeout: (){
         print("have timeout");
         return event.note;
-      });
+      });*/
     }else{
-      note = await _notesRepository.addNewNote(event.note).timeout(Duration(seconds: 3), onTimeout: (){
+      var newNote = CreateNoteModel(
+        title: event.note.title,
+        content: event.note.content
+      );
+      note = await _notesRepository.addNewNote(newNote);/*.timeout(Duration(seconds: 3), onTimeout: (){
         print("have timeout");
         return event.note;
-      });
+      });*/
     }
-    yield LoadingDetailsState(null);
-
-    if(note.tagIds != null && note.tagIds.isNotEmpty){
-      for(var i = 0; i< note.tagIds.length; i++){
-        final tag = await _notesRepository.getTagById(note.tagIds[i]);
-        noteTags.add(tag);
-      }
-    }
-
-    yield ViewDetailsState(note, noteTags);
+    
+    yield ViewDetailsState(note);
   }
 
   Stream<NoteDetailsState> _mapNewNoteModeToState(NewNoteMode event) async*{
-    yield EditDetailsState(new Note(''));
+    yield EditDetailsState(new Note());
   }
 
   Stream<NoteDetailsState> _mapEditModeToState(EditModeClicked event) async*{

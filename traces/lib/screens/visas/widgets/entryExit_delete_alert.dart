@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../../colorsPalette.dart';
+import '../../../constants/color_constants.dart';
 import '../bloc/entry_exit/entry_exit_bloc.dart';
 import '../model/entryExit.dart';
 import '../model/visa.dart';
