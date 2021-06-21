@@ -14,7 +14,6 @@ import 'screens/notes/bloc/note_details_bloc/bloc.dart';
 import 'screens/notes/bloc/tag_filter_bloc/bloc.dart';
 import 'screens/notes/note_detail_view.dart';
 import 'screens/notes/note_page.dart';
-import 'screens/notes/repository/firebase_notes_repository.dart';
 import 'screens/profile/bloc/profile/bloc.dart';
 import 'screens/profile/profile_page.dart';
 import 'screens/profile/repository/firebase_profile_repository.dart';
