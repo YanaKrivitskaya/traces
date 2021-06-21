@@ -1,7 +1,8 @@
 import 'package:meta/meta.dart';
-import 'package:traces/auth/model/user.model.dart';
-import 'package:traces/loginSignup/form_types.dart';
-import 'package:traces/shared/state_types.dart';
+
+import '../../../utils/misc/state_types.dart';
+import '../../model/user.model.dart';
+import '../form_types.dart';
 
 @immutable
 class LoginSignupState {

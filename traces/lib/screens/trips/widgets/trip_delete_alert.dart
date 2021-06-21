@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
-import 'package:traces/shared/shared.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/widgets/widgets.dart';
 
 class TripDeleteAlert extends StatelessWidget {
   final Trip trip;

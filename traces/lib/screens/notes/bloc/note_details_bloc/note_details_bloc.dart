@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import '../../../../helpers/customException.dart';
-import '../../model/create_note.model.dart';
-import '../../model/note.model.dart';
-import '../../repository/api_notes_repository.dart';
+import '../../../../utils/api/customException.dart';
+import '../../models/create_note.model.dart';
+import '../../models/note.model.dart';
+import '../../repositories/api_notes_repository.dart';
 import 'bloc.dart';
 
 class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {

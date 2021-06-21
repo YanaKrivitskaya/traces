@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../auth/bloc.dart';
-import '../constants/color_constants.dart';
-import '../shared/state_types.dart';
+import '../../constants/color_constants.dart';
+import '../../utils/misc/state_types.dart';
+import '../auth_bloc/bloc.dart';
 import 'bloc/bloc.dart';
 import 'form_types.dart';
 

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import 'package:traces/screens/visas/model/visa.dart';
-import 'package:traces/shared/shared.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/widgets/widgets.dart';
 
 class VisaDeleteAlert extends StatelessWidget {
   final Visa visa;

@@ -1,20 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/auth/simple_bloc_delegate.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:traces/router.dart';
-import 'package:traces/screens/home.dart';
-import 'package:traces/screens/settings/repository/appSettings_repository.dart';
-import 'package:traces/screens/settings/repository/firebase_appSettings_repository.dart';
-import 'package:traces/screens/welcome.dart';
-import 'package:traces/auth/bloc.dart';
-import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'loginSignup/loginSignup_page.dart';
-import 'package:flutter/services.dart';
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'auth/auth_bloc/bloc.dart';
+import 'auth/login_signup/loginSignup_page.dart';
+import 'auth/simple_bloc_delegate.dart';
+import 'config/router.dart';
+import 'constants/color_constants.dart';
+import 'screens/home.dart';
+import 'screens/welcome.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.

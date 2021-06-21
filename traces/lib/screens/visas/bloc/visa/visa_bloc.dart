@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import '../../../../shared/state_types.dart';
+import 'package:traces/utils/misc/state_types.dart';
 import '../../model/visa.dart';
 import '../../model/visa_tab.dart';
 import '../../repository/visas_repository.dart';

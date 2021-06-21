@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/auth/auth_bloc/bloc.dart';
 
-import '../auth/authentication_bloc.dart';
-import '../auth/authentication_event.dart';
+import '../auth/auth_bloc/authentication_bloc.dart';
 import '../constants/color_constants.dart';
 import '../constants/route_constants.dart';
-import '../shared/shared.dart';
+import '../widgets/widgets.dart';
 import 'settings/bloc/settings_bloc.dart';
 import 'settings/repository/firebase_appSettings_repository.dart';
 
@@ -49,9 +49,7 @@ Widget _homeMenu(String _theme, BuildContext context) => new Scaffold(
           IconButton(
             icon: Icon(Icons.exit_to_app, color: ColorsPalette.lynxWhite),
             onPressed: (){
-              BlocProvider.of<AuthenticationBloc>(context).add(
-                LoggedOut()
-              );
+              BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
             },
           )
         ]

@@ -1,7 +1,6 @@
-
-import '../../../helpers/api.provider.dart';
-import '../model/create_note.model.dart';
-import '../model/note.model.dart';
+import '../../../utils/api/api.provider.dart';
+import '../models/create_note.model.dart';
+import '../models/note.model.dart';
 
 class ApiNotesRepository{
   ApiProvider apiProvider = ApiProvider();

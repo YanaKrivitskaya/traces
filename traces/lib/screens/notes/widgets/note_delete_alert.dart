@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../shared/shared.dart';
-import 'bloc/note_bloc/bloc.dart';
-import 'model/note.model.dart';
+import '../../../widgets/widgets.dart';
+import '../bloc/note_bloc/bloc.dart';
+import '../models/note.model.dart';
 
 class NoteDeleteAlert extends StatelessWidget{
   final Note note;

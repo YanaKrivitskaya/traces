@@ -4,14 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
-import '../../constants/color_constants.dart';
-import 'bloc/note_bloc/bloc.dart';
-import 'bloc/note_details_bloc/bloc.dart';
-import 'bloc/tag_add_bloc/bloc.dart';
-import 'model/note.model.dart';
-import 'model/tag.model.dart';
-import 'note_delete_alert.dart';
-import 'tags_add_dialog.dart';
+import '../../../constants/color_constants.dart';
+import '../bloc/note_bloc/bloc.dart';
+import '../bloc/note_details_bloc/bloc.dart';
+import '../bloc/tag_add_bloc/bloc.dart';
+import '../models/note.model.dart';
+import '../models/tag.model.dart';
+import '../widgets/note_delete_alert.dart';
+import '../widgets/tags_add_dialog.dart';
 
 class NoteDetailsView extends StatefulWidget{
   NoteDetailsView({Key key}) : super(key: key);

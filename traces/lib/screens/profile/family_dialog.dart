@@ -3,7 +3,7 @@ import 'package:traces/constants/color_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 import 'package:traces/screens/profile/model/member.dart';
-import 'package:traces/shared/state_types.dart';
+import 'package:traces/utils/misc/state_types.dart';
 
 class FamilyDialog extends StatefulWidget{
   final Member familyMember;

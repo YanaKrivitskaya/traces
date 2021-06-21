@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-import '../../model/note.model.dart';
+import 'package:traces/screens/notes/models/note.model.dart';
 
 abstract class NoteSortEvent extends Equatable {
   const NoteSortEvent();

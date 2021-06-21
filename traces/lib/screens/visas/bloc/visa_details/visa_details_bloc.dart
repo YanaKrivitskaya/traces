@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/profile/model/member.dart';
-import '../../../../shared/state_types.dart';
+import 'package:traces/utils/misc/state_types.dart';
 import '../../../profile/repository/profile_repository.dart';
 import '../../model/entryExit.dart';
 import '../../model/settings.dart';

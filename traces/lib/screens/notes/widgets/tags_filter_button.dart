@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../constants/color_constants.dart';
-import '../../shared/state_types.dart';
-import 'bloc/note_bloc/bloc.dart';
-import 'bloc/tag_filter_bloc/bloc.dart';
-import 'model/tag.model.dart';
+import '../../../constants/color_constants.dart';
+import '../../../utils/misc/state_types.dart';
+import '../bloc/note_bloc/bloc.dart';
+import '../bloc/tag_filter_bloc/bloc.dart';
+import '../models/tag.model.dart';
 
 class TagsFilterButton extends StatelessWidget{
   @override

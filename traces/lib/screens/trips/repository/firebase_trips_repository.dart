@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:traces/auth/firebaseUserRepository.dart';
 import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/model/trip_entity.dart';
 import 'package:traces/screens/trips/repository/trips_repository.dart';
@@ -14,31 +13,31 @@ class FirebaseTripsRepository extends TripsRepository{
 
   final storage = firebase_storage.FirebaseStorage.instance;
 
-  FirebaseUserRepository _userRepository;
+  //FirebaseUserRepository _userRepository;
 
   FirebaseTripsRepository() {
-    _userRepository = new FirebaseUserRepository();    
+    //_userRepository = new FirebaseUserRepository();    
   }
 
   @override
   Future<Trip> addnewTrip(Trip trip) async{
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
     var tripEntity = trip.toEntity().toDocument();
     final newTrip = await tripsCollection.doc(uid).collection(userTrips).add(tripEntity);
-    return await getTripById(newTrip.id);
+    return await getTripById(newTrip.id);*/
   }
   
   @override
   Future<Trip> getTripById(String id) async{
-    String uid = await _userRepository.getUserId();
+   /* String uid = await _userRepository.getUserId();
 
     var trip = await tripsCollection.doc(uid).collection(userTrips).doc(id).get();
-    return Trip.fromEntity(TripEntity.fromMap(trip.data(), trip.id));
+    return Trip.fromEntity(TripEntity.fromMap(trip.data(), trip.id));*/
   }
   
   @override
   Stream<List<Trip>> trips() async* {
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
 
     var res = await storage.ref().child('trips').child('beach.jpg').getDownloadURL();
 
@@ -49,33 +48,33 @@ class FirebaseTripsRepository extends TripsRepository{
       return snap.docs
         .map((doc) => Trip.fromEntity(TripEntity.fromSnapshot(doc)))
         .toList();
-    });
+    });*/
   }
 
   @override
   Future<Trip> updateTrip(Trip updTrip) async{
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
 
     await tripsCollection.doc(uid).collection(userTrips).doc(updTrip.id)
       .update(updTrip.toEntity().toDocument());
 
-    return await getTripById(updTrip.id);
+    return await getTripById(updTrip.id);*/
   }
 
   @override
   Future<Trip> updateTripMembers(String tripId, List<String> members) async{
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
 
     await tripsCollection.doc(uid).collection(userTrips).doc(tripId)
       .update({"tripMembers": members});
 
-    return await getTripById(tripId);
+    return await getTripById(tripId);*/
   }
 
   @override
   Future<void> deleteTrip(String tripId) async{
-    String uid = await _userRepository.getUserId();
+   /* String uid = await _userRepository.getUserId();
 
-    await tripsCollection.doc(uid).collection(userTrips).doc(tripId).delete();
+    await tripsCollection.doc(uid).collection(userTrips).doc(tripId).delete();*/
   }
 }

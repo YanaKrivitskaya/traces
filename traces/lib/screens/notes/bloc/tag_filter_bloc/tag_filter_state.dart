@@ -1,7 +1,8 @@
 import 'package:meta/meta.dart';
 
-import '../../../../shared/state_types.dart';
-import '../../model/tag.model.dart';
+import '../../../../utils/misc/state_types.dart';
+import '../../models/tag.model.dart';
+
 
 class TagFilterState{
   final List<Tag> allTags;

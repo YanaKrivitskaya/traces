@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../auth/firebaseUserRepository.dart';
 import '../model/entryExit.dart';
 import '../model/entryExit_entity.dart';
 import '../model/settings.dart';
@@ -15,31 +14,31 @@ class FirebaseVisasRepository extends VisasRepository{
   final String visaEntries = "visaEntries";
   final String visaSettings = "settings";
 
-  FirebaseUserRepository _userRepository;
+  //FirebaseUserRepository _userRepository;
 
   FirebaseVisasRepository() {
-    _userRepository = new FirebaseUserRepository();    
+   // _userRepository = new FirebaseUserRepository();    
   }
 
   @override
   Stream<List<Visa>> visas() async* {
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
     yield* visasCollection.doc(uid).collection(userVisas).snapshots().map((snapshot) {
       return snapshot.docs
           .map((doc) => Visa.fromEntity(VisaEntity.fromSnapshot(doc)))
           .toList();
-    });
+    });*/
   }
 
   @override
   Stream<List<EntryExit>> entryExits(String visaId) async* {
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
 
     yield* visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).snapshots().map((snapshot) {
       return snapshot.docs
           .map((doc) => EntryExit.fromEntity(EntryExitEntity.fromSnapshot(doc)))
           .toList();
-    });
+    });*/
   }
 
   @override
@@ -50,28 +49,28 @@ class FirebaseVisasRepository extends VisasRepository{
 
   @override
   Future<UserSettings> userSettings() async{
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
     var resultSettings = await visasCollection.doc(uid).get();
-    return UserSettings.fromEntity(UserSettingsEntity.fromMap(resultSettings.data()));
+    return UserSettings.fromEntity(UserSettingsEntity.fromMap(resultSettings.data()));*/
   }
 
   @override
   Future<EntryExit> addEntryExit(EntryExit entryExit, String visaId) async {
-    String uid = await _userRepository.getUserId();
+   /* String uid = await _userRepository.getUserId();
     final newEntry = await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).add(entryExit.toEntity().toDocument());
-    return getEntryExitById(newEntry.id, visaId);
+    return getEntryExitById(newEntry.id, visaId);*/
   }
 
   @override
   Future<Visa> addNewVisa(Visa visa) async {
-    String uid = await _userRepository.getUserId();
+   /* String uid = await _userRepository.getUserId();
     final newVisa = await visasCollection.doc(uid).collection(userVisas).add(visa.toEntity().toDocument());
-    return await getVisaById(newVisa.id);
+    return await getVisaById(newVisa.id);*/
   }
 
   @override
   Future<void> deleteVisa(String visaId) async{
-    String uid = await _userRepository.getUserId();
+   /* String uid = await _userRepository.getUserId();
     var data = await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).get();
 
     var entriesDocs = data.docs;
@@ -80,48 +79,48 @@ class FirebaseVisasRepository extends VisasRepository{
       await visasCollection.doc(uid).collection(userVisas).doc(visaId).collection(visaEntries).doc(doc.id).delete();
     }
 
-    await visasCollection.doc(uid).collection(userVisas).doc(visaId).delete();
+    await visasCollection.doc(uid).collection(userVisas).doc(visaId).delete();*/
   }
 
   @override
   Future<Visa> getVisaById(String id) async{
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
 
     var resultVisa = await visasCollection.doc(uid).collection(userVisas).doc(id).get();
 
-    return Visa.fromEntity(VisaEntity.fromMap(resultVisa.data(), resultVisa.id));
+    return Visa.fromEntity(VisaEntity.fromMap(resultVisa.data(), resultVisa.id));*/
   }
 
   @override
   Future<EntryExit> getEntryExitById(String id, String visaId) async{
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
 
     var resultEntry = await visasCollection.doc(uid).collection(userVisas)
     .doc(visaId).collection(visaEntries).doc(id).get();
 
-    return EntryExit.fromEntity(EntryExitEntity.fromMap(resultEntry.data(), resultEntry.id));
+    return EntryExit.fromEntity(EntryExitEntity.fromMap(resultEntry.data(), resultEntry.id));*/
   }
 
   @override
   Future<EntryExit> updateEntryExit(EntryExit entryExit, String visaId) async {
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
     await visasCollection.doc(uid).collection(userVisas).doc(visaId)
       .collection(visaEntries).doc(entryExit.id).update(entryExit.toEntity().toDocument());
-    return getEntryExitById(entryExit.id, visaId);
+    return getEntryExitById(entryExit.id, visaId);*/
   }
 
   @override
   Future<Visa> updateVisa(Visa visa) async {
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
     await visasCollection.doc(uid).collection(userVisas)
         .doc(visa.id)
         .update(visa.toEntity().toDocument());
-    return await getVisaById(visa.id);
+    return await getVisaById(visa.id);*/
   }
 
   @override
   Future<void> updateUserSettings(List<String> countries, List<String> cities) async {
-    String uid = await _userRepository.getUserId();
+   /* String uid = await _userRepository.getUserId();
 
     UserSettings userSettings = await this.userSettings();
 
@@ -139,18 +138,18 @@ class FirebaseVisasRepository extends VisasRepository{
       });
     }
 
-    await visasCollection.doc(uid).set(userSettings.toEntity().toDocument());    
+    await visasCollection.doc(uid).set(userSettings.toEntity().toDocument());    */
   }
 
   @override
   Future<void> deleteEntry(String visaId, String entryId) async{
-    String uid = await _userRepository.getUserId();
+    /*String uid = await _userRepository.getUserId();
 
     await visasCollection.doc(uid).collection(userVisas)
     .doc(visaId).collection(visaEntries).doc(entryId).get();
 
     await visasCollection.doc(uid).collection(userVisas)
-      .doc(visaId).collection(visaEntries).doc(entryId).delete();
+      .doc(visaId).collection(visaEntries).doc(entryId).delete();*/
   }
 
 }

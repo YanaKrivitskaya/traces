@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../constants/color_constants.dart';
-import '../../shared/shared.dart';
-import '../../shared/state_types.dart';
-import 'bloc/note_details_bloc/bloc.dart';
-import 'bloc/tag_add_bloc/bloc.dart';
-import 'model/create_tag.model.dart';
-import 'model/note.model.dart';
-import 'model/tag.model.dart';
+import '../../../constants/color_constants.dart';
+import '../../../utils/misc/state_types.dart';
+import '../../../widgets/widgets.dart';
+import '../bloc/note_details_bloc/bloc.dart';
+import '../bloc/tag_add_bloc/bloc.dart';
+import '../models/create_tag.model.dart';
+import '../models/note.model.dart';
+import '../models/tag.model.dart';
 
 class TagsAddDialog extends StatefulWidget{
   final StringCallback callback;

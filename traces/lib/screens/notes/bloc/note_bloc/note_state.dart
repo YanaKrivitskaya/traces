@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
-import '../../../../shared/state_types.dart';
-import '../../model/note.model.dart';
+import '../../../../utils/misc/state_types.dart';
+import '../../models/note.model.dart';
 
 class NoteState{
   final List<Note> allNotes;

@@ -4,8 +4,8 @@ import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/bloc/tripmembers_bloc.dart';
-import 'package:traces/shared/shared.dart';
-import 'package:traces/shared/styles.dart';
+import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/widgets.dart';
 
 class TripMembersDialog extends StatefulWidget{
   Trip trip;

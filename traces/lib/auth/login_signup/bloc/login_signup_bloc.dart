@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:traces/auth/model/login.model.dart';
+import 'package:traces/auth/model/user.model.dart';
+import 'package:traces/auth/repository/api_user_repository.dart';
+import 'package:traces/utils/api/customException.dart';
+import 'package:traces/utils/helpers/validation_helper.dart';
 
-import '../../auth/model/login.model.dart';
-import '../../auth/model/user.model.dart';
-import '../../auth/repository/api_user_repository.dart';
-import '../../helpers/customException.dart';
-import '../../shared/validator.dart';
 import '../form_types.dart';
 import 'bloc.dart';
 
