@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
-import 'package:traces/screens/notes/model/tag.model.dart';
+
+import 'tag.model.dart';
 
 @immutable
 class Note {
@@ -12,6 +13,7 @@ class Note {
   final DateTime createdDate;
   final DateTime updatedDate;
   final bool deleted;
+  final DateTime deletedDate;
   List<Tag> tags;
 
   Note({
@@ -22,6 +24,7 @@ class Note {
     this.createdDate,
     this.updatedDate,
     this.deleted,
+    this.deletedDate,
     this.tags
   });
 
@@ -51,8 +54,9 @@ class Note {
       'userId': userId,
       'title': title,
       'content': content,
-      'createdDate': createdDate.millisecondsSinceEpoch,
-      'updatedDate': updatedDate.millisecondsSinceEpoch,
+      'createdDate': createdDate?.toIso8601String(),
+      'updatedDate': updatedDate?.toIso8601String(),
+      'deletedDate': deletedDate?.toIso8601String(),
       'deleted': deleted,
     };
   }
@@ -67,6 +71,7 @@ class Note {
       createdDate: DateTime.parse(map['createdDate']),
       updatedDate: DateTime.parse(map['updatedDate']),
       deleted: map['deleted'],
+      deletedDate: map['deletedDate'] != null ? DateTime.parse(map['deletedDate']) : null,
       tags: map["tags"]!= null ? 
         map['tags'].map<Tag>((map) => Tag.fromMap(map)).toList() : null
     );
@@ -78,7 +83,7 @@ class Note {
 
   @override
   String toString() {
-    return 'Note(id: $id, userId: $userId, title: $title, content: $content, createdDate: $createdDate, updatedDate: $updatedDate, deleted: $deleted)';
+    return 'Note(id: $id, userId: $userId, title: $title, content: $content, createdDate: $createdDate, updatedDate: $updatedDate, deleted: $deleted, deletedDate: $deletedDate)';
   }
 
   @override
@@ -92,6 +97,7 @@ class Note {
       other.content == content &&
       other.createdDate == createdDate &&
       other.updatedDate == updatedDate &&
+      other.deletedDate == deletedDate &&
       other.deleted == deleted;
   }
 
@@ -103,6 +109,7 @@ class Note {
       content.hashCode ^
       createdDate.hashCode ^
       updatedDate.hashCode ^
+      deletedDate.hashCode ^
       deleted.hashCode;
   }
 }

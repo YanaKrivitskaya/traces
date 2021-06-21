@@ -8,6 +8,7 @@ class Tag {
   final DateTime createdDate;
   final DateTime updatedDate;
   final bool deleted;
+  final DateTime deletedDate;
   bool isChecked;
   Tag({
     this.id,
@@ -16,6 +17,7 @@ class Tag {
     this.createdDate,
     this.updatedDate,
     this.deleted,
+    this.deletedDate,
     this.isChecked,
   });
 
@@ -45,9 +47,10 @@ class Tag {
       'id': id,
       'userId': userId,
       'name': name,
-      'createdDate': createdDate.millisecondsSinceEpoch,
-      'updatedDate': updatedDate.millisecondsSinceEpoch,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
+      'updatedDate': updatedDate?.millisecondsSinceEpoch,
       'deleted': deleted,
+      'deletedDate': deletedDate?.millisecondsSinceEpoch,
       'isChecked': isChecked,
     };
   }
@@ -57,9 +60,10 @@ class Tag {
       id: map['id'],
       userId: map['userId'],
       name: map['name'],
-      createdDate: DateTime.parse(map['createdDate']),
-      updatedDate: DateTime.parse(map['updatedDate']),
+      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
+      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
       deleted: map['deleted'],
+      deletedDate: map['deletedDate'] != null ? DateTime.parse(map['deletedDate']) : null,
       isChecked: map['isChecked'],
     );
   }
@@ -70,7 +74,7 @@ class Tag {
 
   @override
   String toString() {
-    return 'Tag(id: $id, userId: $userId, name: $name, createdDate: $createdDate, updatedDate: $updatedDate, deleted: $deleted, isChecked: $isChecked)';
+    return 'Tag(id: $id, userId: $userId, name: $name, createdDate: $createdDate, updatedDate: $updatedDate, deleted: $deleted, , deletedDate: $deletedDate, isChecked: $isChecked)';
   }
 
   @override
@@ -78,12 +82,7 @@ class Tag {
     if (identical(this, other)) return true;
   
     return other is Tag &&
-      other.id == id &&
-      other.userId == userId &&
-      other.name == name &&
-      other.createdDate == createdDate &&
-      other.updatedDate == updatedDate &&
-      other.deleted == deleted;
+      other.id == id;
   }
 
   @override
@@ -92,8 +91,6 @@ class Tag {
       userId.hashCode ^
       name.hashCode ^
       createdDate.hashCode ^
-      updatedDate.hashCode ^
-      deleted.hashCode ^
-      isChecked.hashCode;
+      updatedDate.hashCode;
   }
 }

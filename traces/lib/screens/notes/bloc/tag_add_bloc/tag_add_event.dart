@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/model/__tag.dart';
 import 'package:meta/meta.dart';
+
+import '../../model/create_tag.model.dart';
+import '../../model/tag.model.dart';
 
 abstract class TagAddEvent extends Equatable {
   const TagAddEvent();
@@ -12,7 +14,7 @@ abstract class TagAddEvent extends Equatable {
 class GetTags extends TagAddEvent{}
 
 class AddTag extends TagAddEvent{
-  final Tag tag;
+  final CreateTagModel tag;
 
   const AddTag(this.tag);
 
@@ -20,13 +22,15 @@ class AddTag extends TagAddEvent{
   List<Object> get props => [tag];
 }
 
-class UpdateTag extends TagAddEvent {
-  final Tag tag;
+class UpdateNoteTag extends TagAddEvent {
+  final int noteId;
+  final int tagId;
+  final bool isChecked;
 
-  const UpdateTag(this.tag);
+  const UpdateNoteTag(this.noteId, this.tagId, this.isChecked);
 
   @override
-  List<Object> get props => [tag];
+  List<Object> get props => [noteId, tagId, isChecked];
 }
 
 class TagChanged extends TagAddEvent{

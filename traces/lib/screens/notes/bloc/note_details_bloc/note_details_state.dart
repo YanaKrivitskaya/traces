@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/model/note.model.dart';
-import 'package:traces/screens/notes/model/__tag.dart';
+
+import '../../model/note.model.dart';
 
 abstract class NoteDetailsState extends Equatable {
   final Note note;
@@ -16,13 +16,12 @@ class LoadingDetailsState extends NoteDetailsState {
 }
 
 class ViewDetailsState extends NoteDetailsState {
-  final Note note;
-  final List<Tag> noteTags;
+  final Note note;  
 
-  const ViewDetailsState(this.note, this.noteTags) : super(note);
+  const ViewDetailsState(this.note) : super(note);
 
   @override
-  List<Object> get props => [note, noteTags];
+  List<Object> get props => [note];
 }
 
 class EditDetailsState extends NoteDetailsState {
@@ -36,4 +35,14 @@ class EditDetailsState extends NoteDetailsState {
 
 class InitialNoteDetailsState extends NoteDetailsState {
   InitialNoteDetailsState(Note note) : super(note);
+}
+
+class ErrorDetailsState extends NoteDetailsState {
+  //final Note note;
+  final String errorMessage;
+
+  const ErrorDetailsState(this.errorMessage) : super(null);
+
+  @override
+  List<Object> get props => [errorMessage];
 }

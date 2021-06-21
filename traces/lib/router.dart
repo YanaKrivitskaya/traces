@@ -72,20 +72,18 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<NoteBloc>(
             create: (context) =>
-                NoteBloc(/*notesRepository: FirebaseNotesRepository()*/),
+                NoteBloc()..add(GetAllNotes()),
             child: NotesPage(),
           ),
         );
       case noteDetailsRoute:
         {
-          if (args is String) {
+          if (args is int) {
             return MaterialPageRoute(
                 builder: (_) => MultiBlocProvider(
                       providers: [
                         BlocProvider<NoteDetailsBloc>(
-                          create: (context) => NoteDetailsBloc(
-                            notesRepository: FirebaseNotesRepository(),
-                          )..add(args != ''
+                          create: (context) => NoteDetailsBloc()..add(args != 0
                               ? GetNoteDetails(args)
                               : NewNoteMode()),
                         ),

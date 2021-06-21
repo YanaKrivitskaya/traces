@@ -1,18 +1,17 @@
 
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:traces/screens/notes/bloc/note_details_bloc/bloc.dart';
-import 'package:traces/screens/notes/bloc/tag_add_bloc/bloc.dart';
-import 'package:traces/screens/notes/note_delete_alert.dart';
-import 'package:traces/screens/notes/model/note.model.dart';
-import 'package:traces/screens/notes/repository/firebase_notes_repository.dart';
-import 'package:traces/screens/notes/model/__tag.dart';
-import 'package:traces/screens/notes/tags_add_dialog.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
+import '../../constants/color_constants.dart';
 import 'bloc/note_bloc/bloc.dart';
+import 'bloc/note_details_bloc/bloc.dart';
+import 'bloc/tag_add_bloc/bloc.dart';
+import 'model/note.model.dart';
+import 'model/tag.model.dart';
+import 'note_delete_alert.dart';
+import 'tags_add_dialog.dart';
 
 class NoteDetailsView extends StatefulWidget{
   NoteDetailsView({Key key}) : super(key: key);
@@ -29,7 +28,6 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   TextEditingController _textController;
 
   Note _note = Note();
-  List<Tag> _noteTags = <Tag>[];
   bool _isEditMode = false;
 
   @override
@@ -43,7 +41,6 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   void dispose(){
     _titleController.dispose();
     _textController.dispose();
-    _noteTags.clear();
     super.dispose();
   }
 
@@ -51,11 +48,12 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   Widget build(BuildContext context){
 
     return BlocListener<NoteDetailsBloc, NoteDetailsState>(
-      listener: (context, state){},
+      listener: (context, state){
+        print(state);
+      },
       child: BlocBuilder<NoteDetailsBloc, NoteDetailsState>(builder: (context, state){
         if(state is ViewDetailsState){
-          _note = state.note;
-          _noteTags = state.noteTags;
+          _note = state.note;          
           _isEditMode = false;
         }
         if(state is EditDetailsState){
@@ -68,21 +66,23 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           appBar: AppBar(
             leading: IconButton(
               icon: FaIcon(FontAwesomeIcons.chevronLeft, color: ColorsPalette.lynxWhite),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {                
+                Navigator.of(context).pop();
+              },
             ),
             title: _isEditMode ? Text("Edit note", style: TextStyle(color: ColorsPalette.lynxWhite)) 
               : Text("View note", style: TextStyle(color: ColorsPalette.lynxWhite)),
             actions: <Widget>[
-              !_isEditMode ? _tagsAction() : Container(),
+              !_isEditMode ? _tagsAction(_note.id): Container(),
               _isEditMode ? _saveAction(_note) : _editAction(state),
               _note.id != null ? _deleteAction(_note, context) : Container(),
             ],
             backgroundColor: ColorsPalette.greenGrass,
           ),
           body: Container(
-              child: state is LoadingDetailsState
+              child: state is LoadingDetailsState || state is InitialNoteDetailsState
                   ? Center(child: CircularProgressIndicator())
-                  :_noteView(_noteTags)
+                  :_noteView(_note.tags)
           ),
           backgroundColor: Colors.white,
         );
@@ -101,7 +101,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         ));
   }
 
-  Widget _tagsAction() => new IconButton(
+  Widget _tagsAction(int noteId) => new IconButton(
     icon: FaIcon(FontAwesomeIcons.hashtag, color: ColorsPalette.lynxWhite),
     onPressed: () {
       showDialog(
@@ -111,12 +111,15 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               BlocProvider.value(
                 value: context.read<NoteDetailsBloc>(),
               ),
-              /*BlocProvider<TagAddBloc>(
-                  create: (context) => TagAddBloc(notesRepository: FirebaseNotesRepository()
-                )..add(GetTags()),
-              ),*/
+              BlocProvider<TagAddBloc>(
+                  create: (context) => TagAddBloc()..add(GetTags()),
+              ),
             ],
-            child:  TagsAddDialog(),
+            child:  TagsAddDialog(callback: (val) async {
+              if(val == 'Ok'){
+                context.read<NoteDetailsBloc>().add(GetNoteDetails(noteId));                
+              }
+            }),
           ));},
   );
 
@@ -132,8 +135,14 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   Widget _saveAction(Note note) => new IconButton(
     icon: FaIcon(FontAwesomeIcons.solidSave, color: ColorsPalette.lynxWhite),
     onPressed: () {
-      //Note noteToSave = new Note(_textController.text, title: _titleController.text, id: note.id, dateCreated: note.dateCreated, tagIds: note.tagIds);
-      //context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
+      Note noteToSave = new Note(
+        content: _textController.text, 
+        title: _titleController.text, 
+        id: note.id, 
+        userId: note.userId,
+        deleted: note.deleted,
+        createdDate: note.createdDate, tags: note.tags);
+      context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
     },
   );
 
@@ -159,10 +168,10 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
       Text('Created: ${DateFormat.yMMMd().format(_note.createdDate)} | Modified: ${DateFormat.yMMMd().format(_note.updatedDate)}',
           style: new TextStyle(fontSize: 12.0
           )),
-      _noteTags.length > 0 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
+      _note.tags.length > 0 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
       _getTags(tags),
       Divider(color: ColorsPalette.nycTaxi),
-      Text('${_note.content}', style: new TextStyle(fontSize: 16),),
+      Text('${_note.content ?? ''}', style: new TextStyle(fontSize: 16),),
     ],
   );
 
@@ -179,7 +188,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         keyboardType: TextInputType.text,
         autofocus: true,
       ),
-      _noteTags.length > 0 ? _getTags(tags) : Container(),
+      _note.tags != null && _note.tags.length > 0 ? _getTags(tags) : Container(),
       Divider(color: ColorsPalette.nycTaxi),
       TextFormField(
         decoration: const InputDecoration(
@@ -201,11 +210,13 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         barrierDismissible: false, // user must tap button!
         builder: (_) =>
             BlocProvider<NoteBloc>(
-              create: (context) => NoteBloc(/*notesRepository: FirebaseNotesRepository(),*/
-              ),
+              create: (context) => NoteBloc(),
               child: NoteDeleteAlert(note: note,
-                  callback: (val) =>
-                  val == 'Delete' ? Navigator.of(context).pop() : ''
+                  callback: (val) async {
+                    if(val == 'Delete'){
+                      Navigator.of(context).pop();
+                    }
+                  }                 
               ),
             ),
       );

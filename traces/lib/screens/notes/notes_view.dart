@@ -48,7 +48,9 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<NoteBloc, NoteState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+         
+        },
         child: BlocBuilder<NoteBloc, NoteState>(
             bloc: BlocProvider.of(context),
             builder: (context, state){
@@ -97,7 +99,10 @@ class _NotesViewState extends State<NotesView> {
                                               style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
                                           trailing: _popupMenu(note, position),
                                           onTap: (){
-                                            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id);
+                                            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
+                                            {
+                                              context.read<NoteBloc>().add(GetAllNotes());
+                                            });
                                           },
                                         ),
                                         Container(

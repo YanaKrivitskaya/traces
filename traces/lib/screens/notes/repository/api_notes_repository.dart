@@ -1,6 +1,7 @@
 
-import 'package:traces/helpers/api.provider.dart';
-import 'package:traces/screens/notes/model/note.model.dart';
+import '../../../helpers/api.provider.dart';
+import '../model/create_note.model.dart';
+import '../model/note.model.dart';
 
 class ApiNotesRepository{
   ApiProvider apiProvider = ApiProvider();
@@ -14,64 +15,47 @@ class ApiNotesRepository{
     return notes;
   }
 
- /* @override
-  Future<Note> addNewNote(Note note) {
-    // TODO: implement addNewNote
-    throw UnimplementedError();
+  Future<Note> getNoteById(int noteId) async {
+    final response = await apiProvider.getSecure(notesUrl + '/$noteId');
+    
+    var note = response["note"] != null ?
+      Note.fromMap(response["note"]) : null;
+    return note;
   }
 
-  @override
-  Future<Tag> addNewTag(Tag tag) {
-    // TODO: implement addNewTag
-    throw UnimplementedError();
+  Future<void> deleteNote(int noteId) async {
+    await apiProvider.deleteSecure(notesUrl + '/$noteId');    
   }
 
-  @override
-  Future<void> deleteNote(Note note) {
-    // TODO: implement deleteNote
-    throw UnimplementedError();
+  Future<Note> addNoteTag(int noteId, int tagId) async {
+    final response = await apiProvider.postSecure(notesUrl + '$noteId/tags/$tagId', null);
+    
+    var note = response["note"] != null ?
+      Note.fromMap(response["note"]) : null;
+    return note;
   }
 
-  @override
-  Future<void> deleteTag(Tag tag) {
-    // TODO: implement deleteTag
-    throw UnimplementedError();
+  Future<Note> deleteNoteTag(int noteId, int tagId) async {
+    final response = await apiProvider.deleteSecure(notesUrl + '$noteId/tags/$tagId');
+    
+    var note = response["note"] != null ?
+      Note.fromMap(response["note"]) : null;
+    return note;
   }
 
-  @override
-  Future<Note> getNoteById(String id) {
-    // TODO: implement getNoteById
-    throw UnimplementedError();
+  Future<Note> updateNote(Note note) async{
+    final response = await apiProvider.putSecure(notesUrl + '${note.id}', note.toJson());
+    
+    var newNote = response["note"] != null ?
+      Note.fromMap(response["note"]) : null;
+    return newNote;
   }
 
-  @override
-  Future<Tag> getTagById(String id) {
-    // TODO: implement getTagById
-    throw UnimplementedError();
+  Future<Note> addNewNote(CreateNoteModel note) async{
+    final response = await apiProvider.postSecure(notesUrl, note.toJson());
+    
+    var newNote = response["note"] != null ?
+      Note.fromMap(response["note"]) : null;
+    return newNote;
   }
-
-  @override
-  Stream<List<Note>> notes() {
-    // TODO: implement notes
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream<List<Tag>> tags() {
-    // TODO: implement tags
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Note> updateNote(Note note) {
-    // TODO: implement updateNote
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Tag> updateTag(Tag tag) {
-    // TODO: implement updateTag
-    throw UnimplementedError();
-  }*/
-
 }

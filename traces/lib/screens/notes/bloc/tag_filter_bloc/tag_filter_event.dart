@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/notes/model/tag.model.dart';
+
+import '../../model/tag.model.dart';
 
 abstract class TagFilterEvent extends Equatable {
   const TagFilterEvent();

@@ -20,7 +20,7 @@ class NotesPage extends StatelessWidget{
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(
-          value: context.read<NoteBloc>()..add(GetAllNotes()),
+          value: context.read<NoteBloc>()/*..add(GetAllNotes())*/,
         ),
         BlocProvider<TagFilterBloc>(
           create: (context) => TagFilterBloc()..add(GetTags()),
@@ -48,7 +48,8 @@ class NotesPage extends StatelessWidget{
         body:  NotesView(),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
-            Navigator.pushNamed(context, noteDetailsRoute, arguments: '');
+            Navigator.pushNamed(context, noteDetailsRoute, arguments: 0).then((value) 
+              => context.read<NoteBloc>().add(GetAllNotes()));
           },
           tooltip: 'Add New Note',
           backgroundColor: ColorsPalette.nycTaxi,

@@ -87,8 +87,56 @@ class ApiProvider{
       
       responseJson = await sendPost(uri, headers, body);      
     }
-
     return responseJson;  
+  }
+
+  Future<dynamic> putSecure(String url, String body) async{
+    var responseJson;
+
+    var accessToken = await _storage.read(key: "access_token");
+    Uri uri = Uri.parse(_baseUrl + url);
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.authorizationHeader: "Bearer $accessToken"
+    };
+
+    try{
+      responseJson = await sendPut(uri, headers, body);      
+    }on SocketException catch(e) {
+      throw CustomException('No Internet connection');
+    }on UnauthorisedException catch(e) {
+      await refreshToken();
+
+      var accessToken = await _storage.read(key: "access_token");
+      headers["authorization"] = "Bearer $accessToken";
+      
+      responseJson = await sendPut(uri, headers, body);      
+    }
+    return responseJson;  
+  }
+
+  Future<dynamic> deleteSecure(String url) async{
+    var responseJson;
+
+    var accessToken = await _storage.read(key: "access_token");
+    Uri uri = Uri.parse(_baseUrl + url);
+    Map<String, String> headers = {      
+      HttpHeaders.authorizationHeader: "Bearer $accessToken"
+    };
+
+    try{      
+      responseJson = await sendDelete(uri, headers);
+    }on SocketException {
+      throw CustomException('No Internet connection');
+    }on UnauthorisedException {
+      await refreshToken();
+
+      var accessToken = await _storage.read(key: "access_token");
+      headers["authorization"] = "Bearer $accessToken";
+      
+      responseJson = await sendDelete(uri, headers);      
+    }
+    return responseJson;
   }
 
   Future<dynamic> sendGet(Uri uri, Map<String, String> headers) async{
@@ -99,6 +147,16 @@ class ApiProvider{
   Future<dynamic> sendPost(Uri uri, Map<String, String> headers, String body) async{
     var response = await http.post(uri, headers: headers, body: body);
     return await _response(response); 
+  }
+
+  Future<dynamic> sendPut(Uri uri, Map<String, String> headers, String body) async{
+    var response = await http.put(uri, headers: headers, body: body);
+    return await _response(response); 
+  }
+
+  Future<dynamic> sendDelete(Uri uri, Map<String, String> headers) async{
+    var response = await http.delete(uri, headers: headers);
+    return await _response(response);     
   }
 
   Future<dynamic> refreshToken() async{

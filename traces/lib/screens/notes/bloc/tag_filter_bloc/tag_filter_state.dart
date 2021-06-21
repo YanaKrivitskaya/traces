@@ -1,6 +1,7 @@
-import 'package:traces/screens/notes/model/tag.model.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/shared/state_types.dart';
+
+import '../../../../shared/state_types.dart';
+import '../../model/tag.model.dart';
 
 class TagFilterState{
   final List<Tag> allTags;
