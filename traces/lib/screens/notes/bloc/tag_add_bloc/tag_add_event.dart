@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import '../../model/create_tag.model.dart';
-import '../../model/tag.model.dart';
+import '../../models/create_tag.model.dart';
+import '../../models/tag.model.dart';
 
 abstract class TagAddEvent extends Equatable {
   const TagAddEvent();

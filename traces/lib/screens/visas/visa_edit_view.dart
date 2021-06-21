@@ -6,10 +6,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:traces/screens/profile/model/member.dart';
+import 'package:traces/utils/misc/state_types.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
-import '../../shared/state_types.dart';
 import 'bloc/visa_details/visa_details_bloc.dart';
 import 'model/visa.dart';
 

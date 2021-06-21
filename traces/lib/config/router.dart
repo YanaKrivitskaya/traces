@@ -1,59 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
-import 'package:traces/screens/trips/start_planning/start_planning_view.dart';
-import 'package:traces/screens/trips/trips_page.dart';
 
-import 'constants/route_constants.dart';
-import 'screens/expenses.dart';
-import 'screens/home.dart';
-import 'screens/hotels.dart';
-import 'screens/map.dart';
-import 'screens/notes/bloc/note_bloc/bloc.dart';
-import 'screens/notes/bloc/note_details_bloc/bloc.dart';
-import 'screens/notes/bloc/tag_filter_bloc/bloc.dart';
-import 'screens/notes/note_detail_view.dart';
-import 'screens/notes/note_page.dart';
-import 'screens/notes/repository/firebase_notes_repository.dart';
-import 'screens/profile/bloc/profile/bloc.dart';
-import 'screens/profile/profile_page.dart';
-import 'screens/profile/repository/firebase_profile_repository.dart';
-import 'screens/settings/bloc/settings_bloc.dart';
-import 'screens/settings/repository/firebase_appSettings_repository.dart';
-import 'screens/settings/settings_page.dart';
-import 'screens/settings/themes_settings_view.dart';
-import 'screens/trips/bloc/trips_bloc.dart';
-import 'screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
-import 'screens/visas/bloc/visa/visa_bloc.dart';
-import 'screens/visas/bloc/visa_details/visa_details_bloc.dart';
-import 'screens/visas/bloc/visa_tab/visa_tab_bloc.dart';
-import 'screens/visas/entry_exit_details_view.dart';
-import 'screens/visas/repository/firebase_visas_repository.dart';
-import 'screens/visas/visa_details_view.dart';
-import 'screens/visas/visa_edit_view.dart';
-import 'screens/visas/visas_page.dart';
-import 'screens/trips/start_planning/bloc/startplanning_bloc.dart';
-import 'screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
-import 'screens/trips/tripdetails/tripdetails_view.dart';
-
-/*class Router {
-  static Map<String, WidgetBuilder> getRoutes() {
-    return {
-      homeRoute: (context) => HomePage(),
-      tripsRoute: (context) => TripsPage(),
-      mapRoute: (context) => MapPage(),
-      notesRoute: (context) => NotesPage(),
-      noteDetailsRoute: (context) => NoteDetailsPage(),
-      flightsRoute: (context) => FlightsPage(),
-      expensesRoute: (context) => ExpensesPage(),
-      hotelsRoute: (context) => HotelsPage(),
-      visasRoute: (context) => VisasPage(),
-      profileRoute: (context) => ProfilePage(),
-      settingsRoute: (context) => SettingsPage(),
-      loginSignupRoute: (context) => LoginSignupPage()
-    };
-  }
-}*/
+import '../constants/route_constants.dart';
+import '../screens/expenses.dart';
+import '../screens/home.dart';
+import '../screens/hotels.dart';
+import '../screens/map.dart';
+import '../screens/notes/bloc/note_bloc/bloc.dart';
+import '../screens/notes/bloc/note_details_bloc/bloc.dart';
+import '../screens/notes/bloc/tag_filter_bloc/bloc.dart';
+import '../screens/notes/screens/note_detail_view.dart';
+import '../screens/notes/screens/note_page.dart';
+import '../screens/profile/bloc/profile/bloc.dart';
+import '../screens/profile/profile_page.dart';
+import '../screens/profile/repository/firebase_profile_repository.dart';
+import '../screens/settings/bloc/settings_bloc.dart';
+import '../screens/settings/repository/firebase_appSettings_repository.dart';
+import '../screens/settings/settings_page.dart';
+import '../screens/settings/themes_settings_view.dart';
+import '../screens/trips/bloc/trips_bloc.dart';
+import '../screens/trips/repository/firebase_trips_repository.dart';
+import '../screens/trips/start_planning/bloc/startplanning_bloc.dart';
+import '../screens/trips/start_planning/start_planning_view.dart';
+import '../screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
+import '../screens/trips/tripdetails/tripdetails_view.dart';
+import '../screens/trips/trips_page.dart';
+import '../screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
+import '../screens/visas/bloc/visa/visa_bloc.dart';
+import '../screens/visas/bloc/visa_details/visa_details_bloc.dart';
+import '../screens/visas/bloc/visa_tab/visa_tab_bloc.dart';
+import '../screens/visas/entry_exit_details_view.dart';
+import '../screens/visas/repository/firebase_visas_repository.dart';
+import '../screens/visas/visa_details_view.dart';
+import '../screens/visas/visa_edit_view.dart';
+import '../screens/visas/visas_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

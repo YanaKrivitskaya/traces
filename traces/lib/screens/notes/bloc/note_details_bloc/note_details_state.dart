@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../model/note.model.dart';
+import '../../models/note.model.dart';
+
 
 abstract class NoteDetailsState extends Equatable {
   final Note note;

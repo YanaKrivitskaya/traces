@@ -1,8 +1,8 @@
 import 'package:traces/constants/route_constants.dart';
+import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/widgets.dart';
 
 import 'bloc/startplanning_bloc.dart';
-import 'package:traces/shared/shared.dart';
-import 'package:traces/shared/styles.dart';
 import 'package:intl/intl.dart';
 
 import '../model/trip.dart';

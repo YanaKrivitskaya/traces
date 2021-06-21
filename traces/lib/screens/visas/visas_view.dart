@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
-import '../../shared/shared.dart';
-import '../../shared/state_types.dart';
+import '../../utils/misc/state_types.dart';
+import '../../widgets/widgets.dart';
 import 'bloc/visa/visa_bloc.dart';
 import 'helpers.dart';
 import 'model/visa.dart';

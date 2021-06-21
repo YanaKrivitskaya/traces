@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import '../../../../shared/state_types.dart';
-import '../../model/tag.model.dart';
-import '../../repository/api_notes_repository.dart';
-import '../../repository/api_tags_repository.dart';
+import '../../../../utils/misc/state_types.dart';
+import '../../models/tag.model.dart';
+import '../../repositories/api_notes_repository.dart';
+import '../../repositories/api_tags_repository.dart';
 import 'bloc.dart';
 
 class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {

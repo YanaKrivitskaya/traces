@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-
-import '../../../../shared/state_types.dart';
+import 'package:traces/utils/misc/state_types.dart';
 import '../../model/entryExit.dart';
 import '../../model/settings.dart';
 import '../../model/user_countries.dart';

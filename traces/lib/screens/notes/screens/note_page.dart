@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../constants/color_constants.dart';
-import '../../constants/route_constants.dart';
-import 'bloc/note_bloc/bloc.dart';
-import 'bloc/tag_filter_bloc/bloc.dart';
-import 'note_filter_button.dart';
+import '../../../constants/color_constants.dart';
+import '../../../constants/route_constants.dart';
+import '../bloc/note_bloc/bloc.dart';
+import '../bloc/tag_filter_bloc/bloc.dart';
+import '../widgets/note_filter_button.dart';
+import '../widgets/tags_filter_button.dart';
 import 'notes_view.dart';
-import 'tags_filter_button.dart';
 
 class NotesPage extends StatelessWidget{
   NotesPage();

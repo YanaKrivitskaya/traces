@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/constants/route_constants.dart';
-import 'package:traces/shared/styles.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/widgets.dart';
 
 import '../../constants/color_constants.dart';
-import '../../shared/shared.dart';
 import 'bloc/trips_bloc.dart';
 //import 'package:timelines/timelines.dart';
 

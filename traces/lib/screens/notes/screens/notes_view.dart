@@ -4,14 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../constants/color_constants.dart';
-import '../../constants/route_constants.dart';
-import '../../shared/state_types.dart';
-import 'bloc/note_bloc/bloc.dart';
-import 'bloc/tag_filter_bloc/bloc.dart';
-import 'model/note.model.dart';
-import 'model/tag.model.dart';
-import 'note_delete_alert.dart';
+import '../../../constants/color_constants.dart';
+import '../../../constants/route_constants.dart';
+import '../../../utils/misc/state_types.dart';
+import '../bloc/note_bloc/bloc.dart';
+import '../bloc/tag_filter_bloc/bloc.dart';
+import '../models/note.model.dart';
+import '../models/tag.model.dart';
+import '../widgets/note_delete_alert.dart';
 
 class NotesView extends StatefulWidget{
   NotesView();

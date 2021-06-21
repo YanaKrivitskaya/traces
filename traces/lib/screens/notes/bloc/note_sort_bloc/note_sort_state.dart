@@ -1,6 +1,7 @@
 import 'package:meta/meta.dart';
 
-import '../../model/note.model.dart';
+import '../../models/note.model.dart';
+
 
 class NoteSortState {
   final SortFields tempSortField;

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/auth/bloc.dart';
+import 'package:traces/auth/auth_bloc/bloc.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/profile/add_family_button.dart';
@@ -9,9 +9,11 @@ import 'package:traces/screens/profile/edit_family_button.dart';
 import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/screens/profile/name_edit_button.dart';
-import 'package:traces/shared/shared.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/shared/state_types.dart';
+import 'package:traces/utils/misc/state_types.dart';
+import 'package:traces/widgets/widgets.dart';
+
 
 class ProfileView extends StatefulWidget{
 

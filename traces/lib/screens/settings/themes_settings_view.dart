@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/auth/auth_bloc/bloc.dart';
+import 'package:traces/widgets/widgets.dart';
 
-import '../../auth/authentication_bloc.dart';
 import '../../constants/color_constants.dart';
-import '../../shared/shared.dart';
 import 'bloc/settings_bloc.dart';
 
 class ThemeSettingsView extends StatefulWidget{

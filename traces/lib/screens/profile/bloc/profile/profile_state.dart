@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/screens/profile/model/profile.dart';
-import 'package:traces/shared/state_types.dart';
+import 'package:traces/utils/misc/state_types.dart';
 
 class ProfileState {
   final Profile profile;

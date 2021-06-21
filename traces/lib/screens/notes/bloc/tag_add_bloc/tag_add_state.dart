@@ -1,6 +1,7 @@
-import 'package:traces/screens/notes/model/tag.model.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/shared/state_types.dart';
+
+import '../../../../utils/misc/state_types.dart';
+import '../../models/tag.model.dart';
 
 class TagAddState {
   final List<Tag> allTags;
