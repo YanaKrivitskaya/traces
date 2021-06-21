@@ -37,7 +37,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   Stream<NoteState> _mapUpdateNotesListToState(UpdateNotesList event) async* {
     List<Note> filteredNotes = <Note>[];
-    filteredNotes.addAll(event.allNotes);
+    filteredNotes.addAll(event.allNotes!);
     yield NoteState.success(allNotes: event.allNotes, filteredNotes: filteredNotes,
         sortField: event.sortField, sortDirection: event.sortDirection, searchEnabled: false, noteDeleted: false);
   }
@@ -63,17 +63,17 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
     List<Note> filteredNotes = <Note>[];
 
-    !state.searchEnabled ? filteredNotes.addAll(state.allNotes) :  filteredNotes.addAll(state.filteredNotes);
+    !state.searchEnabled! ? filteredNotes.addAll(state.allNotes!) :  filteredNotes.addAll(state.filteredNotes!);
 
-    yield state.update(stateStatus: StateStatus.Success, searchEnabled: !state.searchEnabled, filteredNotes: filteredNotes);
+    yield state.update(stateStatus: StateStatus.Success, searchEnabled: !state.searchEnabled!, filteredNotes: filteredNotes);
   }
 
   Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
 
     try{
-      await _notesRepository.deleteNote(event.note.id);
-      state.allNotes?.removeWhere((n) => n.id == event.note.id);
-      state.filteredNotes?.removeWhere((n) => n.id == event.note.id);
+      await _notesRepository.deleteNote(event.note!.id);
+      state.allNotes?.removeWhere((n) => n.id == event.note!.id);
+      state.filteredNotes?.removeWhere((n) => n.id == event.note!.id);
       yield state.update(allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: true);
     }on CustomException catch(e){
       yield NoteState.failure(error: e.toString());
@@ -91,8 +91,8 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     List<Note> filteredNotes = <Note>[];
 
     event.noteName.length > 0
-        ? filteredNotes = state.allNotes.where((n) => n.title.toLowerCase().contains(event.noteName.toLowerCase())).toList()
-        : filteredNotes.addAll(state.allNotes);
+        ? filteredNotes = state.allNotes!.where((n) => n.title!.toLowerCase().contains(event.noteName.toLowerCase())).toList()
+        : filteredNotes.addAll(state.allNotes!);
 
     yield state.update(filteredNotes: filteredNotes, stateStatus: StateStatus.Success);
   }

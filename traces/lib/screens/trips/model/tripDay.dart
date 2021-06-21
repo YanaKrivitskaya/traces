@@ -8,12 +8,12 @@ import 'package:traces/screens/trips/model/tripDay_entity.dart';
 
 @immutable
 class TripDay {
-  final String id;
-  final String description;
-  final DateTime date;
-  final int dayNumber;
-  final List<DayActionEntity> dayActions;
-  final List<String> photoUrls;
+  final String? id;
+  final String? description;
+  final DateTime? date;
+  final int? dayNumber;
+  final List<DayActionEntity>? dayActions;
+  final List<String>? photoUrls;
 
   TripDay({
     this.id,

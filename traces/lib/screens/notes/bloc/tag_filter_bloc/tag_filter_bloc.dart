@@ -35,10 +35,10 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
     yield TagFilterState.loading();
 
     List<Tag> selectedTags= <Tag>[];
-    if(event.selectedTags.isEmpty && !event.noTagsChecked && !event.allTagsUnChecked){
-      selectedTags.addAll(event.allTags);
+    if(event.selectedTags!.isEmpty && !event.noTagsChecked! && !event.allTagsUnChecked!){
+      selectedTags.addAll(event.allTags!);
     }else{
-      selectedTags.addAll(event.selectedTags);
+      selectedTags.addAll(event.selectedTags!);
     }
 
     yield TagFilterState.success(allTags: event.allTags, selectedTags: selectedTags,
@@ -49,10 +49,10 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
 
     var tags = await _tagsRepository.getTags();
 
-    List<Tag> selectedTags = <Tag>[];
-    bool allTagsChecked = !state.allTagsChecked ? false : true;
-    bool noTagsChecked = !state.noTagsChecked ? false : true;
-    bool allTagsUnChecked = !state.allUnChecked ? false : true;
+    List<Tag>? selectedTags = <Tag>[];
+    bool allTagsChecked = !state.allTagsChecked! ? false : true;
+    bool noTagsChecked = !state.noTagsChecked! ? false : true;
+    bool allTagsUnChecked = !state.allUnChecked! ? false : true;
 
     if(state.selectedTags != null){
       selectedTags = state.selectedTags;
@@ -63,22 +63,22 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
 
   Stream<TagFilterState> _mapTagCheckedToState(TagChecked event) async* {
     yield state.update(stateStatus: StateStatus.Loading);
-    bool allChecked = state.allTagsChecked;
-    bool allUnChecked = state.allUnChecked;
+    bool? allChecked = state.allTagsChecked;
+    bool? allUnChecked = state.allUnChecked;
 
     print(event.checked);
 
-    if(event.checked){
-      state.selectedTags.add(event.tag);
-      state.selectedTags.length == state.allTags.length && state.noTagsChecked ? allChecked = true : allChecked = false;
+    if(event.checked!){
+      state.selectedTags!.add(event.tag);
+      state.selectedTags!.length == state.allTags!.length && state.noTagsChecked! ? allChecked = true : allChecked = false;
       allUnChecked = false;
     }else{
-      state.selectedTags.removeWhere((t) => t.id == event.tag.id);
-      state.selectedTags.length == 0 && !state.noTagsChecked ? allUnChecked = true : allUnChecked = false;
+      state.selectedTags!.removeWhere((t) => t.id == event.tag.id);
+      state.selectedTags!.length == 0 && !state.noTagsChecked! ? allUnChecked = true : allUnChecked = false;
       allChecked = false;
     }
 
-    print(state.selectedTags.length);
+    print(state.selectedTags!.length);
     yield state.update(stateStatus: StateStatus.Success, selectedTags: state.selectedTags, allTagsChecked: allChecked, allUnChecked: allUnChecked);
   }
 
@@ -87,8 +87,8 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
 
     List<Tag> selectedTags = <Tag>[];
 
-    if(event.checked) {
-      selectedTags.addAll(state.allTags);
+    if(event.checked!) {
+      selectedTags.addAll(state.allTags!);
       yield state.update(stateStatus: StateStatus.Success, allTagsChecked: true, allUnChecked: false, selectedTags: selectedTags);
     }else {
       yield state.update(stateStatus: StateStatus.Success, allTagsChecked: false, allUnChecked: true, selectedTags: selectedTags, noTagsChecked: false);
@@ -98,9 +98,9 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
   Stream<TagFilterState> _mapNoTagsCheckedToState(NoTagsChecked event) async* {
     yield state.update(stateStatus: StateStatus.Loading);
 
-    bool allChecked = state.allTagsChecked;
+    bool? allChecked = state.allTagsChecked;
 
-    event.checked && state.allTags.length == state.selectedTags.length ? allChecked = true : allChecked = false;
+    event.checked! && state.allTags!.length == state.selectedTags!.length ? allChecked = true : allChecked = false;
 
     yield state.update(stateStatus: StateStatus.Success, noTagsChecked: event.checked, allTagsChecked: allChecked, allUnChecked: false);
   }

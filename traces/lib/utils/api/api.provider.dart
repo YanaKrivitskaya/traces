@@ -65,7 +65,7 @@ class ApiProvider{
     return responseJson;
   }
 
-  Future<dynamic> postSecure(String url, String body) async{
+  Future<dynamic> postSecure(String url, String? body) async{
     var responseJson;
 
     var accessToken = await _storage.read(key: "access_token");
@@ -139,12 +139,12 @@ class ApiProvider{
     return responseJson;
   }
 
-  Future<dynamic> sendGet(Uri uri, Map<String, String> headers) async{
+  Future<dynamic> sendGet(Uri uri, Map<String, String>? headers) async{
     var response = await http.get(uri, headers: headers);
     return await _response(response);     
   }
 
-  Future<dynamic> sendPost(Uri uri, Map<String, String> headers, String body) async{
+  Future<dynamic> sendPost(Uri uri, Map<String, String> headers, String? body) async{
     var response = await http.post(uri, headers: headers, body: body);
     return await _response(response); 
   }
@@ -199,7 +199,7 @@ class ApiProvider{
         
     switch(response.statusCode){
       case 200: {
-        Map<String, dynamic> data = json.decode(response.body.toString());
+        Map<String, dynamic>? data = json.decode(response.body.toString());
         return data;
       }      
       case 400:

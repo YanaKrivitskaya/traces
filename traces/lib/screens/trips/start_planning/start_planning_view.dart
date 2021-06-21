@@ -18,9 +18,9 @@ class StartPlanningView extends StatefulWidget{
 }
 
 class _StartPlanningViewState extends State<StartPlanningView>{
-  TextEditingController _tripNameController;
+  TextEditingController? _tripNameController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Trip newTrip;
+  Trip? newTrip;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
 
   @override
   void dispose() {
-    _tripNameController.dispose();   
+    _tripNameController!.dispose();   
     super.dispose();
   }
 
@@ -80,7 +80,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
               ));
               Future.delayed(const Duration(seconds: 1), () {
                 Navigator.popAndPushNamed(context, tripDetailsRoute,
-                    arguments: state.trip.id);
+                    arguments: state.trip!.id);
               });
           }
           if(state is StartPlanningErrorState){
@@ -117,7 +117,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
     );
   }
 
-  Widget _createForm(StartPlanningState state, Trip trip) => new Container(
+  Widget _createForm(StartPlanningState state, Trip? trip) => new Container(
     padding: EdgeInsets.all(15.0),
     child: SingleChildScrollView(
       child: Form(
@@ -141,7 +141,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                     controller: _tripNameController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {                        
-                      return value.isEmpty ? 'Required field' : null;
+                      return value!.isEmpty ? 'Required field' : null;
                     },
                   ),
                 ),
@@ -160,12 +160,12 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                   children: [
                     Icon(Icons.date_range),
                     trip?.startDate != null 
-                    ?  Text('${DateFormat.yMMMd().format(trip.startDate)}',
+                    ?  Text('${DateFormat.yMMMd().format(trip!.startDate!)}',
                         style: quicksandStyle(fontSize: 18.0))
                     : Text("Start Date", style:  quicksandStyle(fontSize: 18.0)),
                     Icon(Icons.date_range),
                     trip?.endDate != null 
-                    ?  Text('${DateFormat.yMMMd().format(trip.endDate)}',
+                    ?  Text('${DateFormat.yMMMd().format(trip!.endDate!)}',
                         style: quicksandStyle(fontSize: 18.0))
                     : Text("End Date", style:  quicksandStyle(fontSize: 18.0)),
                   ],
@@ -183,11 +183,11 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                     foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
                   ),
                 onPressed: (){
-                  var isFormValid = _formKey.currentState.validate();                 
+                  var isFormValid = _formKey.currentState!.validate();                 
 
                   if(isFormValid){
                     print(trip.toString());
-                    trip.name = _tripNameController.text.trim();                    
+                    trip!.name = _tripNameController!.text.trim();                    
                     context.read<StartPlanningBloc>().add(StartPlanningSubmitted(trip));
                   }                  
                 }
@@ -204,7 +204,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
   Future<Null> _selectDates(
     BuildContext context, StartPlanningState state) async {
     FocusScope.of(context).unfocus();
-    final DateTimeRange picked = await showDateRangePicker (        
+    final DateTimeRange? picked = await showDateRangePicker (        
         context: context,        
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101),

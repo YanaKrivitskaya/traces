@@ -11,12 +11,12 @@ part 'visa_event.dart';
 part 'visa_state.dart';
 
 class VisaBloc extends Bloc<VisaEvent, VisaState> {
-  final VisasRepository _visasRepository;
-  StreamSubscription _visasSubscription;
+  //final VisasRepository _visasRepository;
+  StreamSubscription? _visasSubscription;
 
-  VisaBloc({@required VisasRepository visasRepository})
-      : assert(visasRepository != null),     
-        _visasRepository = visasRepository,
+  VisaBloc(/*{required VisasRepository visasRepository}*/)
+      : /*assert(visasRepository != null),     
+        _visasRepository = visasRepository,*/
         super(VisaState.empty());
 
   @override
@@ -37,8 +37,8 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
 
     _visasSubscription?.cancel();
 
-    _visasSubscription = _visasRepository.visas().listen(
+   /* _visasSubscription = _visasRepository.visas().listen(
           (visas) => add(UpdateVisasList(visas)),
-        );
+        );*/
   }
 }

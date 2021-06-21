@@ -13,7 +13,7 @@ import 'bloc/tripdetails_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class TripDetailsView extends StatefulWidget{
-  final String tripId;  
+  final String? tripId;  
 
   TripDetailsView({this.tripId});
 
@@ -60,8 +60,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
                               width: MediaQuery.of(context).size.width * 0.7,
                                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                   Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [                                
-                                    Text(state.trip.name, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
-                                    Text('${DateFormat.yMMMd().format(state.trip.startDate)} - ${DateFormat.yMMMd().format(state.trip.endDate)}', style: quicksandStyle(fontSize: 15.0))                                    
+                                    Text(state.trip.name!, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
+                                    Text('${DateFormat.yMMMd().format(state.trip.startDate!)} - ${DateFormat.yMMMd().format(state.trip.endDate!)}', style: quicksandStyle(fontSize: 15.0))                                    
                                   ],),
                                   InkWell(
                                     child: _tripMembers(state.trip.tripMembers, state.familyMembers),
@@ -92,7 +92,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
     );
   }
 
-  Widget _coverImage(String imageUrl) => new Container(
+  Widget _coverImage(String? imageUrl) => new Container(
     margin: EdgeInsets.only(bottom: 20.0),
     child: imageUrl != null ? 
       CachedNetworkImage(
@@ -116,7 +116,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
         );
   }
 
-  Widget _tripMembers(List<String> tripMembers, List<Member> familyMembers){   
+  Widget _tripMembers(List<String>? tripMembers, List<Member> familyMembers){   
 
     if (tripMembers != null && tripMembers.length > 0){
       return Container(        
@@ -142,7 +142,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
     ),
     child:  CircleAvatar(
       backgroundColor: ColorsPalette.lynxWhite,
-      child:Text(getAvatarName(familyMembers.firstWhere((m) => m.id == memberId).name), 
+      child:Text(getAvatarName(familyMembers.firstWhere((m) => m.id == memberId).name!), 
         style: TextStyle(color: ColorsPalette.meditSea, fontSize: 10.0, fontWeight: FontWeight.w300)),
       radius: 15.0
     ),

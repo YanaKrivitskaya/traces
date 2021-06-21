@@ -8,7 +8,7 @@ import '../model/profile_entity.dart';
 import 'profile_repository.dart';
 
 
-class FirebaseProfileRepository extends ProfileRepository{
+class FirebaseProfileRepository{
   final usersCollection = FirebaseFirestore.instance.collection('users');
   final String userFamily = "family";
 
@@ -19,7 +19,7 @@ class FirebaseProfileRepository extends ProfileRepository{
   }
 
   @override
-  Future<Profile> getCurrentProfile() async {
+  Future<void> getCurrentProfile() async {
     /*String uid = await _userRepository.getUserId();
 
     var resultProfile = await usersCollection.doc(uid).get();
@@ -32,7 +32,7 @@ class FirebaseProfileRepository extends ProfileRepository{
   }  
 
   @override
-  Future<Profile> updateProfile(Profile profile) async {
+  Future<void> updateProfile(Profile profile) async {
    /* String uid = await _userRepository.getUserId();
     await usersCollection.doc(uid)
         .update(profile.toEntity().toDocument());
@@ -47,7 +47,7 @@ class FirebaseProfileRepository extends ProfileRepository{
   }
 
   @override
-  Future<Profile> addNewProfile() async {
+  Future<void> addNewProfile() async {
     /*User user = await _userRepository.getUser();
 
     Profile newProfile = Profile(user.email, displayName: user.displayName, isEmailVerified: user.emailVerified);
@@ -88,7 +88,7 @@ class FirebaseProfileRepository extends ProfileRepository{
   }
 
   @override
-  Future<Member> getMemberById(String id) async {
+  Future<void> getMemberById(String? id) async {
     /*String uid = await _userRepository.getUserId();
     
     var member = await usersCollection.doc(uid).collection(userFamily).doc(id).get();

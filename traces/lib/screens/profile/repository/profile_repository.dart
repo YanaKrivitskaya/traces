@@ -18,5 +18,5 @@ abstract class ProfileRepository {
 
   Future<void> updateMember(Member member);
 
-  Future<Member> getMemberById(String id);
+  Future<Member> getMemberById(String? id);
 }

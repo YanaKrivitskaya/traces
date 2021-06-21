@@ -162,7 +162,7 @@ class ColorsPalette {
 
 class LinearGradientMask extends StatelessWidget {
   LinearGradientMask({this.child});
-  final Widget child;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {

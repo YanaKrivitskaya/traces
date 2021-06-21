@@ -100,8 +100,8 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
   }
 
   Stream<LoginSignupState> _mapLoginWithCredentialsPressedToState({
-    String email,
-    String password
+    required String email,
+    required String password
   }) async*{
     yield LoginSignupState.loading(
       formMode: FormMode.Login,
@@ -124,9 +124,9 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
   }
 
   Stream<LoginSignupState> _mapSignupPressedToState({
-    String email,
-    String password,
-    String username
+    required String email,
+    required String password,
+    required String username
   }) async*{
     yield LoginSignupState.loading(
         formMode: FormMode.Register,
@@ -163,7 +163,7 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
   }
 
   Stream<LoginSignupState> _mapPasswordResetedToState({
-    String email
+    required String email
   }) async*{
     yield LoginSignupState.loading(
         formMode: FormMode.Reset,

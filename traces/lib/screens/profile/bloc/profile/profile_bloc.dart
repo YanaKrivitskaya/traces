@@ -9,12 +9,12 @@ import 'bloc.dart';
 import 'package:meta/meta.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  final ProfileRepository _profileRepository;
-  StreamSubscription _profileSubscription;
+  /*final ProfileRepository _profileRepository;*/
+  StreamSubscription? _profileSubscription;
 
-  ProfileBloc({@required ProfileRepository profileRepository})
+  ProfileBloc()/*{required ProfileRepository profileRepository})
       : assert(profileRepository != null),
-        _profileRepository = profileRepository, super(ProfileState.empty());
+        _profileRepository = profileRepository,*/ : super(ProfileState.empty());
   @override
   Stream<ProfileState> mapEventToState(
     ProfileEvent event,
@@ -52,17 +52,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Stream<ProfileState> _mapUsernameUpdatedToState(String username) async*{
 
-    await _profileRepository.updateUsername(username);
+    /*await _profileRepository.updateUsername(username);
 
-    Profile profile = Profile(state.profile.email, displayName: username, isEmailVerified: state.profile.isEmailVerified);
+    Profile profile = Profile(state.profile!.email, displayName: username, isEmailVerified: state.profile!.isEmailVerified);
 
     Profile updProfile = await _profileRepository.updateProfile(profile);
 
-    yield state.update(profile: updProfile);
+    yield state.update(profile: updProfile);*/
   }
 
-  Stream<ProfileState> _mapFamilyMemberUpdatedToState(String id, String name) async*{
-
+  Stream<ProfileState> _mapFamilyMemberUpdatedToState(String? id, String name) async*{
+/*
     Member updMember = Member(name: name);
     if(id != null){
       updMember.id = id;
@@ -71,7 +71,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     await _profileRepository.addNewMember(updMember);        
 
-    yield state.update(profile: state.profile);
+    yield state.update(profile: state.profile);*/
   }
 
   Stream<ProfileState> _mapUpdateProfileStateToState(UpdateProfileState event) async* {
@@ -79,7 +79,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Stream<ProfileState> _mapGetProfileToState(GetProfile event) async*{
-    yield ProfileState.loading();
+   /* yield ProfileState.loading();
 
     Profile profile = await _profileRepository.getCurrentProfile();
 
@@ -91,7 +91,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     _profileSubscription = _profileRepository.familyMembers().listen(
       (members) => add(UpdateProfileState(members, profile))
-    );    
+    );    */
 
     //yield ProfileState.success(profile: profile);
   }

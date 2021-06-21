@@ -14,13 +14,13 @@ part 'tripdetails_event.dart';
 part 'tripdetails_state.dart';
 
 class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
-  final TripsRepository _tripsRepository;
-  final ProfileRepository _profileRepository;
-  StreamSubscription _profileSubscription;
+  /*final TripsRepository _tripsRepository;
+  final ProfileRepository _profileRepository;*/
+  StreamSubscription? _profileSubscription;
   
-  TripDetailsBloc(TripsRepository tripsRepository) : 
-  _tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
-  _profileRepository = new FirebaseProfileRepository(),
+  TripDetailsBloc(/*TripsRepository tripsRepository*/) : 
+  /*_tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
+  _profileRepository = new FirebaseProfileRepository(),*/
   super(TripDetailsInitial());
 
   @override
@@ -44,18 +44,18 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
 
   Stream<TripDetailsState> _mapGetTripDetailsToState(
       GetTripDetails event) async* {
-    Trip trip = await _tripsRepository.getTripById(event.tripId);
+   /* Trip trip = await _tripsRepository.getTripById(event.tripId);
 
     _profileSubscription?.cancel();
     
     _profileSubscription = _profileRepository.familyMembers().listen(
       (members) => add(UpdateTripDetailsSuccess(members, trip))
-    );    
+    );    */
   }
 
   Stream<TripDetailsState> _mapDeleteTripToState(
       DeleteTripClicked event) async* {
-    await _tripsRepository.deleteTrip(event.tripId);
+   // await _tripsRepository.deleteTrip(event.tripId);
   }
 
 }

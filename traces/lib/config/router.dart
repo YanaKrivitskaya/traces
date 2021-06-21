@@ -44,7 +44,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<SettingsBloc>(
             create: (context) =>
-                SettingsBloc(settingsRepository: FirebaseAppSettingsRepository()),
+                SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/),
             child: HomePage(),
           ),
       );
@@ -82,7 +82,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<ProfileBloc>(
             create: (context) =>
-                ProfileBloc(profileRepository: FirebaseProfileRepository()),
+                ProfileBloc(/*profileRepository: FirebaseProfileRepository()*/),
             child: ProfilePage(),
           ),
         );
@@ -90,7 +90,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<SettingsBloc>(
             create: (context) =>
-                SettingsBloc(settingsRepository: FirebaseAppSettingsRepository()),
+                SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/),
             child: SettingsPage(),
           ),
       );
@@ -98,7 +98,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<SettingsBloc>(
             create: (context) =>
-                SettingsBloc(settingsRepository: FirebaseAppSettingsRepository())
+                SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/)
                   ..add(GetAppSettings()),
             child: ThemeSettingsView(),
           ),
@@ -111,7 +111,7 @@ class RouteGenerator {
                         create: (context) => VisaTabBloc()),
                     BlocProvider<VisaBloc>(
                       create: (context) => VisaBloc(
-                        visasRepository: FirebaseVisasRepository(),
+                        /*visasRepository: FirebaseVisasRepository()*/
                       )..add(GetAllVisas()),
                     ),
                   ],
@@ -123,8 +123,8 @@ class RouteGenerator {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<VisaDetailsBloc>(
                 create: (context) => VisaDetailsBloc(
-                    visasRepository: FirebaseVisasRepository(),
-                    profileRepository: FirebaseProfileRepository())
+                    /*visasRepository: FirebaseVisasRepository(),
+                    profileRepository: FirebaseProfileRepository()*/)
                   ..add(GetVisaDetails(args)),
                 child: VisaDetailsView(),
               ),
@@ -138,8 +138,8 @@ class RouteGenerator {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<VisaDetailsBloc>(
                 create: (context) => VisaDetailsBloc(
-                    visasRepository: FirebaseVisasRepository(),
-                    profileRepository: FirebaseProfileRepository())
+                    /*visasRepository: FirebaseVisasRepository(),
+                    profileRepository: FirebaseProfileRepository()*/)
                   ..add(args != '' ? EditVisaClicked(args) : NewVisaMode()),
                 child: VisaEditView(visaId: args),
               ),
@@ -153,8 +153,8 @@ class RouteGenerator {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<EntryExitBloc>(
                 create: (context) => EntryExitBloc(
-                    visasRepository:
-                        FirebaseVisasRepository()) /*..add(args != '' ? EditVisaClicked(args) : NewVisaMode())*/,
+                    /*visasRepository:
+                        FirebaseVisasRepository()*/) /*..add(args != '' ? EditVisaClicked(args) : NewVisaMode())*/,
                 child: EntryExitDetailsView(/*entryId: args*/),
               ),
             );
@@ -165,7 +165,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<TripsBloc>(
             create: (context) =>
-                TripsBloc(FirebaseTripsRepository())..add(GetAllTrips()),
+                TripsBloc(/*FirebaseTripsRepository()*/)..add(GetAllTrips()),
             child: TripsPage(),
           ),
       );
@@ -174,7 +174,7 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => BlocProvider<StartPlanningBloc>(
               create: (context) => StartPlanningBloc(
-                  FirebaseTripsRepository())
+                  /*FirebaseTripsRepository()*/)
                 ..add(NewTripMode()),
               child: StartPlanningView(),
             ),
@@ -186,7 +186,7 @@ class RouteGenerator {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<TripDetailsBloc>(
                 create: (context) => TripDetailsBloc(
-                    FirebaseTripsRepository())..add(GetTripDetails(args)),
+                   /* FirebaseTripsRepository()*/)..add(GetTripDetails(args)),
                 child: TripDetailsView(tripId: args),
               ),
             );

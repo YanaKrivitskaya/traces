@@ -7,10 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:traces/widgets/widgets.dart';
 
 class TripDeleteAlert extends StatelessWidget {
-  final Trip trip;
-  final StringCallback callback;
+  final Trip? trip;
+  final StringCallback? callback;
 
-  const TripDeleteAlert({Key key, this.trip, this.callback}) : super(key: key);
+  const TripDeleteAlert({Key? key, this.trip, this.callback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,9 @@ class TripDeleteAlert extends StatelessWidget {
           content: SingleChildScrollView(            
             child: Column( crossAxisAlignment: CrossAxisAlignment.start,
               children: [                
-                Text('${trip.name}'),
-                trip.description != null ? Text('${trip.description}') : Container(),
-                Text('${DateFormat.yMMMd().format(trip.startDate)} - ${DateFormat.yMMMd().format(trip.endDate)}')                
+                Text('${trip!.name}'),
+                trip!.description != null ? Text('${trip!.description}') : Container(),
+                Text('${DateFormat.yMMMd().format(trip!.startDate!)} - ${DateFormat.yMMMd().format(trip!.endDate!)}')                
               ],
             )
           ),
@@ -32,15 +32,15 @@ class TripDeleteAlert extends StatelessWidget {
             TextButton(
               child: Text('Delete', style: TextStyle(color: ColorsPalette.meditSea)),
               onPressed: () {
-                context.read<TripDetailsBloc>().add(DeleteTripClicked(trip.id));
-                callback("Delete");
+                context.read<TripDetailsBloc>().add(DeleteTripClicked(trip!.id));
+                callback!("Delete");
                 Navigator.pop(context);
               },
             ),
             TextButton(
               child: Text('Cancel', style: TextStyle(color: ColorsPalette.meditSea),),
               onPressed: () {
-                callback("Cancel");
+                callback!("Cancel");
                 Navigator.pop(context);
               },
             ),

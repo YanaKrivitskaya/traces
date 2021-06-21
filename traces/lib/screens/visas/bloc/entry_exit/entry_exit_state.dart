@@ -1,21 +1,21 @@
 part of 'entry_exit_bloc.dart';
 
 class EntryExitState {
-  final EntryExit entryExit;
-  final UserSettings userSettings;
-  final Visa visa;
-  final VisaSettings settings;
+  final EntryExit? entryExit;
+  final UserSettings? userSettings;
+  final Visa? visa;
+  final VisaSettings? settings;
   final StateStatus status;
   final StateMode mode;
-  final String errorMessage;
+  final String? errorMessage;
 
   EntryExitState(
-      {@required this.visa,
-      @required this.entryExit,
-      @required this.settings,
-      @required this.userSettings,
-      @required this.status,
-      @required this.mode,
+      {required this.visa,
+      required this.entryExit,
+      required this.settings,
+      required this.userSettings,
+      required this.status,
+      required this.mode,
       this.errorMessage});
 
   factory EntryExitState.empty() {
@@ -41,7 +41,7 @@ class EntryExitState {
   }
 
   factory EntryExitState.editing(
-      {EntryExit entryExit, Visa visa, VisaSettings settings, UserSettings userSettings}) {
+      {EntryExit? entryExit, Visa? visa, VisaSettings? settings, UserSettings? userSettings}) {
     return EntryExitState(
         entryExit: entryExit,
         visa: visa,
@@ -53,7 +53,7 @@ class EntryExitState {
   }
 
   factory EntryExitState.success(
-      {EntryExit entryExit, Visa visa, VisaSettings settings, UserSettings userSettings}) {
+      {EntryExit? entryExit, Visa? visa, VisaSettings? settings, UserSettings? userSettings}) {
     return EntryExitState(
         entryExit: entryExit,
         visa: visa,
@@ -65,7 +65,7 @@ class EntryExitState {
   }
 
   factory EntryExitState.failure(
-      {EntryExit entryExit, Visa visa, VisaSettings settings, UserSettings userSettings, String error}) {
+      {EntryExit? entryExit, Visa? visa, VisaSettings? settings, UserSettings? userSettings, String? error}) {
     return EntryExitState(
         entryExit: entryExit,
         visa: visa,
@@ -77,13 +77,13 @@ class EntryExitState {
   }
 
   EntryExitState copyWith(
-      {final EntryExit entryExit,
-      final Visa visa,
-      final VisaSettings settings,
-      final UserSettings userSettings,
-      final StateStatus status,
-      final StateMode mode,
-      String error}) {
+      {final EntryExit? entryExit,
+      final Visa? visa,
+      final VisaSettings? settings,
+      final UserSettings? userSettings,
+      final StateStatus? status,
+      final StateMode? mode,
+      String? error}) {
     return EntryExitState(
         visa: visa ?? this.visa,
         settings: settings ?? this.settings,
@@ -95,13 +95,13 @@ class EntryExitState {
   }
 
   EntryExitState update(
-      {EntryExit entryExit,
-      Visa visa,
-      VisaSettings settings,
-      UserSettings userSettings,
-      StateStatus status,
-      StateMode mode,
-      String error}) {
+      {EntryExit? entryExit,
+      Visa? visa,
+      VisaSettings? settings,
+      UserSettings? userSettings,
+      StateStatus? status,
+      StateMode? mode,
+      String? error}) {
     return copyWith(
         entryExit: entryExit,
         visa: visa,

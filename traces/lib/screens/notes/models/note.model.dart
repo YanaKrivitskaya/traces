@@ -6,15 +6,15 @@ import 'tag.model.dart';
 
 @immutable
 class Note {
-  final int id;
-  final int userId;
-  final String title;
-  final String content;  
-  final DateTime createdDate;
-  final DateTime updatedDate;
-  final bool deleted;
-  final DateTime deletedDate;
-  List<Tag> tags;
+  final int? id;
+  final int? userId;
+  final String? title;
+  final String? content;  
+  final DateTime? createdDate;
+  final DateTime? updatedDate;
+  final bool? deleted;
+  final DateTime? deletedDate;
+  List<Tag>? tags;
 
   Note({
     this.id,

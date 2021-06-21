@@ -10,22 +10,22 @@ class LoginSignupState {
   final bool isUsernameValid;
   final bool isPasswordValid;
   final StateStatus status;
-  final FormMode form;
-  final bool isPasswordReseted;
-  final User user;
-  final String errorMessage;
+  final FormMode? form;
+  final bool? isPasswordReseted;
+  final User? user;
+  final String? errorMessage;
 
   bool get isSignupFormValid => isEmailValid & isPasswordValid & isUsernameValid;
 
   bool get isLoginFormValid => isEmailValid & isPasswordValid;
 
   LoginSignupState({
-    @required this.isEmailValid,
-    @required this.isUsernameValid,
-    @required this.isPasswordValid,
-    @required this.status,
-    @required this.form,
-    @required this.isPasswordReseted,
+    required this.isEmailValid,
+    required this.isUsernameValid,
+    required this.isPasswordValid,
+    required this.status,
+    required this.form,
+    required this.isPasswordReseted,
     this.user,
     this.errorMessage
   });
@@ -42,7 +42,7 @@ class LoginSignupState {
     );
   }
 
-  factory LoginSignupState.loading({FormMode formMode, bool isReseted}){
+  factory LoginSignupState.loading({FormMode? formMode, bool? isReseted}){
     return LoginSignupState(
       isEmailValid: true,
       isPasswordValid: true,
@@ -53,7 +53,7 @@ class LoginSignupState {
     );
   }
 
-  factory LoginSignupState.success({FormMode formMode, bool isReseted, User user}){
+  factory LoginSignupState.success({FormMode? formMode, bool? isReseted, User? user}){
     return LoginSignupState(
       isEmailValid: true,
       isPasswordValid: true,
@@ -65,7 +65,7 @@ class LoginSignupState {
     );
   }
 
-  factory LoginSignupState.failure({FormMode formMode, bool isReseted, String error}){
+  factory LoginSignupState.failure({FormMode? formMode, bool? isReseted, String? error}){
     return LoginSignupState(
       isEmailValid: true,
       isPasswordValid: true,
@@ -78,13 +78,13 @@ class LoginSignupState {
   }
 
   LoginSignupState copyWith({
-    bool isEmailValid,
-    bool isPasswordValid,
-    bool isUsernameValid,
-    StateStatus status,
-    FormMode formMode,
-    bool isPasswordReseted,
-    String errorMessage
+    bool? isEmailValid,
+    bool? isPasswordValid,
+    bool? isUsernameValid,
+    StateStatus? status,
+    FormMode? formMode,
+    bool? isPasswordReseted,
+    String? errorMessage
   }){
     return LoginSignupState(
         isEmailValid: isEmailValid ?? this.isEmailValid,
@@ -98,12 +98,12 @@ class LoginSignupState {
   }
 
   LoginSignupState update({
-    bool isEmailValid,
-    bool isPasswordValid,
-    bool isUsernameValid,
-    FormMode formMode,
-    bool isPasswordReseted,
-    String errorMessage
+    bool? isEmailValid,
+    bool? isPasswordValid,
+    bool? isUsernameValid,
+    FormMode? formMode,
+    bool? isPasswordReseted,
+    String? errorMessage
   }){
     return copyWith(
         isEmailValid: isEmailValid,
@@ -132,4 +132,4 @@ class LoginSignupState {
 
 }
 
-class InitialLoginSignupState extends LoginSignupState {}
+mixin InitialLoginSignupState implements LoginSignupState {}

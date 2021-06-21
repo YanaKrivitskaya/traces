@@ -5,8 +5,8 @@ class LoginModel {
   final String email;
   final String password;
   LoginModel({
-    this.email,
-    this.password,
+    required this.email,
+    required this.password,
   });
 
   Map<String, dynamic> toMap() {

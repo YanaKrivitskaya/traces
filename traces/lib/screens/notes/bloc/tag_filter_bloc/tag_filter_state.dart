@@ -5,21 +5,21 @@ import '../../models/tag.model.dart';
 
 
 class TagFilterState{
-  final List<Tag> allTags;
-  final List<Tag> selectedTags;
-  final bool noTagsChecked;
-  final bool allTagsChecked;
-  final bool allUnChecked;
+  final List<Tag>? allTags;
+  final List<Tag>? selectedTags;
+  final bool? noTagsChecked;
+  final bool? allTagsChecked;
+  final bool? allUnChecked;
   final StateStatus status;
-  final String errorMessage;
+  final String? errorMessage;
 
   const TagFilterState({
-    @required this.allTags,
-    @required this.selectedTags,
-    @required this.noTagsChecked,
-    @required this.allTagsChecked,
-    @required this.allUnChecked,
-    @required this.status,
+    required this.allTags,
+    required this.selectedTags,
+    required this.noTagsChecked,
+    required this.allTagsChecked,
+    required this.allUnChecked,
+    required this.status,
     this.errorMessage});
 
   factory TagFilterState.empty(){
@@ -46,7 +46,7 @@ class TagFilterState{
     );
   }
 
-  factory TagFilterState.success({List<Tag> allTags, List<Tag> selectedTags, bool noTagsChecked, bool allTagsChecked, bool allUnchecked}){
+  factory TagFilterState.success({List<Tag>? allTags, List<Tag>? selectedTags, bool? noTagsChecked, bool? allTagsChecked, bool? allUnchecked}){
     return TagFilterState(
         allTags: allTags,
         selectedTags: selectedTags,
@@ -58,7 +58,7 @@ class TagFilterState{
     );
   }
 
-  factory TagFilterState.failure({List<Tag> allTags, List<Tag> selectedTags, bool noTagsChecked, bool allTagsChecked, String error, bool allUnchecked}){
+  factory TagFilterState.failure({List<Tag>? allTags, List<Tag>? selectedTags, bool? noTagsChecked, bool? allTagsChecked, String? error, bool? allUnchecked}){
     return TagFilterState(
         allTags: allTags,
         selectedTags: selectedTags,
@@ -71,13 +71,13 @@ class TagFilterState{
   }
 
   TagFilterState copyWith({
-    List<Tag> allTags,
-    List<Tag> selectedTags,
-    bool noTagsChecked,
-    bool allTagsChecked,
-    bool allUnChecked,
-    StateStatus stateStatus,
-    String errorMessage
+    List<Tag>? allTags,
+    List<Tag>? selectedTags,
+    bool? noTagsChecked,
+    bool? allTagsChecked,
+    bool? allUnChecked,
+    StateStatus? stateStatus,
+    String? errorMessage
   }){
     return TagFilterState(
         allTags: allTags ?? this.allTags,
@@ -91,13 +91,13 @@ class TagFilterState{
   }
 
   TagFilterState update({
-    List<Tag> allTags,
-    List<Tag> selectedTags,
-    bool noTagsChecked,
-    bool allTagsChecked,
-    bool allUnChecked,
-    StateStatus stateStatus,
-    String errorMessage
+    List<Tag>? allTags,
+    List<Tag>? selectedTags,
+    bool? noTagsChecked,
+    bool? allTagsChecked,
+    bool? allUnChecked,
+    StateStatus? stateStatus,
+    String? errorMessage
   }){
     return copyWith(
         allTags: allTags,

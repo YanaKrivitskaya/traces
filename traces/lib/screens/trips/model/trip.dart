@@ -1,14 +1,14 @@
 import 'package:traces/screens/trips/model/trip_entity.dart';
 
 class Trip {
-  final String id;
-  String name;
-  final String description;
-  final String coverImageUrl;
-  DateTime startDate;
-  DateTime endDate;
-  final List<String> photoUrls;
-  List<String> tripMembers;
+  final String? id;
+  String? name;
+  final String? description;
+  final String? coverImageUrl;
+  DateTime? startDate;
+  DateTime? endDate;
+  final List<String>? photoUrls;
+  List<String>? tripMembers;
 
   Trip({
     this.id,

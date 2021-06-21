@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import '../../models/note.model.dart';
 
 
@@ -8,14 +6,14 @@ class NoteSortState {
   final SortDirections tempSortDirection;
 
   NoteSortState({
-    @required SortFields tempSortField,
-    @required SortDirections tempSortDirection,
-  }) : tempSortField = tempSortField ?? SortFields.DATEMODIFIED,
-        tempSortDirection = tempSortDirection ?? SortDirections.ASC;
+    required SortFields tempSortField,
+    required SortDirections tempSortDirection,
+  }) : tempSortField = tempSortField,
+        tempSortDirection = tempSortDirection;
 
   NoteSortState update({
-    SortFields tempSortField,
-    SortDirections tempSortDirection
+    SortFields? tempSortField,
+    SortDirections? tempSortDirection
   }){
     return copyWith(
         tempSortField: tempSortField,
@@ -24,8 +22,8 @@ class NoteSortState {
   }
 
   NoteSortState copyWith({
-    SortFields tempSortField,
-    SortDirections tempSortDirection
+    SortFields? tempSortField,
+    SortDirections? tempSortDirection
   }){
     return NoteSortState(
         tempSortField: tempSortField ?? this.tempSortField,
@@ -34,4 +32,6 @@ class NoteSortState {
   }
 }
 
-class InitialNoteSortState extends NoteSortState {}
+class InitialNoteSortState extends NoteSortState {
+  InitialNoteSortState() : super(tempSortDirection:  SortDirections.ASC, tempSortField:  SortFields.DATEMODIFIED);
+}

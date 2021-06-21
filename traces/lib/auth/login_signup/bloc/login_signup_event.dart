@@ -10,7 +10,7 @@ abstract class LoginSignupEvent {
 class EmailChanged extends LoginSignupEvent{
   final String email;
 
-  const EmailChanged({@required this.email});
+  const EmailChanged({required this.email});
 
   @override
   List<Object> get props => [email];
@@ -19,7 +19,7 @@ class EmailChanged extends LoginSignupEvent{
 class UsernameChanged extends LoginSignupEvent{
   final String username;
 
-  const UsernameChanged({@required this.username});
+  const UsernameChanged({required this.username});
 
   @override
   List<Object> get props => [username];
@@ -28,7 +28,7 @@ class UsernameChanged extends LoginSignupEvent{
 class PasswordChanged extends LoginSignupEvent{
   final String password;
 
-  const PasswordChanged({@required this.password});
+  const PasswordChanged({required this.password});
 
   @override
   List<Object> get props => [password];
@@ -39,8 +39,8 @@ class SubmittedLogin extends LoginSignupEvent{
   final String password;
 
   const SubmittedLogin({
-    @required this.email,
-    @required this.password
+    required this.email,
+    required this.password
   });
 
   @override
@@ -53,9 +53,9 @@ class SubmittedSignup extends LoginSignupEvent{
   final String username;
 
   const SubmittedSignup({
-    @required this.email,
-    @required this.password,
-    @required this.username
+    required this.email,
+    required this.password,
+    required this.username
   });
 
   @override
@@ -65,7 +65,7 @@ class SubmittedSignup extends LoginSignupEvent{
 class SubmittedReset extends LoginSignupEvent{
   final String email;
 
-  const SubmittedReset({@required this.email});
+  const SubmittedReset({required this.email});
 
   @override
   List<Object> get props => [email];

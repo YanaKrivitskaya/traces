@@ -16,10 +16,10 @@ class SettingsPage extends StatelessWidget{
   Widget build(BuildContext context) {
     return BlocProvider<SettingsBloc>(
       create: (context) => 
-        SettingsBloc(settingsRepository: FirebaseAppSettingsRepository())
+        SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/)
           ..add(GetAppSettings()),
       child: WillPopScope(
-        onWillPop: ()=> Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false),
+        onWillPop: (()=> Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false) as Future<bool>) as Future<bool> Function()?,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(

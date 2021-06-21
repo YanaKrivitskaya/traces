@@ -4,7 +4,7 @@ part of 'startplanning_bloc.dart';
 abstract class StartPlanningEvent {
   const StartPlanningEvent();
 
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class NewTripMode extends StartPlanningEvent {}
@@ -19,9 +19,9 @@ class DateRangeUpdated extends StartPlanningEvent {
 }
 
 class StartPlanningSubmitted extends StartPlanningEvent {
-  final Trip trip;
+  final Trip? trip;
   
   StartPlanningSubmitted(this.trip);
 
-  List<Object> get props => [trip];
+  List<Object?> get props => [trip];
 }

@@ -23,8 +23,8 @@ class ProfileView extends StatefulWidget{
 
 class _ProfileViewState extends State<ProfileView>{
 
-  Profile _profile;
-  List<Member> _familyMembers;
+  Profile? _profile;
+  List<Member>? _familyMembers;
 
   @override
   Widget build(BuildContext context) {
@@ -47,13 +47,13 @@ class _ProfileViewState extends State<ProfileView>{
                     children: <Widget>[
                       CircleAvatar(
                           backgroundColor: ColorsPalette.lynxWhite,
-                          child: Text(getAvatarName(_profile.displayName), style: TextStyle(color: ColorsPalette.meditSea, fontSize: 40.0, fontWeight: FontWeight.w300),),
+                          child: Text(getAvatarName(_profile!.displayName), style: TextStyle(color: ColorsPalette.meditSea, fontSize: 40.0, fontWeight: FontWeight.w300),),
                           radius: 50.0
                       ),
                       Expanded(child: Align(child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(_profile.displayName, style: TextStyle(fontSize: 20.0)),
+                          Text(_profile!.displayName, style: TextStyle(fontSize: 20.0)),
                           NameEditButton()
                         ],
                       ), alignment: Alignment.center,))
@@ -63,8 +63,8 @@ class _ProfileViewState extends State<ProfileView>{
                     padding: EdgeInsets.only(right: 10.0, left: 10.0),
                     alignment: Alignment.centerLeft,
                     child: Row(children: <Widget>[
-                      Text("Email: " + _profile.email, style: TextStyle(fontSize: 15.0)),
-                      _profile.isEmailVerified
+                      Text("Email: " + _profile!.email!, style: TextStyle(fontSize: 15.0)),
+                      _profile!.isEmailVerified!
                           ? IconButton(icon: Icon(Icons.check, color: ColorsPalette.meditSea), tooltip: 'Verified', onPressed: () {})
                           : IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.fusionRed), tooltip: 'Not verified', onPressed: () {}),
                     ],),
@@ -86,16 +86,16 @@ class _ProfileViewState extends State<ProfileView>{
                     height: MediaQuery.of(context).size.height * 0.4,
                     child: SingleChildScrollView(child: Column(
                       children: <Widget>[
-                        _familyMembers.length > 0
+                        _familyMembers!.length > 0
                             ? Container(
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: _familyMembers.length,
+                              itemCount: _familyMembers!.length,
                               itemBuilder: (context, position){
-                                final member = _familyMembers[position];
+                                final member = _familyMembers![position];
                                 return ListTile(
-                                  title: Text(member.name),
+                                  title: Text(member.name!),
                                   trailing: EditFamilyButton(member),
                                 );
                               }),

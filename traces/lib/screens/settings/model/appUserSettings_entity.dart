@@ -2,16 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class AppUserSettingsEntity extends Equatable{
-  String theme;
+  String? theme;
 
   AppUserSettingsEntity(this.theme);
 
   @override
-  List<Object> get props => [theme];
+  List<Object?> get props => [theme];
 
   static AppUserSettingsEntity fromMap(Map<dynamic, dynamic> map){
     return AppUserSettingsEntity(
-      map!= null ? map["theme"] as String : null
+      map!= null ? map["theme"] as String? : null
     );
   }
 
@@ -19,7 +19,7 @@ class AppUserSettingsEntity extends Equatable{
     return AppUserSettingsEntity(snap["theme"]);
   }
 
-  Map<String, Object> toDocument(){
+  Map<String, Object?> toDocument(){
     return {
       "theme": theme
     };
@@ -27,11 +27,11 @@ class AppUserSettingsEntity extends Equatable{
 }
 
  class AppUserSettings{
-  String theme;
+  String? theme;
 
   AppUserSettings(this.theme);
 
-  AppUserSettings copyWith({String theme}){
+  AppUserSettings copyWith({String? theme}){
     return AppUserSettings(      
       theme ?? this.theme
     );

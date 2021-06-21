@@ -14,13 +14,13 @@ part 'tripmembers_event.dart';
 part 'tripmembers_state.dart';
 
 class TripMembersBloc extends Bloc<TripMembersEvent, TripMembersState>{
-  final TripsRepository _tripsRepository;
-  final ProfileRepository _profileRepository;
-  StreamSubscription _profileSubscription;
+  //final TripsRepository _tripsRepository;
+  //final ProfileRepository _profileRepository;
+  StreamSubscription? _profileSubscription;
 
   TripMembersBloc(): 
-  _tripsRepository = new FirebaseTripsRepository(),
-  _profileRepository = new FirebaseProfileRepository(),
+  /*_tripsRepository = new FirebaseTripsRepository(),*/
+  //_profileRepository = new FirebaseProfileRepository(),
   super(LoadingTripMembersState());
 
   @override
@@ -45,21 +45,21 @@ class TripMembersBloc extends Bloc<TripMembersEvent, TripMembersState>{
   }
 
   Stream<TripMembersState> _mapGetTripMembersToState(GetMembers event) async*{
-    var trip = await _tripsRepository.getTripById(event.tripId);
+    //var trip = await _tripsRepository.getTripById(event.tripId);
 
-    List<String> selectedMembers = List.empty(growable: true);
+    List<String?> selectedMembers = List.empty(growable: true);
 
     _profileSubscription?.cancel();
-    _profileSubscription = _profileRepository.familyMembers().listen(
+    /*_profileSubscription = _profileRepository.familyMembers().listen(
       (members) {
         members.forEach((m) {
-              if(trip.tripMembers.contains(m.id)){
+              if(trip.tripMembers!.contains(m.id)){
                 selectedMembers.add(m.id);
               }
             });
         add(UpdateTripMembersSuccess(members, selectedMembers));
       } 
-    );
+    );*/
   }
 
   Stream<TripMembersState> _mapUpdateMemberCheckedToState(MemberChecked event) async*{
@@ -80,7 +80,7 @@ class TripMembersBloc extends Bloc<TripMembersEvent, TripMembersState>{
 
     yield LoadingTripMembersState();
    
-    await _tripsRepository.updateTripMembers(event.tripId, event.selectedMembers);
+    //await _tripsRepository.updateTripMembers(event.tripId, event.selectedMembers);
 
     yield SubmittedTripMembersState(
       state.members,

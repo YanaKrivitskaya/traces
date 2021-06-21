@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class DayActionEntity extends Equatable {
-  final String id;
-  final String name;
-  final String description;
-  final DateTime date;
-  final bool isPlanned;
-  final bool isCompleted;
-  final String photoUrl;
+  final String? id;
+  final String? name;
+  final String? description;
+  final DateTime? date;
+  final bool? isPlanned;
+  final bool? isCompleted;
+  final String? photoUrl;
 
   const DayActionEntity(
     this.id, 
@@ -23,7 +23,7 @@ class DayActionEntity extends Equatable {
   );  
 
   @override  
-  List<Object> get props {
+  List<Object?> get props {
     return [id, name, description, date, isPlanned, isCompleted, photoUrl];
   }
 
@@ -54,16 +54,16 @@ class DayActionEntity extends Equatable {
   static DayActionEntity fromSnapshot(DocumentSnapshot snap){
     return DayActionEntity(
       snap.id, 
-      snap.data()['name'], 
-      snap.data()['description'], 
-      snap.data()['date'].toDate(), 
-      snap.data()['isPlanned'] as bool, 
-      snap.data()['isCompleted'] as bool, 
-      snap.data()['photoUrl']
+      snap['name'], 
+      snap['description'], 
+      snap['date'].toDate(), 
+      snap['isPlanned'] as bool?, 
+      snap['isCompleted'] as bool?, 
+      snap['photoUrl']
     );
   }
 
-  Map<String, Object> toDocument(){
+  Map<String, Object?> toDocument(){
     return{
       "name": name,
       "description": description!= '' ? description : 'No description',

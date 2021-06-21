@@ -6,7 +6,7 @@ import 'package:traces/screens/profile/model/member.dart';
 import 'package:traces/utils/misc/state_types.dart';
 
 class FamilyDialog extends StatefulWidget{
-  final Member familyMember;
+  final Member? familyMember;
 
   FamilyDialog(this.familyMember);
 
@@ -15,19 +15,19 @@ class FamilyDialog extends StatefulWidget{
 }
 
 class _FamilyDialogState extends State<FamilyDialog>{
-  TextEditingController _usernameController;
+  TextEditingController? _usernameController;
 
   @override
   void initState() {
     super.initState();
 
     _usernameController = new TextEditingController(text: '');
-    _usernameController.addListener(_onUsernameChanged);
+    _usernameController!.addListener(_onUsernameChanged);
   }
 
   @override
   void dispose(){
-    _usernameController.dispose();
+    _usernameController!.dispose();
     super.dispose();
   }
 
@@ -41,7 +41,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
           }else{
 
             if(widget.familyMember != null && state.mode == StateMode.View){
-              _usernameController.text = widget.familyMember.name;
+              _usernameController!.text = widget.familyMember!.name!;
             }
 
             return new AlertDialog(
@@ -51,7 +51,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
                   child: Text('Done'),
                   onPressed: () {
                     if(state.isUsernameValid){
-                      context.read<ProfileBloc>().add(FamilyUpdated(name: _usernameController.text.trim(), id: widget.familyMember?.id ?? null));
+                      context.read<ProfileBloc>().add(FamilyUpdated(name: _usernameController!.text.trim(), id: widget.familyMember?.id ?? null));
                     }
                     Navigator.pop(context);
                   },
@@ -84,7 +84,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
     );
   }
 
-  Widget _usernameTextField(TextEditingController usernameController, ProfileState state) => new TextFormField(
+  Widget _usernameTextField(TextEditingController? usernameController, ProfileState state) => new TextFormField(
     decoration: InputDecoration(
         labelText: 'Name',
         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(
@@ -104,7 +104,7 @@ class _FamilyDialogState extends State<FamilyDialog>{
   );
 
   void _onUsernameChanged() {
-    context.read<ProfileBloc>().add(UsernameChanged(username: _usernameController.text.trim()));
+    context.read<ProfileBloc>().add(UsernameChanged(username: _usernameController!.text.trim()));
   }
 
 }

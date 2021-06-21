@@ -11,11 +11,11 @@ part 'trips_event.dart';
 part 'trips_state.dart';
 
 class TripsBloc extends Bloc<TripsEvent, TripsState> {
-  final TripsRepository _tripsRepository;
-  StreamSubscription _tripsSubscription;
+  //final TripsRepository _tripsRepository;
+  StreamSubscription? _tripsSubscription;
 
-  TripsBloc(TripsRepository tripsRepository) 
-  : _tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
+  TripsBloc(/*TripsRepository tripsRepository*/) 
+  : //_tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
     super(TripsInitial());
 
   @override
@@ -34,8 +34,8 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   Stream<TripsState> _mapGetTripsToState(GetAllTrips event) async*{
     _tripsSubscription?.cancel();
 
-    _tripsSubscription = _tripsRepository.trips().listen(
+   /* _tripsSubscription = _tripsRepository.trips().listen(
       (trips) => add(UpdateTripsList(trips))
-    );
+    );*/
   }
 }

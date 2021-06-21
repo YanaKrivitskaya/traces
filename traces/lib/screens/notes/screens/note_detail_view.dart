@@ -14,7 +14,7 @@ import '../widgets/note_delete_alert.dart';
 import '../widgets/tags_add_dialog.dart';
 
 class NoteDetailsView extends StatefulWidget{
-  NoteDetailsView({Key key}) : super(key: key);
+  NoteDetailsView({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -24,23 +24,23 @@ class NoteDetailsView extends StatefulWidget{
 
 class _NotesDetailsViewState extends State<NoteDetailsView>{
 
-  TextEditingController _titleController;
-  TextEditingController _textController;
+  TextEditingController? _titleController;
+  TextEditingController? _textController;
 
-  Note _note = Note();
+  Note? _note = Note();
   bool _isEditMode = false;
 
   @override
   void initState() {
     super.initState();
-    _titleController = new TextEditingController(text: _note.title);
-    _textController = new TextEditingController(text: _note.content);
+    _titleController = new TextEditingController(text: _note!.title);
+    _textController = new TextEditingController(text: _note!.content);
   }
 
   @override
   void dispose(){
-    _titleController.dispose();
-    _textController.dispose();
+    _titleController!.dispose();
+    _textController!.dispose();
     super.dispose();
   }
 
@@ -59,8 +59,8 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         if(state is EditDetailsState){
           _note = state.note;
           _isEditMode = true;
-          _titleController.text = state.note.title;
-          _textController.text = state.note.content;
+          _titleController!.text = state.note!.title!;
+          _textController!.text = state.note!.content!;
         }
         return new Scaffold(
           appBar: AppBar(
@@ -73,16 +73,16 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
             title: _isEditMode ? Text("Edit note", style: TextStyle(color: ColorsPalette.lynxWhite)) 
               : Text("View note", style: TextStyle(color: ColorsPalette.lynxWhite)),
             actions: <Widget>[
-              !_isEditMode ? _tagsAction(_note.id): Container(),
+              !_isEditMode ? _tagsAction(_note!.id): Container(),
               _isEditMode ? _saveAction(_note) : _editAction(state),
-              _note.id != null ? _deleteAction(_note, context) : Container(),
+              _note!.id != null ? _deleteAction(_note, context) : Container(),
             ],
             backgroundColor: ColorsPalette.greenGrass,
           ),
           body: Container(
               child: state is LoadingDetailsState || state is InitialNoteDetailsState
                   ? Center(child: CircularProgressIndicator())
-                  :_noteView(_note.tags)
+                  :_noteView(_note!.tags)
           ),
           backgroundColor: Colors.white,
         );
@@ -96,12 +96,12 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         child: Row(
           children: tags.map((tag) => Padding(
               padding: EdgeInsets.all(3.0),
-              child: Text("#"+tag.name, style: TextStyle(color: ColorsPalette.greenGrass, fontSize: 14.0),)
+              child: Text("#"+tag.name!, style: TextStyle(color: ColorsPalette.greenGrass, fontSize: 14.0),)
           )).toList(),
         ));
   }
 
-  Widget _tagsAction(int noteId) => new IconButton(
+  Widget _tagsAction(int? noteId) => new IconButton(
     icon: FaIcon(FontAwesomeIcons.hashtag, color: ColorsPalette.lynxWhite),
     onPressed: () {
       showDialog(
@@ -132,13 +132,13 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     },
   );
 
-  Widget _saveAction(Note note) => new IconButton(
+  Widget _saveAction(Note? note) => new IconButton(
     icon: FaIcon(FontAwesomeIcons.solidSave, color: ColorsPalette.lynxWhite),
     onPressed: () {
       Note noteToSave = new Note(
-        content: _textController.text, 
-        title: _titleController.text, 
-        id: note.id, 
+        content: _textController!.text, 
+        title: _titleController!.text, 
+        id: note!.id, 
         userId: note.userId,
         deleted: note.deleted,
         createdDate: note.createdDate, tags: note.tags);
@@ -146,7 +146,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     },
   );
 
-  Widget _noteView(List<Tag> tags){
+  Widget _noteView(List<Tag>? tags){
     return Container(
         padding: EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 15),
         margin: EdgeInsets.all(5),
@@ -155,7 +155,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
             child: SingleChildScrollView(
                 child: _isEditMode
                     ? _noteCardEdit(tags)
-                    : _noteCardView(tags)
+                    : _noteCardView(tags!)
             )
         )
     );
@@ -164,18 +164,18 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   Widget _noteCardView(List<Tag> tags) => new Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
-      Text('${_note.title}', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-      Text('Created: ${DateFormat.yMMMd().format(_note.createdDate)} | Modified: ${DateFormat.yMMMd().format(_note.updatedDate)}',
+      Text('${_note!.title}', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate!)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate!)}',
           style: new TextStyle(fontSize: 12.0
           )),
-      _note.tags.length > 0 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
+      _note!.tags!.length > 0 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
       _getTags(tags),
       Divider(color: ColorsPalette.nycTaxi),
-      Text('${_note.content ?? ''}', style: new TextStyle(fontSize: 16),),
+      Text('${_note!.content ?? ''}', style: new TextStyle(fontSize: 16),),
     ],
   );
 
-  Widget _noteCardEdit(List<Tag> tags) => new Column(
+  Widget _noteCardEdit(List<Tag>? tags) => new Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
       TextFormField(
@@ -188,7 +188,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         keyboardType: TextInputType.text,
         autofocus: true,
       ),
-      _note.tags != null && _note.tags.length > 0 ? _getTags(tags) : Container(),
+      _note!.tags != null && _note!.tags!.length > 0 ? _getTags(tags!) : Container(),
       Divider(color: ColorsPalette.nycTaxi),
       TextFormField(
         decoration: const InputDecoration(
@@ -202,7 +202,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     ],
   );
 
-  Widget _deleteAction(Note note, BuildContext context) => new IconButton(
+  Widget _deleteAction(Note? note, BuildContext context) => new IconButton(
     icon: FaIcon(FontAwesomeIcons.trashAlt, color: ColorsPalette.lynxWhite),
     onPressed: () {
       showDialog<String>(

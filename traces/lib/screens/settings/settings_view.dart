@@ -16,7 +16,7 @@ class SettingsView extends StatefulWidget{
 
 class _SettingsStateView extends State<SettingsView>{
 
-  AppSettings _settings;
+  AppSettings? _settings;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _SettingsStateView extends State<SettingsView>{
           return Container(         
           child: SingleChildScrollView(
             child: Column(children: [
-              _settings.themes != null 
+              _settings!.themes != null 
                 ? Card(
                   child: InkWell(
                     onTap: (){

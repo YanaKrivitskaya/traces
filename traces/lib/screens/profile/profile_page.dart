@@ -16,7 +16,7 @@ class ProfilePage extends StatelessWidget{
     return BlocProvider<ProfileBloc>(
       create: (context) =>
       ProfileBloc(
-          profileRepository: FirebaseProfileRepository()
+          /*profileRepository: FirebaseProfileRepository()*/
       )
         ..add(GetProfile()),
       child: Scaffold(

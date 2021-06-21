@@ -4,24 +4,24 @@ import '../../../../utils/misc/state_types.dart';
 import '../../models/note.model.dart';
 
 class NoteState{
-  final List<Note> allNotes;
-  final List<Note> filteredNotes;
-  final SortFields sortField;
-  final SortDirections sortDirection;
-  final bool searchEnabled;
-  final bool noteDeleted;
+  final List<Note>? allNotes;
+  final List<Note>? filteredNotes;
+  final SortFields? sortField;
+  final SortDirections? sortDirection;
+  final bool? searchEnabled;
+  final bool? noteDeleted;
   final StateStatus status;
-  final String errorMessage;
+  final String? errorMessage;
 
 
   const NoteState({
-    @required this.allNotes,
-    @required this.filteredNotes,
-    @required this.sortField,
-    @required this.sortDirection,
-    @required this.searchEnabled,
-    @required this.noteDeleted,
-    @required this.status,
+    required this.allNotes,
+    required this.filteredNotes,
+    required this.sortField,
+    required this.sortDirection,
+    required this.searchEnabled,
+    required this.noteDeleted,
+    required this.status,
     this.errorMessage});
 
   factory NoteState.empty(){
@@ -50,8 +50,8 @@ class NoteState{
     );
   }
 
-  factory NoteState.success({List<Note> allNotes, List<Note> filteredNotes, SortFields sortField,
-    SortDirections sortDirection, bool searchEnabled, bool noteDeleted}){
+  factory NoteState.success({List<Note>? allNotes, List<Note>? filteredNotes, SortFields? sortField,
+    SortDirections? sortDirection, bool? searchEnabled, bool? noteDeleted}){
     return NoteState(
         allNotes: allNotes,
         filteredNotes: filteredNotes,
@@ -64,8 +64,8 @@ class NoteState{
     );
   }
 
-  factory NoteState.failure({List<Note> allNotes, List<Note> filteredNotes, SortFields sortField,
-    SortDirections sortDirection, String error, bool searchEnabled, bool noteDeleted}){
+  factory NoteState.failure({List<Note>? allNotes, List<Note>? filteredNotes, SortFields? sortField,
+    SortDirections? sortDirection, String? error, bool? searchEnabled, bool? noteDeleted}){
     return NoteState(
         allNotes: allNotes,
         filteredNotes: filteredNotes,
@@ -79,14 +79,14 @@ class NoteState{
   }
 
   NoteState copyWith({
-    final List<Note> allNotes,
-    final List<Note> filteredNotes,
-    final SortFields sortField,
-    final SortDirections sortDirection,
-    bool searchEnabled,
-    bool noteDeleted,
-    StateStatus status,
-    String errorMessage
+    final List<Note>? allNotes,
+    final List<Note>? filteredNotes,
+    final SortFields? sortField,
+    final SortDirections? sortDirection,
+    bool? searchEnabled,
+    bool? noteDeleted,
+    StateStatus? status,
+    String? errorMessage
   }){
     return NoteState(
         allNotes: allNotes ?? this.allNotes,
@@ -101,14 +101,14 @@ class NoteState{
   }
 
   NoteState update({
-    List<Note> allNotes,
-    List<Note> filteredNotes,
-    SortFields sortField,
-    SortDirections sortDirection,
-    bool searchEnabled,
-    bool noteDeleted,
-    StateStatus stateStatus,
-    String errorMessage
+    List<Note>? allNotes,
+    List<Note>? filteredNotes,
+    SortFields? sortField,
+    SortDirections? sortDirection,
+    bool? searchEnabled,
+    bool? noteDeleted,
+    StateStatus? stateStatus,
+    String? errorMessage
   }){
     return copyWith(
         allNotes: allNotes,

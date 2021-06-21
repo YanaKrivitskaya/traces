@@ -8,7 +8,7 @@ abstract class ProfileEvent extends Equatable {
   const ProfileEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class GetProfile extends ProfileEvent {}
@@ -29,26 +29,26 @@ class UpdateProfileState extends ProfileEvent {
 class UsernameChanged extends ProfileEvent{
   final String username;
 
-  const UsernameChanged({@required this.username});
+  const UsernameChanged({required this.username});
 
   @override
   List<Object> get props => [username];
 }
 
 class FamilyUpdated extends ProfileEvent{
-  final String id;
+  final String? id;
   final String name;
 
-  const FamilyUpdated({@required this.id, @required this.name});
+  const FamilyUpdated({required this.id, required this.name});
 
   @override
-  List<Object> get props => [id, name];
+  List<Object?> get props => [id, name];
 }
 
 class UsernameUpdated extends ProfileEvent{
   final String username;
 
-  const UsernameUpdated({@required this.username});
+  const UsernameUpdated({required this.username});
 
   @override
   List<Object> get props => [username];

@@ -4,19 +4,19 @@ import 'package:traces/screens/profile/model/profile.dart';
 import 'package:traces/utils/misc/state_types.dart';
 
 class ProfileState {
-  final Profile profile;
-  final List<Member> familyMembers;
+  final Profile? profile;
+  final List<Member>? familyMembers;
   final bool isUsernameValid;
   final StateMode mode;
   final StateStatus status;
-  final String errorMessage;
+  final String? errorMessage;
 
   const ProfileState({
-    @required this.profile,
-    @required this.familyMembers,
-    @required this.isUsernameValid,
-    @required this.mode,
-    @required this.status,
+    required this.profile,
+    required this.familyMembers,
+    required this.isUsernameValid,
+    required this.mode,
+    required this.status,
     this.errorMessage});
 
   factory ProfileState.empty(){
@@ -41,7 +41,7 @@ class ProfileState {
     );
   }
 
-  factory ProfileState.success({Profile profile, List<Member> members}){
+  factory ProfileState.success({Profile? profile, List<Member>? members}){
     return ProfileState(
         profile: profile,
         familyMembers: members,
@@ -52,7 +52,7 @@ class ProfileState {
     );
   }
 
-  factory ProfileState.failure({Profile profile, List<Member> members, String error}){
+  factory ProfileState.failure({Profile? profile, List<Member>? members, String? error}){
     return ProfileState(
         profile: profile,
         familyMembers: members,
@@ -64,12 +64,12 @@ class ProfileState {
   }
 
   ProfileState copyWith({
-    final Profile profile,
-    final List<Member> members,
-    bool isUsernameValid,
-    StateMode mode,
-    StateStatus stateStatus,
-    String errorMessage
+    final Profile? profile,
+    final List<Member>? members,
+    bool? isUsernameValid,
+    StateMode? mode,
+    StateStatus? stateStatus,
+    String? errorMessage
   }){
     return ProfileState(
         profile: profile ?? this.profile,
@@ -82,12 +82,12 @@ class ProfileState {
   }
 
   ProfileState update({
-    Profile profile,
-    List<Member> members,
-    bool isUsernameValid,
-    StateMode mode,
-    StateStatus state,
-    String errorMessage
+    Profile? profile,
+    List<Member>? members,
+    bool? isUsernameValid,
+    StateMode? mode,
+    StateStatus? state,
+    String? errorMessage
   }){
     return copyWith(
         profile: profile,

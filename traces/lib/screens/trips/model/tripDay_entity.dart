@@ -6,12 +6,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:traces/screens/trips/model/dayAction_entity.dart';
 
 class TripDayEnity extends Equatable {
-  final String id;
-  final String description;
-  final DateTime date;
-  final int dayNumber;
-  final List<DayActionEntity> dayActions;
-  final List<String> photoUrls;
+  final String? id;
+  final String? description;
+  final DateTime? date;
+  final int? dayNumber;
+  final List<DayActionEntity>? dayActions;
+  final List<String>? photoUrls;
 
   TripDayEnity({
     this.id,
@@ -23,7 +23,7 @@ class TripDayEnity extends Equatable {
   });
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [id, description, date, dayNumber, dayActions, photoUrls];
   }
 
@@ -31,7 +31,7 @@ class TripDayEnity extends Equatable {
     return {
       'id': id,
       'description': description,
-      'date': date.millisecondsSinceEpoch,
+      'date': date!.millisecondsSinceEpoch,
       'dayNumber': dayNumber,
       'dayActions': dayActions?.map((x) => x.toMap())?.toList(),
       'photoUrls': photoUrls
@@ -52,15 +52,15 @@ class TripDayEnity extends Equatable {
   static TripDayEnity fromSnapshot(DocumentSnapshot snap){
     return TripDayEnity(
       id: snap.id,
-      description: snap.data()['description'], 
-      date: DateTime.fromMillisecondsSinceEpoch(snap.data()['date']), 
-      dayNumber: snap.data()['dayNumber'] as int, 
-      dayActions: List<DayActionEntity>.from(snap.data()['dayActions']?.map((x) => DayActionEntity.fromMap(x))),
-      photoUrls: List<String>.from(snap.data()['photoUrls'])
+      description: snap['description'], 
+      date: DateTime.fromMillisecondsSinceEpoch(snap['date']), 
+      dayNumber: snap['dayNumber'] as int?, 
+      dayActions: List<DayActionEntity>.from(snap['dayActions']?.map((x) => DayActionEntity.fromMap(x))),
+      photoUrls: List<String>.from(snap['photoUrls'])
     );
   }
 
-  Map<String, Object> toDocument(){
+  Map<String, Object?> toDocument(){
     return{      
       "description": description!= '' ? description : 'No description',
       "date": date,
