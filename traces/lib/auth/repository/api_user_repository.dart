@@ -1,9 +1,8 @@
 
 import 'dart:convert';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:traces/utils/api/api.provider.dart';
 import 'package:traces/utils/api/customException.dart';
+import 'package:traces/utils/services/api_service.dart';
+import 'package:traces/utils/services/secure_storage_service.dart';
 import '../model/login.model.dart';
 import '../model/user.model.dart';
 import 'userRepository.dart';
@@ -11,9 +10,9 @@ import 'userRepository.dart';
 
 class ApiUserRepository extends UserRepository{
   
-  ApiProvider apiProvider = ApiProvider();
+  ApiService apiProvider = ApiService();
   String authUrl = 'auth/';
-  final _storage = FlutterSecureStorage();
+  final _storage = SecureStorage();
 
   @override
   Future<void> signUp(User user) async{

@@ -1,9 +1,9 @@
-import '../../../utils/api/api.provider.dart';
+import '../../../utils/services/api_service.dart';
 import '../models/create_note.model.dart';
 import '../models/note.model.dart';
 
 class ApiNotesRepository{
-  ApiProvider apiProvider = ApiProvider();
+  ApiService apiProvider = ApiService();
   String notesUrl = 'notes/';
 
   Future<List<Note>?> getNotes( )async{

@@ -1,16 +1,53 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:traces/utils/api/customException.dart';
+import 'package:traces/utils/services/secure_storage_service.dart';
 
-import 'customException.dart';
+class ApiService {
+  static ApiService? _instance;
+  static String _baseUrl = "http://10.0.2.2:8080/";
+  static SecureStorage? _storage;
+  static String? _accessToken;
+  
+  ApiService._internal() {
+    _storage = SecureStorage();    
+    _instance = this;
+  }
 
-class ApiProvider{
-  //final String _baseUrl = "http://192.168.7.200:3002/";
-  final String _baseUrl = "http://10.0.2.2:8080/";
-  final _storage = FlutterSecureStorage();
+  /*static Future<void> init() async{
+    _accessToken = await _storage!.read(key: "access_token");
+  }*/
+
+  factory ApiService() => _instance ?? ApiService._internal();
+
+  Future<dynamic> refreshToken() async{
+    var responseJson;
+
+    var refreshToken = await _storage!.read(key: "refresh_token");
+    if (refreshToken == null) throw UnauthorisedException();
+    var body = {
+      "token": refreshToken
+    };
+
+    try{
+      final response = await http.post(
+        Uri.parse(_baseUrl + 'auth/refresh-token'), 
+        headers: {          
+          HttpHeaders.contentTypeHeader: 'application/x-www-form-urlencoded',
+        },
+        body: body
+      );
+      responseJson = await _response(response);
+      _accessToken = responseJson["accessToken"];
+      //_storage!.write(key: "access_token", value: accessToken);
+
+    }on SocketException catch(e) {
+      throw CustomException('No Internet connection');
+    }
+    return responseJson;
+  }
 
   Future<dynamic> get(String url) async{
     var responseJson;
@@ -27,10 +64,9 @@ class ApiProvider{
   Future<dynamic> getSecure(String url) async{
     var responseJson;
 
-    var accessToken = await _storage.read(key: "access_token");
     Uri uri = Uri.parse(_baseUrl + url);
     Map<String, String> headers = {      
-      HttpHeaders.authorizationHeader: "Bearer $accessToken"
+      HttpHeaders.authorizationHeader: "Bearer $_accessToken"
     };
 
     try{      
@@ -40,8 +76,7 @@ class ApiProvider{
     }on UnauthorisedException {
       await refreshToken();
 
-      var accessToken = await _storage.read(key: "access_token");
-      headers["authorization"] = "Bearer $accessToken";
+      headers["authorization"] = "Bearer $_accessToken";
       
       responseJson = await sendGet(uri, headers);      
     }
@@ -68,11 +103,11 @@ class ApiProvider{
   Future<dynamic> postSecure(String url, String? body) async{
     var responseJson;
 
-    var accessToken = await _storage.read(key: "access_token");
+    //var accessToken = await _storage!.read(key: "access_token");
     Uri uri = Uri.parse(_baseUrl + url);
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $accessToken"
+      HttpHeaders.authorizationHeader: "Bearer $_accessToken"
     };
 
     try{
@@ -82,8 +117,8 @@ class ApiProvider{
     }on UnauthorisedException catch(e) {
       await refreshToken();
 
-      var accessToken = await _storage.read(key: "access_token");
-      headers["authorization"] = "Bearer $accessToken";
+      //var accessToken = await _storage!.read(key: "access_token");
+      headers["authorization"] = "Bearer $_accessToken";
       
       responseJson = await sendPost(uri, headers, body);      
     }
@@ -93,11 +128,11 @@ class ApiProvider{
   Future<dynamic> putSecure(String url, String body) async{
     var responseJson;
 
-    var accessToken = await _storage.read(key: "access_token");
+    //var accessToken = await _storage!.read(key: "access_token");
     Uri uri = Uri.parse(_baseUrl + url);
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $accessToken"
+      HttpHeaders.authorizationHeader: "Bearer $_accessToken"
     };
 
     try{
@@ -107,8 +142,8 @@ class ApiProvider{
     }on UnauthorisedException catch(e) {
       await refreshToken();
 
-      var accessToken = await _storage.read(key: "access_token");
-      headers["authorization"] = "Bearer $accessToken";
+      //var accessToken = await _storage!.read(key: "access_token");
+      headers["authorization"] = "Bearer $_accessToken";
       
       responseJson = await sendPut(uri, headers, body);      
     }
@@ -118,10 +153,10 @@ class ApiProvider{
   Future<dynamic> deleteSecure(String url) async{
     var responseJson;
 
-    var accessToken = await _storage.read(key: "access_token");
+    //var accessToken = await _storage!.read(key: "access_token");
     Uri uri = Uri.parse(_baseUrl + url);
     Map<String, String> headers = {      
-      HttpHeaders.authorizationHeader: "Bearer $accessToken"
+      HttpHeaders.authorizationHeader: "Bearer $_accessToken"
     };
 
     try{      
@@ -131,8 +166,8 @@ class ApiProvider{
     }on UnauthorisedException {
       await refreshToken();
 
-      var accessToken = await _storage.read(key: "access_token");
-      headers["authorization"] = "Bearer $accessToken";
+      //var accessToken = await _storage!.read(key: "access_token");
+      headers["authorization"] = "Bearer $_accessToken";
       
       responseJson = await sendDelete(uri, headers);      
     }
@@ -158,38 +193,11 @@ class ApiProvider{
     var response = await http.delete(uri, headers: headers);
     return await _response(response);     
   }
-
-  Future<dynamic> refreshToken() async{
-    var responseJson;
-
-    var refreshToken = await _storage.read(key: "refresh_token");
-    if (refreshToken == null) throw UnauthorisedException();
-    var body = {
-      "token": refreshToken
-    };
-
-    try{
-      final response = await http.post(
-        Uri.parse(_baseUrl + 'auth/refresh-token'), 
-        headers: {          
-          HttpHeaders.contentTypeHeader: 'application/x-www-form-urlencoded',
-        },
-        body: body
-      );
-      responseJson = await _response(response);
-      var accessToken = responseJson["accessToken"];
-      _storage.write(key: "access_token", value: accessToken);
-
-    }on SocketException catch(e) {
-      throw CustomException('No Internet connection');
-    }
-    return responseJson;
-  }
-
+  
   dynamic _response(http.Response response) async{
     if(response.headers["set-cookie"] != null){      
       var refreshToken = response.headers["set-cookie"].toString().split(';')[0].substring(13);
-      await _storage.write(key: "refresh_token", value: refreshToken);      
+      await _storage!.write(key: "refresh_token", value: refreshToken);      
     }
     var errorMessage;
 
@@ -210,5 +218,5 @@ class ApiProvider{
         throw CustomException(
             'Server Error. StatusCode: ${response.statusCode}. Error: ${errorMessage}');
     }
-  }
+  }  
 }

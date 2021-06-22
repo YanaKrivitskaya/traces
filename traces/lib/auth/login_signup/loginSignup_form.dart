@@ -94,15 +94,9 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             );
         }
         if(state.status == StateStatus.Success){
-          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn(state.user!));
+          BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn(state.user));
         }
-        switch(state.form){
-          case FormMode.Login:{
-            this.linkText = "Don't have an account?";
-            this.linkButtonText = "Create new";
-            this.actionText = "Login";
-            break;
-          }
+        switch(state.form){          
           case FormMode.Register:{
             this.linkText = "Already have an account?";
             this.linkButtonText = "Login";
@@ -113,6 +107,12 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             this.linkText = "Already have an account?";
             this.linkButtonText = "Login";
             this.actionText = "Reset password";
+            break;
+          }
+          default: {
+            this.linkText = "Don't have an account?";
+            this.linkButtonText = "Create new";
+            this.actionText = "Login";
             break;
           }
         }
@@ -195,16 +195,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
     FocusScope.of(context).unfocus();
 
     if(_validateAndSave()){
-      switch(state.form){
-        case FormMode.Login:{
-          _loginSignupBloc.add(
-            SubmittedLogin(
-              email: _emailController.text,
-              password: _passwordController.text,
-            ),
-          );
-          break;
-        }
+      switch(state.form){        
         case FormMode.Register:{
           _loginSignupBloc.add(
               SubmittedSignup(
@@ -219,6 +210,15 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
           _loginSignupBloc.add(
             SubmittedReset(
                 email: _emailController.text
+            ),
+          );
+          break;
+        }
+        default: {
+          _loginSignupBloc.add(
+            SubmittedLogin(
+              email: _emailController.text,
+              password: _passwordController.text,
             ),
           );
           break;

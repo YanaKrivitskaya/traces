@@ -1,11 +1,9 @@
-
-
-import 'package:traces/screens/notes/models/create_tag.model.dart';
-import 'package:traces/screens/notes/models/tag.model.dart';
-import 'package:traces/utils/api/api.provider.dart';
+import '../../../utils/services/api_service.dart';
+import '../models/create_tag.model.dart';
+import '../models/tag.model.dart';
 
 class ApiTagsRepository{
-  ApiProvider apiProvider = ApiProvider();
+  ApiService apiProvider = ApiService();
   String tagsUrl = 'tags/';
 
   Future<List<Tag>?> getTags() async{

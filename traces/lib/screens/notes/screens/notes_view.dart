@@ -195,8 +195,8 @@ class _NotesViewState extends State<NotesView> {
         case SortFields.TITLE:{
           return a.title!.toUpperCase().compareTo(b.title!.toUpperCase());
         }
-      }
-      return a.title!.compareTo(b.title!);
+        default: return a.title!.compareTo(b.title!);
+      }      
     });
     return notes;
   }

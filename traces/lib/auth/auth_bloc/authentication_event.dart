@@ -3,7 +3,7 @@ import 'package:traces/auth/model/user.model.dart';
 
 abstract class AuthenticationEvent extends Equatable {
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AppStarted extends AuthenticationEvent{
@@ -12,12 +12,12 @@ class AppStarted extends AuthenticationEvent{
 }
 
 class LoggedIn extends AuthenticationEvent{
-  final User user;
+  final User? user;
 
   LoggedIn(this.user);
 
   @override
-  List<Object> get props => [user];
+  List<Object?> get props => [user];
 
   @override
   String toString() => 'LoggedIn';

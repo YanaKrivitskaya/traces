@@ -18,18 +18,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.
   await Firebase.initializeApp();
   Bloc.observer = SimpleBlocDelegate();
-  /*final FirebaseUserRepository userRepository = FirebaseUserRepository();
-  final AppSettingsRepository settingsRepository = FirebaseAppSettingsRepository();*/
-
-  // Create the initilization Future outside of `build`:
-  /*Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
-  FutureBuilder(
-    // Initialize FlutterFire:
-    future: _initialization,
-    builder: ()
-  );*/
-
+  
   runApp(
     BlocProvider(
       create: (context) => AuthenticationBloc()
@@ -40,11 +29,7 @@ Future<void> main() async {
 }
 
 class TracesApp extends StatelessWidget{
-  // Create the initilization Future outside of `build`:
-  //Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
-  //final FirebaseUserRepository _userRepository;
-
+ 
   TracesApp({Key? key}/*, @required FirebaseUserRepository userRepository}*/)
     /*:assert(userRepository != null),
     _userRepository = userRepository,*/
