@@ -47,7 +47,10 @@ class _NotesViewState extends State<NotesView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NoteBloc, NoteState>(
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<NoteBloc>().add(GetAllNotes());} ,
+      child: BlocListener<NoteBloc, NoteState>(
         listener: (context, state) {
          
         },
@@ -130,7 +133,8 @@ class _NotesViewState extends State<NotesView> {
                 return Container();
               }
             }
-        ),);
+        ))       
+    );    
   }
 
   Widget _searchBar(){
