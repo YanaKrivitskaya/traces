@@ -20,14 +20,11 @@ class NotesPage extends StatelessWidget{
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(
-          value: context.read<NoteBloc>()/*..add(GetAllNotes())*/,
+          value: context.read<NoteBloc>(),
         ),
         BlocProvider.value(
-          value: context.read<TagFilterBloc>()/*..add(GetAllNotes())*/,
-        ),
-       /* BlocProvider<TagFilterBloc>(
-          create: (context) => TagFilterBloc()/*..add(GetTags())*/,
-        ),*/
+          value: context.read<TagFilterBloc>(),
+        )       
       ],
       child: Scaffold(
         appBar: AppBar(

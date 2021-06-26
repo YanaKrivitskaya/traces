@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/misc/state_types.dart';
+import '../../../widgets/widgets.dart';
 import '../bloc/note_bloc/bloc.dart';
 import '../bloc/tag_filter_bloc/bloc.dart';
 import '../models/tag.model.dart';
@@ -17,9 +18,9 @@ class TagsFilterButton extends StatelessWidget{
           showDialog(
               barrierDismissible: false, context: context, builder: (_) =>
               MultiBlocProvider(
-                providers: [
+                providers: [                  
                   BlocProvider.value(
-                      value: context.read<TagFilterBloc>()/*..add(GetTags())*/
+                    value: context.read<TagFilterBloc>()..add(GetTags()),
                   ),
                   BlocProvider.value(
                     value: context.read<NoteBloc>(),
@@ -54,15 +55,7 @@ class _TagsDialogState extends State<TagsDialog>{
   }
 
   @override
-  Widget build(BuildContext context){
-    /*return BlocListener<TagFilterBloc, TagFilterState>(
-      listener: (context, state) {
-         if(state.status == StateStatus.Empty){
-           context.read<TagFilterBloc>().add(GetAllTags());
-         }
-        },
-    );*/
-
+  Widget build(BuildContext context){    
     return BlocBuilder<TagFilterBloc, TagFilterState>(
         builder: (context, state) {
           if(state.status == StateStatus.Success){
@@ -96,15 +89,13 @@ class _TagsDialogState extends State<TagsDialog>{
                 _tags!.forEach((t) => t.isChecked = true);
               }
             }
-
-          }
-          return new AlertDialog(
+            return new AlertDialog(
             title: Text('Tags'),
             actions: <Widget>[
               TextButton(
                 child: Text('Done'),
-                onPressed: () {
-                  context.read<NoteBloc>().add(SelectedTagsUpdated());
+                onPressed: () {                  
+                  context.read<NoteBloc>().add(SelectedTagsUpdated(state.selectedTags, state.allTagsChecked, state.noTagsChecked));
                   Navigator.pop(context);
                 },
                 style: ButtonStyle(
@@ -124,6 +115,8 @@ class _TagsDialogState extends State<TagsDialog>{
                       child: Column(children: <Widget>[_tagOptions()],),),
                   )],),)
           );
+          }
+          return loadingWidget(ColorsPalette.greenGrass);
         });
   }
 

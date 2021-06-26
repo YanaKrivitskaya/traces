@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/create_tag.model.dart';
 import '../../models/tag.model.dart';

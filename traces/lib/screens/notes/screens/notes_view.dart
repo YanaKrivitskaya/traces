@@ -8,7 +8,6 @@ import '../../../constants/color_constants.dart';
 import '../../../constants/route_constants.dart';
 import '../../../utils/misc/state_types.dart';
 import '../bloc/note_bloc/bloc.dart';
-import '../bloc/tag_filter_bloc/bloc.dart';
 import '../models/note.model.dart';
 import '../models/tag.model.dart';
 import '../widgets/note_delete_alert.dart';
@@ -18,12 +17,10 @@ class NotesView extends StatefulWidget{
   State<NotesView> createState() => _NotesViewState();
 }
 
-class _NotesViewState extends State<NotesView> {
-  late TagFilterBloc _tagBloc;
-
-  List<Tag>? _tags;
-  bool? _allTagsSelected;
-  bool? _noTagsSelected;
+class _NotesViewState extends State<NotesView> { 
+ 
+  bool _allTagsSelected = true;
+  bool _noTagsSelected = true;
   List<Tag>? _selectedTags;
 
   TextEditingController? _searchController;
@@ -33,16 +30,13 @@ class _NotesViewState extends State<NotesView> {
     super.initState();
 
     _searchController = new TextEditingController(text: '');
-    _searchController!.addListener(_onSearchTextChanged);
-
-    _tagBloc = BlocProvider.of<TagFilterBloc>(context);
+    _searchController!.addListener(_onSearchTextChanged);    
   }
 
   @override
   void dispose(){
     _searchController!.dispose();
-    super.dispose();
-    _tagBloc.close();
+    super.dispose();    
   }
 
   @override
@@ -51,28 +45,23 @@ class _NotesViewState extends State<NotesView> {
       onRefresh: () async {
         context.read<NoteBloc>().add(GetAllNotes());} ,
       child: BlocListener<NoteBloc, NoteState>(
-        listener: (context, state) {
-          print(state.status);
-         if(_tagBloc.state.status == StateStatus.Empty){
-           //context.read<TagFilterBloc>()..add(GetTags());
-         }
-        },
+        listener: (context, state) {},
         child: BlocBuilder<NoteBloc, NoteState>(
             bloc: BlocProvider.of(context),
             builder: (context, state){
 
-              if(state.status == StateStatus.Empty || state.status == StateStatus.Loading || _tagBloc.state.status == StateStatus.Loading){
+              if(state.status == StateStatus.Empty || state.status == StateStatus.Loading){
                 return Center(child: CircularProgressIndicator());
               }
-              if(state.status == StateStatus.Success && _tagBloc.state.status == StateStatus.Success){
+              if(state.status == StateStatus.Success){
                 final notes = _sortNotes(state.filteredNotes!, state.sortField);
 
-                _tags = _tagBloc.state.allTags;
-                _selectedTags = _tagBloc.state.selectedTags;
-                _allTagsSelected = _tagBloc.state.allTagsChecked;
-                _noTagsSelected = _tagBloc.state.noTagsChecked;
+                
+                _selectedTags = state.selectedTags;
+                _allTagsSelected = state.allTagsSelected ?? true;
+                _noTagsSelected = state.noTagsSelected ?? true;
 
-                final filteredNotes = _filterNotes(notes, _selectedTags, _allTagsSelected!, _noTagsSelected);
+                final filteredNotes = _filterNotes(notes, _selectedTags, _allTagsSelected, _noTagsSelected);
 
                 if(!state.searchEnabled!) _searchController!.clear();
 
@@ -83,7 +72,7 @@ class _NotesViewState extends State<NotesView> {
                       child: Column(
                         children: <Widget>[
                           state.searchEnabled! ? _searchBar() : Container(),
-                          filteredNotes != null && filteredNotes.length > 0 ?
+                          filteredNotes.length > 0 ?
                           Container(
                             child: ListView.builder(
                                 shrinkWrap: true,
@@ -114,7 +103,7 @@ class _NotesViewState extends State<NotesView> {
                                         Container(
                                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
                                           alignment: Alignment.centerLeft,
-                                          child: note.tags!.isNotEmpty && _tags != null ? getChips(note,/* _tags,*/ _allTagsSelected, _selectedTags): Container(),
+                                          child: note.tags!.isNotEmpty ? getChips(note, _allTagsSelected, _selectedTags): Container(),
                                         )
                                       ],
                                     ),
@@ -164,8 +153,7 @@ class _NotesViewState extends State<NotesView> {
     context.read<NoteBloc>().add(SearchTextChanged(noteName: _searchController!.text));
   }
 
-  Widget getChips(Note note/*, List<Tag> tags*/, bool? allTagsSelected, List<Tag>? selectedTags) {
-    //var selectedTags = tags.where((t) => note.tags.contains(t));
+  Widget getChips(Note note, bool? allTagsSelected, List<Tag>? selectedTags) {    
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
