@@ -56,6 +56,8 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
 
     if(state.selectedTags != null){
       selectedTags = state.selectedTags;
+    }else{
+      selectedTags = tags;
     }
 
     add(UpdateTagsList(tags, selectedTags: selectedTags, allTagsChecked: allTagsChecked, noTagsChecked: noTagsChecked, allTagsUnChecked: allTagsUnChecked));
@@ -89,7 +91,7 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
 
     if(event.checked!) {
       selectedTags.addAll(state.allTags!);
-      yield state.update(stateStatus: StateStatus.Success, allTagsChecked: true, allUnChecked: false, selectedTags: selectedTags);
+      yield state.update(stateStatus: StateStatus.Success, allTagsChecked: true, allUnChecked: false, selectedTags: selectedTags, noTagsChecked: true);
     }else {
       yield state.update(stateStatus: StateStatus.Success, allTagsChecked: false, allUnChecked: true, selectedTags: selectedTags, noTagsChecked: false);
     }

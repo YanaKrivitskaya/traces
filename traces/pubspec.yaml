@@ -47,6 +47,7 @@ dev_dependencies:
   timelines: ^0.1.0
   http: ^0.13.3
   flutter_secure_storage: ^4.2.0
+  device_info_plus: ^2.0.1
   flutter_test:
     sdk: flutter
 

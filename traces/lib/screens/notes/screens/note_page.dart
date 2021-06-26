@@ -22,9 +22,12 @@ class NotesPage extends StatelessWidget{
         BlocProvider.value(
           value: context.read<NoteBloc>()/*..add(GetAllNotes())*/,
         ),
-        BlocProvider<TagFilterBloc>(
-          create: (context) => TagFilterBloc()..add(GetTags()),
+        BlocProvider.value(
+          value: context.read<TagFilterBloc>()/*..add(GetAllNotes())*/,
         ),
+       /* BlocProvider<TagFilterBloc>(
+          create: (context) => TagFilterBloc()/*..add(GetTags())*/,
+        ),*/
       ],
       child: Scaffold(
         appBar: AppBar(

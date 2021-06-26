@@ -13,10 +13,12 @@ import 'config/router.dart';
 import 'constants/color_constants.dart';
 import 'screens/home.dart';
 import 'screens/welcome.dart';
+import 'utils/services/api_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.
   await Firebase.initializeApp();
+  await ApiService.init();
   Bloc.observer = SimpleBlocDelegate();
   
   runApp(

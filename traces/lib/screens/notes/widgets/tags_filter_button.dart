@@ -19,7 +19,7 @@ class TagsFilterButton extends StatelessWidget{
               MultiBlocProvider(
                 providers: [
                   BlocProvider.value(
-                      value: context.read<TagFilterBloc>()..add(GetTags())
+                      value: context.read<TagFilterBloc>()/*..add(GetTags())*/
                   ),
                   BlocProvider.value(
                     value: context.read<NoteBloc>(),
@@ -55,6 +55,13 @@ class _TagsDialogState extends State<TagsDialog>{
 
   @override
   Widget build(BuildContext context){
+    /*return BlocListener<TagFilterBloc, TagFilterState>(
+      listener: (context, state) {
+         if(state.status == StateStatus.Empty){
+           context.read<TagFilterBloc>().add(GetAllTags());
+         }
+        },
+    );*/
 
     return BlocBuilder<TagFilterBloc, TagFilterState>(
         builder: (context, state) {
