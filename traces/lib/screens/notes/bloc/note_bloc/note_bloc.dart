@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:traces/screens/notes/bloc/tag_filter_bloc/bloc.dart';
 
 import '../../../../utils/api/customException.dart';
 import '../../../../utils/misc/state_types.dart';
@@ -10,18 +9,12 @@ import '../../repositories/api_notes_repository.dart';
 import 'bloc.dart';
 
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
-  final TagFilterBloc tagFilterBloc;
   late StreamSubscription tagFilterBlocSubscription;
   final ApiNotesRepository _notesRepository;
 
-  NoteBloc(this.tagFilterBloc):
-    _notesRepository = new ApiNotesRepository(), super(NoteState.empty()){
-    tagFilterBlocSubscription = tagFilterBloc.stream.listen((state) {
-      if(state.status == StateStatus.Success){
-       add(GetAllNotes());
-      }
-     });
-  }
+  NoteBloc():
+    _notesRepository = new ApiNotesRepository(), 
+    super(NoteState.empty()){}
 
   @override
   Stream<NoteState> mapEventToState(
@@ -36,7 +29,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     }else if(event is UpdateSortFilter){
       yield* _mapNotesUpdateSortFilterToState(event);
     } else if(event is SelectedTagsUpdated){
-      yield* _mapSelectedTagsUpdatedToState();
+      yield* _mapSelectedTagsUpdatedToState(event);
     } else if(event is SearchTextChanged){
       yield* _mapSearchTextChangedToState(event);
     } else if(event is SearchBarToggle){
@@ -89,9 +82,10 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     }   
   }
 
-  Stream<NoteState> _mapSelectedTagsUpdatedToState() async* {
+  Stream<NoteState> _mapSelectedTagsUpdatedToState(SelectedTagsUpdated event) async* {
     yield state.update(stateStatus: StateStatus.Loading);
-    yield state.update(stateStatus: StateStatus.Success);
+
+    yield state.update(stateStatus: StateStatus.Success, selectedTags: event.selectedTags, allTagsSelected: event.allTagsSelected, noTagsSelected: event.noTagsSelected);
   }
 
   Stream<NoteState> _mapSearchTextChangedToState(SearchTextChanged event) async*{

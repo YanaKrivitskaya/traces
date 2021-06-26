@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../models/note.model.dart';
+import '../../models/tag.model.dart';
 
 abstract class NoteEvent extends Equatable {
   const NoteEvent();
@@ -38,7 +38,16 @@ class UpdateSortFilter extends NoteEvent{
   List<Object> get props => [sortField, sortDirection];
 }
 
-class SelectedTagsUpdated extends NoteEvent{}
+class SelectedTagsUpdated extends NoteEvent{
+  final List<Tag>? selectedTags;
+  final bool? allTagsSelected;
+  final bool? noTagsSelected;
+
+  SelectedTagsUpdated(this.selectedTags, this.allTagsSelected, this.noTagsSelected);
+
+  @override
+  List<Object?> get props => [selectedTags, allTagsSelected, noTagsSelected];
+}
 
 class DeleteNote extends NoteEvent {
   final Note? note;

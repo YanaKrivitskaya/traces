@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/notes/bloc/tag_filter_bloc/tag_filter_bloc.dart';
 
 import '../../../constants/color_constants.dart';
 import '../bloc/note_bloc/bloc.dart';
@@ -211,7 +210,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         barrierDismissible: false, // user must tap button!
         builder: (_) =>
             BlocProvider<NoteBloc>(
-              create: (context) => NoteBloc(TagFilterBloc()),
+              create: (context) => NoteBloc(/*TagFilterBloc()*/),
               child: NoteDeleteAlert(note: note,
                   callback: (val) async {
                     if(val == 'Delete'){

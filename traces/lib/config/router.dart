@@ -61,12 +61,10 @@ class RouteGenerator {
         builder: (_) => MultiBlocProvider(
                       providers: [                       
                         BlocProvider<TagFilterBloc>(
-                          create: (context) => TagFilterBloc(
-                            /*notesRepository: FirebaseNotesRepository(),*/
-                          )..add(GetTags()),
+                          create: (context) => TagFilterBloc(),
                         ),
                          BlocProvider<NoteBloc>(
-                          create: (context) => NoteBloc(context.read<TagFilterBloc>())
+                          create: (context) => NoteBloc()..add(GetAllNotes())
                         ),
                       ],
                       child: NotesPage(),

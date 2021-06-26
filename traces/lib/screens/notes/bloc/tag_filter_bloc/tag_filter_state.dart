@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 
 import '../../../../utils/misc/state_types.dart';
 import '../../models/tag.model.dart';
