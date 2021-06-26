@@ -7,6 +7,7 @@ class ApiNotesRepository{
   String notesUrl = 'notes/';
 
   Future<List<Note>?> getNotes( )async{
+    print("getNotes");
     final response = await apiProvider.getSecure(notesUrl);
       
     var notes = response["notes"] != null ? 

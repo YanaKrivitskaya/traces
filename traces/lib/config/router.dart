@@ -48,14 +48,30 @@ class RouteGenerator {
             child: HomePage(),
           ),
       );
-      case notesRoute:
+      /*case notesRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<NoteBloc>(
             create: (context) =>
-                NoteBloc()..add(GetAllNotes()),
+                NoteBloc(TagFilterBloc())/*..add(GetAllNotes())*/,
             child: NotesPage(),
           ),
-        );
+        );*/
+      case notesRoute:
+      return MaterialPageRoute(
+        builder: (_) => MultiBlocProvider(
+                      providers: [                       
+                        BlocProvider<TagFilterBloc>(
+                          create: (context) => TagFilterBloc(
+                            /*notesRepository: FirebaseNotesRepository(),*/
+                          )..add(GetTags()),
+                        ),
+                         BlocProvider<NoteBloc>(
+                          create: (context) => NoteBloc(context.read<TagFilterBloc>())
+                        ),
+                      ],
+                      child: NotesPage(),
+                    )
+      );
       case noteDetailsRoute:
         {
           if (args is int) {

@@ -28,7 +28,7 @@ int daysLeft(Visa visa, List<EntryExit> entries){
   }
 
   int? days = -1;
-  if(daysTillExpiration < daysLeft!) days =  daysTillExpiration;
+  if(daysTillExpiration < daysLeft) days =  daysTillExpiration;
   else days = daysLeft;
 
   if(days < 0) return 0;

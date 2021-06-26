@@ -23,7 +23,7 @@ class _WelcomePageState extends State<WelcomePage>{
   void initState() {
     super.initState();
     _authenticationBloc = AuthenticationBloc();
-    _authenticationBloc!.add(AppStarted());
+    //_authenticationBloc!.add(AppStarted());
   }
 
   Widget _buildWaitingScreen() {

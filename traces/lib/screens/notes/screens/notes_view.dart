@@ -52,13 +52,16 @@ class _NotesViewState extends State<NotesView> {
         context.read<NoteBloc>().add(GetAllNotes());} ,
       child: BlocListener<NoteBloc, NoteState>(
         listener: (context, state) {
-         
+          print(state.status);
+         if(_tagBloc.state.status == StateStatus.Empty){
+           //context.read<TagFilterBloc>()..add(GetTags());
+         }
         },
         child: BlocBuilder<NoteBloc, NoteState>(
             bloc: BlocProvider.of(context),
             builder: (context, state){
 
-              if(state.status == StateStatus.Loading || _tagBloc.state.status == StateStatus.Loading){
+              if(state.status == StateStatus.Empty || state.status == StateStatus.Loading || _tagBloc.state.status == StateStatus.Loading){
                 return Center(child: CircularProgressIndicator());
               }
               if(state.status == StateStatus.Success && _tagBloc.state.status == StateStatus.Success){

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/notes/bloc/tag_filter_bloc/tag_filter_bloc.dart';
 
 import '../../../constants/color_constants.dart';
 import '../bloc/note_bloc/bloc.dart';
@@ -59,8 +60,8 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         if(state is EditDetailsState){
           _note = state.note;
           _isEditMode = true;
-          _titleController!.text = state.note!.title!;
-          _textController!.text = state.note!.content!;
+          _titleController!.text = state.note!.title ?? '';
+          _textController!.text = state.note!.content ?? '';
         }
         return new Scaffold(
           appBar: AppBar(
@@ -210,7 +211,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         barrierDismissible: false, // user must tap button!
         builder: (_) =>
             BlocProvider<NoteBloc>(
-              create: (context) => NoteBloc(),
+              create: (context) => NoteBloc(TagFilterBloc()),
               child: NoteDeleteAlert(note: note,
                   callback: (val) async {
                     if(val == 'Delete'){
