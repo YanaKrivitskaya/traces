@@ -1,20 +1,20 @@
 import 'dart:async';
 
 import '../model/login.model.dart';
-import '../model/user.model.dart';
+import '../model/account.model.dart';
 
 abstract class UserRepository{
-  Future<User> signInWithEmailAndPassword(LoginModel loginModel);
+  Future<Account> signInWithEmailAndPassword(LoginModel loginModel);
 
-  Future<void> signUp(User user);
+  Future<void> signUp(Account user);
 
-  Future<User> getAccessToken();
+  Future<Account> getAccessToken();
 
   Future<void> signOut();
 
   Future<String> getUserId();
 
-  Future<User> getUser(int userId);
+  Future<Account> getUser(int userId);
 
-  Future<User> isSignedIn();
+  Future<Account> isSignedIn();
 }

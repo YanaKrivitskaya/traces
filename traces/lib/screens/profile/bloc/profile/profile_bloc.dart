@@ -1,99 +1,112 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:traces/screens/profile/model/member.dart';
-import 'package:traces/screens/profile/model/profile.dart';
-import 'package:traces/screens/profile/repository/profile_repository.dart';
-import 'package:traces/utils/helpers/validation_helper.dart';
-import 'package:traces/utils/misc/state_types.dart';
+
+import '../../../../utils/helpers/validation_helper.dart';
+import '../../../../utils/misc/state_types.dart';
+import '../../model/group_user_model.dart';
+import '../../model/profile_model.dart';
+import '../../repository/api_profile_repository.dart';
 import 'bloc.dart';
-import 'package:meta/meta.dart';
+
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  /*final ProfileRepository _profileRepository;*/
-  StreamSubscription? _profileSubscription;
+    final ApiProfileRepository profileRepository;
 
-  ProfileBloc()/*{required ProfileRepository profileRepository})
-      : assert(profileRepository != null),
-        _profileRepository = profileRepository,*/ : super(ProfileState.empty());
+    ProfileBloc()
+        : profileRepository = new ApiProfileRepository(),
+          super(ProfileState.empty());
   @override
   Stream<ProfileState> mapEventToState(
     ProfileEvent event,
   ) async* {
     if (event is GetProfile) {
       yield* _mapGetProfileToState(event);
-    } else if (event is UpdateProfileState) {
-      yield* _mapUpdateProfileStateToState(event);
-    }else if (event is UsernameChanged) {
+    } else if (event is UsernameChanged) {
       yield* _mapUsernameChangedToState(event.username);
     }
     else if (event is UsernameUpdated) {
-      yield* _mapUsernameUpdatedToState(event.username);
+      yield* _mapUsernameUpdatedToState(event);
     }
     else if (event is FamilyUpdated) {
-      yield* _mapFamilyMemberUpdatedToState(event.id, event.name);
+      yield* _mapGroupMemberUpdatedToState(event);
     }
     else if (event is ShowFamilyDialog) {
       yield* _mapShowFamilyDialogToState();
+    }else if (event is UserRemovedFromGroup) {
+      yield* _mapUserRemovedFromGroupToState(event);
     }
   }
 
   Stream<ProfileState> _mapUsernameChangedToState(String username) async*{
     yield state.update(
         isUsernameValid: Validator.isValidUsername(username),
+        errorMessage: null,
         mode: StateMode.Edit
     );
   }
 
   Stream<ProfileState> _mapShowFamilyDialogToState() async*{
     yield state.update(
-        mode: StateMode.View
+      errorMessage: null,
+      mode: StateMode.View
     );
   }
 
-  Stream<ProfileState> _mapUsernameUpdatedToState(String username) async*{
+  Stream<ProfileState> _mapUsernameUpdatedToState(UsernameUpdated event) async*{
 
-    /*await _profileRepository.updateUsername(username);
+    ProfileState currentState = state;
+    yield ProfileState.loading();
 
-    Profile profile = Profile(state.profile!.email, displayName: username, isEmailVerified: state.profile!.isEmailVerified);
+    GroupUser user = GroupUser(name: event.username, userId: event.userId);
 
-    Profile updProfile = await _profileRepository.updateProfile(profile);
+    user = await profileRepository.updateUser(user);
 
-    yield state.update(profile: updProfile);*/
+    Profile profile = currentState.profile!.copyWith(name: user.name);
+
+    yield ProfileState.success(profile: profile);
   }
 
-  Stream<ProfileState> _mapFamilyMemberUpdatedToState(String? id, String name) async*{
-/*
-    Member updMember = Member(name: name);
-    if(id != null){
-      updMember.id = id;
-      await _profileRepository.updateMember(updMember);   
+  Stream<ProfileState> _mapGroupMemberUpdatedToState(FamilyUpdated event) async*{
+    ProfileState currentState = state;
+    yield ProfileState.loading();
+
+    GroupUser user = GroupUser(name: event.name, userId: event.userId);
+
+    try{
+      if(event.userId != null) user = await profileRepository.updateUser(user);
+      else user = await profileRepository.createUser(user, event.groupId);
+
+      var group = await profileRepository.getGroupUsers(event.groupId);
+
+      var groupIndex = currentState.profile!.groups!.indexWhere((g) => g.id == group.id);
+
+      currentState.profile!.groups![groupIndex] = group;     
+
+      yield ProfileState.success(profile: currentState.profile);
+    } catch(e){      
+      yield ProfileState.failure(profile: currentState.profile, error: e.toString());
     }
-
-    await _profileRepository.addNewMember(updMember);        
-
-    yield state.update(profile: state.profile);*/
-  }
-
-  Stream<ProfileState> _mapUpdateProfileStateToState(UpdateProfileState event) async* {
-    yield ProfileState.success(profile: event.profile, members: event.familyMembers);
-  }
+  }  
 
   Stream<ProfileState> _mapGetProfileToState(GetProfile event) async*{
-   /* yield ProfileState.loading();
+   yield ProfileState.loading();
 
-    Profile profile = await _profileRepository.getCurrentProfile();
+   Profile profile = await profileRepository.getProfileWithGroups();    
 
-    if(profile == null){
-      profile = await _profileRepository.addNewProfile();
-    }
+    yield ProfileState.success(profile: profile);
+  }
 
-    _profileSubscription?.cancel();
+  Stream<ProfileState> _mapUserRemovedFromGroupToState(UserRemovedFromGroup event) async*{
+    ProfileState currentState = state;
+    yield ProfileState.loading();
 
-    _profileSubscription = _profileRepository.familyMembers().listen(
-      (members) => add(UpdateProfileState(members, profile))
-    );    */
+    var group = await profileRepository.removeUserFromGroup(event.user.userId!, event.group.id!);
+    var groupIndex = currentState.profile!.groups!.indexWhere((g) => g.id == group.id);
 
-    //yield ProfileState.success(profile: profile);
+    currentState.profile!.groups![groupIndex] = group;
+
+    yield ProfileState.success(profile: currentState.profile);
   }
 
 }

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/profile/bloc/profile/profile_bloc.dart';
-import 'package:traces/screens/profile/family_dialog.dart';
+
+import '../../constants/color_constants.dart';
+import 'bloc/profile/profile_bloc.dart';
+import 'family_dialog.dart';
 
 class AddFamilyButton extends StatelessWidget {
+   final int groupId;
+
+  const AddFamilyButton(this.groupId);
+
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
@@ -13,7 +18,7 @@ class AddFamilyButton extends StatelessWidget {
         showDialog(barrierDismissible: false, context: context,builder: (_) =>
             BlocProvider.value(
               value: context.read<ProfileBloc>(),
-              child: FamilyDialog(null),
+              child: FamilyDialog(null, groupId),
             )
         );
       },

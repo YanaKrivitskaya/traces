@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 
 @immutable
-class User {
+class Account {
   final int? id;
   final String? name;
   final String? email;
@@ -14,7 +14,7 @@ class User {
   final bool? disabled;
   final DateTime? disabledDate;
 
-  User({    
+  Account({    
     this.id, 
     this.name, 
     this.email, 
@@ -40,12 +40,10 @@ class User {
     };
   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    var map1 = map;
-    print(map1);
-    return User(
+  factory Account.fromMap(Map<String, dynamic> map) {    
+    return Account(
       id: map['id'],
-      name: map['name'],
+      name: map["name"],
       email: map['email'],
       password: map['password'],
       emailVerified: map['emailVerified'],
@@ -58,5 +56,5 @@ class User {
 
   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) => User.fromMap(json.decode(source));
+  factory Account.fromJson(String source) => Account.fromMap(json.decode(source));
 }

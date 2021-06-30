@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/profile/bloc/profile/bloc.dart';
-import 'package:traces/screens/profile/model/member.dart';
-import 'package:traces/utils/misc/state_types.dart';
+
+import '../../constants/color_constants.dart';
+import '../../utils/misc/state_types.dart';
+import 'bloc/profile/bloc.dart';
+import 'model/group_user_model.dart';
 
 class FamilyDialog extends StatefulWidget{
-  final Member? familyMember;
+  final GroupUser? groupUser;
+  final int groupId;
 
-  FamilyDialog(this.familyMember);
+  FamilyDialog(this.groupUser, this.groupId);
 
   @override
   _FamilyDialogState createState() => new _FamilyDialogState();
@@ -40,8 +42,8 @@ class _FamilyDialogState extends State<FamilyDialog>{
             return new Center(child: CircularProgressIndicator());
           }else{
 
-            if(widget.familyMember != null && state.mode == StateMode.View){
-              _usernameController!.text = widget.familyMember!.name!;
+            if(widget.groupUser != null && state.mode == StateMode.View){
+              _usernameController!.text = widget.groupUser!.name;
             }
 
             return new AlertDialog(
@@ -51,7 +53,8 @@ class _FamilyDialogState extends State<FamilyDialog>{
                   child: Text('Done'),
                   onPressed: () {
                     if(state.isUsernameValid){
-                      context.read<ProfileBloc>().add(FamilyUpdated(name: _usernameController!.text.trim(), id: widget.familyMember?.id ?? null));
+                      context.read<ProfileBloc>().add(FamilyUpdated(name: _usernameController!.text.trim(), 
+                        userId: widget.groupUser?.userId ?? null, groupId: widget.groupId));
                     }
                     Navigator.pop(context);
                   },

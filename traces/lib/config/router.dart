@@ -13,7 +13,7 @@ import '../screens/notes/screens/note_detail_view.dart';
 import '../screens/notes/screens/note_page.dart';
 import '../screens/profile/bloc/profile/bloc.dart';
 import '../screens/profile/profile_page.dart';
-import '../screens/profile/repository/firebase_profile_repository.dart';
+import '../screens/profile/repository/__firebase_profile_repository.dart';
 import '../screens/settings/bloc/settings_bloc.dart';
 import '../screens/settings/repository/firebase_appSettings_repository.dart';
 import '../screens/settings/settings_page.dart';
@@ -48,14 +48,6 @@ class RouteGenerator {
             child: HomePage(),
           ),
       );
-      /*case notesRoute:
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider<NoteBloc>(
-            create: (context) =>
-                NoteBloc(TagFilterBloc())/*..add(GetAllNotes())*/,
-            child: NotesPage(),
-          ),
-        );*/
       case notesRoute:
       return MaterialPageRoute(
         builder: (_) => MultiBlocProvider(

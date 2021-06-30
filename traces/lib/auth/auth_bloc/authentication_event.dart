@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:traces/auth/model/user.model.dart';
+import 'package:traces/auth/model/account.model.dart';
 
 abstract class AuthenticationEvent extends Equatable {
   @override
@@ -12,7 +12,7 @@ class AppStarted extends AuthenticationEvent{
 }
 
 class LoggedIn extends AuthenticationEvent{
-  final User? user;
+  final Account? user;
 
   LoggedIn(this.user);
 

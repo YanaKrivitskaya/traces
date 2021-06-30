@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/constants/color_constants.dart';
-import 'package:traces/screens/profile/model/member.dart';
+import 'package:traces/screens/profile/model/__member.dart';
 import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/bloc/tripmembers_bloc.dart';
 import 'package:traces/utils/style/styles.dart';

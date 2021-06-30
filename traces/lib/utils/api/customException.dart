@@ -20,3 +20,7 @@ class BadRequestException extends CustomException {
 class UnauthorisedException extends CustomException {
   UnauthorisedException([message]) : super("Unauthorised: $message");
 }
+
+class ForbiddenException extends CustomException {
+  ForbiddenException([message]) : super("Forbidden: $message");
+}

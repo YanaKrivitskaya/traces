@@ -1,7 +1,8 @@
-import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/profile/model/member.dart';
-import 'package:traces/screens/profile/model/profile.dart';
+
+import '../../model/group_model.dart';
+import '../../model/group_user_model.dart';
+import '../../model/profile_model.dart';
 
 
 abstract class ProfileEvent extends Equatable {
@@ -16,7 +17,7 @@ class GetProfile extends ProfileEvent {}
 class ShowFamilyDialog extends ProfileEvent {}
 
 class UpdateProfileState extends ProfileEvent {
-  final List<Member> familyMembers;
+  final List<GroupUser> familyMembers;
 
   final Profile profile;
 
@@ -36,21 +37,33 @@ class UsernameChanged extends ProfileEvent{
 }
 
 class FamilyUpdated extends ProfileEvent{
-  final String? id;
+  final int? userId;
   final String name;
+  final int groupId;
 
-  const FamilyUpdated({required this.id, required this.name});
+  const FamilyUpdated({required this.userId, required this.name, required this.groupId});
 
   @override
-  List<Object?> get props => [id, name];
+  List<Object?> get props => [userId, name, groupId];
 }
 
 class UsernameUpdated extends ProfileEvent{
+  final int userId;
   final String username;
 
-  const UsernameUpdated({required this.username});
+  const UsernameUpdated({required this.username, required this.userId});
 
   @override
-  List<Object> get props => [username];
+  List<Object> get props => [username, userId];
+}
+
+class UserRemovedFromGroup extends ProfileEvent{
+  final GroupUser user;
+  final Group group;
+
+  const UserRemovedFromGroup({required this.user, required this.group});
+
+  @override
+  List<Object> get props => [user, group];
 }
 

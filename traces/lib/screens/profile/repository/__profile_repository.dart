@@ -1,6 +1,6 @@
 
-import 'package:traces/screens/profile/model/member.dart';
-import 'package:traces/screens/profile/model/profile.dart';
+import 'package:traces/screens/profile/model/__member.dart';
+import 'package:traces/screens/profile/model/__profile.dart';
 
 abstract class ProfileRepository {
 

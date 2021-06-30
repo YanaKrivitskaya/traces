@@ -65,7 +65,7 @@ class _VisasViewState extends State<VisasView> {
                                               children: <Widget>[
                                                 Row( mainAxisAlignment: MainAxisAlignment.start,
                                                   children: <Widget>[
-                                                    _avatar(visa.owner!),
+                                                    avatar(visa.owner!, 30.0, ColorsPalette.algalFuel, 25.0),
                                                     _visaDetails(visa)
                                                   ],
                                                 )
@@ -84,17 +84,6 @@ class _VisasViewState extends State<VisasView> {
           }),
     );
   }
-
-  Widget _avatar(String username) => new CircleAvatar(
-      backgroundColor: ColorsPalette.lynxWhite,
-      child: Text(
-        getAvatarName(username),
-        style: TextStyle(
-            color: ColorsPalette.algalFuel,
-            fontSize: 25.0,
-            fontWeight: FontWeight.w300),
-      ),
-      radius: 30.0);
 
   Widget _visaDetails(Visa visa) => new Container(
         padding: EdgeInsets.only(left: 20.0),
