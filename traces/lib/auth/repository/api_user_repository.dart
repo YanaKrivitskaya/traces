@@ -1,6 +1,6 @@
 import '../../utils/services/api_service.dart';
 import '../model/login.model.dart';
-import '../model/user.model.dart';
+import '../model/account.model.dart';
 import 'userRepository.dart';
 
 
@@ -10,18 +10,18 @@ class ApiUserRepository extends UserRepository{
   String authUrl = 'auth/'; 
 
   @override
-  Future<void> signUp(User user) async{
+  Future<void> signUp(Account user) async{
     print("signUp");
     final response = await apiProvider.post(authUrl + 'register', user.toJson());
     return response;
   }
 
   @override
-  Future<User> signInWithEmailAndPassword(LoginModel loginModel) async {   
+  Future<Account> signInWithEmailAndPassword(LoginModel loginModel) async {   
     print("signIn");     
     try{      
       final response = await apiProvider.post(authUrl + 'login', loginModel.toJson());
-      var user = User.fromMap(response["user"]);      
+      var user = Account.fromMap(response["account"]);      
       return user;
     } on Exception catch(e){      
       throw(e);
@@ -29,21 +29,21 @@ class ApiUserRepository extends UserRepository{
   }
 
   @override
-  Future<User> getAccessToken() async {
+  Future<Account> getAccessToken() async {
     print("getAccessToken");    
    
     final response = await apiProvider.refreshToken();
-    var user = User.fromMap(response["user"]);    
+    var user = Account.fromMap(response["account"]);    
 
     return user;
   }
 
   @override
-  Future<User> getUser(int userId) async{
+  Future<Account> getUser(int userId) async{
     print("getUser");
     var userIdParam = userId.toString();
     final response = await apiProvider.getSecure(authUrl + '/users/$userIdParam');
-    return User.fromMap(response);
+    return Account.fromMap(response);
   }
   
 
@@ -61,7 +61,7 @@ class ApiUserRepository extends UserRepository{
   }
 
   @override
-  Future<User> isSignedIn() {
+  Future<Account> isSignedIn() {
     // TODO: implement isSignedIn
     throw UnimplementedError();
   }

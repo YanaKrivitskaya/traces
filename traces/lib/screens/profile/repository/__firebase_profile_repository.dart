@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:traces/screens/profile/model/member.dart';
-import 'package:traces/screens/profile/model/member_entity.dart';
+import 'package:traces/screens/profile/model/__member.dart';
+import 'package:traces/screens/profile/model/__member_entity.dart';
 
-import '../model/profile.dart';
-import '../model/profile_entity.dart';
-import 'profile_repository.dart';
+import '../model/__profile.dart';
+import '../model/__profile_entity.dart';
+import '__profile_repository.dart';
 
 
 class FirebaseProfileRepository{

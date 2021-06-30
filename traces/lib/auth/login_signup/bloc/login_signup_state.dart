@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
 import '../../../utils/misc/state_types.dart';
-import '../../model/user.model.dart';
+import '../../model/account.model.dart';
 import '../form_types.dart';
 
 @immutable
@@ -12,7 +12,7 @@ class LoginSignupState {
   final StateStatus status;
   final FormMode? form;
   final bool? isPasswordReseted;
-  final User? user;
+  final Account? user;
   final String? errorMessage;
 
   bool get isSignupFormValid => isEmailValid & isPasswordValid & isUsernameValid;
@@ -53,7 +53,7 @@ class LoginSignupState {
     );
   }
 
-  factory LoginSignupState.success({FormMode? formMode, bool? isReseted, User? user}){
+  factory LoginSignupState.success({FormMode? formMode, bool? isReseted, Account? user}){
     return LoginSignupState(
       isEmailValid: true,
       isPasswordValid: true,

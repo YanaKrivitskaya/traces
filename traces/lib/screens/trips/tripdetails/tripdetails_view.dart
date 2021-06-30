@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/screens/profile/model/member.dart';
+import 'package:traces/screens/profile/model/__member.dart';
 import 'package:traces/screens/trips/model/trip.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/bloc/tripmembers_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/tripMembers_dialog.dart';

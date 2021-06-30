@@ -1,11 +1,10 @@
-import 'package:meta/meta.dart';
-import 'package:traces/screens/profile/model/member.dart';
-import 'package:traces/screens/profile/model/profile.dart';
-import 'package:traces/utils/misc/state_types.dart';
+import '../../../../utils/misc/state_types.dart';
+import '../../model/group_user_model.dart';
+import '../../model/profile_model.dart';
 
 class ProfileState {
   final Profile? profile;
-  final List<Member>? familyMembers;
+  final List<GroupUser>? familyMembers;
   final bool isUsernameValid;
   final StateMode mode;
   final StateStatus status;
@@ -26,7 +25,7 @@ class ProfileState {
         isUsernameValid: true,
         mode: StateMode.View,
         status: StateStatus.Empty,
-        errorMessage: ""
+        errorMessage: null
     );
   }
 
@@ -37,22 +36,22 @@ class ProfileState {
         isUsernameValid: true,
         mode: StateMode.View,
         status: StateStatus.Loading,
-        errorMessage: ""
+        errorMessage: null
     );
   }
 
-  factory ProfileState.success({Profile? profile, List<Member>? members}){
+  factory ProfileState.success({Profile? profile, List<GroupUser>? members}){
     return ProfileState(
         profile: profile,
         familyMembers: members,
         isUsernameValid: true,
         mode: StateMode.View,
         status: StateStatus.Success,
-        errorMessage: ""
+        errorMessage: null
     );
   }
 
-  factory ProfileState.failure({Profile? profile, List<Member>? members, String? error}){
+  factory ProfileState.failure({Profile? profile, List<GroupUser>? members, String? error}){
     return ProfileState(
         profile: profile,
         familyMembers: members,
@@ -65,7 +64,7 @@ class ProfileState {
 
   ProfileState copyWith({
     final Profile? profile,
-    final List<Member>? members,
+    final List<GroupUser>? members,
     bool? isUsernameValid,
     StateMode? mode,
     StateStatus? stateStatus,
@@ -83,7 +82,7 @@ class ProfileState {
 
   ProfileState update({
     Profile? profile,
-    List<Member>? members,
+    List<GroupUser>? members,
     bool? isUsernameValid,
     StateMode? mode,
     StateStatus? state,

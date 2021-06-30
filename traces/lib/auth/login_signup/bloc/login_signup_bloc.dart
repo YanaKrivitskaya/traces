@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:traces/auth/model/login.model.dart';
-import 'package:traces/auth/model/user.model.dart';
+import 'package:traces/auth/model/account.model.dart';
 import 'package:traces/auth/repository/api_user_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 import 'package:traces/utils/helpers/validation_helper.dart';
@@ -133,7 +133,7 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginSignupState> {
         isReseted: false
     );
     try{
-      final user = User(
+      final user = Account(
         name: username,
         email: email,
         password: password

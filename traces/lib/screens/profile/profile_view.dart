@@ -1,18 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/auth/auth_bloc/bloc.dart';
-import 'package:traces/constants/color_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/profile/add_family_button.dart';
-import 'package:traces/screens/profile/bloc/profile/bloc.dart';
-import 'package:traces/screens/profile/edit_family_button.dart';
-import 'package:traces/screens/profile/model/member.dart';
-import 'package:traces/screens/profile/model/profile.dart';
-import 'package:traces/screens/profile/name_edit_button.dart';
-
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/utils/misc/state_types.dart';
-import 'package:traces/widgets/widgets.dart';
+
+import '../../auth/auth_bloc/bloc.dart';
+import '../../constants/color_constants.dart';
+import '../../utils/misc/state_types.dart';
+import '../../utils/style/styles.dart';
+import '../../widgets/widgets.dart';
+import 'add_family_button.dart';
+import 'bloc/profile/bloc.dart';
+import 'family_dialog.dart';
+import 'model/group_model.dart';
+import 'model/profile_model.dart';
+import 'name_edit_button.dart';
+import 'user_delete_alert.dart';
+import 'vertical_user_list_item.dart';
 
 
 class ProfileView extends StatefulWidget{
@@ -22,21 +26,56 @@ class ProfileView extends StatefulWidget{
 }
 
 class _ProfileViewState extends State<ProfileView>{
-
+  SlidableController? slidableController; 
   Profile? _profile;
-  List<Member>? _familyMembers;
+  Group? _familyGroup;
 
+  void initState() { 
+    slidableController = SlidableController();
+    super.initState(); 
+  }
+
+  // for Slidable animation
+  void handleSlideIsOpenChanged(bool isOpen) { }
+  void handleSlideAnimationChanged(Animation<double> slideAnimation) { }  
+  
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileBloc, ProfileState>(
+    return BlocListener<ProfileBloc, ProfileState>(
+      listener: (context, state){
+        if(state.status == StateStatus.Error){
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 250,
+                      child: Text(
+                        state.errorMessage!, style: quicksandStyle(color: ColorsPalette.lynxWhite),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                    Icon(Icons.error, color: ColorsPalette.lynxWhite,)],
+                ),
+               // duration: const Duration(seconds: 5),
+                backgroundColor: ColorsPalette.redPigment,
+              ),
+            );
+        }
+      },
+      child: BlocBuilder<ProfileBloc, ProfileState>(
       bloc: BlocProvider.of(context),
       builder: (context, state){
         if(state.status == StateStatus.Loading){
           return Center(child: CircularProgressIndicator());
         }
-        if(state.status == StateStatus.Success){
+        if(state.status == StateStatus.Success || state.status == StateStatus.Error){
           _profile = state.profile;
-          _familyMembers = state.familyMembers;
+          _familyGroup = _profile!.groups?.firstWhere((g) => g.name == "Family" && g.ownerAccountId == _profile!.accountId, orElse: null);
 
           return Container(
             padding: EdgeInsets.all(10.0),
@@ -47,14 +86,14 @@ class _ProfileViewState extends State<ProfileView>{
                     children: <Widget>[
                       CircleAvatar(
                           backgroundColor: ColorsPalette.lynxWhite,
-                          child: Text(getAvatarName(_profile!.displayName), style: TextStyle(color: ColorsPalette.meditSea, fontSize: 40.0, fontWeight: FontWeight.w300),),
+                          child: Text(getAvatarName(_profile!.name), style: TextStyle(color: ColorsPalette.meditSea, fontSize: 40.0, fontWeight: FontWeight.w300),),
                           radius: 50.0
                       ),
                       Expanded(child: Align(child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(_profile!.displayName, style: TextStyle(fontSize: 20.0)),
-                          NameEditButton()
+                          Text(_profile!.name, style: TextStyle(fontSize: 20.0)),
+                          NameEditButton(userId: _profile!.userId)
                         ],
                       ), alignment: Alignment.center,))
                     ],
@@ -63,57 +102,98 @@ class _ProfileViewState extends State<ProfileView>{
                     padding: EdgeInsets.only(right: 10.0, left: 10.0),
                     alignment: Alignment.centerLeft,
                     child: Row(children: <Widget>[
-                      Text("Email: " + _profile!.email!, style: TextStyle(fontSize: 15.0)),
-                      _profile!.isEmailVerified!
+                      Text("Email: " + _profile!.email, style: TextStyle(fontSize: 15.0)),
+                      _profile!.emailVerified
                           ? IconButton(icon: Icon(Icons.check, color: ColorsPalette.meditSea), tooltip: 'Verified', onPressed: () {})
                           : IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.fusionRed), tooltip: 'Not verified', onPressed: () {}),
                     ],),
                   ),
                   /*Align(
-           alignment: Alignment.centerLeft,
-           child: FlatButton(
-             color: ColorsPalette.fusionRed,
-             child: Text("Verify email", style: TextStyle(color: ColorsPalette.lynxWhite),),
-             onPressed: (){},
-           ),
-         ),*/
+                      alignment: Alignment.centerLeft,
+                      child: FlatButton(
+                        color: ColorsPalette.fusionRed,
+                        child: Text("Verify email", style: TextStyle(color: ColorsPalette.lynxWhite),),
+                        onPressed: (){},
+                      ),
+                    ),*/
                   Divider(color: ColorsPalette.meditSea),
-                  Align(
-                    alignment: Alignment.centerLeft,child: Text("Family", style: TextStyle(fontSize: 20.0, color: ColorsPalette.meditSea)),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(right: 10.0),                   
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    child: SingleChildScrollView(child: Column(
-                      children: <Widget>[
-                        _familyMembers!.length > 0
-                            ? Container(
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: _familyMembers!.length,
-                              itemBuilder: (context, position){
-                                final member = _familyMembers![position];
-                                return ListTile(
-                                  title: Text(member.name!),
-                                  trailing: EditFamilyButton(member),
-                                );
-                              }),
-                        )
-                            : Container(child: Align(child: Text("No one added yet"), alignment: Alignment.centerLeft)),
-                        Align(
-                            alignment: Alignment.centerLeft,child: AddFamilyButton()
-                        ),
-                      ],
-                    ),)
-                  ),
+                  _familyGroup != null ? 
+                  _familyGroupWidget(_familyGroup!, _profile!.accountId, _profile!.userId): Container(),                  
                   _footer()
                 ],
               ),
             )
           );
-        }else return Container();
+        }else return loadingWidget(ColorsPalette.meditSea);
       },
+    ),
+    );    
+  }
+
+  Widget _familyGroupWidget(Group group, int accountId, int userId){
+    group.users.removeWhere((u) => u.userId == userId);
+    return Container(
+      child: Column(children: [
+        Align(
+          alignment: Alignment.centerLeft,child: Text(group.name, style: TextStyle(fontSize: 20.0, color: ColorsPalette.meditSea)),
+        ),
+        Container(
+          padding: EdgeInsets.only(right: 10.0),
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: SingleChildScrollView(
+            child: Column(children: [
+              group.users.length > 0 ? Container(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: group.users.length,
+                  itemBuilder: (context, position){
+                    final member = group.users[position];
+                    return Slidable(key: Key(member.userId!.toString()),
+                      controller: slidableController,
+                      direction: Axis.horizontal,                      
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: VerticalUserListItem(group, member),
+                      actions: member.accountId == null || member.accountId == accountId ? [
+                        IconSlideAction(
+                          color: ColorsPalette.meditSea, 
+                          icon: FontAwesomeIcons.edit, 
+                          onTap: () => showDialog(barrierDismissible: false, context: context,builder: (_) =>
+                            BlocProvider.value(
+                              value: context.read<ProfileBloc>()..add(ShowFamilyDialog()),
+                              child: FamilyDialog(member, group.id!),
+                            )
+                        )
+                        ), 
+                      ] : [],
+                      secondaryActions: <Widget>[
+                        IconSlideAction(
+                          color: ColorsPalette.carminePink, 
+                          icon: FontAwesomeIcons.trashAlt, 
+                          onTap: () => showDialog(barrierDismissible: false, context: context,builder: (_) =>
+                            BlocProvider.value(
+                              value: context.read<ProfileBloc>()..add(ShowFamilyDialog()),
+                              child: UserDeleteAlert(user: member, group: group),
+                            )
+                        ), 
+                        ), 
+                      ], 
+                    );
+                    /*return ListTile(
+                      title: Text(member.name),
+                      trailing: EditFamilyButton(member, group.id!),
+                    );*/
+                  }),
+              )
+              : Container(child: Align(child: Text("No one added yet"), alignment: Alignment.centerLeft)),
+                Align(
+                  alignment: Alignment.centerLeft,child: AddFamilyButton(group.id!)
+                ),
+            ],)
+          ),
+        )
+      ],),
     );
   }
 

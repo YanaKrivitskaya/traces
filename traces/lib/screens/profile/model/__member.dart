@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:traces/screens/profile/model/member_entity.dart';
+import 'package:traces/screens/profile/model/__member_entity.dart';
 
 @immutable
 class Member{  

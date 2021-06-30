@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:traces/screens/profile/model/profile_entity.dart';
+import 'package:traces/screens/profile/model/__profile_entity.dart';
 
 @immutable class Profile{
   final String? email;

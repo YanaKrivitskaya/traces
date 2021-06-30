@@ -1,10 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/profile/bloc/profile/bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../constants/color_constants.dart';
+import 'bloc/profile/bloc.dart';
+
 class NameEditButton extends StatelessWidget {
+  final int userId;
+
+  const NameEditButton({
+    Key? key,
+    required this.userId,
+  }) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -13,7 +22,7 @@ class NameEditButton extends StatelessWidget {
           showDialog(barrierDismissible: false, context: context,builder: (_) =>
               BlocProvider.value(
                 value: context.read<ProfileBloc>(),
-                child: NameEditDialog(),
+                child: NameEditDialog(userId: userId),
               ),
           );
         });
@@ -21,6 +30,10 @@ class NameEditButton extends StatelessWidget {
 }
 
 class NameEditDialog extends StatefulWidget{
+
+  final int userId;
+
+  const NameEditDialog({Key? key, required this.userId}) : super(key: key);
 
   @override
   _NameEditDialogState createState() => new _NameEditDialogState();
@@ -33,7 +46,7 @@ class _NameEditDialogState extends State<NameEditDialog>{
   void initState() {
     super.initState();
 
-    _usernameController = TextEditingController(text: context.read<ProfileBloc>().state.profile!.displayName);
+    _usernameController = TextEditingController(text: context.read<ProfileBloc>().state.profile!.name);
     _usernameController!.addListener(_onUsernameChanged);
   }
 
@@ -54,7 +67,7 @@ class _NameEditDialogState extends State<NameEditDialog>{
           TextButton(
             child: Text('Done'),
             onPressed: () {
-              context.read<ProfileBloc>().add(UsernameUpdated(username: _usernameController!.text));
+              context.read<ProfileBloc>().add(UsernameUpdated(userId: widget.userId, username: _usernameController!.text));
               Navigator.pop(context);
             },
             style: ButtonStyle(

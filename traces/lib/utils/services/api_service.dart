@@ -273,7 +273,9 @@ class ApiService {
       case 400:
         throw CustomException("Invalid Request: $errorMessage");
       case 401:
-        throw UnauthorisedException(errorMessage);      
+        throw UnauthorisedException(errorMessage); 
+      case 403:
+        throw ForbiddenException(errorMessage);      
       default:
         throw CustomException(
             'Server Error. StatusCode: ${response.statusCode}. Error: ${errorMessage}');
