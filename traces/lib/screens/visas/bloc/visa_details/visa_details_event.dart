@@ -8,7 +8,7 @@ abstract class VisaDetailsEvent {
 }
 
 class GetVisaDetails extends VisaDetailsEvent {
-  final String visaId;
+  final int visaId;
 
   GetVisaDetails(this.visaId);
 
@@ -30,7 +30,7 @@ class UpdateVisaDetailsSuccess extends VisaDetailsEvent {
 class UpdateVisaDetailsEditing extends VisaDetailsEvent {
   final Visa? visa;
   final VisaSettings settings;
-  final List<Member> members;
+  final Group members;
   final UserSettings userSettings;
 
   const UpdateVisaDetailsEditing(this.visa, this.settings, this.members, this.userSettings);
@@ -42,7 +42,7 @@ class UpdateVisaDetailsEditing extends VisaDetailsEvent {
 class NewVisaMode extends VisaDetailsEvent {}
 
 class EditVisaClicked extends VisaDetailsEvent {
-  final String visaId;
+  final int visaId;
 
   EditVisaClicked(this.visaId);
 
@@ -51,7 +51,7 @@ class EditVisaClicked extends VisaDetailsEvent {
 }
 
 class DeleteVisaClicked extends VisaDetailsEvent {
-  final String? visaId;
+  final int? visaId;
 
   DeleteVisaClicked(this.visaId);
 

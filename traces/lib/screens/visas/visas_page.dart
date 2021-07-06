@@ -28,7 +28,7 @@ class VisasPage extends StatelessWidget {
         body: VisasView(activeTab: activeTab),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(context, visaEditRoute, arguments: '');
+            Navigator.pushNamed(context, visaEditRoute, arguments: 0);
           },
           tooltip: 'Add New Visa',
           backgroundColor: ColorsPalette.algalFuel,

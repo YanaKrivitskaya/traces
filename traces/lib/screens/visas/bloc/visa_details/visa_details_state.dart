@@ -2,9 +2,7 @@ part of 'visa_details_bloc.dart';
 
 class VisaDetailsState {
   Visa? visa;
-  final VisaSettings? settings;
-  final UserSettings? userSettings;
-  final List<Member>? familyMembers;
+  final Group? familyGroup;
   final List<EntryExit>? entryExits;
   final StateStatus status;
   final StateMode mode;  
@@ -12,10 +10,8 @@ class VisaDetailsState {
   final int? activeTab;
 
   VisaDetailsState(
-      {required this.visa,
-      required this.settings,
-      required this.userSettings,
-      required this.familyMembers,
+      {required this.visa,     
+      required this.familyGroup,
       required this.entryExits,
       required this.status,
       required this.mode,      
@@ -23,10 +19,8 @@ class VisaDetailsState {
 
   factory VisaDetailsState.empty() {
     return VisaDetailsState(
-        visa: null,
-        settings: null,
-        userSettings: null,
-        familyMembers: null,
+        visa: null,       
+        familyGroup: null,
         entryExits: null,
         status: StateStatus.Empty,
         mode: StateMode.View,
@@ -36,10 +30,8 @@ class VisaDetailsState {
 
   factory VisaDetailsState.loading() {
     return VisaDetailsState(
-        visa: null,
-        settings: null,
-        userSettings: null,
-        familyMembers: null,
+        visa: null,       
+        familyGroup: null,
         entryExits: null,
         status: StateStatus.Loading,
         mode: StateMode.View,
@@ -48,16 +40,12 @@ class VisaDetailsState {
   }
 
   factory VisaDetailsState.editing(
-      {Visa? visa,
-      VisaSettings? settings,
-      UserSettings? userSettings,
-      List<Member>? members,
+      {Visa? visa,     
+      Group? members,
       bool? autovalidate}) {
     return VisaDetailsState(
-        visa: visa,
-        settings: settings,
-        userSettings: userSettings,
-        familyMembers: members,
+        visa: visa,        
+        familyGroup: members,
         status: StateStatus.Empty,
         mode: StateMode.Edit,        
         errorMessage: "", entryExits: null,
@@ -68,13 +56,11 @@ class VisaDetailsState {
       {Visa? visa,
       VisaSettings? settings,
       UserSettings? userSettings,
-      List<Member>? members,
+      Group? members,
       List<EntryExit>? entryExits}) {
     return VisaDetailsState(
-        visa: visa,
-        settings: settings,
-        userSettings: userSettings,
-        familyMembers: members,
+        visa: visa,        
+        familyGroup: members,
         entryExits: entryExits,
         status: StateStatus.Success,
         mode: StateMode.View,
@@ -82,18 +68,14 @@ class VisaDetailsState {
   }
 
   factory VisaDetailsState.failure(
-      {Visa? visa,
-      VisaSettings? settings,
-      UserSettings? userSettings,
-      List<Member>? members,
+      {Visa? visa,      
+      Group? members,
       List<EntryExit>? entryExits,
       bool? autovalidate,
       String? error}) {
     return VisaDetailsState(
-        visa: visa,
-        settings: settings,
-        userSettings: userSettings,
-        familyMembers: members,
+        visa: visa,        
+        familyGroup: members,
         entryExits: entryExits,
         status: StateStatus.Error,
         mode: StateMode.View,        
@@ -101,19 +83,15 @@ class VisaDetailsState {
   }
 
   VisaDetailsState copyWith(
-      {final Visa? visa,
-      final VisaSettings? settings,
-      final UserSettings? userSettings,
-      final List<Member>? members,
+      {final Visa? visa,      
+      final Group? members,
       final List<EntryExit>? entryExits,
       final StateStatus? status,
       final StateMode? mode,      
       String? errorMessage, int? activeTab}) {
     return VisaDetailsState(
-        visa: visa ?? this.visa,
-        settings: settings ?? this.settings,
-        userSettings: userSettings ?? this.userSettings,
-        familyMembers: members ?? this.familyMembers,
+        visa: visa ?? this.visa,        
+        familyGroup: members ?? this.familyGroup,
         entryExits: entryExits ?? this.entryExits,
         status: status ?? this.status,
         mode: mode ?? this.mode,       
@@ -123,18 +101,14 @@ class VisaDetailsState {
   }
 
   VisaDetailsState update(
-      {Visa? visa,
-      VisaSettings? settings,
-      UserSettings? userSettings,
+      {Visa? visa,      
       List<EntryExit>? entryExits,
       StateStatus? status,
       StateMode? mode,      
       String? errorMessage, int? activeTab}) {
     return copyWith(
-        visa: visa,
-        settings: settings,
-        userSettings: userSettings,
-        members: familyMembers,
+        visa: visa,        
+        members: familyGroup,
         entryExits: entryExits,
         status: status,
         mode: mode,        

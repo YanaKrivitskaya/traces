@@ -5,7 +5,7 @@ import '../model/user_countries.dart';
 import '../model/visa.dart';
 
 abstract class VisasRepository {
-  Stream<List<Visa>> visas();
+ /* Stream<List<Visa>> visas();
 
   Stream<List<EntryExit>> entryExits(String? visaId);
 
@@ -29,5 +29,5 @@ abstract class VisasRepository {
 
   Future<Visa> getVisaById(String id);
 
-  Future<EntryExit> getEntryExitById(String id, String visaId);
+  Future<EntryExit> getEntryExitById(String id, String visaId);*/
 }

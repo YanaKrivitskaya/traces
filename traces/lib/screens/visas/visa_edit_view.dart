@@ -5,16 +5,17 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/profile/model/__member.dart';
+import 'package:traces/screens/profile/model/group_user_model.dart';
+import 'package:traces/screens/visas/model/visa.model.dart';
+import 'package:traces/screens/visas/model/visa_settings.model.dart';
 import 'package:traces/utils/misc/state_types.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
 import 'bloc/visa_details/visa_details_bloc.dart';
-import 'model/visa.dart';
 
 class VisaEditView extends StatefulWidget {
-  final String? visaId;
+  final int? visaId;
 
   VisaEditView({Key? key, this.visaId}) : super(key: key);
 
@@ -25,7 +26,7 @@ class VisaEditView extends StatefulWidget {
 class _VisaEditViewState extends State<VisaEditView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController? _countryController;
-  TextEditingController? _durationController;
+  TextEditingController? _durationController;  
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _VisaEditViewState extends State<VisaEditView> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-          title: Text(widget.visaId == '' ? 'New Visa' : 'Edit Visa',
+          title: Text(widget.visaId == 0 ? 'New Visa' : 'Edit Visa',
               style: GoogleFonts.quicksand(
                   textStyle: TextStyle(
                       color: ColorsPalette.lynxWhite, fontSize: 25.0))),
@@ -76,21 +77,16 @@ class _VisaEditViewState extends State<VisaEditView> {
                         maxLines: 5,
                       ),
                     ),
-                    Icon(Icons.error)
+                    Icon(Icons.error, color: ColorsPalette.lynxWhite)
                   ],
                 ),
               ),
             );
         }
         if (state.mode == StateMode.Edit) {
-          if (state.visa == null) {
-            state.visa = new Visa(
-                startDate: DateTime.now(),
-                endDate: DateTime.now(),
-                entryExitIds: <String>[]);
-          } else {
-            _countryController!.text = state.visa!.countryOfIssue!;
-            _durationController!.text = state.visa!.durationOfStay.toString();
+          if (widget.visaId != 0) {
+            _countryController!.text = state.visa!.country ?? '';
+            _durationController!.text = state.visa!.durationOfStay != null ? state.visa!.durationOfStay.toString() : '';
           }
         }
         if (state.status == StateStatus.Loading &&
@@ -130,7 +126,7 @@ class _VisaEditViewState extends State<VisaEditView> {
                       child: Text(
                         widget.visaId == ''
                             ? "Visa created successfully"
-                            : "Visa update successfully",
+                            : "Visa updated successfully",
                         style: GoogleFonts.quicksand(
                             textStyle:
                                 TextStyle(color: ColorsPalette.lynxWhite)),
@@ -138,7 +134,7 @@ class _VisaEditViewState extends State<VisaEditView> {
                         maxLines: 5,
                       ),
                     ),
-                    Icon(Icons.info)
+                    Icon(Icons.info, color: ColorsPalette.lynxWhite),
                   ],
                 ),
               ),
@@ -147,12 +143,7 @@ class _VisaEditViewState extends State<VisaEditView> {
             Navigator.popAndPushNamed(context, visaDetailsRoute,
                 arguments: state.visa!.id);
           });
-        }
-        if (state.mode == StateMode.Edit) {          
-          if (state.familyMembers!.length == 1) {
-            state.visa!.owner = state.familyMembers!.first.id;            
-          }
-        }
+        }        
 
       }, child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(
               builder: (context, state) {
@@ -167,7 +158,7 @@ class _VisaEditViewState extends State<VisaEditView> {
             state.status == StateStatus.Success ||
             state.status == StateStatus.Error) {
           return Container(
-              padding: EdgeInsets.all(5.0), child: _createForm(state));
+              padding: EdgeInsets.all(5.0), child: _editForm(state));
         } else {
           return Center(child: CircularProgressIndicator());
         }
@@ -176,7 +167,7 @@ class _VisaEditViewState extends State<VisaEditView> {
     );
   }
 
-  Widget _createForm(VisaDetailsState state) => new Container(
+  Widget _editForm(VisaDetailsState state) => new Container(
       color: ColorsPalette.white,
       padding: EdgeInsets.all(15.0),
       //height: MediaQuery.of(context).size.height * 0.6,
@@ -270,30 +261,29 @@ class _VisaEditViewState extends State<VisaEditView> {
           onPressed: () {
             var isFormValid = _formKey.currentState!.validate();
 
-            state.visa!.countryOfIssue = _countryController!.text.trim();
-            state.visa!.durationOfStay =
-                int.parse(this._durationController!.text.trim());
+            state.visa = state.visa!.copyWith(
+              country: _countryController!.text.trim(),
+              durationOfStay: int.parse(this._durationController!.text.trim())
+            );           
 
-            context
-                .read<VisaDetailsBloc>()
-                .add(VisaSubmitted(state.visa, isFormValid));
+            context.read<VisaDetailsBloc>().add(VisaSubmitted(state.visa, isFormValid));
           }));
 
   Widget _ownerSelector(VisaDetailsState state) =>
-      new DropdownButtonFormField<String>(
-          value: state.visa!.owner,
+      new DropdownButtonFormField<GroupUser>(
+          value: state.visa!.user,
           isExpanded: true,
           decoration: InputDecoration(
               labelText: "Visa owner",
               labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-          items: state.familyMembers!.map((Member member) {
-            return new DropdownMenuItem<String>(
-              value: member.id,
-              child: new Text(member.name!),
+          items: state.familyGroup!.users.map((GroupUser member) {
+            return new DropdownMenuItem<GroupUser>(
+              value: member,
+              child: new Text(member.name),
             );
           }).toList(),
-          onChanged: (String? value) {
-            state.visa!.owner = value;
+          onChanged: (GroupUser? value) {
+            state.visa = state.visa!.copyWith(user: value);
           },
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (value) {
@@ -307,15 +297,15 @@ class _VisaEditViewState extends State<VisaEditView> {
             labelText: 'Country of issue',
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
       ),
-      // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCountries = state.userSettings!.countries!
+          /*var filteredCountries = state.userSettings!.countries!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCountries.length > 0) {
             return filteredCountries;
-          }          
+          }  */    
+          return [];    
         }
         return [];
       },
@@ -360,14 +350,14 @@ class _VisaEditViewState extends State<VisaEditView> {
         decoration: InputDecoration(
             labelText: "Type",
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-        items: state.settings!.visaTypes!.map((String value) {
+        items: VisaSettings.visaTypes.map((String value) {
           return new DropdownMenuItem<String>(
             value: value,
             child: new Text(value),
           );
         }).toList(),
         onChanged: (String? value) {
-          state.visa!.type = value;
+          state.visa = state.visa!.copyWith(type: value);
           FocusScope.of(context).unfocus();
         },
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -378,21 +368,20 @@ class _VisaEditViewState extends State<VisaEditView> {
 
   Widget _entriesNumberSelector(VisaDetailsState state) =>
       new DropdownButtonFormField<String>(
-        value: state.visa!.numberOfEntries,
+        value: state.visa!.entriesType,
         isExpanded: true,
         decoration: InputDecoration(
             labelText: "Entries",
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-        items: state.settings!.entries!.map((String value) {
+        items: VisaSettings.entries.map((String value) {
           return new DropdownMenuItem<String>(
             value: value,
             child: new Text(value),
           );
         }).toList(),
         onChanged: (String? value) {
-          state.visa!.numberOfEntries = value;
-          FocusScope.of(context).unfocus();
-          //context.bloc<FamilyBloc>().add(GenderUpdated(gender: value));
+          state.visa = state.visa!.copyWith(entriesType: value);        
+          FocusScope.of(context).unfocus();          
         },
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: (value) {
@@ -413,9 +402,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         initialDate: state.visa!.startDate!,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != state.visa!.startDate) {
-      state.visa!.durationOfStay =
-          int.parse(this._durationController!.text.trim());
+    if (picked != null && picked != state.visa!.startDate) {     
       context.read<VisaDetailsBloc>().add(DateFromChanged(picked));
     }
   }
@@ -433,9 +420,7 @@ class _VisaEditViewState extends State<VisaEditView> {
         initialDate: state.visa!.startDate!.add(new Duration(days: 1)),
         firstDate: state.visa!.startDate!.add(new Duration(days: 1)),
         lastDate: DateTime(2101));
-    if (picked != null && picked != state.visa!.endDate) {
-      state.visa!.durationOfStay =
-          int.parse(this._durationController!.text.trim());
+    if (picked != null && picked != state.visa!.endDate) {      
       context.read<VisaDetailsBloc>().add(DateToChanged(picked));
     }
   }

@@ -1,15 +1,15 @@
-part of 'entry_exit_bloc.dart';
+part of 'visa_entry_bloc.dart';
 
 @immutable
-abstract class EntryExitEvent {
-  const EntryExitEvent();
+abstract class VisaEntryEvent {
+  const VisaEntryEvent();
 
   List<Object?> get props => [];
 }
 
-class GetEntryDetails extends EntryExitEvent {
+class GetEntryDetails extends VisaEntryEvent {
   final Visa? visa;
-  final EntryExit? entry;
+  final VisaEntry? entry;
 
   GetEntryDetails(this.entry, this.visa);
 
@@ -17,9 +17,9 @@ class GetEntryDetails extends EntryExitEvent {
   List<Object?> get props => [entry, visa];
 }
 
-class SubmitEntry extends EntryExitEvent {
+class SubmitEntry extends VisaEntryEvent {
   final Visa? visa;
-  final EntryExit? entry;
+  VisaEntry? entry;
 
   SubmitEntry(this.entry, this.visa);
 
@@ -27,9 +27,9 @@ class SubmitEntry extends EntryExitEvent {
   List<Object?> get props => [entry, visa];
 }
 
-class DeleteEntry extends EntryExitEvent {
+class DeleteEntry extends VisaEntryEvent {
   final Visa? visa;
-  final EntryExit? entry;
+  final VisaEntry? entry;
 
   DeleteEntry(this.entry, this.visa);
 
@@ -37,7 +37,7 @@ class DeleteEntry extends EntryExitEvent {
   List<Object?> get props => [entry, visa];
 }
 
-class EntryDateChanged extends EntryExitEvent {
+class EntryDateChanged extends VisaEntryEvent {
   final DateTime entryDate;
 
   EntryDateChanged(this.entryDate);
@@ -46,7 +46,7 @@ class EntryDateChanged extends EntryExitEvent {
   List<Object> get props => [entryDate];
 }
 
-class ExitDateChanged extends EntryExitEvent {
+class ExitDateChanged extends VisaEntryEvent {
   final DateTime exitDate;
 
   ExitDateChanged(this.exitDate);

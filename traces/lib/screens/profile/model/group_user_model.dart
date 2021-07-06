@@ -58,10 +58,9 @@ class GroupUser {
     return other is GroupUser &&
       other.userId == userId &&
       other.accountId == accountId &&
-      other.name == name &&
-      other.isOwner == isOwner;
+      other.name == name;
   }
 
   @override
-  int get hashCode => userId.hashCode ^ accountId.hashCode ^ name.hashCode ^ isOwner.hashCode;
+  int get hashCode => userId.hashCode ^ accountId.hashCode ^ name.hashCode;
 }

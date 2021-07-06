@@ -2,20 +2,14 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-import '../../screens/settings/repository/appSettings_repository.dart';
-import '../../screens/settings/repository/firebase_appSettings_repository.dart';
 import '../repository/api_user_repository.dart';
 import 'bloc.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
-  
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {  
   final ApiUserRepository _userRepository;
-  /*final AppSettingsRepository _appSettingsRepository;*/
 
   AuthenticationBloc(): 
       _userRepository = new ApiUserRepository(),
-      /*_appSettingsRepository = new FirebaseAppSettingsRepository(),*/
       super(Uninitialized());
 
   @override
@@ -32,9 +26,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
     try{
       final user = await _userRepository.getAccessToken();
-      if(user != null){        
-        //final userSettings = await _appSettingsRepository.userSettings();
-        yield Authenticated(user/*, userSettings*/, null);
+      if(user != null){
+        
+        yield Authenticated(user, null);
       }else yield Unauthenticated();
     }catch(_){
       yield Unauthenticated();
