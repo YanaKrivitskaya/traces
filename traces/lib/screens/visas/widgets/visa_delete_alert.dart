@@ -1,11 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:traces/screens/visas/bloc/visa_details/visa_details_bloc.dart';
-import 'package:traces/screens/visas/model/visa.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/widgets/widgets.dart';
+
+import '../../../constants/color_constants.dart';
+import '../../../constants/route_constants.dart';
+import '../../../widgets/widgets.dart';
+import '../bloc/visa_details/visa_details_bloc.dart';
+import '../model/visa.model.dart';
 
 class VisaDeleteAlert extends StatelessWidget {
   final Visa? visa;
@@ -23,7 +24,7 @@ class VisaDeleteAlert extends StatelessWidget {
           content: SingleChildScrollView(            
             child: Column( crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${visa!.countryOfIssue} - ${visa!.type}'),
+                Text('${visa!.country} - ${visa!.type}'),
                 Text('${DateFormat.yMMMd().format(visa!.startDate!)} - ${DateFormat.yMMMd().format(visa!.endDate!)}'),
                 Divider(color: ColorsPalette.algalFuel,),
                 Text('All visa entries will be deleted')
@@ -36,7 +37,7 @@ class VisaDeleteAlert extends StatelessWidget {
               onPressed: () {
                 context.read<VisaDetailsBloc>().add(DeleteVisaClicked(visa!.id));
                 callback!("Delete");
-                Navigator.pop(context);
+                Navigator.of(context).pushReplacementNamed (visasRoute);
               },
             ),
             TextButton(

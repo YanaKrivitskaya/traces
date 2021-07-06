@@ -14,6 +14,14 @@ class ApiProfileRepository{
     return profile;
   }
 
+  Future<List<Group>> getGroups() async{
+    print("getGroups");
+    final response = await apiProvider.getSecure('${profileUrl}groups');
+    var groups = response["groups"] != null ? 
+      response['groups'].map<Group>((map) => Group.fromMap(map)).toList() : null;
+    return groups;
+  }
+
   Future<Group> getGroupUsers(int groupId) async{
     print("getGroupUsers");
     final response = await apiProvider.getSecure(profileUrl + 'groups/$groupId/users');

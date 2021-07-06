@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/utils/style/styles.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
@@ -8,7 +9,7 @@ import '../../utils/misc/state_types.dart';
 import '../../widgets/widgets.dart';
 import 'bloc/visa/visa_bloc.dart';
 import 'helpers.dart';
-import 'model/visa.dart';
+import 'model/visa.model.dart';
 import 'model/visa_tab.dart';
 
 class VisasView extends StatefulWidget {
@@ -26,10 +27,38 @@ class _VisasViewState extends State<VisasView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<VisaBloc, VisaState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state.status == StateStatus.Error){
+            ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                backgroundColor: ColorsPalette.redPigment,
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 250,
+                      child: Text(
+                        state.errorMessage!,
+                        style: quicksandStyle(color: ColorsPalette.lynxWhite),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                    Icon(Icons.error, color: ColorsPalette.lynxWhite)
+                  ],
+                ),
+              ));
+          }
+      },
+
       child: BlocBuilder<VisaBloc, VisaState>(
         bloc: BlocProvider.of(context),
         builder: (context, state) {
+          if(state.status == StateStatus.Error){
+            return Center(child: Icon(Icons.error),);
+          }
           if (state.status == StateStatus.Loading)
             return loadingWidget(ColorsPalette.algalFuel);
 
@@ -42,47 +71,38 @@ class _VisasViewState extends State<VisasView> {
 
               this.visas = _sortVisas(visas);
 
-              return Container(
+              return RefreshIndicator(      
+                onRefresh: () async => context.read<VisaBloc>().add(GetAllVisas()),
+                child:  Container(
                   padding: EdgeInsets.all(5.0),
                   child: SingleChildScrollView(
-                      child: Column(children: [
-                    this.visas != null && this.visas.length > 0
-                        ? Container(
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: this.visas.length,
-                                itemBuilder: (context, position) {
-                                  final visa = this.visas[position];
-                                  return Card(
-                                    child: InkWell(
-                                        onTap: () {
-                                          Navigator.pushNamed(context, visaDetailsRoute, arguments: visa.id);
-                                        },
-                                        child: Container(
-                                            padding: EdgeInsets.all(10.0),
-                                            child: Column(
-                                              children: <Widget>[
-                                                Row( mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    avatar(visa.owner!, 30.0, ColorsPalette.algalFuel, 25.0),
-                                                    _visaDetails(visa)
-                                                  ],
-                                                )
-                                              ],
-                                            ))),
-                                  );
-                                }))
-                        : Center(
-                            child: Container(
-                                padding: EdgeInsets.only(top: 20.0),
-                                child: Text("No items here",
-                                    style: TextStyle(fontSize: 18.0))))
-                  ])));
+                    child: Column(children: [
+                      this.visas.length > 0 ? Container(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: this.visas.length,
+                          itemBuilder: (context, position) {
+                            final visa = this.visas[position];
+                            return Card(child: InkWell(
+                              onTap: () => Navigator.pushReplacementNamed(context, visaDetailsRoute, arguments: visa.id),
+                              child: Container(padding: EdgeInsets.all(10.0),
+                                child: Column(children: <Widget>[
+                                  Row( mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+                                    avatar(visa.user!.name, 30.0, ColorsPalette.algalFuel, 25.0),
+                                    _visaDetails(visa)
+                                  ])]))),
+                            );
+                        }))
+                        : Center(child: Container(
+                            padding: EdgeInsets.only(top: 20.0),
+                            child: Text("No items here", style: TextStyle(fontSize: 18.0))))
+                    ]))));
             }
             return loadingWidget(ColorsPalette.algalFuel);
           }),
     );
+    
   }
 
   Widget _visaDetails(Visa visa) => new Container(
@@ -90,7 +110,7 @@ class _VisasViewState extends State<VisasView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(visa.countryOfIssue! + ' - ' + visa.type!,
+            Text(visa.country! + ' - ' + visa.type!,
                 style: TextStyle(
                     fontSize: 15.0,
                     color: ColorsPalette.mazarineBlue,

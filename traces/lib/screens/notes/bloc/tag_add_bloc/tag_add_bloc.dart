@@ -50,7 +50,7 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
   Stream<TagAddState> _mapAddTagToState(AddTag event) async* {
     yield state.update(stateStatus: StateStatus.Loading);
 
-    Tag tag = await (_tagsRepository.createTag(event.tag) as FutureOr<Tag>);
+    Tag tag = await _tagsRepository.createTag(event.tag);
     state.allTags!.add(tag);
 
     add(TagChanged(tagName: tag.name));    

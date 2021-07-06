@@ -1,22 +1,22 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/utils/misc/state_types.dart';
-import '../../model/visa.dart';
+
+import '../../../../utils/misc/state_types.dart';
+import '../../model/visa.model.dart';
 import '../../model/visa_tab.dart';
-import '../../repository/visas_repository.dart';
+import '../../repository/api_visas_repository.dart';
 
 part 'visa_event.dart';
 part 'visa_state.dart';
 
 class VisaBloc extends Bloc<VisaEvent, VisaState> {
-  //final VisasRepository _visasRepository;
-  StreamSubscription? _visasSubscription;
+  final ApiVisasRepository visasRepository; 
 
-  VisaBloc(/*{required VisasRepository visasRepository}*/)
-      : /*assert(visasRepository != null),     
-        _visasRepository = visasRepository,*/
+  VisaBloc(): 
+        visasRepository = new ApiVisasRepository(),
         super(VisaState.empty());
 
   @override
@@ -35,10 +35,15 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
   Stream<VisaState> _mapGetVisasToState(GetAllVisas event) async* {
     yield VisaState.loading();
 
-    _visasSubscription?.cancel();
+    try{
+      var visas = await visasRepository.getVisas();
+      yield VisaState.success(allVisas: visas);
+    } catch(e){
+      yield VisaState.failure(error: e.toString());
+    }
 
-   /* _visasSubscription = _visasRepository.visas().listen(
-          (visas) => add(UpdateVisasList(visas)),
-        );*/
+   
+
+   
   }
 }

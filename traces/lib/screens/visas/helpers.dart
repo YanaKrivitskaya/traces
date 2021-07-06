@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
-import 'package:traces/screens/visas/model/entryExit.dart';
-import 'package:traces/screens/visas/model/visa.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/screens/visas/model/visa_entry.model.dart';
+
+import 'model/visa.model.dart';
 
 Widget isActiveLabel(Visa visa) => new Text(
     isVisaActive(visa) ? 'Active' : 'Expired',
@@ -18,13 +19,13 @@ Widget transportIcon(String? transport) => new Container(
         : Container()
 );
 
-int daysLeft(Visa visa, List<EntryExit> entries){
+int daysLeft(Visa visa, List<VisaEntry> entries){
   int daysLeft = visa.durationOfStay!;
 
   int daysTillExpiration = visa.endDate!.difference(DateTime.now()).inDays;
 
   for (var entry in entries){
-    daysLeft -= entry.duration!;
+    daysLeft -= tripDuration(entry.entryDate, entry.exitDate);
   }
 
   int? days = -1;
@@ -36,11 +37,11 @@ int daysLeft(Visa visa, List<EntryExit> entries){
   return days;
 }
 
-String daysUsed(Visa visa, List<EntryExit> entries){
+String daysUsed(Visa visa, List<VisaEntry> entries){
   int daysUsed = 0;  
 
   for (var entry in entries){    
-    daysUsed += entry.duration!;
+    daysUsed += tripDuration(entry.entryDate, entry.exitDate);
   }
   return daysUsed.toString();
 }

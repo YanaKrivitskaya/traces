@@ -1,32 +1,27 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/screens/profile/model/__member.dart';
-import 'package:traces/utils/misc/state_types.dart';
-import '../../../profile/repository/__profile_repository.dart';
-import '../../model/entryExit.dart';
-import '../../model/settings.dart';
-import '../../model/user_countries.dart';
-import '../../model/visa.dart';
-import '../../repository/visas_repository.dart';
+
+import '../../../../utils/misc/state_types.dart';
+import '../../../profile/model/group_model.dart';
+import '../../../profile/repository/api_profile_repository.dart';
+import '../../model/visa.model.dart';
+import '../../model/visa_settings.model.dart';
+import '../../repository/api_visas_repository.dart';
 
 part 'visa_details_event.dart';
 part 'visa_details_state.dart';
 
 class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
-  /*final VisasRepository _visasRepository;
-  final ProfileRepository _profileRepository;*/
-  StreamSubscription? _visasSubscription;
-  StreamSubscription? _profileSubscription;
-
-  VisaDetailsBloc(
-      /*{required VisasRepository visasRepository,
-      required ProfileRepository profileRepository}*/)
-      : /*assert(visasRepository != null),
-        _visasRepository = visasRepository,
-        _profileRepository = profileRepository,*/
-        super(VisaDetailsState.empty());
+  final ApiVisasRepository visasRepository;
+  final ApiProfileRepository profileRepository;
+  
+  VisaDetailsBloc(): 
+    profileRepository = new ApiProfileRepository(),
+    visasRepository = new ApiVisasRepository(),
+    super(VisaDetailsState.empty());
 
   @override
   Stream<VisaDetailsState> mapEventToState(VisaDetailsEvent event) async* {
@@ -38,10 +33,6 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapSaveVisaClickedToState(event.visa!);
     } else if (event is VisaSubmitted) {
       yield* _mapVisaSubmittedToState(event);
-    } else if (event is UpdateVisaDetailsSuccess) {
-      yield* _mapUpdateVisaDetailsListToSuccessState(event);
-    } else if (event is UpdateVisaDetailsEditing) {
-      yield* _mapUpdateVisaDetailsListToEditState(event);
     } else if (event is DateFromChanged) {
       yield* _mapDateFromChangedToState(event);
     } else if (event is DateToChanged) {
@@ -54,98 +45,75 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield* _mapTabUpdatedToState(event);
     }
   }
-
-  Stream<VisaDetailsState> _mapUpdateVisaDetailsListToSuccessState(
-      UpdateVisaDetailsSuccess event) async* {
-    yield VisaDetailsState.success(
-        visa: event.visa,
-        entryExits: event.entryExits,  
-        settings: event.settings);
-  }
-
-  Stream<VisaDetailsState> _mapUpdateVisaDetailsListToEditState(
-      UpdateVisaDetailsEditing event) async* {
-    yield VisaDetailsState.editing(
-        visa: event.visa,        
-        settings: event.settings,
-        userSettings: event.userSettings,
-        members: event.members);
-  }
   
-  Stream<VisaDetailsState> _mapGetVisaDetailsToState(
-      GetVisaDetails event) async* {
-   /* Visa visa = await _visasRepository.getVisaById(event.visaId);
-
-    var member = await _profileRepository.getMemberById(visa.owner);
-
-    visa.owner = member.name;
-
+  Stream<VisaDetailsState> _mapGetVisaDetailsToState(GetVisaDetails event) async* {
     yield VisaDetailsState.loading();
 
-    VisaSettings settings = await _visasRepository.settings();
-
-    _visasSubscription?.cancel();
-
-    _visasSubscription = _visasRepository.entryExits(visa.id).listen(
-          (entryExits) => add(UpdateVisaDetailsSuccess(
-              visa, entryExits, settings
-            )),
-        );*/
+    try{      
+      Visa? visa = await visasRepository.getVisaById(event.visaId);
+      yield VisaDetailsState.success(visa: visa);      
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
+    }
+    
   }
 
-  Stream<VisaDetailsState> _mapDeleteVisaEventToState(
-      DeleteVisaClicked event) async* {
-   // await _visasRepository.deleteVisa(event.visaId);
+  Stream<VisaDetailsState> _mapDeleteVisaEventToState(DeleteVisaClicked event) async* {
+    try{
+      await visasRepository.deleteVisa(event.visaId!);
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
+    }    
   }
 
   Stream<VisaDetailsState> _mapNewVisaModeToState(NewVisaMode event) async* {
     yield VisaDetailsState.loading();
 
-   /* UserSettings userSettings = await _visasRepository.userSettings();
-    VisaSettings settings = await _visasRepository.settings();
+    try{
+      List<Group> accountGroups = await profileRepository.getGroups();
+      var familyGroup = accountGroups.firstWhere((g) => g.name == "Family");
 
-    _profileSubscription?.cancel();
-    
-    _profileSubscription = _profileRepository.familyMembers().listen(
-      (members) => add(UpdateVisaDetailsEditing(null, settings, members, userSettings))
-    );   
+      Group family = await profileRepository.getGroupUsers(familyGroup.id!);
 
-    /*yield VisaDetailsState.editing(
-        visa: null,
-        settings: settings,
-        userSettings: userSettings,
-        members: members,
-        autovalidate: false);*/*/
+      Visa visa = new Visa(      
+        startDate: DateTime.now(),
+        endDate: DateTime.now()
+      );
+
+      yield VisaDetailsState.editing(
+        visa: visa,
+        members: family,
+        autovalidate: false); 
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
+    }
   }
 
   Stream<VisaDetailsState> _mapEditVisaModeToState(
       EditVisaClicked event) async* {
     yield VisaDetailsState.loading();
 
-   /* UserSettings userSettings = await _visasRepository.userSettings();
-    VisaSettings settings = await _visasRepository.settings();
-    
-    Visa visa = await _visasRepository.getVisaById(event.visaId);
+    try{
+      Visa? visa = await visasRepository.getVisaById(event.visaId);
 
-    _profileSubscription?.cancel();
-    
-    _profileSubscription = _profileRepository.familyMembers().listen(
-      (members) => add(UpdateVisaDetailsEditing(visa, settings, members, userSettings))
-    );   */
+      List<Group> accountGroups = await profileRepository.getGroups();
+      var familyGroup = accountGroups.firstWhere((g) => g.name == "Family");
 
+      Group family = await profileRepository.getGroupUsers(familyGroup.id!);
 
-    /*yield VisaDetailsState.editing(
-        visa: visa,
-        settings: settings,
-        userSettings: userSettings,
-        members: members,
-        autovalidate: false);*/
+      yield VisaDetailsState.editing(
+        visa: visa,        
+        members: family,
+        autovalidate: false);
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
+    }       
   }
 
   Stream<VisaDetailsState> _mapDateFromChangedToState(
       DateFromChanged event) async* {
     Visa updVisa = state.visa!;
-    updVisa.startDate = event.dateFrom;
+    updVisa = updVisa.copyWith(startDate: event.dateFrom);
 
     yield state.update(visa: updVisa);
   }
@@ -153,7 +121,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   Stream<VisaDetailsState> _mapDateToChangedToState(
       DateToChanged event) async* {
     Visa updVisa = state.visa!;
-    updVisa.endDate = event.dateTo;
+    updVisa = updVisa.copyWith(endDate: event.dateTo);
 
     yield state.update(visa: updVisa);
   }
@@ -173,10 +141,8 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
     if (errorMessage.isNotEmpty) {
       yield VisaDetailsState.failure(
-          visa: event.visa,
-          settings: state.settings,
-          userSettings: state.userSettings,
-          members: state.familyMembers,
+          visa: event.visa,          
+          members: state.familyGroup,
           autovalidate: true,
           error: errorMessage);
     } else {
@@ -185,39 +151,22 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   }
 
   Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async* {
-    /*yield state.copyWith(status: StateStatus.Loading, mode: StateMode.Edit);
+    yield state.copyWith(status: StateStatus.Loading, mode: StateMode.Edit);
 
-    if (visa.id != null) {
-      visa = await _visasRepository
-          .updateVisa(visa)
-          .timeout(Duration(seconds: 3), onTimeout: () {
-        print("have timeout");
-        return visa;
-      });
-    } else {
-      visa = await _visasRepository
-          .addNewVisa(visa)
-          .timeout(Duration(seconds: 3), onTimeout: () {
-        print("have timeout");
-        return visa;
-      });
+    try{
+      if (visa.id != null) {
+        visa = await visasRepository.updateVisa(visa, visa.user!.userId!);
+      } else {
+        visa = await visasRepository.createVisa(visa, visa.user!.userId!);          
+      }
+
+      yield VisaDetailsState.success(
+        visa: visa,        
+        members: state.familyGroup);
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
     }
-
-    List<String?> countries = [visa.countryOfIssue];
-
-    await _visasRepository
-          .updateUserSettings(countries, null)
-          .timeout(Duration(seconds: 3), onTimeout: () {
-        print("have timeout");
-        return null;
-      });  
-
-
-    yield VisaDetailsState.success(
-        visa: visa,
-        settings: state.settings,
-        userSettings: state.userSettings,
-        members: state.familyMembers);*/
+            
   }
 
   Stream<VisaDetailsState> _mapTabUpdatedToState(

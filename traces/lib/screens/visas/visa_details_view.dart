@@ -4,18 +4,17 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/visas/model/visa_entry.model.dart';
 import 'package:traces/utils/misc/state_types.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
-import 'bloc/entry_exit/entry_exit_bloc.dart';
+import 'bloc/visa_entry/visa_entry_bloc.dart';
 import 'bloc/visa_details/visa_details_bloc.dart';
+import 'model/visa.model.dart';
 import 'widgets/entryExit_delete_alert.dart';
-import 'entry_exit_details_view.dart';
+import 'visa_entry_details_view.dart';
 import 'helpers.dart';
-import 'model/entryExit.dart';
-import 'model/visa.dart';
-import 'repository/firebase_visas_repository.dart';
 import 'widgets/visa_delete_alert.dart';
 
 class VisaDetailsView extends StatefulWidget {
@@ -83,23 +82,24 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                 backgroundColor: ColorsPalette.mazarineBlue,
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back_ios, color: ColorsPalette.lynxWhite),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => Navigator.of(context).pushReplacementNamed (visasRoute),
                 ),
                 actions: [_editAction(state), _deleteAction(state)],
               ),
               backgroundColor: Colors.white,
-              floatingActionButton: state.activeTab == 1 && (state.entryExits!.length > 0 && state.entryExits!.last.hasExit) 
+              floatingActionButton: state.activeTab == 1 && (state.visa!.entries!.length == 0 
+              || (state.visa!.entries!.length > 0 && state.visa!.entries!.last.hasExit!)) 
                   ? FloatingActionButton(
                 onPressed: () {
                   showDialog(
                     barrierDismissible: false,
                     context: context,
-                    builder: (_) => BlocProvider<EntryExitBloc>(
+                    builder: (_) => BlocProvider<VisaEntryBloc>(
                         create: (context) =>
-                            EntryExitBloc(/*visasRepository: new FirebaseVisasRepository()*/)
+                            VisaEntryBloc()
                               ..add(GetEntryDetails(null, state.visa)),
-                        child: EntryExitDetailsView()),
-                  );
+                        child: VisaEntryDetailsView()),
+                  ).then((value) => context.read<VisaDetailsBloc>().add(GetVisaDetails(state.visa!.id!)));
                 },
                 tooltip: 'Add entry',
                 backgroundColor: ColorsPalette.algalFuel,
@@ -111,16 +111,16 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                   children: [
                     Container(
                       padding: EdgeInsets.all(5.0),
-                      child: _details(state.visa!, state.entryExits!)
+                      child: _details(state.visa!)
                     ),
                     Container(
                       padding: EdgeInsets.all(5.0),
-                      child: _entries(state.visa, _sortEntries(state.entryExits!))
+                      child: _entries(state.visa, _sortEntries(state.visa!.entries!))
                     )
                   ],
                 )
               : Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.algalFuel)))
-              );          
+              );
         }));
   }
 
@@ -149,36 +149,36 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
         },
       );
 
-  Widget _details(Visa visa, List<EntryExit> entryExits) => new Container(
+  Widget _details(Visa visa) => new Container(
     color: ColorsPalette.white, padding: EdgeInsets.all(15.0),
     child: SingleChildScrollView(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           isActiveLabel(visa),
           Divider(color: ColorsPalette.mazarineBlue, thickness: 1.0),
-          Text(visa.owner!, style: TextStyle(
+          Text(visa.user!.name, style: TextStyle(
             color: ColorsPalette.mazarineBlue,
             fontSize: 15.0,
             fontWeight: FontWeight.bold),
           ),
-          Text(visa.countryOfIssue! + ' - ' + visa.type!, style: TextStyle(
+          Text(visa.country! + ' - ' + visa.type!, style: TextStyle(
             fontSize: 15.0,
             color: ColorsPalette.mazarineBlue,
             fontWeight: FontWeight.bold)),
-          Text(visa.numberOfEntries!, style: TextStyle(fontSize: 15.0)),
+          Text(visa.entriesType!, style: TextStyle(fontSize: 15.0)),
           Text('${DateFormat.yMMMd().format(visa.startDate!)} - ${DateFormat.yMMMd().format(visa.endDate!)}',
             style: TextStyle(fontSize: 15.0)),
           Text('${visaDuration(visa)} / ${visa.durationOfStay} days',
             style: TextStyle(fontSize: 15.0)),
-          Text('Days used: ${daysUsed(visa, entryExits)}',
+          Text('Days used: ${daysUsed(visa, visa.entries!)}',
             style: TextStyle(fontSize: 15.0)),
-          Text('Days left: ${daysLeft(visa, entryExits)}',
+          Text('Days left: ${daysLeft(visa, visa.entries!)}',
             style: TextStyle(fontSize: 15.0))
         ],
       ),
-    ));      
+    ));
 
-  Widget _entries(Visa? visa, List<EntryExit> entryExits) => new Container(
+  Widget _entries(Visa? visa, List<VisaEntry> entries) => new Container(
     color: ColorsPalette.white, padding: EdgeInsets.all(15.0),
     child: SingleChildScrollView(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,18 +191,18 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
           ]),
           Divider(color: ColorsPalette.mazarineBlue,thickness: 1.0),
           Column(children: <Widget>[
-            entryExits.length > 0 ? Container(child:
+            entries.length > 0 ? Container(child:
               ListView.builder(shrinkWrap: true, physics: NeverScrollableScrollPhysics(),
-                itemCount: entryExits.length,
+                itemCount: entries.length,
                 itemBuilder: (builderContext, position) {
-                  final entryExit = entryExits[position];
+                  final entryExit = entries[position];
                   return Column(children: [
-                    Slidable(key: Key(entryExit.id!),
+                    Slidable(key: Key(entryExit.id!.toString()),
                       controller: slidableController,
                       direction: Axis.horizontal,                      
                       actionPane: SlidableDrawerActionPane(),
                       actionExtentRatio: 0.25,
-                      child: VerticalListItem(entryExits[position], visa),
+                      child: VerticalListItem(entryExit, visa),
                         secondaryActions: <Widget>[
                           IconSlideAction(
                             color: ColorsPalette.carminePink, 
@@ -210,13 +210,13 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                             onTap: () => showDialog<String>(
                               context: context,
                               barrierDismissible: false, // user must tap button!
-                              builder: (_) => BlocProvider<EntryExitBloc>(                                   
-                                    create: (context) => EntryExitBloc(/*visasRepository:new FirebaseVisasRepository()*/),
+                              builder: (_) => BlocProvider<VisaEntryBloc>(                                   
+                                    create: (context) => VisaEntryBloc(/*visasRepository:new FirebaseVisasRepository()*/),
                                     child: EntryExitDeleteAlert(
                                       visa: visa,
                                       entryExit: entryExit                                      
                                     ),
-                                  )), 
+                                  )).then((val) => context.read<VisaDetailsBloc>().add(GetVisaDetails(visa!.id!))), 
                           ), 
                         ], 
                       ),
@@ -240,7 +240,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
 
 class VerticalListItem extends StatelessWidget {
   VerticalListItem(this.item, this.visa);
-  final EntryExit item;
+  final VisaEntry item;
   final Visa? visa;
 
   @override
@@ -257,12 +257,12 @@ class VerticalListItem extends StatelessWidget {
                //entry
               Column(children: [Container(width: MediaQuery.of(context).size.width * 0.3,
                 child: Column(children: [
-                  Text('${DateFormat.yMMMd().format(item.entryDate!)}'),
+                  Text('${DateFormat.yMMMd().format(item.entryDate)}'),
                   Text('${item.entryCountry}, ${item.entryCity}'),
                   transportIcon(item.entryTransport)],
                 crossAxisAlignment:CrossAxisAlignment.start))]),
               //exit
-              item.hasExit ? Column(children: [ Container(width: MediaQuery.of(context).size.width *0.3,
+              item.hasExit! ? Column(children: [ Container(width: MediaQuery.of(context).size.width *0.3,
                 child: Column(children: [
                   Text('${DateFormat.yMMMd().format(item.exitDate!)}'),
                   Text('${item.exitCountry}, ${item.exitCity}'),
@@ -272,8 +272,8 @@ class VerticalListItem extends StatelessWidget {
               //duration
               Column(children: [Container(padding: EdgeInsets.only(right: 10.0), child: Column(children: [
                 Row(children: [
-                  Text(item.duration.toString() + " days"),
-                  item.duration! > visa!.durationOfStay! ?
+                  Text(tripDuration(item.entryDate, item.exitDate).toString() + " days"),
+                  tripDuration(item.entryDate, item.exitDate) > visa!.durationOfStay! ?
                   IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.carminePink), 
                     tooltip: 'Trip duration is more than visa duration', onPressed: () {},) : Container()
                 ])],
@@ -282,19 +282,21 @@ class VerticalListItem extends StatelessWidget {
                 showDialog(
                   barrierDismissible: false,
                   context: context,
-                  builder: (_) => BlocProvider<EntryExitBloc>(
-                    create: (context) => EntryExitBloc(/*visasRepository: new FirebaseVisasRepository()*/)
+                  builder: (_) => BlocProvider<VisaEntryBloc>(
+                    create: (context) => VisaEntryBloc(/*visasRepository: new FirebaseVisasRepository()*/)
                       ..add(GetEntryDetails(item, visa)),
-                    child: EntryExitDetailsView()));
+                    child: VisaEntryDetailsView())).then((value) {
+                      context.read<VisaDetailsBloc>().add(GetVisaDetails(visa!.id!));
+                    });
               })]))
     );
   }
 }
 
-List<EntryExit> _sortEntries(List<EntryExit> entries) {
+List<VisaEntry> _sortEntries(List<VisaEntry> entries) {
     entries.sort((a, b) {
-      return b.entryDate!.millisecondsSinceEpoch
-          .compareTo(a.entryDate!.millisecondsSinceEpoch);
+      return b.entryDate.millisecondsSinceEpoch
+          .compareTo(a.entryDate.millisecondsSinceEpoch);
     });
     return entries;
   }

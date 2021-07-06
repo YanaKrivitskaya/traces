@@ -14,11 +14,10 @@ class ApiTagsRepository{
     return notes;
   }
 
-  Future<Tag?> createTag(CreateTagModel tag) async {
+  Future<Tag> createTag(CreateTagModel tag) async {
     final response = await apiProvider.postSecure(tagsUrl, tag.toJson());
     
-    var newTag = response["Tag"] != null ?
-      Tag.fromMap(response["Tag"]) : null;
+    var newTag = Tag.fromMap(response["Tag"]);
     return newTag;
   }
 

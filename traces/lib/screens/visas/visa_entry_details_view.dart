@@ -4,18 +4,19 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/utils/misc/state_types.dart';
 
 import '../../constants/color_constants.dart';
-import 'bloc/entry_exit/entry_exit_bloc.dart';
+import '../../utils/misc/state_types.dart';
+import 'bloc/visa_entry/visa_entry_bloc.dart';
 import 'helpers.dart';
+import 'model/visa_settings.model.dart';
 
-class EntryExitDetailsView extends StatefulWidget {
+class VisaEntryDetailsView extends StatefulWidget {
   @override
-  _EntryExitDetailsViewState createState() => _EntryExitDetailsViewState();
+  _VisaEntryDetailsViewState createState() => _VisaEntryDetailsViewState();
 }
 
-class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
+class _VisaEntryDetailsViewState extends State<VisaEntryDetailsView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController? _entryCountryController;
   TextEditingController? _entryCityController;
@@ -44,14 +45,14 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
-          title: Text("Entry/Exit record",style: GoogleFonts.quicksand(
+          title: Text("Visa Entry",style: GoogleFonts.quicksand(
                     textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
           backgroundColor: ColorsPalette.mazarineBlue,
-          leading: IconButton(icon: Icon(Icons.arrow_back_ios),
+          leading: IconButton(icon: Icon(Icons.arrow_back_ios, color: ColorsPalette.lynxWhite),
             onPressed: () => Navigator.of(context).pop(),
         )),
         backgroundColor: Colors.white,
-        body: BlocListener<EntryExitBloc, EntryExitState>(
+        body: BlocListener<VisaEntryBloc, VisaEntryState>(
           listener: (context, state) {
             if (state.status == StateStatus.Success && state.mode == StateMode.View) {
               ScaffoldMessenger.of(context)
@@ -72,16 +73,16 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
               });
             }
             if(state.status == StateStatus.Success && state.mode == StateMode.Edit){
-                if(state.entryExit!.id != null){
-                  if(_entryCountryController!.text == '') _entryCountryController!.text = state.entryExit!.entryCountry!;
-                  if(_entryCityController!.text == '') _entryCityController!.text = state.entryExit!.entryCity!;
-                  if(_exitCountryController!.text == '') _exitCountryController!.text = state.entryExit!.exitCountry!;
-                  if(_exitCityController!.text == '') _exitCityController!.text = state.entryExit!.exitCity!;                  
-                  if(state.entryExit!.exitDate == null) state.entryExit!.exitDate = state.entryExit!.entryDate;
+                if(state.visaEntry!.id != null){
+                  if(_entryCountryController!.text == '') _entryCountryController!.text = state.visaEntry!.entryCountry!;
+                  if(_entryCityController!.text == '') _entryCityController!.text = state.visaEntry!.entryCity ?? '';
+                  if(_exitCountryController!.text == '') _exitCountryController!.text = state.visaEntry!.exitCountry ?? '';
+                  if(_exitCityController!.text == '') _exitCityController!.text = state.visaEntry!.exitCity ?? '';                  
+                  if(state.visaEntry!.exitDate == null) state.visaEntry = state.visaEntry!.copyWith(exitDate: state.visaEntry!.entryDate);
                 }                
               }
           },
-          child: BlocBuilder<EntryExitBloc, EntryExitState>(
+          child: BlocBuilder<VisaEntryBloc, VisaEntryState>(
             builder: (context, state) {
               if (state.status == StateStatus.Loading) {
                 return Center(
@@ -93,7 +94,7 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
                 return Container(padding: EdgeInsets.all(10.0), color: ColorsPalette.white, child: SingleChildScrollView(
                   child: Form(key: this._formKey, child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
                     _entryEditContainer(context, state),
-                    state.entryExit!.id !=null ? _exitEditContainer(context, state) : Container(),
+                    state.visaEntry!.id !=null ? _exitEditContainer(context, state) : Container(),
                     _submitButton(state)
                   ],)),
                 ));
@@ -104,7 +105,7 @@ class _EntryExitDetailsViewState extends State<EntryExitDetailsView> {
         ));
   }
 
-Widget _entryEditContainer(BuildContext context, EntryExitState state) => new Column(
+Widget _entryEditContainer(BuildContext context, VisaEntryState state) => new Column(
   crossAxisAlignment: CrossAxisAlignment.start,children: <Widget>[
   Text('Entry', style: GoogleFonts.quicksand(
     textStyle: TextStyle(color: ColorsPalette.mazarineBlue,
@@ -112,7 +113,7 @@ Widget _entryEditContainer(BuildContext context, EntryExitState state) => new Co
   Divider(color: ColorsPalette.algalFuel),
   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
     Text('Date', style: TextStyle(fontSize: 16.0, color: ColorsPalette.mazarineBlue)),
-    Text('${DateFormat.yMMMd().format(state.entryExit!.entryDate!)}', style: TextStyle(
+    Text('${DateFormat.yMMMd().format(state.visaEntry!.entryDate)}', style: TextStyle(
           fontSize: 16.0,fontWeight: FontWeight.bold)),
     IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue), 
       onPressed: ()=> _selectEntryDate(context, state))
@@ -122,7 +123,7 @@ Widget _entryEditContainer(BuildContext context, EntryExitState state) => new Co
   _entryTransportSelector(state)  
 ]);
 
-Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Container(
+Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Container(
   padding: EdgeInsets.only(top: 15.0),
   child:Column(
     crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
@@ -132,7 +133,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
     Divider(color: ColorsPalette.algalFuel),
     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
       Text('Date', style: TextStyle(fontSize: 16.0, color: ColorsPalette.mazarineBlue)),
-      Text('${DateFormat.yMMMd().format(state.entryExit!.exitDate!)}', style: TextStyle(
+      Text('${DateFormat.yMMMd().format(state.visaEntry!.exitDate!)}', style: TextStyle(
             fontSize: 16.0,fontWeight: FontWeight.bold)),
       IconButton(icon: FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.mazarineBlue), 
         onPressed: ()=> _selectExitDate(context, state))
@@ -143,7 +144,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
 ]));
 
   Future<Null> _selectEntryDate(
-    BuildContext context, EntryExitState state) async {
+    BuildContext context, VisaEntryState state) async {
     final DateTime? picked = await showDatePicker(
         builder: (BuildContext context, Widget? child) {
           return Theme(
@@ -152,16 +153,16 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
           );
         },
         context: context,
-        initialDate: state.entryExit!.entryDate ?? state.visa!.startDate!,
+        initialDate: state.visaEntry!.entryDate,
         firstDate: state.visa!.startDate!,
         lastDate: DateTime.now().difference(state.visa!.endDate!).inDays > 0 ? state.visa!.endDate! : DateTime.now());
     if (picked != null) {
-      context.read<EntryExitBloc>().add(EntryDateChanged(picked));     
+      context.read<VisaEntryBloc>().add(EntryDateChanged(picked));     
     }
   }
 
   Future<Null> _selectExitDate(
-      BuildContext context, EntryExitState state) async {
+      BuildContext context, VisaEntryState state) async {
     final DateTime? picked = await showDatePicker(
         builder: (BuildContext context, Widget? child) {
           return Theme(
@@ -170,15 +171,15 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
           );
         },
         context: context,
-        initialDate: state.entryExit!.exitDate ?? state.entryExit!.entryDate!,
-        firstDate: state.entryExit!.entryDate!,
+        initialDate: state.visaEntry!.exitDate ?? state.visaEntry!.entryDate,
+        firstDate: state.visaEntry!.entryDate,
         lastDate: DateTime.now().difference(state.visa!.endDate!).inDays > 0 ? state.visa!.endDate! : DateTime.now());
     if (picked != null) {
-      context.read<EntryExitBloc>().add(ExitDateChanged(picked));     
+      context.read<VisaEntryBloc>().add(ExitDateChanged(picked));     
     }
   }
   
-   Widget _entryCountrySelector(EntryExitState state) => new TypeAheadFormField(
+   Widget _entryCountrySelector(VisaEntryState state) => new TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
         controller: this._entryCountryController,
         decoration: InputDecoration(
@@ -188,15 +189,18 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCountries = state.userSettings!.countries!
+          /*var filteredCountries = state.userSettings!.countries!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCountries.length > 0) {
             return filteredCountries;
-          }
+          }*/
+          return List.empty();
         }
         return List.empty();
       },
+      hideOnLoading: true,
+      hideOnEmpty: true,
       itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion),
@@ -217,7 +221,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         return null;
       });
 
-  Widget _exitCountrySelector(EntryExitState state) => new TypeAheadFormField(
+  Widget _exitCountrySelector(VisaEntryState state) => new TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
         controller: this._exitCountryController,
         decoration: InputDecoration(
@@ -227,15 +231,18 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCountries = state.userSettings!.countries!
+          /*var filteredCountries = state.userSettings!.countries!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCountries.length > 0) {
             return filteredCountries;
-          }
+          }*/
+          return List.empty();
         }
         return List.empty();
       },
+      hideOnLoading: true,
+      hideOnEmpty: true,
       itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion),
@@ -249,7 +256,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         FocusScope.of(context).unfocus();
       });
 
-  Widget _entryCitySelector(EntryExitState state) => new TypeAheadFormField(
+  Widget _entryCitySelector(VisaEntryState state) => new TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
         controller: this._entryCityController,
         decoration: InputDecoration(
@@ -259,15 +266,18 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCities = state.userSettings!.cities!
+          /*var filteredCities = state.userSettings!.cities!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCities.length > 0) {
             return filteredCities;
-          }
+          }*/
+          return List.empty();
         }
          return List.empty();
       },
+      hideOnLoading: true,
+      hideOnEmpty: true,
       itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion),
@@ -288,7 +298,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         return null;
       });
 
-  Widget _exitCitySelector(EntryExitState state) => new TypeAheadFormField(
+  Widget _exitCitySelector(VisaEntryState state) => new TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
         controller: this._exitCityController,
         decoration: InputDecoration(
@@ -298,15 +308,18 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
-          var filteredCities = state.userSettings!.cities!
+          /*var filteredCities = state.userSettings!.cities!
               .where((c) => c.toLowerCase().startsWith(pattern.toLowerCase()))
               .toList();
           if (filteredCities.length > 0) {
             return filteredCities;
-          }
+          }*/
+          return List.empty();
         }
         return List.empty();
       },
+      hideOnLoading: true,
+      hideOnEmpty: true,
       itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion),
@@ -320,15 +333,15 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         FocusScope.of(context).unfocus();
       });
   
-  Widget _entryTransportSelector(EntryExitState state) =>
+  Widget _entryTransportSelector(VisaEntryState state) =>
       new DropdownButtonFormField<String>(
-        value: state.entryExit!.entryTransport??state.settings!.transport!.first,
+        value: state.visaEntry!.entryTransport,
         isExpanded: true,
         decoration: InputDecoration(
             labelText: "Transport",
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
         items:
-            state.settings!.transport!.map((String value) {
+            VisaSettings.transport.map((String value) {
           return new DropdownMenuItem<String>(
               value: value,
               child: Row(
@@ -342,7 +355,7 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
               ));
         }).toList(),
         onChanged: (String? value) {
-          state.entryExit!.entryTransport = value!.trim();
+          state.visaEntry = state.visaEntry!.copyWith(entryTransport: value);
           FocusScope.of(context).unfocus();
         },
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -351,15 +364,15 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
         },
       );
 
-  Widget _exitTransportSelector(EntryExitState state) =>
+  Widget _exitTransportSelector(VisaEntryState state) =>
       new DropdownButtonFormField<String>(
-        value: state.entryExit!.exitTransport??state.settings!.transport!.first,
+        value: state.visaEntry!.exitTransport ?? VisaSettings.transport.first,
         isExpanded: true,
         decoration: InputDecoration(
             labelText: "Transport",
             labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
         items:
-            state.settings!.transport!.map((String value) {
+            VisaSettings.transport.map((String value) {
           return new DropdownMenuItem<String>(
               value: value,
               child: Row(
@@ -373,11 +386,12 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
               ));
         }).toList(),
         onChanged: (String? value) {
-          state.entryExit!.exitTransport = value!.trim();          
+          state.visaEntry = state.visaEntry!.copyWith(exitTransport: value);
+          FocusScope.of(context).unfocus();
         },        
     );
 
-  Widget _submitButton(EntryExitState state) => new Center(
+  Widget _submitButton(VisaEntryState state) => new Center(
       child: Container(padding: EdgeInsets.only(top: 10.0),
         child: ElevatedButton(child: Text('Save'),
         style: ButtonStyle(
@@ -389,22 +403,17 @@ Widget _exitEditContainer(BuildContext context, EntryExitState state) => new Con
             var isFormValid = _formKey.currentState!.validate();
 
             if(isFormValid){
-              if(state.entryExit!.entryTransport == null) state.entryExit!.entryTransport = state.settings!.transport!.first;
-              if(state.entryExit!.exitTransport == null) state.entryExit!.exitTransport = state.settings!.transport!.first;              
-              state.entryExit!.entryCountry = _entryCountryController!.text.trim();
-              state.entryExit!.entryCity = _entryCityController!.text.trim();
-              state.entryExit!.exitCountry = _exitCountryController!.text.trim();
-              state.entryExit!.exitCity = _exitCityController!.text.trim();
-              if(state.entryExit!.exitCity == '' || state.entryExit!.exitCountry == ''){
-                state.entryExit!.duration = tripDuration(state.entryExit!.entryDate!, null);
-              }else{
-                state.entryExit!.duration = tripDuration(state.entryExit!.entryDate!, state.entryExit!.exitDate);
-              }              
-              context.read<EntryExitBloc>().add(SubmitEntry(state.entryExit, state.visa));
-            }
-            
+              state.visaEntry = state.visaEntry!.copyWith(
+                entryCountry: _entryCountryController!.text.trim(),
+                entryCity: _entryCityController!.text.trim().isEmpty ? null : _entryCityController!.text.trim(),
+                exitCountry: _exitCountryController!.text.trim().isEmpty ? null : _exitCountryController!.text.trim(),
+                exitCity: _exitCityController!.text.trim().isEmpty ? null : _exitCityController!.text.trim(),
+                exitTransport: state.visaEntry!.exitTransport ?? null,
+                hasExit: false
+              );                       
+              context.read<VisaEntryBloc>().add(SubmitEntry(state.visaEntry, state.visa));
+            }            
   })));
-
 }
 
 

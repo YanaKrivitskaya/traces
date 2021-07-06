@@ -13,24 +13,18 @@ import '../screens/notes/screens/note_detail_view.dart';
 import '../screens/notes/screens/note_page.dart';
 import '../screens/profile/bloc/profile/bloc.dart';
 import '../screens/profile/profile_page.dart';
-import '../screens/profile/repository/__firebase_profile_repository.dart';
 import '../screens/settings/bloc/settings_bloc.dart';
-import '../screens/settings/repository/firebase_appSettings_repository.dart';
 import '../screens/settings/settings_page.dart';
 import '../screens/settings/themes_settings_view.dart';
 import '../screens/trips/bloc/trips_bloc.dart';
-import '../screens/trips/repository/firebase_trips_repository.dart';
 import '../screens/trips/start_planning/bloc/startplanning_bloc.dart';
 import '../screens/trips/start_planning/start_planning_view.dart';
 import '../screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import '../screens/trips/tripdetails/tripdetails_view.dart';
 import '../screens/trips/trips_page.dart';
-import '../screens/visas/bloc/entry_exit/entry_exit_bloc.dart';
 import '../screens/visas/bloc/visa/visa_bloc.dart';
 import '../screens/visas/bloc/visa_details/visa_details_bloc.dart';
 import '../screens/visas/bloc/visa_tab/visa_tab_bloc.dart';
-import '../screens/visas/entry_exit_details_view.dart';
-import '../screens/visas/repository/firebase_visas_repository.dart';
 import '../screens/visas/visa_details_view.dart';
 import '../screens/visas/visa_edit_view.dart';
 import '../screens/visas/visas_page.dart';
@@ -74,9 +68,7 @@ class RouteGenerator {
                               : NewNoteMode()),
                         ),
                         BlocProvider<TagFilterBloc>(
-                          create: (context) => TagFilterBloc(
-                            /*notesRepository: FirebaseNotesRepository(),*/
-                          )..add(GetTags()),
+                          create: (context) => TagFilterBloc()..add(GetTags()),
                         ),
                       ],
                       child: NoteDetailsView(),
@@ -88,7 +80,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<ProfileBloc>(
             create: (context) =>
-                ProfileBloc(/*profileRepository: FirebaseProfileRepository()*/),
+                ProfileBloc(),
             child: ProfilePage(),
           ),
         );
@@ -96,7 +88,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<SettingsBloc>(
             create: (context) =>
-                SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/),
+                SettingsBloc(),
             child: SettingsPage(),
           ),
       );
@@ -104,7 +96,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<SettingsBloc>(
             create: (context) =>
-                SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/)
+                SettingsBloc()
                   ..add(GetAppSettings()),
             child: ThemeSettingsView(),
           ),
@@ -116,21 +108,17 @@ class RouteGenerator {
                     BlocProvider<VisaTabBloc>(
                         create: (context) => VisaTabBloc()),
                     BlocProvider<VisaBloc>(
-                      create: (context) => VisaBloc(
-                        /*visasRepository: FirebaseVisasRepository()*/
-                      )..add(GetAllVisas()),
+                      create: (context) => VisaBloc()..add(GetAllVisas()),
                     ),
                   ],
                   child: VisasPage(),
                 ));
       case visaDetailsRoute:
         {
-          if (args is String) {
+          if (args is int) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<VisaDetailsBloc>(
-                create: (context) => VisaDetailsBloc(
-                    /*visasRepository: FirebaseVisasRepository(),
-                    profileRepository: FirebaseProfileRepository()*/)
+                create: (context) => VisaDetailsBloc()
                   ..add(GetVisaDetails(args)),
                 child: VisaDetailsView(),
               ),
@@ -140,33 +128,17 @@ class RouteGenerator {
         }
       case visaEditRoute:
         {
-          if (args is String) {
+          if (args is int) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<VisaDetailsBloc>(
-                create: (context) => VisaDetailsBloc(
-                    /*visasRepository: FirebaseVisasRepository(),
-                    profileRepository: FirebaseProfileRepository()*/)
-                  ..add(args != '' ? EditVisaClicked(args) : NewVisaMode()),
+                create: (context) => VisaDetailsBloc()
+                  ..add(args != 0 ? EditVisaClicked(args) : NewVisaMode()),
                 child: VisaEditView(visaId: args),
               ),
             );
           }
           return _errorRoute();
-        }
-      case visaAddEntryRoute:
-        {
-          if (args is String) {
-            return MaterialPageRoute(
-              builder: (_) => BlocProvider<EntryExitBloc>(
-                create: (context) => EntryExitBloc(
-                    /*visasRepository:
-                        FirebaseVisasRepository()*/) /*..add(args != '' ? EditVisaClicked(args) : NewVisaMode())*/,
-                child: EntryExitDetailsView(/*entryId: args*/),
-              ),
-            );
-          }
-          return _errorRoute();
-        }
+        }      
       case tripsRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<TripsBloc>(
