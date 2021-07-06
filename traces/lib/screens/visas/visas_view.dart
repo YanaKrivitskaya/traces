@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/utils/style/styles.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
@@ -26,11 +27,38 @@ class _VisasViewState extends State<VisasView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<VisaBloc, VisaState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state.status == StateStatus.Error){
+            ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                backgroundColor: ColorsPalette.redPigment,
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 250,
+                      child: Text(
+                        state.errorMessage!,
+                        style: quicksandStyle(color: ColorsPalette.lynxWhite),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                    Icon(Icons.error, color: ColorsPalette.lynxWhite)
+                  ],
+                ),
+              ));
+          }
+      },
 
       child: BlocBuilder<VisaBloc, VisaState>(
         bloc: BlocProvider.of(context),
         builder: (context, state) {
+          if(state.status == StateStatus.Error){
+            return Center(child: Icon(Icons.error),);
+          }
           if (state.status == StateStatus.Loading)
             return loadingWidget(ColorsPalette.algalFuel);
 

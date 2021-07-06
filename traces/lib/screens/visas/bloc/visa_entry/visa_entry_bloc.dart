@@ -55,25 +55,33 @@ class VisaEntryBloc extends Bloc<VisaEntryEvent, VisaEntryState> {
   Stream<VisaEntryState> _mapSubmitEntryToState(SubmitEntry event) async* {
     yield VisaEntryState.loading();
 
-    VisaEntry entry;
+    try{
+      VisaEntry entry;
 
-    if (event.entry!.id == null) {
-      entry = await _visasRepository.createVisaEntry(event.visa!.id!, event.entry!);
-    } else {
-      if ((event.entry!.exitCity?.isNotEmpty ?? true) &&
-          (event.entry!.exitCountry?.isNotEmpty ?? true) &&
-          (event.entry!.exitTransport?.isNotEmpty ?? true) ) {
-        event.entry = event.entry!.copyWith(hasExit: true);
+      if (event.entry!.id == null) {
+        entry = await _visasRepository.createVisaEntry(event.visa!.id!, event.entry!);
+      } else {
+        if ((event.entry!.exitCity?.isNotEmpty ?? true) &&
+            (event.entry!.exitCountry?.isNotEmpty ?? true) &&
+            (event.entry!.exitTransport?.isNotEmpty ?? true) ) {
+          event.entry = event.entry!.copyWith(hasExit: true);
+        }
+        entry =
+            await _visasRepository.updateVisaEntry(event.visa!.id!, event.entry!);
       }
-      entry =
-          await _visasRepository.updateVisaEntry(event.visa!.id!, event.entry!);
-    }
-   
-    yield VisaEntryState.success(visa: event.visa, entryExit: entry);
+    
+      yield VisaEntryState.success(visa: event.visa, entryExit: entry);
+    }catch(e){
+      yield VisaEntryState.failure(error: e.toString());
+    }    
   }
 
   Stream<VisaEntryState> _mapDeleteEntryToState(DeleteEntry event) async* {
-    await _visasRepository.deleteVisaEntry(event.visa!.id!, event.entry!.id!);
+    try{
+       await _visasRepository.deleteVisaEntry(event.visa!.id!, event.entry!.id!);
+    }catch(e){
+      yield VisaEntryState.failure(error: e.toString());
+    }   
   }
 
   Stream<VisaEntryState> _mapEntryDateChangedToState(

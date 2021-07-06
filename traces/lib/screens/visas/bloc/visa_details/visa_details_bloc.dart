@@ -46,57 +46,68 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     }
   }
   
-  Stream<VisaDetailsState> _mapGetVisaDetailsToState(
-      GetVisaDetails event) async* {
+  Stream<VisaDetailsState> _mapGetVisaDetailsToState(GetVisaDetails event) async* {
     yield VisaDetailsState.loading();
 
-    Visa? visa = await visasRepository.getVisaById(event.visaId);
-
-    yield VisaDetailsState.success(
-        visa: visa,        
-        settings: null);   
+    try{      
+      Visa? visa = await visasRepository.getVisaById(event.visaId);
+      yield VisaDetailsState.success(visa: visa);      
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
+    }
+    
   }
 
-  Stream<VisaDetailsState> _mapDeleteVisaEventToState(
-      DeleteVisaClicked event) async* {
-    await visasRepository.deleteVisa(event.visaId!);
+  Stream<VisaDetailsState> _mapDeleteVisaEventToState(DeleteVisaClicked event) async* {
+    try{
+      await visasRepository.deleteVisa(event.visaId!);
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
+    }    
   }
 
   Stream<VisaDetailsState> _mapNewVisaModeToState(NewVisaMode event) async* {
     yield VisaDetailsState.loading();
-    
-    List<Group> accountGroups = await profileRepository.getGroups();
-    var familyGroup = accountGroups.firstWhere((g) => g.name == "Family");
 
-    Group family = await profileRepository.getGroupUsers(familyGroup.id!);
+    try{
+      List<Group> accountGroups = await profileRepository.getGroups();
+      var familyGroup = accountGroups.firstWhere((g) => g.name == "Family");
 
-    Visa visa = new Visa(      
-      startDate: DateTime.now(),
-      endDate: DateTime.now()
-    );
+      Group family = await profileRepository.getGroupUsers(familyGroup.id!);
 
-    yield VisaDetailsState.editing(
-      visa: visa,
-      members: family,
-      autovalidate: false);   
+      Visa visa = new Visa(      
+        startDate: DateTime.now(),
+        endDate: DateTime.now()
+      );
 
+      yield VisaDetailsState.editing(
+        visa: visa,
+        members: family,
+        autovalidate: false); 
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
+    }
   }
 
   Stream<VisaDetailsState> _mapEditVisaModeToState(
       EditVisaClicked event) async* {
     yield VisaDetailsState.loading();
 
-    Visa? visa = await visasRepository.getVisaById(event.visaId);
+    try{
+      Visa? visa = await visasRepository.getVisaById(event.visaId);
 
-    List<Group> accountGroups = await profileRepository.getGroups();
-    var familyGroup = accountGroups.firstWhere((g) => g.name == "Family");
+      List<Group> accountGroups = await profileRepository.getGroups();
+      var familyGroup = accountGroups.firstWhere((g) => g.name == "Family");
 
-    Group family = await profileRepository.getGroupUsers(familyGroup.id!);
+      Group family = await profileRepository.getGroupUsers(familyGroup.id!);
 
-    yield VisaDetailsState.editing(
-      visa: visa,        
-      members: family,
-      autovalidate: false);   
+      yield VisaDetailsState.editing(
+        visa: visa,        
+        members: family,
+        autovalidate: false);
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
+    }       
   }
 
   Stream<VisaDetailsState> _mapDateFromChangedToState(
@@ -142,15 +153,20 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async* {
     yield state.copyWith(status: StateStatus.Loading, mode: StateMode.Edit);
 
-    if (visa.id != null) {
-      visa = await visasRepository.updateVisa(visa, visa.user!.userId!);
-    } else {
-      visa = await visasRepository.createVisa(visa, visa.user!.userId!);          
-    }
+    try{
+      if (visa.id != null) {
+        visa = await visasRepository.updateVisa(visa, visa.user!.userId!);
+      } else {
+        visa = await visasRepository.createVisa(visa, visa.user!.userId!);          
+      }
 
-    yield VisaDetailsState.success(
+      yield VisaDetailsState.success(
         visa: visa,        
-        members: state.familyGroup);    
+        members: state.familyGroup);
+    }catch(e){
+      yield VisaDetailsState.failure(error: e.toString());
+    }
+            
   }
 
   Stream<VisaDetailsState> _mapTabUpdatedToState(

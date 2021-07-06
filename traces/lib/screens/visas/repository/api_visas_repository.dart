@@ -1,3 +1,5 @@
+import 'package:traces/utils/api/customException.dart';
+
 import '../../../utils/services/api_service.dart';
 import '../model/api_visa.model.dart';
 import '../model/visa.model.dart';
@@ -7,7 +9,7 @@ class ApiVisasRepository{
   ApiService apiProvider = ApiService();
   String visasUrl = 'visas/';
 
-  Future<List<Visa>?> getVisas( )async{
+  Future<List<Visa>?> getVisas() async{    
     print("getVisas");
     final response = await apiProvider.getSecure(visasUrl);
       

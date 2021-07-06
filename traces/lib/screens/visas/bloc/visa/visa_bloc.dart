@@ -35,8 +35,15 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
   Stream<VisaState> _mapGetVisasToState(GetAllVisas event) async* {
     yield VisaState.loading();
 
-   var visas = await visasRepository.getVisas();
+    try{
+      var visas = await visasRepository.getVisas();
+      yield VisaState.success(allVisas: visas);
+    } catch(e){
+      yield VisaState.failure(error: e.toString());
+    }
 
-   yield VisaState.success(allVisas: visas);
+   
+
+   
   }
 }
