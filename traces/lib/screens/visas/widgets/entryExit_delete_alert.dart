@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/visas/model/visa.model.dart';
-import 'package:traces/screens/visas/model/visa_entry.model.dart';
+
 import '../../../constants/color_constants.dart';
-import '../bloc/entry_exit/visa_entry_bloc.dart';
-import '../model/entryExit.dart';
+import '../bloc/visa_entry/visa_entry_bloc.dart';
+import '../model/visa.model.dart';
+import '../model/visa_entry.model.dart';
 
 class EntryExitDeleteAlert extends StatelessWidget {
   final VisaEntry? entryExit;

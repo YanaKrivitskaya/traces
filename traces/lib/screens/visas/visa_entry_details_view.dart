@@ -4,12 +4,12 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/visas/model/visa_settings.model.dart';
-import 'package:traces/utils/misc/state_types.dart';
 
 import '../../constants/color_constants.dart';
-import 'bloc/entry_exit/visa_entry_bloc.dart';
+import '../../utils/misc/state_types.dart';
+import 'bloc/visa_entry/visa_entry_bloc.dart';
 import 'helpers.dart';
+import 'model/visa_settings.model.dart';
 
 class VisaEntryDetailsView extends StatefulWidget {
   @override

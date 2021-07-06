@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
-import 'package:traces/screens/visas/model/entryExit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:traces/screens/visas/model/visa_entry.model.dart';
 

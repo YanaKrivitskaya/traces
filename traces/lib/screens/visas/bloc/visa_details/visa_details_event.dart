@@ -16,29 +16,6 @@ class GetVisaDetails extends VisaDetailsEvent {
   List<Object> get props => [visaId];
 }
 
-class UpdateVisaDetailsSuccess extends VisaDetailsEvent {
-  final Visa visa;
-  final List<EntryExit> entryExits;
-  final VisaSettings settings;
-
-  const UpdateVisaDetailsSuccess(this.visa, this.entryExits, this.settings);
-
-  @override
-  List<Object> get props => [visa, entryExits, settings];
-}
-
-class UpdateVisaDetailsEditing extends VisaDetailsEvent {
-  final Visa? visa;
-  final VisaSettings settings;
-  final Group members;
-  final UserSettings userSettings;
-
-  const UpdateVisaDetailsEditing(this.visa, this.settings, this.members, this.userSettings);
-
-  @override
-  List<Object?> get props => [visa, settings, members, userSettings];
-}
-
 class NewVisaMode extends VisaDetailsEvent {}
 
 class EditVisaClicked extends VisaDetailsEvent {

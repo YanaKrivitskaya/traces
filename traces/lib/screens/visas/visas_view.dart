@@ -27,6 +27,7 @@ class _VisasViewState extends State<VisasView> {
   Widget build(BuildContext context) {
     return BlocListener<VisaBloc, VisaState>(
       listener: (context, state) {},
+
       child: BlocBuilder<VisaBloc, VisaState>(
         bloc: BlocProvider.of(context),
         builder: (context, state) {
@@ -43,45 +44,32 @@ class _VisasViewState extends State<VisasView> {
               this.visas = _sortVisas(visas);
 
               return RefreshIndicator(      
-                onRefresh: () async {
-                  context.read<VisaBloc>().add(GetAllVisas());},
-                child:   Container(
-                            padding: EdgeInsets.all(5.0),
-                            child: SingleChildScrollView(
-                                child: Column(children: [
-                              this.visas.length > 0
-                                  ? Container(
-                                      child: ListView.builder(
-                                          shrinkWrap: true,
-                                          physics: NeverScrollableScrollPhysics(),
-                                          itemCount: this.visas.length,
-                                          itemBuilder: (context, position) {
-                                            final visa = this.visas[position];
-                                            return Card(
-                                              child: InkWell(
-                                                  onTap: () {
-                                                    Navigator.pushReplacementNamed(context, visaDetailsRoute, arguments: visa.id);
-                                                  },
-                                                  child: Container(
-                                                      padding: EdgeInsets.all(10.0),
-                                                      child: Column(
-                                                        children: <Widget>[
-                                                          Row( mainAxisAlignment: MainAxisAlignment.start,
-                                                            children: <Widget>[
-                                                              avatar(visa.user!.name, 30.0, ColorsPalette.algalFuel, 25.0),
-                                                              _visaDetails(visa)
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ))),
-                                            );
-                                          }))
-                                  : Center(
-                                      child: Container(
-                                          padding: EdgeInsets.only(top: 20.0),
-                                          child: Text("No items here",
-                                              style: TextStyle(fontSize: 18.0))))
-                            ]))));
+                onRefresh: () async => context.read<VisaBloc>().add(GetAllVisas()),
+                child:  Container(
+                  padding: EdgeInsets.all(5.0),
+                  child: SingleChildScrollView(
+                    child: Column(children: [
+                      this.visas.length > 0 ? Container(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: this.visas.length,
+                          itemBuilder: (context, position) {
+                            final visa = this.visas[position];
+                            return Card(child: InkWell(
+                              onTap: () => Navigator.pushReplacementNamed(context, visaDetailsRoute, arguments: visa.id),
+                              child: Container(padding: EdgeInsets.all(10.0),
+                                child: Column(children: <Widget>[
+                                  Row( mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+                                    avatar(visa.user!.name, 30.0, ColorsPalette.algalFuel, 25.0),
+                                    _visaDetails(visa)
+                                  ])]))),
+                            );
+                        }))
+                        : Center(child: Container(
+                            padding: EdgeInsets.only(top: 20.0),
+                            child: Text("No items here", style: TextStyle(fontSize: 18.0))))
+                    ]))));
             }
             return loadingWidget(ColorsPalette.algalFuel);
           }),

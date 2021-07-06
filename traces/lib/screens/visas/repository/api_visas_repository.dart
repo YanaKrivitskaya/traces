@@ -1,8 +1,7 @@
-import 'package:traces/screens/visas/model/api_visa.model.dart';
-import 'package:traces/screens/visas/model/visa.model.dart';
-import 'package:traces/screens/visas/model/visa_entry.model.dart';
-
 import '../../../utils/services/api_service.dart';
+import '../model/api_visa.model.dart';
+import '../model/visa.model.dart';
+import '../model/visa_entry.model.dart';
 
 class ApiVisasRepository{
   ApiService apiProvider = ApiService();

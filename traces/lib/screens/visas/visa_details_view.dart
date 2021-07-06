@@ -9,13 +9,12 @@ import 'package:traces/utils/misc/state_types.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
-import 'bloc/entry_exit/visa_entry_bloc.dart';
+import 'bloc/visa_entry/visa_entry_bloc.dart';
 import 'bloc/visa_details/visa_details_bloc.dart';
 import 'model/visa.model.dart';
 import 'widgets/entryExit_delete_alert.dart';
-import 'entry_exit_details_view.dart';
+import 'visa_entry_details_view.dart';
 import 'helpers.dart';
-import 'model/entryExit.dart';
 import 'widgets/visa_delete_alert.dart';
 
 class VisaDetailsView extends StatefulWidget {

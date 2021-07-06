@@ -7,8 +7,6 @@ import 'package:meta/meta.dart';
 import '../../../../utils/misc/state_types.dart';
 import '../../../profile/model/group_model.dart';
 import '../../../profile/repository/api_profile_repository.dart';
-import '../../model/entryExit.dart';
-import '../../model/user_countries.dart';
 import '../../model/visa.model.dart';
 import '../../model/visa_settings.model.dart';
 import '../../repository/api_visas_repository.dart';
@@ -55,8 +53,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     Visa? visa = await visasRepository.getVisaById(event.visaId);
 
     yield VisaDetailsState.success(
-        visa: visa,
-        entryExits: null,  
+        visa: visa,        
         settings: null);   
   }
 

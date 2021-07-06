@@ -5,14 +5,13 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/profile/model/group_user_model.dart';
-import 'package:traces/screens/visas/model/visa.model.dart';
-import 'package:traces/screens/visas/model/visa_settings.model.dart';
-import 'package:traces/utils/misc/state_types.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
+import '../../utils/misc/state_types.dart';
+import '../profile/model/group_user_model.dart';
 import 'bloc/visa_details/visa_details_bloc.dart';
+import 'model/visa_settings.model.dart';
 
 class VisaEditView extends StatefulWidget {
   final int? visaId;

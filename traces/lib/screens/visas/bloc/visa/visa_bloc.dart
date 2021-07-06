@@ -1,11 +1,13 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/screens/visas/model/visa.model.dart';
-import 'package:traces/screens/visas/repository/api_visas_repository.dart';
-import 'package:traces/utils/misc/state_types.dart';
+
+import '../../../../utils/misc/state_types.dart';
+import '../../model/visa.model.dart';
 import '../../model/visa_tab.dart';
+import '../../repository/api_visas_repository.dart';
 
 part 'visa_event.dart';
 part 'visa_state.dart';

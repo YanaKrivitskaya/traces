@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/screens/profile/model/group_user_model.dart';
-import 'package:traces/screens/visas/model/visa_entry.model.dart';
-import 'package:traces/screens/visas/model/visa_settings.model.dart';
+
+import '../../profile/model/group_user_model.dart';
+import 'visa_entry.model.dart';
 
 @immutable
 class Visa {

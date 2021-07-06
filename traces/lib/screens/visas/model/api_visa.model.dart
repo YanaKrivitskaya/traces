@@ -2,7 +2,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:traces/screens/visas/model/visa.model.dart';
+
+import 'visa.model.dart';
 
 @immutable
 class ApiVisaModel {
