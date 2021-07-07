@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import 'auth/auth_bloc/bloc.dart';
 import 'auth/login_signup/loginSignup_page.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.
   await Firebase.initializeApp();
   await ApiService.init();
+  await SharedPreferencesService.init();
   Bloc.observer = SimpleBlocDelegate();
   
   runApp(

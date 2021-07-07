@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/auth/auth_bloc/bloc.dart';
+import 'package:traces/screens/settings/model/app_theme.dart';
 import 'package:traces/widgets/widgets.dart';
 
 import '../../constants/color_constants.dart';
@@ -19,41 +19,27 @@ class ThemeSettingsView extends StatefulWidget{
 
 class _ThemeSettingsViewState extends State<ThemeSettingsView>{
 
-  late AuthenticationBloc _authBloc;
   int _currentIndex=0;
-  String? _userTheme;
-
-  List<String?>? _themes;
-
-   @override
-  void initState() {
-    super.initState();   
-
-    _authBloc = BlocProvider.of<AuthenticationBloc>(context);
-  }
-
-  @override
-  void dispose(){
-    _authBloc.close();
-    super.dispose();
-  }
+  AppTheme? _userTheme;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SettingsBloc, SettingsState>(
-      bloc: BlocProvider.of(context),
-      builder: (context, state){
+    return BlocListener<SettingsBloc, SettingsState>(
+      listener: (context, state) {
         if(state is SuccessSettingsState){         
-          _userTheme = state.userTheme;
-
-          _themes = state.settings!.themes;
+          _userTheme = state.userTheme;         
 
           if(_userTheme == null){
-            _userTheme = _themes![0];
+            _userTheme = AppThemes[0];
           }
          
-          _currentIndex = _themes!.indexOf(state.selectedTheme ?? state.userTheme);          
+          _currentIndex = AppThemes.indexOf(state.selectedTheme ?? _userTheme!);          
         }
+      },
+      child: BlocBuilder<SettingsBloc, SettingsState>(
+      bloc: BlocProvider.of(context),
+      builder: (context, state){
+        
         return new Scaffold(
           appBar: AppBar(
             title: Text('Themes', style: GoogleFonts.quicksand(textStyle: TextStyle(
@@ -63,7 +49,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
               onPressed: () => Navigator.of(context).pop(),
             )            
           ),
-          body: state.settings != null ? Container(
+          body: state is SuccessSettingsState ?  Container(
             padding: EdgeInsets.only(top: 20.0),
             child: Column(children: [
               CarouselSlider(
@@ -73,24 +59,24 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                     enlargeCenterPage: true,
                     enableInfiniteScroll: false,
                     onPageChanged: (index, reason) {
-                      var theme = state.settings!.themes![index];
+                      var theme = AppThemes[index];
                       context.read<SettingsBloc>().add(ThemeSelected(theme)); 
                     },
                   ),
-                  items: _themes!.map((item) => Container(   
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),                                     
+                  items: AppThemes.map((item) => Container(   
+                    padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),                                     
                     child: Center(
                       child: item == _userTheme ? Badge(
                         badgeContent: Icon(Icons.check, color: ColorsPalette.lynxWhite),
                         badgeColor: ColorsPalette.pureApple,
-                        child: Image.asset('assets/$item.jpg', fit: BoxFit.cover)
-                      ) : Image.asset('assets/$item.jpg', fit: BoxFit.cover)
+                        child: Image.asset(item.path, fit: BoxFit.cover)
+                      ) : Image.asset(item.path, fit: BoxFit.cover)
                     ),
                   )).toList()),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: _themes!.map((img) {
-                  int index = _themes!.indexOf(img);
+                children:AppThemes.map((img) {
+                  int index = AppThemes.indexOf(img);
                   return Container(
                     width: 8.0,
                     height: 8.0,
@@ -111,7 +97,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                 foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
               ),
               onPressed: () {
-                var theme = state.settings!.themes![_currentIndex];
+                var theme = AppThemes[_currentIndex];
                 context.read<SettingsBloc>().add(SubmitTheme(theme));                
               },
               child: Text('Select theme'),
@@ -120,7 +106,8 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
           ) : loadingWidget(ColorsPalette.picoVoid)
         );
       }
-    );
+    ),
+    );    
   }
 
 }

@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/auth/auth_bloc/bloc.dart';
+import 'package:traces/screens/settings/model/app_theme.dart';
 
 import '../auth/auth_bloc/authentication_bloc.dart';
 import '../constants/color_constants.dart';
 import '../constants/route_constants.dart';
 import '../widgets/widgets.dart';
 import 'settings/bloc/settings_bloc.dart';
-import 'settings/repository/firebase_appSettings_repository.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -21,14 +21,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? _theme;
+  AppTheme? _theme;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SettingsBloc>(
       create: (context) => 
-        SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/)
-          ..add(GetUserSettings()),
+        SettingsBloc()
+          ..add(GetAppSettings()),
       child: BlocBuilder<SettingsBloc, SettingsState>(        
         builder: (context, state){
           if(state is SuccessSettingsState){         
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _homeMenu(String? _theme, BuildContext context) => new Scaffold(
+Widget _homeMenu(AppTheme? _theme, BuildContext context) => new Scaffold(
       appBar: AppBar(
         title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))),
         actions: <Widget>[
@@ -90,7 +90,7 @@ Widget _homeMenu(String? _theme, BuildContext context) => new Scaffold(
       )
     );
 
-Column _menuTile(IconData icon, String? theme, String iconName, String title, BuildContext context, String routeName) => Column(
+Column _menuTile(IconData icon, AppTheme? theme, String iconName, String title, BuildContext context, String routeName) => Column(
   children: <Widget>[
     TextButton(
       onPressed: () {
@@ -98,9 +98,9 @@ Column _menuTile(IconData icon, String? theme, String iconName, String title, Bu
       },
       style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(10.0))),
       child: Column(        
-        children: theme == 'calmGreenTheme' || theme == 'brightBlueTheme' ?  
+        children: theme?.iconsPath != null ?  
           <Widget>[
-            Image(image: AssetImage('assets/$theme/$iconName'), height: 65.0, width: 65.0,),
+            Image(image: AssetImage('${theme!.iconsPath}$iconName'), height: 65.0, width: 65.0,),
             Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))            
           ]
         : <Widget>[ 
