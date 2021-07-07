@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../../../utils/misc/state_types.dart';
 import '../../../profile/model/group_model.dart';
@@ -17,6 +18,7 @@ part 'visa_details_state.dart';
 class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   final ApiVisasRepository visasRepository;
   final ApiProfileRepository profileRepository;
+  SharedPreferencesService sharedPrefsService = SharedPreferencesService();
   
   VisaDetailsBloc(): 
     profileRepository = new ApiProfileRepository(),
@@ -48,9 +50,10 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   
   Stream<VisaDetailsState> _mapGetVisaDetailsToState(GetVisaDetails event) async* {
     yield VisaDetailsState.loading();
+    
+    try{
+      Visa? visa = await visasRepository.getVisaById(event.visaId);      
 
-    try{      
-      Visa? visa = await visasRepository.getVisaById(event.visaId);
       yield VisaDetailsState.success(visa: visa);      
     }catch(e){
       yield VisaDetailsState.failure(error: e.toString());
@@ -171,7 +174,8 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
   Stream<VisaDetailsState> _mapTabUpdatedToState(
       TabUpdatedClicked event) async* {
+    await sharedPrefsService.writeInt(key: "visaTab", value: event.index);
     
-    yield state.update(activeTab: event.index);
+    yield state.update();
   }
 }

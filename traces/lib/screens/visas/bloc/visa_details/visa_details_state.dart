@@ -6,14 +6,13 @@ class VisaDetailsState {
   final StateStatus status;
   final StateMode mode;  
   final String? errorMessage;
-  final int? activeTab;
 
   VisaDetailsState(
       {required this.visa,     
       required this.familyGroup,      
       required this.status,
       required this.mode,      
-      this.errorMessage, this.activeTab});
+      this.errorMessage});
 
   factory VisaDetailsState.empty() {
     return VisaDetailsState(
@@ -22,7 +21,7 @@ class VisaDetailsState {
         status: StateStatus.Empty,
         mode: StateMode.View,
         errorMessage: "",
-        activeTab: 0);
+      );
   }
 
   factory VisaDetailsState.loading() {
@@ -32,11 +31,11 @@ class VisaDetailsState {
         status: StateStatus.Loading,
         mode: StateMode.View,
         errorMessage: "",
-        activeTab: 0);
+      );
   }
 
   factory VisaDetailsState.editing(
-      {Visa? visa,     
+      {Visa? visa,      
       Group? members,
       bool? autovalidate}) {
     return VisaDetailsState(
@@ -45,11 +44,12 @@ class VisaDetailsState {
         status: StateStatus.Empty,
         mode: StateMode.Edit,        
         errorMessage: "",
-        activeTab: 0);
+      );
   }
 
   factory VisaDetailsState.success(
       {Visa? visa,
+      int? activeTab,
       VisaSettings? settings,      
       Group? members}) {
     return VisaDetailsState(
@@ -57,7 +57,7 @@ class VisaDetailsState {
         familyGroup: members,       
         status: StateStatus.Success,
         mode: StateMode.View,
-        errorMessage: "", activeTab: 0);
+        errorMessage: "");
   }
 
   factory VisaDetailsState.failure(
@@ -70,7 +70,7 @@ class VisaDetailsState {
         familyGroup: members,    
         status: StateStatus.Error,
         mode: StateMode.View,        
-        errorMessage: error, activeTab: 0);
+        errorMessage: error);
   }
 
   VisaDetailsState copyWith(
@@ -78,30 +78,27 @@ class VisaDetailsState {
       final Group? members,    
       final StateStatus? status,
       final StateMode? mode,      
-      String? errorMessage, int? activeTab}) {
+      String? errorMessage}) {
     return VisaDetailsState(
-        visa: visa ?? this.visa,        
-        familyGroup: members ?? this.familyGroup,      
+        visa: visa ?? this.visa,
+        familyGroup: members ?? this.familyGroup,
         status: status ?? this.status,
-        mode: mode ?? this.mode,       
-        errorMessage: errorMessage ?? this.errorMessage,
-        activeTab: activeTab ?? this.activeTab
+        mode: mode ?? this.mode,
+        errorMessage: errorMessage ?? this.errorMessage       
     );
   }
 
   VisaDetailsState update(
-      {Visa? visa,     
-    
+      {Visa? visa,    
       StateStatus? status,
       StateMode? mode,      
-      String? errorMessage, int? activeTab}) {
+      String? errorMessage}) {
     return copyWith(
         visa: visa,        
         members: familyGroup,      
         status: status,
         mode: mode,        
-        errorMessage: errorMessage, 
-        activeTab: activeTab
+        errorMessage: errorMessage
     );
   }
 }

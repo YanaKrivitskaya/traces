@@ -16,13 +16,6 @@ class UpdateThemesList extends SettingsEvent{
   List<Object> get props => [themes];
 }
 
-class GetUserSettings extends SettingsEvent{
-  GetUserSettings();
-
-  @override
-  List<Object> get props => [];
-}
-
 class GetAppSettings extends SettingsEvent{
   GetAppSettings();
 
