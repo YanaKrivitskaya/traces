@@ -2,20 +2,19 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
-import '../model/appSettings_entity.dart';
-import '../repository/appSettings_repository.dart';
-import '../repository/firebase_appSettings_repository.dart';
+import 'package:traces/screens/settings/model/app_theme.dart';
+import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 part 'settings_event.dart';
 part 'settings_state.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
+  SharedPreferencesService sharedPrefsService = SharedPreferencesService();
   //final AppSettingsRepository _settingsRepository;  
 
   SettingsBloc(/*{AppSettingsRepository? settingsRepository}*/)
   : /*_settingsRepository = settingsRepository ?? new FirebaseAppSettingsRepository(),*/
-      super(InitialSettingsState(null));
+      super(InitialSettingsState());
 
   @override
   Stream<SettingsState> mapEventToState(SettingsEvent event) async* {
@@ -30,37 +29,40 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
     }
   }
 
-   Stream<SettingsState> _mapGetAppSettingsToState() async* {
-     AppSettings settings;
+   Stream<SettingsState> _mapGetAppSettingsToState() async* {     
 
     try{
-      /*settings = await _settingsRepository.generalSettings();
-      var userSettings = await _settingsRepository.userSettings();   
-      yield SuccessSettingsState(settings, null, userSettings.theme);*/
-
+      var theme = sharedPrefsService.read(key: "appTheme");
+      if(theme != null){
+        var userTheme = AppThemes.firstWhere((t) => t.name == theme);
+        yield SuccessSettingsState(userTheme, userTheme);
+      }else{
+        yield SuccessSettingsState(AppThemes.first, AppThemes.first);
+      }
     }catch(e){
       print(e);
       //yield NoteState.failure(error: e.message);
     }    
   }
 
-  Stream<SettingsState> _mapThemeSelectedToState(String? theme) async* {
-     yield SuccessSettingsState(state.settings, theme, state.userTheme);
+  Stream<SettingsState> _mapThemeSelectedToState(AppTheme? theme) async* {
+     yield SuccessSettingsState(theme, state.userTheme);
   }
 
-  Stream<SettingsState> _mapSubmitThemeToState(String? theme) async* {
+  Stream<SettingsState> _mapSubmitThemeToState(AppTheme theme) async* {
+    await sharedPrefsService.write(key: "appTheme", value: theme.name);
     /*var settings = await _settingsRepository.userSettings();
     settings.theme = theme;
 
     await _settingsRepository.updateUserSettings(settings);*/
 
-     yield SuccessSettingsState(null, null, null/*state.settings, theme, theme*/);
+     yield SuccessSettingsState(theme, theme);
   }
 
   Stream<SettingsState> _mapGetUserSettingsToState() async* {
-    //var settings = await _settingsRepository.userSettings();   
+    var theme = sharedPrefsService.read(key: "appTheme");
 
-     yield SuccessSettingsState(null, null, null/*settings.theme*/);
+     //yield SuccessSettingsState(null, theme);
   }
   
 }

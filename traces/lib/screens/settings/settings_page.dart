@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
 import 'bloc/settings_bloc.dart';
-import 'repository/firebase_appSettings_repository.dart';
 import 'settings_view.dart';
 
 class SettingsPage extends StatelessWidget{
@@ -16,10 +15,9 @@ class SettingsPage extends StatelessWidget{
   Widget build(BuildContext context) {
     return BlocProvider<SettingsBloc>(
       create: (context) => 
-        SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/)
-          ..add(GetAppSettings()),
+        SettingsBloc()..add(GetAppSettings()),
       child: WillPopScope(
-        onWillPop: (()=> Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false) as Future<bool>) as Future<bool> Function()?,
+        onWillPop: (()=> Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false) as Future<bool>),
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(

@@ -8,7 +8,7 @@ abstract class SettingsEvent extends Equatable{
 }
 
 class UpdateThemesList extends SettingsEvent{
-  final List<String> themes;
+  final List<AppTheme> themes;
 
   UpdateThemesList(this.themes);
 
@@ -31,7 +31,7 @@ class GetAppSettings extends SettingsEvent{
 }
 
 class GetThemes extends SettingsEvent{
-  final List<String> themes;
+  final List<AppTheme> themes;
 
   GetThemes(this.themes);
 
@@ -40,7 +40,7 @@ class GetThemes extends SettingsEvent{
 }
 
 class ThemeSelected extends SettingsEvent{
-  final String? theme;
+  final AppTheme? theme;
 
   ThemeSelected(this.theme);
 
@@ -49,7 +49,7 @@ class ThemeSelected extends SettingsEvent{
 }
 
 class SubmitTheme extends SettingsEvent{
-  final String? theme;
+  final AppTheme theme;
 
   SubmitTheme(this.theme);
 

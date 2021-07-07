@@ -1,7 +1,7 @@
 
 class VisaSettings{
   static const List<String> visaTypes = [
-     "National",
+    "National",
     "Schengen"
   ];
   static const  List<String> entries = [

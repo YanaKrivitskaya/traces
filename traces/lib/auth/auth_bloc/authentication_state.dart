@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/auth/model/account.model.dart';
-import 'package:traces/screens/settings/model/appUserSettings_entity.dart';
 
 @immutable
 abstract class AuthenticationState extends Equatable {
@@ -18,12 +17,11 @@ class Uninitialized extends AuthenticationState {
 
 class Authenticated extends AuthenticationState{
   final Account? user;
-  final AppUserSettings? userSettings;
 
-  const Authenticated(this.user, this.userSettings);
+  const Authenticated(this.user);
 
   @override
-  List<Object?> get props => [user, userSettings];
+  List<Object?> get props => [user];
 
   @override
   String toString() => 'Authenticated { user: ${user.toString()} }';

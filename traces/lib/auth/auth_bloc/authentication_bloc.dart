@@ -28,7 +28,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       final user = await _userRepository.getAccessToken();
       if(user != null){
         
-        yield Authenticated(user, null);
+        yield Authenticated(user);
       }else yield Unauthenticated();
     }catch(_){
       yield Unauthenticated();
@@ -36,7 +36,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
   Stream<AuthenticationState> _mapLoggedInToState(event) async*{
-    yield Authenticated(event.user, /*await _appSettingsRepository.userSettings()*/null);
+    yield Authenticated(event.user /*await _appSettingsRepository.userSettings()*/);
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
