@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:traces/screens/visas/model/visa_entry.model.dart';
 import 'package:traces/utils/misc/state_types.dart';
+import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
@@ -26,9 +27,12 @@ class VisaDetailsView extends StatefulWidget {
 }
 
 class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProviderStateMixin {
-  SlidableController? slidableController; 
+  SlidableController? slidableController;
+  SharedPreferencesService sharedPrefsService = SharedPreferencesService();
 
   TabController? tabController;
+
+  String visaTabKey = "visaTab";
 
   final List<Tab> detailsTabs = <Tab>[
     Tab(text: 'Details'),
@@ -64,7 +68,8 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
   Widget build(BuildContext context) {
     return BlocListener<VisaDetailsBloc, VisaDetailsState>(
         listener: (context, state) {
-          tabController!.index = state.activeTab!;
+          int? tabValue = sharedPrefsService.readInt(key: visaTabKey);
+          tabController!.index = tabValue ?? 0;
         },
         child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(
           builder: (context, state) {
@@ -82,12 +87,15 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                 backgroundColor: ColorsPalette.mazarineBlue,
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back_ios, color: ColorsPalette.lynxWhite),
-                  onPressed: () => Navigator.of(context).pushReplacementNamed (visasRoute),
+                  onPressed: () {
+                    sharedPrefsService.remove(key: visaTabKey);
+                    Navigator.of(context).pushReplacementNamed (visasRoute);                
+                  }
                 ),
                 actions: [_editAction(state), _deleteAction(state)],
               ),
               backgroundColor: Colors.white,
-              floatingActionButton: state.activeTab == 1 && (state.visa!.entries!.length == 0 
+              floatingActionButton: tabController!.index == 1 && state.visa != null && (state.visa!.entries!.length == 0 
               || (state.visa!.entries!.length > 0 && state.visa!.entries!.last.hasExit!)) 
                   ? FloatingActionButton(
                 onPressed: () {
