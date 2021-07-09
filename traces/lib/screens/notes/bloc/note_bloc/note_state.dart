@@ -1,4 +1,6 @@
 
+import 'package:traces/utils/api/customException.dart';
+
 import '../../../../utils/misc/state_types.dart';
 import '../../models/note.model.dart';
 import '../../models/tag.model.dart';
@@ -13,9 +15,8 @@ class NoteState{
   final bool? allTagsSelected;
   final bool? noTagsSelected;
   final bool? noteDeleted;
-  final StateStatus status;
-  final String? errorMessage;
-
+  final StateStatus status;  
+  final CustomException? exception;
 
   const NoteState({
     required this.allNotes,
@@ -28,7 +29,7 @@ class NoteState{
     this.selectedTags,
     this.allTagsSelected,
     this.noTagsSelected,
-    this.errorMessage});
+    this.exception});
 
   factory NoteState.empty(){
     return NoteState(
@@ -42,7 +43,7 @@ class NoteState{
         noTagsSelected: false,
         noteDeleted: false,
         status: StateStatus.Empty,
-        errorMessage: ""
+        exception: null
     );
   }
 
@@ -58,7 +59,7 @@ class NoteState{
         noTagsSelected: false,
         noteDeleted: false,
         status: StateStatus.Loading,
-        errorMessage: ""
+        exception: null
     );
   }
 
@@ -75,12 +76,12 @@ class NoteState{
         noTagsSelected: noTagsSelected,
         noteDeleted: noteDeleted,
         status: StateStatus.Success,
-        errorMessage: ""
+        exception: null
     );
   }
 
   factory NoteState.failure({List<Note>? allNotes, List<Note>? filteredNotes, List<Tag>? selectedTags, SortFields? sortField,
-    SortDirections? sortDirection, String? error, bool? searchEnabled, bool? allTagsSelected, bool? noTagsSelected, bool? noteDeleted}){
+    SortDirections? sortDirection, CustomException? error, bool? searchEnabled, bool? allTagsSelected, bool? noTagsSelected, bool? noteDeleted}){
     return NoteState(
         allNotes: allNotes,
         filteredNotes: filteredNotes,
@@ -92,7 +93,7 @@ class NoteState{
         noTagsSelected: noTagsSelected,
         noteDeleted: noteDeleted,
         status: StateStatus.Error,
-        errorMessage: error
+        exception: error
     );
   }
 
@@ -107,7 +108,7 @@ class NoteState{
     bool? allTagsSelected,
     bool? noTagsSelected,
     StateStatus? status,
-    String? errorMessage
+    CustomException? errorMessage
   }){
     return NoteState(
         allNotes: allNotes ?? this.allNotes,
@@ -120,7 +121,7 @@ class NoteState{
         noTagsSelected: noTagsSelected ?? this.noTagsSelected,
         noteDeleted: noteDeleted ?? this.noteDeleted,
         status: status ?? this.status,
-        errorMessage: errorMessage ?? this.errorMessage
+        exception: errorMessage ?? this.exception
     );
   }
 
@@ -135,7 +136,7 @@ class NoteState{
     bool? noTagsSelected,
     bool? noteDeleted,
     StateStatus? stateStatus,
-    String? errorMessage
+    CustomException? errorMessage
   }){
     return copyWith(
         allNotes: allNotes,

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/utils/api/customException.dart';
+import 'package:traces/widgets/error_widgets.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../constants/route_constants.dart';
@@ -45,17 +47,45 @@ class _NotesViewState extends State<NotesView> {
       onRefresh: () async {
         context.read<NoteBloc>().add(GetAllNotes());} ,
       child: BlocListener<NoteBloc, NoteState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if(state.status == StateStatus.Error && state.exception != ConnectionException){
+            ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                //duration: Duration(days: 1),
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(                      
+                      width: 250,
+                      child: Text(
+                        state.exception.toString(), style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                    Icon(Icons.error)],
+                ),
+                backgroundColor: ColorsPalette.redPigment,
+              ),
+            );
+          }
+        },
         child: BlocBuilder<NoteBloc, NoteState>(
             bloc: BlocProvider.of(context),
             builder: (context, state){
+              if(state.status == StateStatus.Error){
+                if(state.exception is ConnectionException){
+                  return errorWidget(context, iconSize: 50.0, color: ColorsPalette.greenGrass, error: state.exception!, fontSize: 20.0);
+                }
+              }
 
               if(state.status == StateStatus.Empty || state.status == StateStatus.Loading){
                 return Center(child: CircularProgressIndicator());
               }
               if(state.status == StateStatus.Success){
                 final notes = _sortNotes(state.filteredNotes!, state.sortField);
-
                 
                 _selectedTags = state.selectedTags;
                 _allTagsSelected = state.allTagsSelected ?? true;
@@ -92,7 +122,7 @@ class _NotesViewState extends State<NotesView> {
                                               style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
                                           Text('${DateFormat.yMMMd().format(note.updatedDate!)} / ${DateFormat.yMMMd().format(note.createdDate!)}',
                                               style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
-                                          trailing: _popupMenu(note, position),
+                                          //trailing: _popupMenu(note, position),
                                           onTap: (){
                                             Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
                                             {
@@ -212,7 +242,7 @@ class _NotesViewState extends State<NotesView> {
     return filteredNotes;
   }
 
-  Widget _popupMenu(Note note, int position) => PopupMenuButton<int>(
+  /*Widget _popupMenu(Note note, int position) => PopupMenuButton<int>(
     itemBuilder: (context) => [
       PopupMenuItem(
         value: 2,
@@ -228,7 +258,7 @@ class _NotesViewState extends State<NotesView> {
               child: NoteDeleteAlert(note: note, callback: (val) =>''),
             ),
         );
-      }},);
+      }},);*/
 
 }
 

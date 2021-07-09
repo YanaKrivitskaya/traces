@@ -59,10 +59,12 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
+                duration: Duration(days: 1),
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
+                      
                       width: 250,
                       child: Text(
                         state.errorMessage!, style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite)),

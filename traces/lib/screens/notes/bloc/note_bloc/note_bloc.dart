@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 
@@ -49,10 +50,14 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
     try{
       var notes = await _notesRepository.getNotes();
-      add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes));
+     // List<Note> filteredNotes = <Note>[];
+      //filteredNotes.addAll(event.allNotes!);
+      yield NoteState.success(allNotes: notes, filteredNotes: notes,
+        sortField: SortFields.DATEMODIFIED, sortDirection: SortDirections.ASC, searchEnabled: false, noteDeleted: false);
+      //add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes));
     }on CustomException catch(e){
-      yield NoteState.failure(error: e.toString());
-    }    
+      yield NoteState.failure(error: e);      
+    }
   }
 
   Stream<NoteState> _mapNotesUpdateSortFilterToState(UpdateSortFilter event) async*{
@@ -73,12 +78,18 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
 
     try{
-      await _notesRepository.deleteNote(event.note!.id);
-      state.allNotes?.removeWhere((n) => n.id == event.note!.id);
-      state.filteredNotes?.removeWhere((n) => n.id == event.note!.id);
-      yield state.update(allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: true);
+      var response = await _notesRepository.deleteNote(event.note!.id);
+      if(response == "Ok"){
+        state.allNotes?.removeWhere((n) => n.id == event.note!.id);
+        state.filteredNotes?.removeWhere((n) => n.id == event.note!.id);
+        yield state.update(allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: true);
+      }else{
+        yield NoteState.failure(
+          error: CustomException(Error.Default, "Something went wrong"),
+          allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: false);
+      }      
     }on CustomException catch(e){
-      yield NoteState.failure(error: e.toString());
+      yield NoteState.failure(error: e, allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: false);
     }   
   }
 

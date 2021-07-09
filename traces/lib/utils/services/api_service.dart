@@ -34,7 +34,7 @@ class ApiService {
     var responseJson;
 
     var refreshToken = await _storage!.read(key: "refresh_token");
-    if (refreshToken == null) throw UnauthorisedException();
+    if (refreshToken == null) throw UnauthorizedException();
     var body = {
       "token": refreshToken,
       "device": _deviceId
@@ -53,7 +53,7 @@ class ApiService {
       _accessToken = responseJson["accessToken"];     
 
     }on SocketException catch(e) {
-      throw CustomException('No Internet connection');
+      throw ConnectionException('No Internet connection');
     }
     return responseJson;
   }
@@ -65,7 +65,7 @@ class ApiService {
     Uri uri = Uri.parse(_baseUrl + 'auth/revoke-token');
 
     var token = await _storage!.read(key: "refresh_token");
-    if (token == null) throw UnauthorisedException();
+    if (token == null) throw UnauthorizedException();
     var body = {
       "token": token,
       "device": _deviceId
@@ -81,14 +81,14 @@ class ApiService {
       responseJson = await sendPost(uri, headers, json.encode(body));      
 
     }on SocketException catch(e) {
-      throw CustomException('No Internet connection');
-    }on UnauthorisedException catch(e) {
+      throw ConnectionException('No Internet connection');
+    }on UnauthorizedException catch(e) {
       await refreshToken();
       
       headers["authorization"] = "Bearer $_accessToken";
 
       token = await _storage!.read(key: "refresh_token");
-      if (token == null) throw UnauthorisedException();
+      if (token == null) throw UnauthorizedException();
       body = {
         "token": token
       };
@@ -106,7 +106,7 @@ class ApiService {
     try{
       responseJson = await sendGet(uri, null);
     }on SocketException {
-      throw CustomException('No Internet connection');
+      throw ConnectionException('No Internet connection');
     }
     return responseJson;
   }
@@ -124,8 +124,8 @@ class ApiService {
     try{      
       responseJson = await sendGet(uri, headers);
     }on SocketException {
-      throw CustomException('No Internet connection');
-    }on UnauthorisedException {
+      throw ConnectionException('No Internet connection');
+    }on UnauthorizedException {
       await refreshToken();
 
       headers["authorization"] = "Bearer $_accessToken";
@@ -149,7 +149,7 @@ class ApiService {
       responseJson = await sendPost(uri, headers, body);
       _accessToken = responseJson["accessToken"] ?? _accessToken;
     }on SocketException catch(e) {
-      throw CustomException('No Internet connection');
+      throw ConnectionException('No Internet connection');
     }
     
     return responseJson;
@@ -169,11 +169,10 @@ class ApiService {
     try{
       responseJson = await sendPost(uri, headers, body);      
     }on SocketException catch(e) {
-      throw CustomException('No Internet connection');
-    }on UnauthorisedException catch(e) {
+      throw ConnectionException('No Internet connection');
+    }on UnauthorizedException catch(e) {
       await refreshToken();
-
-      //var accessToken = await _storage!.read(key: "access_token");
+     
       headers["authorization"] = "Bearer $_accessToken";
       
       responseJson = await sendPost(uri, headers, body);      
@@ -184,8 +183,7 @@ class ApiService {
   Future<dynamic> putSecure(String url, String body) async{
     print("putSecure");
     var responseJson;
-
-    //var accessToken = await _storage!.read(key: "access_token");
+    
     Uri uri = Uri.parse(_baseUrl + url);
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json",
@@ -196,11 +194,10 @@ class ApiService {
     try{
       responseJson = await sendPut(uri, headers, body);      
     }on SocketException catch(e) {
-      throw CustomException('No Internet connection');
-    }on UnauthorisedException catch(e) {
+      throw ConnectionException('No Internet connection');
+    }on UnauthorizedException catch(e) {
       await refreshToken();
-
-      //var accessToken = await _storage!.read(key: "access_token");
+      
       headers["authorization"] = "Bearer $_accessToken";
       
       responseJson = await sendPut(uri, headers, body);      
@@ -211,8 +208,7 @@ class ApiService {
   Future<dynamic> deleteSecure(String url) async{
     print("deleteSecure");
     var responseJson;
-
-    //var accessToken = await _storage!.read(key: "access_token");
+   
     Uri uri = Uri.parse(_baseUrl + url);
     Map<String, String> headers = {      
       HttpHeaders.authorizationHeader: "Bearer $_accessToken",
@@ -222,11 +218,10 @@ class ApiService {
     try{      
       responseJson = await sendDelete(uri, headers);
     }on SocketException {
-      throw CustomException('No Internet connection');
-    }on UnauthorisedException {
+      throw ConnectionException('No Internet connection');
+    }on UnauthorizedException {
       await refreshToken();
-
-      //var accessToken = await _storage!.read(key: "access_token");
+      
       headers["authorization"] = "Bearer $_accessToken";
       
       responseJson = await sendDelete(uri, headers);      
@@ -271,13 +266,13 @@ class ApiService {
         return data;
       }      
       case 400:
-        throw CustomException("Invalid Request: $errorMessage");
+        throw BadRequestException(errorMessage);
       case 401:
-        throw UnauthorisedException(errorMessage); 
+        throw UnauthorizedException(errorMessage); 
       case 403:
         throw ForbiddenException(errorMessage);      
       default:
-        throw CustomException(
+        throw CustomException(Error.Default, 
             'Server Error. StatusCode: ${response.statusCode}. Error: ${errorMessage}');
     }
   }  
