@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:traces/utils/api/customException.dart';
+
 import '../../../utils/services/api_service.dart';
 import '../models/create_note.model.dart';
 import '../models/note.model.dart';
@@ -6,7 +10,7 @@ class ApiNotesRepository{
   ApiService apiProvider = ApiService();
   String notesUrl = 'notes/';
 
-  Future<List<Note>?> getNotes( )async{
+  Future<List<Note>?> getNotes( )async{    
     print("getNotes");
     final response = await apiProvider.getSecure(notesUrl);
       
@@ -23,8 +27,10 @@ class ApiNotesRepository{
     return note;
   }
 
-  Future<void> deleteNote(int? noteId) async {
-    await apiProvider.deleteSecure(notesUrl + '/$noteId');    
+  Future<String> deleteNote(int? noteId) async {
+    //throw ForbiddenException("No permissions to delete this note");
+    var response = await apiProvider.deleteSecure(notesUrl + '/$noteId');
+    return response["message"] ?? null;
   }
 
   Future<Note?> addNoteTag(int? noteId, int? tagId) async {
