@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/widgets/error_widgets.dart';
 
 import '../../auth/auth_bloc/bloc.dart';
 import '../../constants/color_constants.dart';
@@ -43,7 +44,7 @@ class _ProfileViewState extends State<ProfileView>{
   Widget build(BuildContext context) {
     return BlocListener<ProfileBloc, ProfileState>(
       listener: (context, state){
-        if(state.status == StateStatus.Error){
+        if(state.status == StateStatus.Error && state.profile != null){
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -54,7 +55,7 @@ class _ProfileViewState extends State<ProfileView>{
                     Container(
                       width: 250,
                       child: Text(
-                        state.errorMessage!, style: quicksandStyle(color: ColorsPalette.lynxWhite),
+                        state.exception.toString(), style: quicksandStyle(color: ColorsPalette.lynxWhite),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 5,
                       ),
@@ -74,12 +75,14 @@ class _ProfileViewState extends State<ProfileView>{
           return Center(child: CircularProgressIndicator());
         }
         if(state.status == StateStatus.Success || state.status == StateStatus.Error){
-          _profile = state.profile;
-          _familyGroup = _profile!.groups?.firstWhere((g) => g.name == "Family" && g.ownerAccountId == _profile!.accountId, orElse: null);
+          if(state.status == StateStatus.Success){
+            _profile = state.profile;
+            _familyGroup = _profile!.groups?.firstWhere((g) => g.name == "Family" && g.ownerAccountId == _profile!.accountId, orElse: null);
+          }          
 
           return Container(
             padding: EdgeInsets.all(10.0),
-            child: Container(
+            child: state.profile != null ? Container(
               child: Column(
                 children: <Widget>[
                   Row(
@@ -122,7 +125,7 @@ class _ProfileViewState extends State<ProfileView>{
                   _footer()
                 ],
               ),
-            )
+            ) : state.exception != null ? errorWidget(context, error: state.exception!) : loadingWidget(ColorsPalette.meditSea)
           );
         }else return loadingWidget(ColorsPalette.meditSea);
       },

@@ -1,3 +1,5 @@
+import 'package:traces/utils/api/customException.dart';
+
 import '../../../../utils/misc/state_types.dart';
 import '../../model/group_user_model.dart';
 import '../../model/profile_model.dart';
@@ -8,7 +10,7 @@ class ProfileState {
   final bool isUsernameValid;
   final StateMode mode;
   final StateStatus status;
-  final String? errorMessage;
+  final CustomException? exception;
 
   const ProfileState({
     required this.profile,
@@ -16,7 +18,7 @@ class ProfileState {
     required this.isUsernameValid,
     required this.mode,
     required this.status,
-    this.errorMessage});
+    this.exception});
 
   factory ProfileState.empty(){
     return ProfileState(
@@ -25,7 +27,7 @@ class ProfileState {
         isUsernameValid: true,
         mode: StateMode.View,
         status: StateStatus.Empty,
-        errorMessage: null
+        exception: null
     );
   }
 
@@ -36,7 +38,7 @@ class ProfileState {
         isUsernameValid: true,
         mode: StateMode.View,
         status: StateStatus.Loading,
-        errorMessage: null
+        exception: null
     );
   }
 
@@ -47,18 +49,18 @@ class ProfileState {
         isUsernameValid: true,
         mode: StateMode.View,
         status: StateStatus.Success,
-        errorMessage: null
+        exception: null
     );
   }
 
-  factory ProfileState.failure({Profile? profile, List<GroupUser>? members, String? error}){
+  factory ProfileState.failure({Profile? profile, List<GroupUser>? members, CustomException? exception}){
     return ProfileState(
         profile: profile,
         familyMembers: members,
         isUsernameValid: true,
         mode: StateMode.View,
         status: StateStatus.Error,
-        errorMessage: error
+        exception: exception
     );
   }
 
@@ -68,7 +70,7 @@ class ProfileState {
     bool? isUsernameValid,
     StateMode? mode,
     StateStatus? stateStatus,
-    String? errorMessage
+    CustomException? exception
   }){
     return ProfileState(
         profile: profile ?? this.profile,
@@ -76,7 +78,7 @@ class ProfileState {
         isUsernameValid: isUsernameValid ?? this.isUsernameValid,
         mode: mode ?? this.mode,
         status: stateStatus ?? this.status,
-        errorMessage: errorMessage ?? this.errorMessage
+        exception: exception ?? this.exception
     );
   }
 
@@ -86,7 +88,7 @@ class ProfileState {
     bool? isUsernameValid,
     StateMode? mode,
     StateStatus? state,
-    String? errorMessage
+    CustomException? exception
   }){
     return copyWith(
         profile: profile,
@@ -94,7 +96,7 @@ class ProfileState {
         isUsernameValid: isUsernameValid,
         mode: mode,
         stateStatus: state,
-        errorMessage: errorMessage
+        exception: exception
     );
   }
 
