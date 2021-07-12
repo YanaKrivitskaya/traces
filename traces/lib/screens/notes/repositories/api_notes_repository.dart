@@ -10,7 +10,7 @@ class ApiNotesRepository{
   ApiService apiProvider = ApiService();
   String notesUrl = 'notes/';
 
-  Future<List<Note>?> getNotes( )async{    
+  Future<List<Note>?> getNotes( )async{
     print("getNotes");
     final response = await apiProvider.getSecure(notesUrl);
       
@@ -27,13 +27,12 @@ class ApiNotesRepository{
     return note;
   }
 
-  Future<String> deleteNote(int? noteId) async {
-    //throw ForbiddenException("No permissions to delete this note");
+  Future<String> deleteNote(int? noteId) async {    
     var response = await apiProvider.deleteSecure(notesUrl + '/$noteId');
     return response["message"] ?? null;
   }
 
-  Future<Note?> addNoteTag(int? noteId, int? tagId) async {
+  Future<Note?> addNoteTag(int? noteId, int? tagId) async {     
     final response = await apiProvider.postSecure(notesUrl + '$noteId/tags/$tagId', null);
     
     var note = response["note"] != null ?
@@ -49,7 +48,7 @@ class ApiNotesRepository{
     return note;
   }
 
-  Future<Note?> updateNote(Note note) async{
+  Future<Note?> updateNote(Note note) async{    
     final response = await apiProvider.putSecure(notesUrl + '${note.id}', note.toJson());
     
     var newNote = response["note"] != null ?

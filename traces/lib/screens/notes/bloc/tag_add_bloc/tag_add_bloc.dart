@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:traces/utils/api/customException.dart';
 
 import '../../../../utils/misc/state_types.dart';
 import '../../models/tag.model.dart';
@@ -29,38 +30,43 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
       yield* _mapUpdateNoteTagToState(event);
     } else if (event is TagChanged) {
       yield* _mapTagChangedToState(event);
-    }else if (event is UpdateTagsList) {
-      yield* _mapUpdateTagsListToState(event);
     }
-  }
-
-  Stream<TagAddState> _mapUpdateTagsListToState(UpdateTagsList event) async* {
-    List<Tag> filteredTags = <Tag>[];
-    filteredTags.addAll(event.allTags!);
-    yield TagAddState.success(allTags: event.allTags, filteredTags: filteredTags);
   }
 
   Stream<TagAddState> _mapGetTagsToState() async* {
     yield TagAddState.loading();
-
-    var tags = await _tagsRepository.getTags();
-    add(UpdateTagsList(tags, tags));
+    try{
+      var tags = await _tagsRepository.getTags();
+      yield TagAddState.success(allTags: tags, filteredTags: tags);
+    } on CustomException catch(e){
+      yield TagAddState.failure(allTags: state.allTags, filteredTags: state.filteredTags, error: e);
+    }    
   }
 
   Stream<TagAddState> _mapAddTagToState(AddTag event) async* {
     yield state.update(stateStatus: StateStatus.Loading);
 
-    Tag tag = await _tagsRepository.createTag(event.tag);
-    state.allTags!.add(tag);
+    try{
+      Tag tag = await _tagsRepository.createTag(event.tag);
+      state.allTags!.add(tag);
 
-    add(TagChanged(tagName: tag.name));    
+      add(TagChanged(tagName: tag.name));    
+    }on CustomException catch(e){
+      yield TagAddState.failure(allTags: state.allTags, filteredTags: state.filteredTags, error: e);
+    } 
+    
   }
 
   Stream<TagAddState> _mapUpdateNoteTagToState(UpdateNoteTag event) async* {
-    event.isChecked!      
+    try{
+      event.isChecked!      
       ? await _notesRepository.addNoteTag(event.noteId, event.tagId)
       : await _notesRepository.deleteNoteTag(event.noteId, event.tagId);
-    yield TagAddState.success(allTags: state.allTags, filteredTags: state.filteredTags);
+      yield TagAddState.success(allTags: state.allTags, filteredTags: state.filteredTags);
+    }on CustomException catch(e){
+      yield TagAddState.failure(allTags: state.allTags, filteredTags: state.filteredTags, error: e);
+    } 
+    
   }
 
   Stream<TagAddState> _mapTagChangedToState(TagChanged event) async*{

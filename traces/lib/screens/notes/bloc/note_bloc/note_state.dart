@@ -64,7 +64,7 @@ class NoteState{
   }
 
   factory NoteState.success({List<Note>? allNotes, List<Note>? filteredNotes, List<Tag>? selectedTags, SortFields? sortField,
-    SortDirections? sortDirection, bool? searchEnabled, bool? allTagsSelected, bool? noTagsSelected, bool? noteDeleted}){
+    SortDirections? sortDirection, bool? searchEnabled, bool? allTagsSelected, bool? noTagsSelected, bool? noteDeleted, CustomException? exception}){
     return NoteState(
         allNotes: allNotes,
         filteredNotes: filteredNotes,
@@ -76,7 +76,7 @@ class NoteState{
         noTagsSelected: noTagsSelected,
         noteDeleted: noteDeleted,
         status: StateStatus.Success,
-        exception: null
+        exception: exception
     );
   }
 

@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/error_widgets.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/misc/state_types.dart';
@@ -45,8 +47,11 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
 
   @override
   Widget build(BuildContext context) {
-
-    return BlocBuilder<TagAddBloc, TagAddState>(
+    return BlocListener<TagAddBloc, TagAddState>(
+      listener: (context, state){        
+        
+      },
+      child: BlocBuilder<TagAddBloc, TagAddState>(
         builder: (context, state) {
 
           if(state.status == StateStatus.Success){
@@ -77,7 +82,7 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
                   ),
                 ),
               ],
-              content: Container(
+              content: state.status == StateStatus.Success ? Container(
                 child: Column(
                   children: <Widget>[
                     _addSearchTagField(),
@@ -91,9 +96,13 @@ class _TagsAddDialogState extends State<TagsAddDialog>{
                                 ? Center(child: CircularProgressIndicator(),)
                                 : Text("No tags found")
                         ],),),
-                    )],),)
+                    )],),) 
+                    : state.status == StateStatus.Error && state.errorMessage != null
+                      ? errorWidget(context, error: state.errorMessage!)
+                    : loadingWidget(ColorsPalette.nycTaxi)
           );
-        });
+        }),
+    );    
   }
   
   Widget _addSearchTagField() => new Row(

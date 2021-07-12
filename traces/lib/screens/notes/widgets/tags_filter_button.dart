@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/widgets/error_widgets.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/misc/state_types.dart';
@@ -58,37 +59,38 @@ class _TagsDialogState extends State<TagsDialog>{
   Widget build(BuildContext context){    
     return BlocBuilder<TagFilterBloc, TagFilterState>(
         builder: (context, state) {
-          if(state.status == StateStatus.Success){
+          if(state.status == StateStatus.Success || state.status == StateStatus.Error){
+            if(state.status == StateStatus.Success){
+              _tags = state.allTags;
+              _selectedTags = state.selectedTags ?? state.allTags;
+              _noTags.isChecked = state.noTagsChecked;
+              _selectAll.isChecked = state.allTagsChecked;
 
-            _tags = state.allTags;
-            _selectedTags = state.selectedTags ?? state.allTags;
-            _noTags.isChecked = state.noTagsChecked;
-            _selectAll.isChecked = state.allTagsChecked;
-
-            // uncheck all
-            if(state.allUnChecked!){
-              _tags!.forEach((t) => t.isChecked = false);
-              _noTags.isChecked = false;
-            }
-
-            //check all
-            else if(_selectAll.isChecked!){
-              _tags!.forEach((t) => t.isChecked = true);
-              _noTags.isChecked = true;
-            }
-
-            //check selected
-            else if (_tags != null && !_selectAll.isChecked!) {
-              if (_selectedTags != null) {
-                for(var i=0; i< _tags!.length; i++){
-                  if(_selectedTags!.where((tag) => tag.id == _tags![i].id).toList().length > 0){
-                    _tags![i].isChecked = true;
-                  }else _tags![i].isChecked = false;
-                }
-              } else {
-                _tags!.forEach((t) => t.isChecked = true);
+              // uncheck all
+              if(state.allUnChecked!){
+                _tags!.forEach((t) => t.isChecked = false);
+                _noTags.isChecked = false;
               }
-            }
+
+              //check all
+              else if(_selectAll.isChecked!){
+                _tags!.forEach((t) => t.isChecked = true);
+                _noTags.isChecked = true;
+              }
+
+              //check selected
+              else if (_tags != null && !_selectAll.isChecked!) {
+                if (_selectedTags != null) {
+                  for(var i=0; i< _tags!.length; i++){
+                    if(_selectedTags!.where((tag) => tag.id == _tags![i].id).toList().length > 0){
+                      _tags![i].isChecked = true;
+                    }else _tags![i].isChecked = false;
+                  }
+                } else {
+                  _tags!.forEach((t) => t.isChecked = true);
+                }
+              }
+            }            
             return new AlertDialog(
             title: Text('Tags'),
             actions: <Widget>[
@@ -104,7 +106,7 @@ class _TagsDialogState extends State<TagsDialog>{
                 ),                
               ),
             ],
-            content: Container(
+            content: state.status == StateStatus.Success ? Container(
               child: Column(
                 children: <Widget>[
                   _selectAllOptions(),
@@ -113,7 +115,9 @@ class _TagsDialogState extends State<TagsDialog>{
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(children: <Widget>[_tagOptions()],),),
-                  )],),)
+                  )],),) : state.status == StateStatus.Error && state.errorMessage != null 
+                  ? errorWidget(context, error: state.errorMessage!)
+                  : loadingWidget(ColorsPalette.nycTaxi)
           );
           }
           return loadingWidget(ColorsPalette.greenGrass);

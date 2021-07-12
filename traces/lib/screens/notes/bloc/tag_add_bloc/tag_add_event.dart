@@ -40,13 +40,3 @@ class TagChanged extends TagAddEvent{
   @override
   List<Object?> get props => [tagName];
 }
-
-class UpdateTagsList extends TagAddEvent {
-  final List<Tag>? allTags;
-  final List<Tag>? filteredTags;
-
-  const UpdateTagsList(this.allTags, this.filteredTags);
-
-  @override
-  List<Object?> get props => [allTags, filteredTags];
-}

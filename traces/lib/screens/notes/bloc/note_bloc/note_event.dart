@@ -49,14 +49,14 @@ class SelectedTagsUpdated extends NoteEvent{
   List<Object?> get props => [selectedTags, allTagsSelected, noTagsSelected];
 }
 
-class DeleteNote extends NoteEvent {
+/*class DeleteNote extends NoteEvent {
   final Note? note;
 
   const DeleteNote(this.note);
 
   @override
   List<Object?> get props => [note];
-}
+}*/
 
 class SearchTextChanged extends NoteEvent{
   final String noteName;
