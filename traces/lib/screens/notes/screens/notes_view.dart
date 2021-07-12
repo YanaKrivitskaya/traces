@@ -47,7 +47,7 @@ class _NotesViewState extends State<NotesView> {
         context.read<NoteBloc>().add(GetAllNotes());} ,
       child: BlocListener<NoteBloc, NoteState>(
         listener: (context, state) {
-          if(state.status == StateStatus.Error && !(state.exception is ConnectionException)){
+          if(state.status != StateStatus.Error && state.exception != null){
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -75,9 +75,7 @@ class _NotesViewState extends State<NotesView> {
             bloc: BlocProvider.of(context),
             builder: (context, state){
               if(state.status == StateStatus.Error){
-                if(state.exception is ConnectionException){
-                  return errorWidget(context, iconSize: 50.0, color: ColorsPalette.greenGrass, error: state.exception!, fontSize: 20.0);
-                }
+                return errorWidget(context, iconSize: 50.0, color: ColorsPalette.greenGrass, error: state.exception!, fontSize: 20.0);
               }
 
               if(state.status == StateStatus.Empty || state.status == StateStatus.Loading){

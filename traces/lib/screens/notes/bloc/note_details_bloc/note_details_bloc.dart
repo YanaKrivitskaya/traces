@@ -27,6 +27,8 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
       yield* _mapEditModeToState(event);
     }else if(event is SaveNoteClicked){
       yield* _mapSaveNoteToState(event);
+    }else if (event is DeleteNote) {
+      yield* _mapDeleteNoteToState(event);
     }
   }
 
@@ -35,32 +37,42 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
 
     try{
       Note? note = await _notesRepository.getNoteById(event.noteId);
-      yield ViewDetailsState(note);
+      yield ViewDetailsState(note, null);
     } on CustomException catch(e){
-      yield ErrorDetailsState(e.toString());
+      yield ErrorDetailsState(state.note, e);
     }
   }
 
   Stream<NoteDetailsState> _mapSaveNoteToState(SaveNoteClicked event) async*{
-    Note? note;    
-
-    if(event.note.id != null){
-      note = await _notesRepository.updateNote(event.note);/*.timeout(Duration(seconds: 3), onTimeout: (){
-        print("have timeout");
-        return event.note;
-      });*/
+    Note? note;
+    
+    try{
+      if(event.note.id != null){
+      note = await _notesRepository.updateNote(event.note);
     }else{
       var newNote = CreateNoteModel(
         title: event.note.title,
         content: event.note.content
       );
-      note = await _notesRepository.addNewNote(newNote);/*.timeout(Duration(seconds: 3), onTimeout: (){
-        print("have timeout");
-        return event.note;
-      });*/
+      note = await _notesRepository.addNewNote(newNote);
     }
     
-    yield ViewDetailsState(note);
+      yield ViewDetailsState(note, null);
+    } on CustomException catch(e){
+      yield ErrorDetailsState(state.note, e);
+    }    
+  }
+
+  Stream<NoteDetailsState> _mapDeleteNoteToState(DeleteNote event) async* {
+    var currentState = state;
+    yield LoadingDetailsState(null);
+
+    try{
+      await _notesRepository.deleteNote(event.note!.id);
+      yield ViewDetailsState(currentState.note, true);
+    }on CustomException catch(e){
+       yield ErrorDetailsState(currentState.note, e);
+    }   
   }
 
   Stream<NoteDetailsState> _mapNewNoteModeToState(NewNoteMode event) async*{

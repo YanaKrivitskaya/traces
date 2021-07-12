@@ -1,4 +1,6 @@
 
+import 'package:traces/utils/api/customException.dart';
+
 import '../../../../utils/misc/state_types.dart';
 import '../../models/tag.model.dart';
 
@@ -10,7 +12,7 @@ class TagFilterState{
   final bool? allTagsChecked;
   final bool? allUnChecked;
   final StateStatus status;
-  final String? errorMessage;
+  final CustomException? errorMessage;
 
   const TagFilterState({
     required this.allTags,
@@ -29,7 +31,7 @@ class TagFilterState{
         allTagsChecked: true,
         allUnChecked: false,
         status: StateStatus.Empty,
-        errorMessage: ""
+        errorMessage: null
     );
   }
 
@@ -41,7 +43,7 @@ class TagFilterState{
         allTagsChecked: true,
         allUnChecked: false,
         status: StateStatus.Loading,
-        errorMessage: ""
+        errorMessage: null
     );
   }
 
@@ -53,11 +55,11 @@ class TagFilterState{
         allTagsChecked: allTagsChecked,
         allUnChecked: allUnchecked,
         status: StateStatus.Success,
-        errorMessage: ""
+        errorMessage: null
     );
   }
 
-  factory TagFilterState.failure({List<Tag>? allTags, List<Tag>? selectedTags, bool? noTagsChecked, bool? allTagsChecked, String? error, bool? allUnchecked}){
+  factory TagFilterState.failure({List<Tag>? allTags, List<Tag>? selectedTags, bool? noTagsChecked, bool? allTagsChecked, CustomException? error, bool? allUnchecked}){
     return TagFilterState(
         allTags: allTags,
         selectedTags: selectedTags,
@@ -76,7 +78,7 @@ class TagFilterState{
     bool? allTagsChecked,
     bool? allUnChecked,
     StateStatus? stateStatus,
-    String? errorMessage
+    CustomException? errorMessage
   }){
     return TagFilterState(
         allTags: allTags ?? this.allTags,
@@ -96,7 +98,7 @@ class TagFilterState{
     bool? allTagsChecked,
     bool? allUnChecked,
     StateStatus? stateStatus,
-    String? errorMessage
+    CustomException? errorMessage
   }){
     return copyWith(
         allTags: allTags,

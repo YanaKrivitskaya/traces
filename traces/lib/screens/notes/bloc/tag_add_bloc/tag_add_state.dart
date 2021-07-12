@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:traces/utils/api/customException.dart';
 
 import '../../../../utils/misc/state_types.dart';
 import '../../models/tag.model.dart';
@@ -7,7 +8,7 @@ class TagAddState {
   final List<Tag>? allTags;
   final List<Tag>? filteredTags;
   final StateStatus status;
-  final String? errorMessage;
+  final CustomException? errorMessage;
 
 
   const TagAddState({
@@ -21,7 +22,7 @@ class TagAddState {
         allTags: null,
         filteredTags: null,
         status: StateStatus.Empty,
-        errorMessage: ""
+        errorMessage: null
     );
   }
 
@@ -30,7 +31,7 @@ class TagAddState {
         allTags: null,
         filteredTags: null,
         status: StateStatus.Loading,
-        errorMessage: ""
+        errorMessage: null
     );
   }
 
@@ -39,11 +40,11 @@ class TagAddState {
         allTags: allTags,
         filteredTags: filteredTags,
         status: StateStatus.Success,
-        errorMessage: ""
+        errorMessage:null
     );
   }
 
-  factory TagAddState.failure({List<Tag>? allTags, List<Tag>? filteredTags, String? error}){
+  factory TagAddState.failure({List<Tag>? allTags, List<Tag>? filteredTags, CustomException? error}){
     return TagAddState(
         allTags: allTags,
         filteredTags: filteredTags,
@@ -56,7 +57,7 @@ class TagAddState {
     List<Tag>? allTags,
     List<Tag>? filteredTags,
     StateStatus? stateStatus,
-    String? errorMessage
+    CustomException? errorMessage
   }){
     return TagAddState(
         allTags: allTags ?? this.allTags,
@@ -70,7 +71,7 @@ class TagAddState {
     List<Tag>? allTags,
     List<Tag>? filteredTags,
     StateStatus? stateStatus,
-    String? errorMessage
+    CustomException? errorMessage
   }){
     return copyWith(
         allTags: allTags,

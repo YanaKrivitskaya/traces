@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/error_widgets.dart';
 
 import '../../../constants/color_constants.dart';
 import '../bloc/note_bloc/bloc.dart';
@@ -48,8 +50,30 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   Widget build(BuildContext context){
 
     return BlocListener<NoteDetailsBloc, NoteDetailsState>(
-      listener: (context, state){
-        print(state);
+      listener: (context, state){        
+        if(state is ErrorDetailsState && state.note != null){
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                //duration: Duration(days: 1),
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(                      
+                      width: 250,
+                      child: Text(
+                        state.errorMessage.toString(), style:quicksandStyle(color: ColorsPalette.lynxWhite),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                    Icon(Icons.error)],
+                ),
+                backgroundColor: ColorsPalette.redPigment,
+              ),
+            );
+        }
       },
       child: BlocBuilder<NoteDetailsBloc, NoteDetailsState>(builder: (context, state){
         if(state is ViewDetailsState){
@@ -82,7 +106,8 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           body: Container(
               child: state is LoadingDetailsState || state is InitialNoteDetailsState
                   ? Center(child: CircularProgressIndicator())
-                  :_noteView(_note!.tags)
+                  : state is ErrorDetailsState && state.note == null ? errorWidget(context, error: state.errorMessage)
+                  : _noteView(_note!.tags)
           ),
           backgroundColor: Colors.white,
         );
@@ -209,12 +234,56 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         context: context,
         barrierDismissible: false, // user must tap button!
         builder: (_) =>
-            BlocProvider<NoteBloc>(
-              create: (context) => NoteBloc(/*TagFilterBloc()*/),
+            BlocProvider<NoteDetailsBloc>(
+              create: (context) => NoteDetailsBloc(/*TagFilterBloc()*/),
               child: NoteDeleteAlert(note: note,
                   callback: (val) async {
-                    if(val == 'Delete'){
+                    if(val == 'Ok'){
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            //duration: Duration(days: 1),
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(                      
+                                  width: 250,
+                                  child: Text(
+                                    "Note deleted successfully", style:quicksandStyle(color: ColorsPalette.lynxWhite),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 5,
+                                  ),
+                                ),
+                                Icon(Icons.check, color: ColorsPalette.lynxWhite,)],
+                            ),
+                            backgroundColor: ColorsPalette.greenGrass,
+                          ),
+                      );
                       Navigator.of(context).pop();
+                    }
+                    else{
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            //duration: Duration(days: 1),
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(                      
+                                  width: 250,
+                                  child: Text(
+                                    val, style:quicksandStyle(color: ColorsPalette.lynxWhite),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 5,
+                                  ),
+                                ),
+                                Icon(Icons.error, color: ColorsPalette.lynxWhite,)],
+                            ),
+                            backgroundColor: ColorsPalette.redPigment,
+                          ),
+                      );
                     }
                   }                 
               ),

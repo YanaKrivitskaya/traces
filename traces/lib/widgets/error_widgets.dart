@@ -18,13 +18,13 @@ Widget errorWidget(BuildContext context, {double? iconSize, Color? color, requir
     : Icon(Icons.report_problem_outlined, size: iconSize ?? 50.0, color: color ?? ColorsPalette.meditSea),
     Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
       Container(padding: EdgeInsets.symmetric(horizontal: 10.0), 
-        width:  MediaQuery.of(context).size.width * 0.9,
-        child:  Text(
+        width:  MediaQuery.of(context).size.width * 0.6,
+        child:  Center(child: Text(
           error.toString(), 
           style: quicksandStyle(fontSize: fontSize ?? 20.0),
           overflow: TextOverflow.ellipsis,
           maxLines: 5
-      )),
+      ))),
      
     ],)
     

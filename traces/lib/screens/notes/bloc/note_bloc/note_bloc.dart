@@ -10,12 +10,11 @@ import '../../repositories/api_notes_repository.dart';
 import 'bloc.dart';
 
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
-  late StreamSubscription tagFilterBlocSubscription;
   final ApiNotesRepository _notesRepository;
 
   NoteBloc():
     _notesRepository = new ApiNotesRepository(), 
-    super(NoteState.empty()){}
+    super(NoteState.empty());
 
   @override
   Stream<NoteState> mapEventToState(
@@ -23,9 +22,9 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   ) async* {
     if (event is GetAllNotes) {
       yield* _mapGetAllNotesToState();
-    } else if (event is DeleteNote) {
+    } /*else if (event is DeleteNote) {
       yield* _mapDeleteNoteToState(event);
-    }else if (event is UpdateNotesList) {
+    }*/else if (event is UpdateNotesList) {
       yield* _mapUpdateNotesListToState(event);
     }else if(event is UpdateSortFilter){
       yield* _mapNotesUpdateSortFilterToState(event);
@@ -46,17 +45,17 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   Stream<NoteState> _mapGetAllNotesToState() async* {   
+    var currentState = state;
     yield NoteState.loading();
 
     try{
-      var notes = await _notesRepository.getNotes();
-     // List<Note> filteredNotes = <Note>[];
-      //filteredNotes.addAll(event.allNotes!);
+      var notes = await _notesRepository.getNotes();     
       yield NoteState.success(allNotes: notes, filteredNotes: notes,
-        sortField: SortFields.DATEMODIFIED, sortDirection: SortDirections.ASC, searchEnabled: false, noteDeleted: false);
-      //add(UpdateNotesList(notes, SortFields.DATEMODIFIED, SortDirections.ASC, notes));
+        sortField: SortFields.DATEMODIFIED, sortDirection: SortDirections.ASC, searchEnabled: false, noteDeleted: false);      
     }on CustomException catch(e){
-      yield NoteState.failure(error: e);      
+      if(currentState.allNotes != null) yield NoteState.success(allNotes: currentState.allNotes, filteredNotes: currentState.allNotes,
+        sortField: currentState.sortField, sortDirection: currentState.sortDirection, searchEnabled: currentState.searchEnabled, noteDeleted: false, exception: e);
+      else yield NoteState.failure(error: e);      
     }
   }
 
@@ -75,23 +74,17 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     yield state.update(stateStatus: StateStatus.Success, searchEnabled: !state.searchEnabled!, filteredNotes: filteredNotes);
   }
 
-  Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
+  /*Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
 
     try{
-      var response = await _notesRepository.deleteNote(event.note!.id);
-      if(response == "Ok"){
-        state.allNotes?.removeWhere((n) => n.id == event.note!.id);
-        state.filteredNotes?.removeWhere((n) => n.id == event.note!.id);
-        yield state.update(allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: true);
-      }else{
-        yield NoteState.failure(
-          error: CustomException(Error.Default, "Something went wrong"),
-          allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: false);
-      }      
+      await _notesRepository.deleteNote(event.note!.id);        
     }on CustomException catch(e){
-      yield NoteState.failure(error: e, allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: false);
+      if(state.allNotes != null){
+        yield state.update(allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: false, errorMessage: e);
+      }else
+      yield NoteState.failure(error: e, noteDeleted: false);
     }   
-  }
+  }*/
 
   Stream<NoteState> _mapSelectedTagsUpdatedToState(SelectedTagsUpdated event) async* {
     yield state.update(stateStatus: StateStatus.Loading);

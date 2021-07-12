@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:traces/utils/api/customException.dart';
 
 import '../../../../utils/misc/state_types.dart';
 import '../../models/tag.model.dart';
@@ -20,8 +21,6 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
   ) async* {
     if (event is GetTags) {
       yield* _mapGetTagsToState();
-    }else if (event is UpdateTagsList) {
-      yield* _mapUpdateTagsListToState(event);
     }else if (event is AllTagsChecked) {
       yield* _mapAllTagsCheckedToState(event);
     }else if (event is NoTagsChecked) {
@@ -31,36 +30,34 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
     }
   }
 
-  Stream<TagFilterState> _mapUpdateTagsListToState(UpdateTagsList event) async* {
-    yield TagFilterState.loading();
-
-    List<Tag> selectedTags= <Tag>[];
-    if(event.selectedTags!.isEmpty && !event.noTagsChecked! && !event.allTagsUnChecked!){
-      selectedTags.addAll(event.allTags!);
-    }else{
-      selectedTags.addAll(event.selectedTags!);
-    }
-
-    yield TagFilterState.success(allTags: event.allTags, selectedTags: selectedTags,
-        allTagsChecked: event.allTagsChecked, noTagsChecked: event.noTagsChecked, allUnchecked: event.allTagsUnChecked);
-  }
 
   Stream<TagFilterState> _mapGetTagsToState() async* {
+    try{
+      var tags = await _tagsRepository.getTags();
 
-    var tags = await _tagsRepository.getTags();
+      List<Tag>? selectedTags = <Tag>[];
+      bool allTagsChecked = !state.allTagsChecked! ? false : true;
+      bool noTagsChecked = !state.noTagsChecked! ? false : true;
+      bool allTagsUnChecked = !state.allUnChecked! ? false : true;
 
-    List<Tag>? selectedTags = <Tag>[];
-    bool allTagsChecked = !state.allTagsChecked! ? false : true;
-    bool noTagsChecked = !state.noTagsChecked! ? false : true;
-    bool allTagsUnChecked = !state.allUnChecked! ? false : true;
+      if(state.selectedTags != null){
+        selectedTags = state.selectedTags;
+      }else{
+        selectedTags = tags;
+      }
 
-    if(state.selectedTags != null){
-      selectedTags = state.selectedTags;
-    }else{
-      selectedTags = tags;
-    }
+      if(selectedTags!.isEmpty && !noTagsChecked! && !allTagsUnChecked!){
+        selectedTags.addAll(tags!);
+      }else{
+        selectedTags.addAll(selectedTags);
+      }
 
-    add(UpdateTagsList(tags, selectedTags: selectedTags, allTagsChecked: allTagsChecked, noTagsChecked: noTagsChecked, allTagsUnChecked: allTagsUnChecked));
+      yield TagFilterState.success(allTags: tags, selectedTags: selectedTags,
+          allTagsChecked: allTagsChecked, noTagsChecked: noTagsChecked, allUnchecked: allTagsUnChecked);
+    }on CustomException catch(e){
+      yield TagFilterState.failure(allTags: state.allTags, selectedTags: state.selectedTags,
+          allTagsChecked: state.allTagsChecked, noTagsChecked: state.noTagsChecked, allUnchecked: state.allUnChecked, error: e);
+    }   
   }
 
   Stream<TagFilterState> _mapTagCheckedToState(TagChecked event) async* {

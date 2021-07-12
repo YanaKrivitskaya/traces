@@ -38,3 +38,12 @@ class SaveNoteClicked extends NoteDetailsEvent{
   @override
   List<Object> get props => [note];
 }
+
+class DeleteNote extends NoteDetailsEvent {
+  final Note? note;
+
+  const DeleteNote(this.note);
+
+  @override
+  List<Object?> get props => [note];
+}
