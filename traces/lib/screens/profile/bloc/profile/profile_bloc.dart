@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:traces/utils/api/customException.dart';
 
 import '../../../../utils/helpers/validation_helper.dart';
 import '../../../../utils/misc/state_types.dart';
@@ -41,14 +42,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Stream<ProfileState> _mapUsernameChangedToState(String username) async*{
     yield state.update(
         isUsernameValid: Validator.isValidUsername(username),
-        errorMessage: null,
+        exception: null,
         mode: StateMode.Edit
     );
   }
 
   Stream<ProfileState> _mapShowFamilyDialogToState() async*{
     yield state.update(
-      errorMessage: null,
+      exception: null,
       mode: StateMode.View
     );
   }
@@ -60,11 +61,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     GroupUser user = GroupUser(name: event.username, userId: event.userId);
 
-    user = await profileRepository.updateUser(user);
+    try{
+      user = await profileRepository.updateUser(user);
 
-    Profile profile = currentState.profile!.copyWith(name: user.name);
+      Profile profile = currentState.profile!.copyWith(name: user.name);
 
-    yield ProfileState.success(profile: profile);
+      yield ProfileState.success(profile: profile);
+    }on CustomException catch(e){      
+      yield ProfileState.failure(profile: currentState.profile, exception: e);
+    }
+    
   }
 
   Stream<ProfileState> _mapGroupMemberUpdatedToState(FamilyUpdated event) async*{
@@ -84,29 +90,37 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       currentState.profile!.groups![groupIndex] = group;     
 
       yield ProfileState.success(profile: currentState.profile);
-    } catch(e){      
-      yield ProfileState.failure(profile: currentState.profile, error: e.toString());
+    } on CustomException catch(e){      
+      yield ProfileState.failure(profile: currentState.profile, exception: e);
     }
   }  
 
   Stream<ProfileState> _mapGetProfileToState(GetProfile event) async*{
+    ProfileState currentState = state;
    yield ProfileState.loading();
 
-   Profile profile = await profileRepository.getProfileWithGroups();    
+   try{
+      Profile profile = await profileRepository.getProfileWithGroups();    
 
-    yield ProfileState.success(profile: profile);
+      yield ProfileState.success(profile: profile);
+   }on CustomException catch(e){      
+      yield ProfileState.failure(profile: currentState.profile, exception: e);
+    }   
   }
 
   Stream<ProfileState> _mapUserRemovedFromGroupToState(UserRemovedFromGroup event) async*{
     ProfileState currentState = state;
     yield ProfileState.loading();
 
-    var group = await profileRepository.removeUserFromGroup(event.user.userId!, event.group.id!);
-    var groupIndex = currentState.profile!.groups!.indexWhere((g) => g.id == group.id);
+    try{
+      var group = await profileRepository.removeUserFromGroup(event.user.userId!, event.group.id!);
+      var groupIndex = currentState.profile!.groups!.indexWhere((g) => g.id == group.id);
 
-    currentState.profile!.groups![groupIndex] = group;
+      currentState.profile!.groups![groupIndex] = group;
 
-    yield ProfileState.success(profile: currentState.profile);
+      yield ProfileState.success(profile: currentState.profile);
+    }on CustomException catch(e){      
+      yield ProfileState.failure(profile: currentState.profile, exception: e);
+    }    
   }
-
 }

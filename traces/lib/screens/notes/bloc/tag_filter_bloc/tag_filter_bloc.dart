@@ -46,7 +46,7 @@ class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
         selectedTags = tags;
       }
 
-      if(selectedTags!.isEmpty && !noTagsChecked! && !allTagsUnChecked!){
+      if(selectedTags!.isEmpty && !noTagsChecked && !allTagsUnChecked){
         selectedTags.addAll(tags!);
       }else{
         selectedTags.addAll(selectedTags);

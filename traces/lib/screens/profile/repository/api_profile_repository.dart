@@ -1,3 +1,5 @@
+import 'package:traces/utils/api/customException.dart';
+
 import '../../../utils/services/api_service.dart';
 import '../model/group_model.dart';
 import '../model/group_user_model.dart';
@@ -7,14 +9,14 @@ class ApiProfileRepository{
   ApiService apiProvider = ApiService();
   String profileUrl = 'profile/';
   
-  Future<Profile> getProfileWithGroups() async{
+  Future<Profile> getProfileWithGroups() async{    
     print("getProfileWithGroups");
     final response = await apiProvider.getSecure(profileUrl);
     var profile = Profile.fromMap(response["profile"]);
     return profile;
   }
 
-  Future<List<Group>> getGroups() async{
+  Future<List<Group>> getGroups() async{    
     print("getGroups");
     final response = await apiProvider.getSecure('${profileUrl}groups');
     var groups = response["groups"] != null ? 
@@ -22,7 +24,7 @@ class ApiProfileRepository{
     return groups;
   }
 
-  Future<Group> getGroupUsers(int groupId) async{
+  Future<Group> getGroupUsers(int groupId) async{   
     print("getGroupUsers");
     final response = await apiProvider.getSecure(profileUrl + 'groups/$groupId/users');
     var group = Group.fromMap(response["group"]);
