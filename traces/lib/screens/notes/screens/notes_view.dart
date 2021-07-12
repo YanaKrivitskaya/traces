@@ -12,7 +12,6 @@ import '../../../utils/misc/state_types.dart';
 import '../bloc/note_bloc/bloc.dart';
 import '../models/note.model.dart';
 import '../models/tag.model.dart';
-import '../widgets/note_delete_alert.dart';
 
 class NotesView extends StatefulWidget{
   NotesView();
@@ -48,7 +47,7 @@ class _NotesViewState extends State<NotesView> {
         context.read<NoteBloc>().add(GetAllNotes());} ,
       child: BlocListener<NoteBloc, NoteState>(
         listener: (context, state) {
-          if(state.status == StateStatus.Error && state.exception != ConnectionException){
+          if(state.status == StateStatus.Error && !(state.exception is ConnectionException)){
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -96,7 +95,7 @@ class _NotesViewState extends State<NotesView> {
                 if(!state.searchEnabled!) _searchController!.clear();
 
                 return Container(
-                  padding: EdgeInsets.only(bottom: 65.0),
+                  padding: EdgeInsets.only(bottom: 65.0, top: 10.0),
                   child: Container(
                     child: SingleChildScrollView(
                       child: Column(
