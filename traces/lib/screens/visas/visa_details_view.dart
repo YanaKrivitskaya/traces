@@ -7,6 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:traces/screens/visas/model/visa_entry.model.dart';
 import 'package:traces/utils/misc/state_types.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
+import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/error_widgets.dart';
+import 'package:traces/widgets/widgets.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
@@ -70,6 +73,31 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
         listener: (context, state) {
           int? tabValue = sharedPrefsService.readInt(key: visaTabKey);
           tabController!.index = tabValue ?? 0;
+
+          if(state.status == StateStatus.Error && state.visa != null){
+            ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                backgroundColor: ColorsPalette.redPigment,
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 250,
+                      child: Text(
+                        state.exception.toString(),
+                        style: quicksandStyle(color: ColorsPalette.lynxWhite),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                    Icon(Icons.error, color: ColorsPalette.lynxWhite)
+                  ],
+                ),
+              ),
+            );
+          }
         },
         child: BlocBuilder<VisaDetailsBloc, VisaDetailsState>(
           builder: (context, state) {
@@ -89,7 +117,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                   icon: Icon(Icons.arrow_back_ios, color: ColorsPalette.lynxWhite),
                   onPressed: () {
                     sharedPrefsService.remove(key: visaTabKey);
-                    Navigator.of(context).pushReplacementNamed (visasRoute);                
+                    Navigator.of(context).pushReplacementNamed(visasRoute);                
                   }
                 ),
                 actions: [_editAction(state), _deleteAction(state)],
@@ -113,7 +141,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                 backgroundColor: ColorsPalette.algalFuel,
                 child: Icon(Icons.add, color: ColorsPalette.lynxWhite),
               ): null,
-              body: (state.status == StateStatus.Success || state.status == StateStatus.Error) 
+              body: (state.status == StateStatus.Success || (state.status == StateStatus.Error && state.visa != null)) 
               ? TabBarView(
                 controller: tabController,
                   children: [
@@ -127,7 +155,9 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                     )
                   ],
                 )
-              : Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(ColorsPalette.algalFuel)))
+              : state.status == StateStatus.Error && state.visa == null 
+                ? errorWidget(context, error: state.exception!) 
+                : loadingWidget(ColorsPalette.algalFuel)
               );
         }));
   }
@@ -219,12 +249,14 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                               context: context,
                               barrierDismissible: false, // user must tap button!
                               builder: (_) => BlocProvider<VisaEntryBloc>(                                   
-                                    create: (context) => VisaEntryBloc(/*visasRepository:new FirebaseVisasRepository()*/),
+                                    create: (context) => VisaEntryBloc(),
                                     child: EntryExitDeleteAlert(
                                       visa: visa,
-                                      entryExit: entryExit                                      
+                                      entryExit: entryExit,
+                                      callback: (val) =>
+                                        val == 'Delete' ? context.read<VisaDetailsBloc>().add(GetVisaDetails(visa!.id!)) : '',
                                     ),
-                                  )).then((val) => context.read<VisaDetailsBloc>().add(GetVisaDetails(visa!.id!))), 
+                                  )), 
                           ), 
                         ], 
                       ),

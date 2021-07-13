@@ -5,6 +5,8 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/widgets/error_widgets.dart';
+import 'package:traces/widgets/widgets.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
@@ -56,7 +58,7 @@ class _VisaEditViewState extends State<VisaEditView> {
           )),
       body: BlocListener<VisaDetailsBloc, VisaDetailsState>(
           listener: (context, state) {
-        if (state.status == StateStatus.Error) {
+        if (state.status == StateStatus.Error && state.visa != null) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -68,7 +70,7 @@ class _VisaEditViewState extends State<VisaEditView> {
                     Container(
                       width: 250,
                       child: Text(
-                        state.errorMessage!,
+                        state.exception.toString(),
                         style: GoogleFonts.quicksand(
                             textStyle:
                                 TextStyle(color: ColorsPalette.lynxWhite)),
@@ -148,14 +150,14 @@ class _VisaEditViewState extends State<VisaEditView> {
               builder: (context, state) {
         if (state.status == StateStatus.Loading &&
             state.mode == StateMode.View) {
-          return Center(
-              child: CircularProgressIndicator(
-                  valueColor: new AlwaysStoppedAnimation<Color>(
-                      ColorsPalette.algalFuel)));
+          return loadingWidget(ColorsPalette.algalFuel);
+        }
+        if(state.status == StateStatus.Error && state.visa == null){
+          return errorWidget(context, error: state.exception!);
         }
         if (state.mode == StateMode.Edit ||
             state.status == StateStatus.Success ||
-            state.status == StateStatus.Error) {
+            (state.status == StateStatus.Error && state.visa != null)) {
           return Container(
               padding: EdgeInsets.all(5.0), child: _editForm(state));
         } else {

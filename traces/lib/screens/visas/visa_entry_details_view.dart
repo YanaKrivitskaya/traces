@@ -4,6 +4,9 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/error_widgets.dart';
+import 'package:traces/widgets/widgets.dart';
 
 import '../../constants/color_constants.dart';
 import '../../utils/misc/state_types.dart';
@@ -45,8 +48,7 @@ class _VisaEntryDetailsViewState extends State<VisaEntryDetailsView> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
-          title: Text("Visa Entry",style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0))),
+          title: Text("Visa Entry",style: quicksandStyle(color: ColorsPalette.lynxWhite, fontSize: 25.0)),
           backgroundColor: ColorsPalette.mazarineBlue,
           leading: IconButton(icon: Icon(Icons.arrow_back_ios, color: ColorsPalette.lynxWhite),
             onPressed: () => Navigator.of(context).pop(),
@@ -72,6 +74,30 @@ class _VisaEntryDetailsViewState extends State<VisaEntryDetailsView> {
                 Navigator.pop(context);                
               });
             }
+            if (state.status == StateStatus.Error && state.visaEntry != null) {
+              ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                backgroundColor: ColorsPalette.redPigment,
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 250,
+                      child: Text(
+                        state.exception.toString(),
+                        style: quicksandStyle(color: ColorsPalette.lynxWhite),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 5,
+                      ),
+                    ),
+                    Icon(Icons.error, color: ColorsPalette.lynxWhite)
+                  ],
+                ),
+              ),
+            );              
+            }
             if(state.status == StateStatus.Success && state.mode == StateMode.Edit){
                 if(state.visaEntry!.id != null){
                   if(_entryCountryController!.text == '') _entryCountryController!.text = state.visaEntry!.entryCountry!;
@@ -85,10 +111,10 @@ class _VisaEntryDetailsViewState extends State<VisaEntryDetailsView> {
           child: BlocBuilder<VisaEntryBloc, VisaEntryState>(
             builder: (context, state) {
               if (state.status == StateStatus.Loading) {
-                return Center(
-                    child: CircularProgressIndicator(
-                        valueColor: new AlwaysStoppedAnimation<Color>(
-                            ColorsPalette.algalFuel)));
+                return loadingWidget(ColorsPalette.algalFuel);
+              }
+              if (state.status == StateStatus.Error && state.visaEntry == null) {
+                return errorWidget(context, error: state.exception!);
               }
               if(state.status == StateStatus.Success && state.mode == StateMode.Edit){                
                 return Container(padding: EdgeInsets.all(10.0), color: ColorsPalette.white, child: SingleChildScrollView(
@@ -366,7 +392,7 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
 
   Widget _exitTransportSelector(VisaEntryState state) =>
       new DropdownButtonFormField<String>(
-        value: state.visaEntry!.exitTransport ?? VisaSettings.transport.first,
+        value: state.visaEntry!.exitTransport,
         isExpanded: true,
         decoration: InputDecoration(
             labelText: "Transport",
@@ -408,7 +434,7 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
                 entryCity: _entryCityController!.text.trim().isEmpty ? null : _entryCityController!.text.trim(),
                 exitCountry: _exitCountryController!.text.trim().isEmpty ? null : _exitCountryController!.text.trim(),
                 exitCity: _exitCityController!.text.trim().isEmpty ? null : _exitCityController!.text.trim(),
-                exitTransport: state.visaEntry!.exitTransport ?? null,
+                exitTransport: state.visaEntry!.exitTransport ?? VisaSettings.transport.first,
                 hasExit: false
               );                       
               context.read<VisaEntryBloc>().add(SubmitEntry(state.visaEntry, state.visa));

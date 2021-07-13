@@ -5,14 +5,14 @@ class VisaDetailsState {
   final Group? familyGroup; 
   final StateStatus status;
   final StateMode mode;  
-  final String? errorMessage;
+  final CustomException? exception;
 
   VisaDetailsState(
       {required this.visa,     
       required this.familyGroup,      
       required this.status,
       required this.mode,      
-      this.errorMessage});
+      this.exception});
 
   factory VisaDetailsState.empty() {
     return VisaDetailsState(
@@ -20,7 +20,7 @@ class VisaDetailsState {
         familyGroup: null,        
         status: StateStatus.Empty,
         mode: StateMode.View,
-        errorMessage: "",
+        exception: null,
       );
   }
 
@@ -30,7 +30,7 @@ class VisaDetailsState {
         familyGroup: null,       
         status: StateStatus.Loading,
         mode: StateMode.View,
-        errorMessage: "",
+        exception: null,
       );
   }
 
@@ -43,7 +43,7 @@ class VisaDetailsState {
         familyGroup: members,
         status: StateStatus.Empty,
         mode: StateMode.Edit,        
-        errorMessage: "",
+        exception: null,
       );
   }
 
@@ -57,20 +57,20 @@ class VisaDetailsState {
         familyGroup: members,       
         status: StateStatus.Success,
         mode: StateMode.View,
-        errorMessage: "");
+        exception: null);
   }
 
   factory VisaDetailsState.failure(
       {Visa? visa,      
       Group? members,    
       bool? autovalidate,
-      String? error}) {
+      CustomException? error}) {
     return VisaDetailsState(
         visa: visa,        
         familyGroup: members,    
         status: StateStatus.Error,
         mode: StateMode.View,        
-        errorMessage: error);
+        exception: error);
   }
 
   VisaDetailsState copyWith(
@@ -78,13 +78,13 @@ class VisaDetailsState {
       final Group? members,    
       final StateStatus? status,
       final StateMode? mode,      
-      String? errorMessage}) {
+      CustomException? errorMessage}) {
     return VisaDetailsState(
         visa: visa ?? this.visa,
         familyGroup: members ?? this.familyGroup,
         status: status ?? this.status,
         mode: mode ?? this.mode,
-        errorMessage: errorMessage ?? this.errorMessage       
+        exception: errorMessage ?? this.exception       
     );
   }
 
@@ -92,7 +92,7 @@ class VisaDetailsState {
       {Visa? visa,    
       StateStatus? status,
       StateMode? mode,      
-      String? errorMessage}) {
+      CustomException? errorMessage}) {
     return copyWith(
         visa: visa,        
         members: familyGroup,      

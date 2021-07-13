@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/utils/api/customException.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../../../utils/misc/state_types.dart';
@@ -49,14 +50,20 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   }
   
   Stream<VisaDetailsState> _mapGetVisaDetailsToState(GetVisaDetails event) async* {
+    var currentState = state;
     yield VisaDetailsState.loading();
     
     try{
       Visa? visa = await visasRepository.getVisaById(event.visaId);      
 
       yield VisaDetailsState.success(visa: visa);      
-    }catch(e){
-      yield VisaDetailsState.failure(error: e.toString());
+    }on CustomException catch(e){
+      if(currentState.visa != null) {
+        yield VisaDetailsState.success(visa: currentState.visa);
+        yield state.update(errorMessage: e);
+      } else{
+        yield VisaDetailsState.failure(error: e);
+      }      
     }
     
   }
@@ -64,8 +71,8 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   Stream<VisaDetailsState> _mapDeleteVisaEventToState(DeleteVisaClicked event) async* {
     try{
       await visasRepository.deleteVisa(event.visaId!);
-    }catch(e){
-      yield VisaDetailsState.failure(error: e.toString());
+    }on CustomException catch(e){
+      yield state.update(errorMessage: e);
     }    
   }
 
@@ -87,13 +94,14 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
         visa: visa,
         members: family,
         autovalidate: false); 
-    }catch(e){
-      yield VisaDetailsState.failure(error: e.toString());
+    }on CustomException catch(e){
+      yield VisaDetailsState.failure(error: e);
     }
   }
 
   Stream<VisaDetailsState> _mapEditVisaModeToState(
       EditVisaClicked event) async* {
+    var currentState = state;
     yield VisaDetailsState.loading();
 
     try{
@@ -108,8 +116,16 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
         visa: visa,        
         members: family,
         autovalidate: false);
-    }catch(e){
-      yield VisaDetailsState.failure(error: e.toString());
+    }on CustomException catch(e){
+      if(currentState.visa != null) {
+        yield VisaDetailsState.editing(
+          visa: currentState.visa,        
+          members: currentState.familyGroup,
+          autovalidate: false);
+        yield state.update(errorMessage: e);
+      } else{
+        yield VisaDetailsState.failure(error: e);
+      }   
     }       
   }
 
@@ -143,11 +159,7 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     }
 
     if (errorMessage.isNotEmpty) {
-      yield VisaDetailsState.failure(
-          visa: event.visa,          
-          members: state.familyGroup,
-          autovalidate: true,
-          error: errorMessage);
+      yield state.update(errorMessage: CustomException(Error.BadRequest, errorMessage));
     } else {
       add(SaveVisaClicked(event.visa));
     }
@@ -166,8 +178,9 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
       yield VisaDetailsState.success(
         visa: visa,        
         members: state.familyGroup);
-    }catch(e){
-      yield VisaDetailsState.failure(error: e.toString());
+    }on CustomException catch(e){
+      if(state.visa != null) yield state.update(errorMessage: e);
+      else yield VisaDetailsState.failure(error: e);
     }
             
   }
