@@ -5,14 +5,16 @@ class VisaEntryState {
   final Visa? visa;
   final StateStatus status;
   final StateMode mode;
-  final String? errorMessage;
+  final bool? entryDeleted;
+  final CustomException? exception;
 
   VisaEntryState(
       {required this.visa,
       required this.visaEntry,
       required this.status,
       required this.mode,
-      this.errorMessage});
+      this.entryDeleted,
+      this.exception});
 
   factory VisaEntryState.empty() {
     return VisaEntryState(
@@ -20,7 +22,7 @@ class VisaEntryState {
         visa: null,
         status: StateStatus.Empty,
         mode: StateMode.View,
-        errorMessage: "");
+        exception: null);
   }
 
   factory VisaEntryState.loading() {
@@ -29,7 +31,7 @@ class VisaEntryState {
         visa: null,
         status: StateStatus.Loading,
         mode: StateMode.View,
-        errorMessage: "");
+        exception: null);
   }
 
   factory VisaEntryState.editing(
@@ -39,27 +41,28 @@ class VisaEntryState {
         visa: visa,
         status: StateStatus.Success,
         mode: StateMode.Edit,
-        errorMessage: "");
+        exception: null);
   }
 
   factory VisaEntryState.success(
-      {VisaEntry? entryExit, Visa? visa}) {
+      {VisaEntry? entryExit, Visa? visa, bool? entryDeleted}) {
     return VisaEntryState(
         visaEntry: entryExit,
         visa: visa,  
         status: StateStatus.Success,
         mode: StateMode.View,
-        errorMessage: "");
+        entryDeleted: entryDeleted,
+        exception: null);
   }
 
   factory VisaEntryState.failure(
-      {VisaEntry? entryExit, Visa? visa, String? error}) {
+      {VisaEntry? entryExit, Visa? visa, CustomException? error}) {
     return VisaEntryState(
         visaEntry: entryExit,
         visa: visa,    
         status: StateStatus.Error,
         mode: StateMode.Edit,
-        errorMessage: error);
+        exception: error);
   }
 
   VisaEntryState copyWith(
@@ -67,13 +70,15 @@ class VisaEntryState {
       final Visa? visa,  
       final StateStatus? status,
       final StateMode? mode,
-      String? error}) {
+      bool? entryDeleted,
+      CustomException? error}) {
     return VisaEntryState(
         visa: visa ?? this.visa,     
         visaEntry: visaEntry ?? this.visaEntry,
         status: status ?? this.status,
         mode: mode ?? this.mode,
-        errorMessage: error ?? this.errorMessage);
+        entryDeleted: entryDeleted ?? this.entryDeleted,
+        exception: error ?? this.exception);
   }
 
   VisaEntryState update(
@@ -81,12 +86,14 @@ class VisaEntryState {
       Visa? visa,    
       StateStatus? status,
       StateMode? mode,
-      String? error}) {
+      bool? entryDeleted,
+      CustomException? error}) {
     return copyWith(
         visaEntry: visaEntry,
         visa: visa,
         status: status,
         mode: mode,
+        entryDeleted: entryDeleted,
         error: error);
   }
 }

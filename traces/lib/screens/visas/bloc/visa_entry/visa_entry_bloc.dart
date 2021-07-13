@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/utils/api/customException.dart';
 
 import '../../../../utils/misc/state_types.dart';
 import '../../model/visa.model.dart';
@@ -53,6 +54,7 @@ class VisaEntryBloc extends Bloc<VisaEntryEvent, VisaEntryState> {
   }
 
   Stream<VisaEntryState> _mapSubmitEntryToState(SubmitEntry event) async* {
+    var currentState = state;
     yield VisaEntryState.loading();
 
     try{
@@ -71,16 +73,21 @@ class VisaEntryBloc extends Bloc<VisaEntryEvent, VisaEntryState> {
       }
     
       yield VisaEntryState.success(visa: event.visa, entryExit: entry);
-    }catch(e){
-      yield VisaEntryState.failure(error: e.toString());
+    }on CustomException catch(e){
+      if(currentState.visaEntry != null){
+        yield VisaEntryState.success(visa: event.visa, entryExit: currentState.visaEntry);
+        yield state.update(error: e);
+      }else 
+      yield VisaEntryState.failure(error: e);
     }    
   }
 
   Stream<VisaEntryState> _mapDeleteEntryToState(DeleteEntry event) async* {
     try{
-       await _visasRepository.deleteVisaEntry(event.visa!.id!, event.entry!.id!);
-    }catch(e){
-      yield VisaEntryState.failure(error: e.toString());
+       await _visasRepository.deleteVisaEntry(event.visa!.id!, event.entry!.id!);       
+       yield state.update(entryDeleted: true);
+    }on CustomException catch(e){
+      yield state.update(error: e);
     }   
   }
 

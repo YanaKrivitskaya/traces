@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/widgets/widgets.dart';
 
 import '../../../constants/color_constants.dart';
 import '../bloc/visa_entry/visa_entry_bloc.dart';
@@ -10,12 +11,20 @@ import '../model/visa_entry.model.dart';
 class EntryExitDeleteAlert extends StatelessWidget {
   final VisaEntry? entryExit;
   final Visa? visa;
+  final StringCallback? callback;
 
-  const EntryExitDeleteAlert({Key? key, this.entryExit, this.visa/*, this.callback*/}) : super(key: key);
+  const EntryExitDeleteAlert({Key? key, this.entryExit, this.visa, this.callback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VisaEntryBloc, VisaEntryState>(
+    return BlocListener<VisaEntryBloc, VisaEntryState>(
+      listener: (context, state){
+        if(state.entryDeleted != null && state.entryDeleted!){
+          callback!("Delete");
+          Navigator.pop(context);
+        }
+      },
+      child: BlocBuilder<VisaEntryBloc, VisaEntryState>(
       bloc: BlocProvider.of(context),
       builder: (context, state){
         return AlertDialog(
@@ -33,8 +42,8 @@ class EntryExitDeleteAlert extends StatelessWidget {
               child: Text('Delete', style: TextStyle(color: ColorsPalette.mazarineBlue)),
               onPressed: () {
                 context.read<VisaEntryBloc>().add(DeleteEntry(entryExit, visa));
-                //callback("Delete");
-                Navigator.pop(context);
+                /*callback!("Delete");
+                Navigator.pop(context);*/
               },
             ),
             TextButton(
@@ -46,6 +55,7 @@ class EntryExitDeleteAlert extends StatelessWidget {
           ],
         );
       }
-    );
+    ),
+    ); 
   }
 }

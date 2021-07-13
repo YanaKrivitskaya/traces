@@ -37,7 +37,7 @@ class VisaDeleteAlert extends StatelessWidget {
               onPressed: () {
                 context.read<VisaDetailsBloc>().add(DeleteVisaClicked(visa!.id));
                 callback!("Delete");
-                Navigator.of(context).pushReplacementNamed (visasRoute);
+                Navigator.of(context).pushReplacementNamed(visasRoute);
               },
             ),
             TextButton(

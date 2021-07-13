@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/error_widgets.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
@@ -28,7 +29,7 @@ class _VisasViewState extends State<VisasView> {
   Widget build(BuildContext context) {
     return BlocListener<VisaBloc, VisaState>(
       listener: (context, state) {
-        if(state.status == StateStatus.Error){
+        if(state.status == StateStatus.Error && state.allVisas != null){
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -40,7 +41,7 @@ class _VisasViewState extends State<VisasView> {
                     Container(
                       width: 250,
                       child: Text(
-                        state.errorMessage!,
+                        state.errorMessage.toString(),
                         style: quicksandStyle(color: ColorsPalette.lynxWhite),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 5,
@@ -56,13 +57,13 @@ class _VisasViewState extends State<VisasView> {
       child: BlocBuilder<VisaBloc, VisaState>(
         bloc: BlocProvider.of(context),
         builder: (context, state) {
-          if(state.status == StateStatus.Error){
-            return Center(child: Icon(Icons.error),);
+          if(state.status == StateStatus.Error && state.allVisas == null){
+            return errorWidget(context, error: state.errorMessage!);
           }
           if (state.status == StateStatus.Loading)
             return loadingWidget(ColorsPalette.algalFuel);
 
-          if (state.status == StateStatus.Success) {
+          if (state.status == StateStatus.Success || state.allVisas != null) {
             widget.activeTab == VisaTab.ActiveVisas
               ? this.visas = state.allVisas!.where((visa) => isVisaActive(visa)).toList()
                 : widget.activeTab == VisaTab.ExpiredVisas
@@ -85,7 +86,10 @@ class _VisasViewState extends State<VisasView> {
                           itemBuilder: (context, position) {
                             final visa = this.visas[position];
                             return Card(child: InkWell(
-                              onTap: () => Navigator.pushReplacementNamed(context, visaDetailsRoute, arguments: visa.id),
+                              onTap: () {
+                                Navigator.pushReplacementNamed(context, visaDetailsRoute, arguments: visa.id).then((value) => 
+                                  context.read<VisaBloc>().add(GetAllVisas()));
+                              },
                               child: Container(padding: EdgeInsets.all(10.0),
                                 child: Column(children: <Widget>[
                                   Row( mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
