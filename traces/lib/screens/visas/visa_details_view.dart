@@ -124,7 +124,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
               ),
               backgroundColor: Colors.white,
               floatingActionButton: tabController!.index == 1 && state.visa != null && (state.visa!.entries!.length == 0 
-              || (state.visa!.entries!.length > 0 && state.visa!.entries!.last.hasExit!)) 
+              || (state.visa!.entries!.length > 0 && state.visa!.entries!.last.hasExit!)) && (state.visa!.entriesType != "Single" || state.visa!.entries!.length == 0) 
                   ? FloatingActionButton(
                 onPressed: () {
                   showDialog(
