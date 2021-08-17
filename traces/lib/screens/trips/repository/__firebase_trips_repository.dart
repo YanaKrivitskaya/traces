@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:traces/screens/trips/model/trip.dart';
-import 'package:traces/screens/trips/model/trip_entity.dart';
-import 'package:traces/screens/trips/repository/trips_repository.dart';
+import 'package:traces/screens/trips/model/__trip.dart';
+import 'package:traces/screens/trips/model/__trip_entity.dart';
+import 'package:traces/screens/trips/repository/__trips_repository.dart';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 

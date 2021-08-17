@@ -160,7 +160,7 @@ class RouteGenerator {
       }
       case tripDetailsRoute:
         {
-          if (args is String) {
+          if (args is int) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<TripDetailsBloc>(
                 create: (context) => TripDetailsBloc(

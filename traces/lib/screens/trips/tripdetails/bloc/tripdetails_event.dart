@@ -8,7 +8,7 @@ abstract class TripDetailsEvent {
 }
 
 class GetTripDetails extends TripDetailsEvent {
-  final String tripId;
+  final int tripId;
 
   GetTripDetails(this.tripId);
 
@@ -17,7 +17,7 @@ class GetTripDetails extends TripDetailsEvent {
 }
 
 class UpdateTripDetailsSuccess extends TripDetailsEvent{
-  final List<Member> members;
+  final List<GroupUser> members;
   final Trip trip;
 
   const UpdateTripDetailsSuccess(this.members, this.trip);
@@ -27,7 +27,7 @@ class UpdateTripDetailsSuccess extends TripDetailsEvent{
 }
 
 class DeleteTripClicked extends TripDetailsEvent{
-  final String? tripId;
+  final int tripId;
 
   const DeleteTripClicked(this.tripId);
 

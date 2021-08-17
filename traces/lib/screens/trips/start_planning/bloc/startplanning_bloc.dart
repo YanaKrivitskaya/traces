@@ -1,23 +1,22 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:equatable/equatable.dart';
-import 'package:traces/screens/profile/repository/__firebase_profile_repository.dart';
-import 'package:traces/screens/profile/repository/__profile_repository.dart';
-import 'package:traces/screens/trips/model/trip.dart';
-import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
-import 'package:traces/screens/trips/repository/trips_repository.dart';
+import 'package:traces/screens/profile/model/group_model.dart';
+import 'package:traces/screens/profile/repository/api_profile_repository.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/repository/api_trips_repository.dart';
+import 'package:traces/utils/api/customException.dart';
 
 part 'startplanning_event.dart';
 part 'startplanning_state.dart';
 
 class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
-  /*final TripsRepository _tripsRepository;
-  final ProfileRepository _profileRepository;*/
+  final ApiTripsRepository _tripsRepository;
+  final ApiProfileRepository _profileRepository;
   
-  StartPlanningBloc(/*TripsRepository tripsRepository*/) : 
-  /*_tripsRepository = tripsRepository ?? new FirebaseTripsRepository(),
-  _profileRepository = new FirebaseProfileRepository(),*/
+  StartPlanningBloc() : 
+  _tripsRepository = new ApiTripsRepository(),
+  _profileRepository = new ApiProfileRepository(),
   super(StartPlanningInitial(null));
 
   @override
@@ -39,10 +38,9 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
     
     Trip trip = state.trip ?? new Trip();
 
-    trip.startDate = event.startDate;
-    trip.endDate = event.endDate;
+    Trip updTrip = trip.copyWith(startDate: event.startDate, endDate: event.endDate);
 
-    yield StartPlanningSuccessState(trip, false);
+    yield StartPlanningSuccessState(updTrip, false);
   }
 
   Stream<StartPlanningState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
@@ -53,18 +51,20 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
       yield StartPlanningErrorState(event.trip, error);
     }
     else{
-      /*var userProfile = await _profileRepository.getCurrentProfile(); 
-      event.trip!.tripMembers = [userProfile.displayName];
+      try{
+        var profile = await _profileRepository.getProfileWithGroups();      
+        var familyGroup = profile.groups!.firstWhere((g) => g.name == "Family");
 
-      Trip trip = await _tripsRepository.addnewTrip(event.trip)
-      .timeout(Duration(seconds: 5), onTimeout: (){
-          print("have timeout");
-          return event.trip!;
-        });
+        Group family = await _profileRepository.getGroupUsers(familyGroup.id!);
+        event.trip!.users = [family.users.firstWhere((u) => u.accountId == profile.accountId)];
 
-      if(trip != null && trip.id != null){
+        Trip trip = await _tripsRepository.createTrip(event.trip!, profile.accountId);
+
         yield StartPlanningCreatedState(trip);
-      }*/
+      } on CustomException catch(e){
+        
+      }
+      
     }    
   }
 

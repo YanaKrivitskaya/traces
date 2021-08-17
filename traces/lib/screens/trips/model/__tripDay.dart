@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
-import 'package:traces/screens/trips/model/dayAction_entity.dart';
-import 'package:traces/screens/trips/model/tripDay_entity.dart';
+import 'package:traces/screens/trips/model/__dayAction_entity.dart';
+import 'package:traces/screens/trips/model/__tripDay_entity.dart';
 
 @immutable
 class TripDay {

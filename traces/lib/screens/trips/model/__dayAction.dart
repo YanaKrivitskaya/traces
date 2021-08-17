@@ -1,6 +1,6 @@
 
 import 'package:meta/meta.dart';
-import 'dayAction_entity.dart';
+import '__dayAction_entity.dart';
 
 @immutable
 class DayAction {

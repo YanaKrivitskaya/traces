@@ -1,4 +1,4 @@
-import 'package:traces/screens/trips/model/trip_entity.dart';
+import 'package:traces/screens/trips/model/__trip_entity.dart';
 
 class Trip {
   final String? id;

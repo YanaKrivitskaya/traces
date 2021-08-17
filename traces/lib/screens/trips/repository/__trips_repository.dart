@@ -1,5 +1,5 @@
 
-import 'package:traces/screens/trips/model/trip.dart';
+import 'package:traces/screens/trips/model/__trip.dart';
 
 abstract class TripsRepository{
   Future<Trip> addnewTrip(Trip? trip);

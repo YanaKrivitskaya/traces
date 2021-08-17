@@ -1,11 +1,11 @@
 import 'package:traces/constants/route_constants.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
 
 import 'bloc/startplanning_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../model/trip.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../constants/color_constants.dart';
 import 'package:flutter/material.dart';
@@ -186,9 +186,8 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                   var isFormValid = _formKey.currentState!.validate();                 
 
                   if(isFormValid){
-                    print(trip.toString());
-                    trip!.name = _tripNameController!.text.trim();                    
-                    context.read<StartPlanningBloc>().add(StartPlanningSubmitted(trip));
+                    Trip newTrip = trip!.copyWith(name: _tripNameController!.text.trim());                                    
+                    context.read<StartPlanningBloc>().add(StartPlanningSubmitted(newTrip));
                   }                  
                 }
               )

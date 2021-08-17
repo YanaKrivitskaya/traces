@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
-import 'package:traces/screens/trips/model/trip.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +14,14 @@ class TripDeleteAlert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TripDetailsBloc, TripDetailsState>(
+    return BlocListener<TripDetailsBloc, TripDetailsState>(
+      listener: (context, state){
+        if(state is TripDetailsDeleted){
+            callback!("Delete");
+            Navigator.pop(context);
+        }
+      },
+      child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
       bloc: BlocProvider.of(context),
       builder: (context, state){
         return AlertDialog(
@@ -32,9 +39,8 @@ class TripDeleteAlert extends StatelessWidget {
             TextButton(
               child: Text('Delete', style: TextStyle(color: ColorsPalette.meditSea)),
               onPressed: () {
-                context.read<TripDetailsBloc>().add(DeleteTripClicked(trip!.id));
-                callback!("Delete");
-                Navigator.pop(context);
+                context.read<TripDetailsBloc>().add(DeleteTripClicked(trip!.id!));
+                //Navigator.pop(context);
               },
             ),
             TextButton(
@@ -47,6 +53,7 @@ class TripDeleteAlert extends StatelessWidget {
           ],
         );
       }
-    );
+    ),
+    );    
   }
 }
