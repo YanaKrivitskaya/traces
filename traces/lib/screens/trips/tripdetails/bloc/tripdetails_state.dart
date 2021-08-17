@@ -5,14 +5,16 @@ abstract class TripDetailsState extends Equatable{
   const TripDetailsState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class TripDetailsInitial extends TripDetailsState {}
 
+class TripDetailsDeleted extends TripDetailsState {}
+
 class TripDetailsSuccessState extends TripDetailsState{
   final Trip trip;
-  final List<Member> familyMembers;
+  final List<GroupUser> familyMembers;
 
   TripDetailsSuccessState(this.trip, this.familyMembers);
 

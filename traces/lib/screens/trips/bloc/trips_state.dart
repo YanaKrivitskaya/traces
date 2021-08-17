@@ -6,17 +6,19 @@ abstract class TripsState extends Equatable{
   const TripsState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class TripsInitial extends TripsState {}
 
+class TripsLoadingState extends TripsState {}
+
 class TripsSuccessState extends TripsState {
-  final List<Trip> allTrips;
+  final List<Trip>? allTrips;
   
   const TripsSuccessState(this.allTrips);
 
   @override
-  List<Object> get props => [allTrips];
+  List<Object?> get props => [allTrips];
 }
 

@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:traces/screens/profile/model/__member.dart';
-import 'package:traces/screens/trips/model/trip.dart';
+import 'package:traces/screens/profile/model/group_user_model.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/bloc/tripmembers_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tripMembers/tripMembers_dialog.dart';
 import 'package:traces/screens/trips/widgets/trip_delete_alert.dart';
@@ -13,7 +13,7 @@ import 'bloc/tripdetails_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class TripDetailsView extends StatefulWidget{
-  final String? tripId;  
+  final int? tripId;  
 
   TripDetailsView({this.tripId});
 
@@ -28,7 +28,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
     return Scaffold(      
       body: BlocListener<TripDetailsBloc, TripDetailsState>(
         listener: (context, state){
-
+          
         },
         child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
           builder: (context, state){
@@ -37,7 +37,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
               child: Stack(
                 alignment: AlignmentDirectional.bottomCenter,
                   children: [
-                    _coverImage(state.trip.coverImageUrl),
+                    _coverImage(state.trip.coverImage),
                     Positioned(top: 25, left: 10,
                       child: InkWell(
                         onTap: (){Navigator.pop(context);},
@@ -64,28 +64,32 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
                                     Text('${DateFormat.yMMMd().format(state.trip.startDate!)} - ${DateFormat.yMMMd().format(state.trip.endDate!)}', style: quicksandStyle(fontSize: 15.0))                                    
                                   ],),
                                   InkWell(
-                                    child: _tripMembers(state.trip.tripMembers, state.familyMembers),
+                                    child: _tripMembers(state.trip.users, state.familyMembers),
                                     onTap: (){
                                       showDialog(
                                         barrierDismissible: false, context: context, builder: (_) =>
                                         BlocProvider<TripMembersBloc>(
                                           create: (context) => TripMembersBloc()
                                             ..add(GetMembers(state.trip.id)),
-                                          child: TripMembersDialog(trip: state.trip)
-                                        ),                                        
+                                          child: TripMembersDialog(
+                                            trip: state.trip,
+                                            callback: (val) =>
+                                              val == 'Update' ? context.read<TripDetailsBloc>().add(GetTripDetails(widget.tripId!)) : '',
+                                          )
+                                         // child: TripMembersDialog(trip: state.trip)
+                                        ),
                                       );
                                     },
-                                  )                                  
+                                  )
                                 ],),
                               ),
-                              ),                            
+                              ),
                             )
                             ),
                           ],
-                        ),);                        
+                        ),);
             }
-            return loadingWidget(ColorsPalette.meditSea);
-            
+            return loadingWidget(ColorsPalette.meditSea);            
           }
         ),
       )
@@ -116,22 +120,22 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
         );
   }
 
-  Widget _tripMembers(List<String>? tripMembers, List<Member> familyMembers){   
+  Widget _tripMembers(List<GroupUser>? tripMembers, List<GroupUser> familyMembers){   
 
     if (tripMembers != null && tripMembers.length > 0){
       return Container(        
         child: Stack(children: [
-          _tripMemberAvatar(tripMembers.first, familyMembers),
+          _tripMemberAvatar(tripMembers.first.userId!, familyMembers),
           tripMembers.length > 1 ? 
           Positioned(top: 0, right: 10,
-            child:_tripMemberAvatar(tripMembers.last, familyMembers)                                        )
+            child:_tripMemberAvatar(tripMembers.last.userId!, familyMembers)                                        )
         : Container()
         ],),
       );
     } return Container();
   }
 
-  Widget _tripMemberAvatar(String memberId, List<Member> familyMembers) => Container(
+  Widget _tripMemberAvatar(int memberId, List<GroupUser> familyMembers) => Container(
     margin: EdgeInsets.only(left: 10.0),
     decoration: new BoxDecoration(
       shape: BoxShape.circle,
@@ -142,7 +146,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
     ),
     child:  CircleAvatar(
       backgroundColor: ColorsPalette.lynxWhite,
-      child:Text(getAvatarName(familyMembers.firstWhere((m) => m.id == memberId).name!), 
+      child:Text(getAvatarName(familyMembers.firstWhere((m) => m.userId == memberId).name), 
         style: TextStyle(color: ColorsPalette.meditSea, fontSize: 10.0, fontWeight: FontWeight.w300)),
       radius: 15.0
     ),

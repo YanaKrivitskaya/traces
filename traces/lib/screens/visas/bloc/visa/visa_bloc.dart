@@ -34,10 +34,6 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
       yield VisaState.success(allVisas: visas);
     } on CustomException catch(e){
       yield VisaState.failure(error: e);
-    }
-
-   
-
-   
+    }  
   }
 }

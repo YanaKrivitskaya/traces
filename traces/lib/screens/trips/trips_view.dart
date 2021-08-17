@@ -20,12 +20,17 @@ class _TripsStateView extends State<TripsView>{
   @override
   Widget build(BuildContext context) {
     return BlocListener<TripsBloc, TripsState>(
-      listener: (context, state){},
+      listener: (context, state){
+        
+      },
       child: BlocBuilder<TripsBloc, TripsState>(
         bloc: BlocProvider.of(context),
         builder: (context, state){
+          if(state is TripsLoadingState){
+            return loadingWidget(ColorsPalette.juicyBlue);
+          }
           if(state is TripsSuccessState){
-            if(state.allTrips.length > 0){
+            if(state.allTrips !=null && state.allTrips!.length > 0){
               return Container(
                 padding: EdgeInsets.only(bottom: 15.0),
                 child: SingleChildScrollView(
@@ -33,9 +38,9 @@ class _TripsStateView extends State<TripsView>{
                   ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: state.allTrips.length,
+                  itemCount: state.allTrips!.length,
                   itemBuilder: (context, position){
-                    final trip = state.allTrips[position];                    
+                    final trip = state.allTrips![position];                    
                     return  Container(
                       margin: EdgeInsets.all(10),
                       width: MediaQuery.of(context).size.width * 0.8,
@@ -46,10 +51,10 @@ class _TripsStateView extends State<TripsView>{
                           children: [
                             Container(
                               padding: EdgeInsets.only(bottom: 20.0),
-                              child: trip.coverImageUrl != null ? CachedNetworkImage(
+                              child: trip.coverImage != null ? CachedNetworkImage(
                                 placeholder: (context, url) => Image.asset("assets/sunset.jpg"),
                                 //placeholder: (context, url) => loadingWidget(ColorsPalette.meditSea),
-                                imageUrl: trip.coverImageUrl!,
+                                imageUrl: trip.coverImage!,
                               ) : Image.asset("assets/sunset.jpg")                            
                             ),
                             Positioned(
@@ -69,13 +74,15 @@ class _TripsStateView extends State<TripsView>{
                                     style: quicksandStyle(fontSize: 15.0)),
                                 ],),
                               ),
-                              ),                            
+                              ),
                             )
-                            ),                         
+                            ),
                           ],
                         )),
                         onTap: (){
-                          Navigator.pushNamed(context, tripDetailsRoute, arguments: trip.id);
+                          Navigator.pushNamed(context, tripDetailsRoute, arguments: trip.id).then((value) => {
+                            context.read<TripsBloc>().add(GetAllTrips())
+                          });
                         },
                       )
                     );},

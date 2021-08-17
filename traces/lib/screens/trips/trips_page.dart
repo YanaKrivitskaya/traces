@@ -25,7 +25,7 @@ class TripsPage extends StatelessWidget{
               onPressed: (){
                 Navigator.pop(context);
               },
-            ),                       
+            ),
             elevation: 0,
             backgroundColor: ColorsPalette.white,
             //backgroundColor: ColorsPalette.freshBlue,
@@ -33,7 +33,7 @@ class TripsPage extends StatelessWidget{
           body: TripsView(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-            Navigator.pushNamed(context, tripStartPlanningRoute);
+            Navigator.pushNamed(context, tripStartPlanningRoute).then((value) => context.read<TripsBloc>().add(GetAllTrips()));
           },
             tooltip: 'Add new Trip',
             backgroundColor: ColorsPalette.juicyYellow,

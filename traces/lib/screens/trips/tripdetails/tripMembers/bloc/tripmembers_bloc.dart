@@ -2,72 +2,71 @@ import 'package:meta/meta.dart';
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:traces/screens/profile/model/__member.dart';
-import 'package:traces/screens/profile/repository/__firebase_profile_repository.dart';
-import 'package:traces/screens/profile/repository/__profile_repository.dart';
-import 'package:traces/screens/trips/model/trip.dart';
-import 'package:traces/screens/trips/repository/firebase_trips_repository.dart';
-import 'package:traces/screens/trips/repository/trips_repository.dart';
-
+import 'package:traces/screens/profile/model/group_model.dart';
+import 'package:traces/screens/profile/model/group_user_model.dart';
+import 'package:traces/screens/profile/repository/api_profile_repository.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/repository/api_trips_repository.dart';
+import 'package:traces/utils/api/customException.dart';
 
 part 'tripmembers_event.dart';
 part 'tripmembers_state.dart';
 
 class TripMembersBloc extends Bloc<TripMembersEvent, TripMembersState>{
-  //final TripsRepository _tripsRepository;
-  //final ProfileRepository _profileRepository;
-  StreamSubscription? _profileSubscription;
+  final ApiTripsRepository _tripsRepository;
+  final ApiProfileRepository _profileRepository; 
 
   TripMembersBloc(): 
-  /*_tripsRepository = new FirebaseTripsRepository(),*/
-  //_profileRepository = new FirebaseProfileRepository(),
+  _tripsRepository = new ApiTripsRepository(),
+  _profileRepository = new ApiProfileRepository(),
   super(LoadingTripMembersState());
 
   @override
   Stream<TripMembersState> mapEventToState(TripMembersEvent event) async* {
     if(event is GetMembers){
       yield* _mapGetTripMembersToState(event);
-    } else if(event is UpdateTripMembersSuccess){
-      yield* _mapUpdateTripMembersToSuccessState(event);
-    }else if(event is MemberChecked){
+    } else if(event is MemberChecked){
       yield* _mapUpdateMemberCheckedToState(event);
     }else if(event is SubmitTripMembers){
       yield* _mapSubmitTripMembersToState(event);
     }  
-  }
-
-  Stream<TripMembersState> _mapUpdateTripMembersToSuccessState(
-      UpdateTripMembersSuccess event) async* {
-    yield SuccessTripMembersState(
-      event.members,
-      event.selectedMembers
-    );
-  }
+  } 
 
   Stream<TripMembersState> _mapGetTripMembersToState(GetMembers event) async*{
-    //var trip = await _tripsRepository.getTripById(event.tripId);
+    try{
+      Trip? trip = await _tripsRepository.getTripById(event.tripId!);
 
-    List<String?> selectedMembers = List.empty(growable: true);
+      if(trip != null){
+        List<int> selectedMembers = List.empty(growable: true);
 
-    _profileSubscription?.cancel();
-    /*_profileSubscription = _profileRepository.familyMembers().listen(
-      (members) {
-        members.forEach((m) {
-              if(trip.tripMembers!.contains(m.id)){
-                selectedMembers.add(m.id);
-              }
-            });
-        add(UpdateTripMembersSuccess(members, selectedMembers));
-      } 
-    );*/
+        var profile = await _profileRepository.getProfileWithGroups();      
+        var familyGroup = profile.groups!.firstWhere((g) => g.name == "Family");
+
+        Group family = await _profileRepository.getGroupUsers(familyGroup.id!);
+
+        family.users.forEach((m) {
+          if(trip.users!.contains(m)){
+            selectedMembers.add(m.userId!);
+          }
+        });
+
+        yield SuccessTripMembersState(
+          family.users,
+          selectedMembers
+        );
+      }   
+    }on CustomException catch(e){
+        
+    }  
+    
   }
 
   Stream<TripMembersState> _mapUpdateMemberCheckedToState(MemberChecked event) async*{
    
-    if (state.selectedMembers.contains(event.memberId)){
-      state.selectedMembers.remove(event.memberId);
+    if (state.selectedMembers != null && state.selectedMembers!.contains(event.memberId)){
+      state.selectedMembers!.remove(event.memberId);
     }else{
-      state.selectedMembers.add(event.memberId);
+      state.selectedMembers!.add(event.memberId!);
     }
 
     yield SuccessTripMembersState(
@@ -80,7 +79,7 @@ class TripMembersBloc extends Bloc<TripMembersEvent, TripMembersState>{
 
     yield LoadingTripMembersState();
    
-    //await _tripsRepository.updateTripMembers(event.tripId, event.selectedMembers);
+    await _tripsRepository.updateTripUsers(event.tripId, event.selectedMembers!);
 
     yield SubmittedTripMembersState(
       state.members,

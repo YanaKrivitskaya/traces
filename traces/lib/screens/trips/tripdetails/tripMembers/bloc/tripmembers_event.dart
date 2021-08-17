@@ -8,7 +8,7 @@ abstract class TripMembersEvent extends Equatable {
 }
 
 class GetMembers extends TripMembersEvent {
-  final String? tripId;
+  final int? tripId;
 
   const GetMembers(this.tripId);
   
@@ -17,8 +17,8 @@ class GetMembers extends TripMembersEvent {
 }
 
 class UpdateTripMembersSuccess extends TripMembersEvent{
-  final List<Member> members;
-  final List<String?> selectedMembers;
+  final List<GroupUser> members;
+  final List<GroupUser?> selectedMembers;
 
   const UpdateTripMembersSuccess(this.members, this.selectedMembers);
 
@@ -27,7 +27,7 @@ class UpdateTripMembersSuccess extends TripMembersEvent{
 }
 
 class MemberChecked extends TripMembersEvent{
-  final String? memberId;
+  final int? memberId;
   final bool? checked;
 
   const MemberChecked(this.memberId, this.checked);
@@ -37,8 +37,8 @@ class MemberChecked extends TripMembersEvent{
 }
 
 class SubmitTripMembers extends TripMembersEvent{
-  final String? tripId;
-  final List<String?> selectedMembers;
+  final int tripId;
+  final List<int>? selectedMembers;
 
   const SubmitTripMembers(this.tripId, this.selectedMembers);
 
