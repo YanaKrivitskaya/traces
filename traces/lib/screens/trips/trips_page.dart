@@ -19,9 +19,9 @@ class TripsPage extends StatelessWidget{
           appBar: AppBar(
             centerTitle: true,
             title: Text('Trips', style: GoogleFonts.quicksand(textStyle: 
-              TextStyle(color: ColorsPalette.meditSea, fontSize: 30.0))),
+              TextStyle(fontSize: 30.0))),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: ColorsPalette.meditSea),
+              icon: Icon(Icons.arrow_back),
               onPressed: (){
                 Navigator.pop(context);
               },

@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:traces/screens/profile/model/group_model.dart';
 import 'package:traces/screens/profile/repository/api_profile_repository.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/model/trip_day.model.dart';
 import 'package:traces/screens/trips/repository/api_trips_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 
@@ -59,6 +60,20 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
         event.trip!.users = [family.users.firstWhere((u) => u.accountId == profile.accountId)];
 
         Trip trip = await _tripsRepository.createTrip(event.trip!, profile.accountId);
+
+        //generate days
+        var daysCount = trip.endDate!.difference(trip.startDate!).inDays;
+          for (var i=0; i<=daysCount; i++){
+            var dayDate = trip.startDate!.add(new Duration(days: i));
+            var dayName = "Day ${i+1}";
+            var day = new TripDay(
+              name: dayName,
+              dayNumber: i+1,
+              date: dayDate
+            );
+
+            await _tripsRepository.createTripDay(day, trip.id!);
+          }
 
         yield StartPlanningCreatedState(trip);
       } on CustomException catch(e){

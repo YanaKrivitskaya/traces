@@ -39,12 +39,12 @@ class _StartPlanningViewState extends State<StartPlanningView>{
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Plan a new trip',
+        title: Text('Trip info',
           style: quicksandStyle(fontSize: 30.0)),
         backgroundColor: ColorsPalette.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.close_rounded, color: ColorsPalette.meditSea),
+          icon: Icon(Icons.close_rounded),
           onPressed: ()=> Navigator.pop(context)
       )),
       body: BlocListener<StartPlanningBloc, StartPlanningState>(
@@ -53,7 +53,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-              backgroundColor: ColorsPalette.meditSea,
+              backgroundColor: ColorsPalette.juicyGreen,
               content: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [SizedBox(
                       child: CircularProgressIndicator(
@@ -71,7 +71,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-              backgroundColor: ColorsPalette.meditSea,
+              backgroundColor: ColorsPalette.juicyGreen,
               content: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [ 
                     Icon(Icons.check, color: ColorsPalette.lynxWhite,)
@@ -106,7 +106,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
         child: BlocBuilder<StartPlanningBloc, StartPlanningState>(
           builder: (context, state){
             if (state is StartPlanningInitial){
-              return loadingWidget(ColorsPalette.boyzone);
+              return loadingWidget(ColorsPalette.juicyGreen);
             }
             newTrip = state.trip;            
             return _createForm(state, newTrip);
@@ -129,7 +129,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                Text('Where are you going?', style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold/*color: ColorsPalette.meditSea*/),),
+                Text('Trip name', style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold/*color: ColorsPalette.meditSea*/),),
                 SizedBox(height: 10.0),
                 SizedBox(width:  MediaQuery.of(context).size.width * 0.7,
                   child: TextFormField(
@@ -147,39 +147,42 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                 ),
                 SizedBox(height: 15.0),
                 Row(children: [
-                  Text('Dates?', style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)),
+                  Text('Dates', style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)),
                   /*Text('(optional)', style: quicksandStyle(fontSize: 13.0)),*/
                 ],),
-                SizedBox(height: 10.0)
+                SizedBox(height: 10.0),
+                SizedBox(
+                  width:  MediaQuery.of(context).size.width * 0.7,
+                  child:
+                    InkWell(      
+                      child: Row(
+                        mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(Icons.date_range),
+                          trip?.startDate != null 
+                          ?  Text('${DateFormat.yMMMd().format(trip!.startDate!)}',
+                              style: quicksandStyle(fontSize: 18.0))
+                          : Text("Start Date", style:  quicksandStyle(fontSize: 18.0)),
+                          Icon(Icons.date_range),
+                          trip?.endDate != null 
+                          ?  Text('${DateFormat.yMMMd().format(trip!.endDate!)}',
+                              style: quicksandStyle(fontSize: 18.0))
+                          : Text("End Date", style:  quicksandStyle(fontSize: 18.0)),
+                        ],
+                      ),
+                      onTap: () => _selectDates(context, state),
+                    )
+                )
               ],)
-            ]),
-            Container(width:  MediaQuery.of(context).size.width * 0.7, child:
-              InkWell(      
-                child: Row(
-                  mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(Icons.date_range),
-                    trip?.startDate != null 
-                    ?  Text('${DateFormat.yMMMd().format(trip!.startDate!)}',
-                        style: quicksandStyle(fontSize: 18.0))
-                    : Text("Start Date", style:  quicksandStyle(fontSize: 18.0)),
-                    Icon(Icons.date_range),
-                    trip?.endDate != null 
-                    ?  Text('${DateFormat.yMMMd().format(trip!.endDate!)}',
-                        style: quicksandStyle(fontSize: 18.0))
-                    : Text("End Date", style:  quicksandStyle(fontSize: 18.0)),
-                  ],
-                ),
-                onTap: () => _selectDates(context, state),
-              )
-            ),
-            SizedBox(height: 30.0),           
+            ]),                    
+            
+            SizedBox(height: 30.0),                      
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               ElevatedButton(
-                child: Text("Start planning"), 
+                child: Text("Let's go!"), 
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
-                    backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.meditSea),
+                    backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyYellow),
                     foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
                   ),
                 onPressed: (){

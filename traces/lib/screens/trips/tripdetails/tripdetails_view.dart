@@ -12,6 +12,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/tripdetails_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:timeline_tile/timeline_tile.dart';
+
+
 class TripDetailsView extends StatefulWidget{
   final int? tripId;  
 
@@ -33,8 +36,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
         child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
           builder: (context, state){
             if(state is TripDetailsSuccessState){
-              return Container(              
-              child: Stack(
+              return Column(children: [
+                Stack(
                 alignment: AlignmentDirectional.bottomCenter,
                   children: [
                     _coverImage(state.trip.coverImage),
@@ -47,10 +50,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
                     Positioned(top: 25, right: 10,
                       child: _popupMenu(state.trip)
                     ),
-                    Positioned(
-                      bottom: 0,
-                      child: Container(
-                        margin: EdgeInsets.all(10),
+                    Positioned(bottom: 0,
+                      child: Container( margin: EdgeInsets.all(10),
                         child: Material(
                           elevation: 10.0,
                           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -75,19 +76,28 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
                                             trip: state.trip,
                                             callback: (val) =>
                                               val == 'Update' ? context.read<TripDetailsBloc>().add(GetTripDetails(widget.tripId!)) : '',
-                                          )
-                                         // child: TripMembersDialog(trip: state.trip)
-                                        ),
-                                      );
-                                    },
-                                  )
-                                ],),
-                              ),
-                              ),
-                            )
-                            ),
-                          ],
-                        ),);
+                                          )));
+                                  })
+                                ])
+                              )),
+                    )),
+                  ]),
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    Container(                    
+                      padding: EdgeInsets.all(10.0),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text('Description:', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
+                        Text('${state.trip.description}', style: quicksandStyle(fontSize: 15.0),),
+                      ],)
+                    )
+                  ],)                  
+                  /*Expanded(
+                    child: Padding(padding: EdgeInsets.only(bottom: 40.0), child: 
+                      _timelineDays(state.trip)
+                    )
+                  ),*/
+              ]);
+              //return ;
             }
             return loadingWidget(ColorsPalette.meditSea);            
           }
@@ -173,7 +183,34 @@ class _TripDetailsViewViewState extends State<TripDetailsView>{
                 val == 'Delete' ? Navigator.of(context).pop() : '',
             ),
           ));
-      }},);
+      }},); 
 
+      Widget _timelineDays(Trip trip){
+        return Container(child: ListView.builder(
+          shrinkWrap: true,         
+          itemCount: trip.days!.length,
+          itemBuilder: (context, position){
+            final day = trip.days![position];     
+            return TimelineTile(
+              alignment: TimelineAlign.manual,
+              lineXY: 0.1,
+              isFirst: position == 0,
+              isLast: position == trip.days!.length,
+              indicatorStyle: const IndicatorStyle(
+                width: 20,
+                color: Color(0xFF27AA69),
+                padding: EdgeInsets.all(6),
+              ),
+              endChild: Card(child: Text('${day.name} - ${DateFormat.yMMMd().format(day.date!)}'),),
+              beforeLineStyle: const LineStyle(
+                color: Color(0xFF27AA69),
+              ),
+            );
+          }
+        )
+        );
+      }
 }
+
+
 
