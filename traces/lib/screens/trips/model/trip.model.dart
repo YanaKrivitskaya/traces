@@ -83,8 +83,8 @@ class Trip {
       startDate: DateTime.parse(map['startDate']),
       endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
       users: map['users'] != null ? List<GroupUser>.from(map['users']?.map((x) => GroupUser.fromMap(x))) : null,
-      days: map['days'] != null ? List<TripDay>.from(map['days']?.map((x) => TripDay.fromMap(x))) : null,
-      actions: map['actions'] != null ? List<TripAction>.from(map['actions']?.map((x) => TripAction.fromMap(x))) : null,
+      days: map['trip_days'] != null ? List<TripDay>.from(map['trip_days']?.map((x) => TripDay.fromMap(x))) : null,
+      actions: map['trip_actions'] != null ? List<TripAction>.from(map['trip_actions']?.map((x) => TripAction.fromMap(x))) : null,
     );
   }
 

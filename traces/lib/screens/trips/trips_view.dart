@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/constants/route_constants.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
 
@@ -16,12 +17,15 @@ class TripsView extends StatefulWidget{
 }
 
 class _TripsStateView extends State<TripsView>{
+  List<Trip> trips = List.empty();
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<TripsBloc, TripsState>(
       listener: (context, state){
-        
+        if(state is TripsSuccessState && state.allTrips !=null && state.allTrips!.length > 0){
+          trips = _sortTrips(state.allTrips!);
+        }
       },
       child: BlocBuilder<TripsBloc, TripsState>(
         bloc: BlocProvider.of(context),
@@ -30,7 +34,7 @@ class _TripsStateView extends State<TripsView>{
             return loadingWidget(ColorsPalette.juicyBlue);
           }
           if(state is TripsSuccessState){
-            if(state.allTrips !=null && state.allTrips!.length > 0){
+            if(state.allTrips !=null && state.allTrips!.length > 0){              
               return Container(
                 padding: EdgeInsets.only(bottom: 15.0),
                 child: SingleChildScrollView(
@@ -38,9 +42,9 @@ class _TripsStateView extends State<TripsView>{
                   ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: state.allTrips!.length,
+                  itemCount: trips.length,
                   itemBuilder: (context, position){
-                    final trip = state.allTrips![position];                    
+                    final trip = trips[position];                    
                     return  Container(
                       margin: EdgeInsets.all(10),
                       width: MediaQuery.of(context).size.width * 0.8,
@@ -132,3 +136,11 @@ class _TripsStateView extends State<TripsView>{
   }
 
 }
+
+List<Trip> _sortTrips(List<Trip> trips) {
+    trips.sort((a, b) {
+      return b.startDate!.millisecondsSinceEpoch
+          .compareTo(a.startDate!.millisecondsSinceEpoch);
+    });
+    return trips;
+  }
