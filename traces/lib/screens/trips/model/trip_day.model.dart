@@ -65,7 +65,7 @@ class TripDay {
       description: map['description'],
       image: map['image'],
       dayNumber: map['dayNumber'],
-      actions: List<TripAction>.from(map['actions']?.map((x) => TripAction.fromMap(x))),
+      actions: map['actions'] != null ? List<TripAction>.from(map['actions']?.map((x) => TripAction.fromMap(x))) : null,
     );
   }
 
