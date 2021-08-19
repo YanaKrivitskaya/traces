@@ -44,11 +44,14 @@ dev_dependencies:
   badges: ^2.0.1
   cached_network_image: ^3.0.0
   flutter_cache_manager: ^3.1.2
-  timeline_tile: ^2.0.0
+  timeline_tile: ^2.0.0  
   http: ^0.13.3
   flutter_secure_storage: ^4.2.0
   device_info_plus: ^2.0.1
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.0.6 
+  google_nav_bar: ^5.0.5
+  line_icons: ^2.0.1 
+  bubble_tab_indicator: ^0.1.6
   flutter_test:
     sdk: flutter
 

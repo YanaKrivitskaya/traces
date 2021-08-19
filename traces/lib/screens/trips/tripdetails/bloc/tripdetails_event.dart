@@ -34,3 +34,17 @@ class DeleteTripClicked extends TripDetailsEvent{
   @override
   List<Object?> get props => [tripId];
 }
+
+class TabUpdated extends TripDetailsEvent{
+  final int tab;
+
+  const TabUpdated(this.tab);
+
+  @override
+  List<Object> get props => [tab];
+
+  @override
+  String toString() => 'UpdateTab { tab: $tab }';
+
+}
+
