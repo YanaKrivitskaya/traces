@@ -1,6 +1,5 @@
 import 'package:traces/screens/trips/model/api_trip_user.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
-import 'package:traces/screens/trips/model/trip_day.model.dart';
 
 import '../../../utils/services/api_service.dart';
 
@@ -65,14 +64,5 @@ class ApiTripsRepository{
     final response = await apiProvider.deleteSecure("$tripsUrl$tripId}");     
     
     return response["response"];
-  }
-  
-  Future<Trip> createTripDay(TripDay day, int tripId)async{
-    print("createTripDay");
-
-    final response = await apiProvider.postSecure("$tripsUrl/$tripId/days", day.toJson());
-      
-    var tripResponse = Trip.fromMap(response['trip']);
-    return tripResponse;
-  }
+  } 
 }

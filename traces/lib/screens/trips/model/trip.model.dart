@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
 
-import 'package:traces/screens/profile/model/group_user_model.dart';
-import 'package:traces/screens/trips/model/trip_action.model.dart';
-import 'package:traces/screens/trips/model/trip_day.model.dart';
+import '../../profile/model/group_user_model.dart';
+import 'trip_action.model.dart';
+
 
 class Trip {
   final int? id;  
@@ -15,8 +14,7 @@ class Trip {
   final String? coverImage;  
   final DateTime? startDate;
   final DateTime? endDate;
-  List<GroupUser>? users;  
-  List<TripDay>? days;  
+  List<GroupUser>? users;
   List<TripAction>? actions;  
 
   Trip({
@@ -28,7 +26,6 @@ class Trip {
     this.startDate,
     this.endDate,
     this.users,
-    this.days,
     this.actions,
   });
 
@@ -40,8 +37,7 @@ class Trip {
     String? coverImage,
     DateTime? startDate,
     DateTime? endDate,
-    List<GroupUser>? users,
-    List<TripDay>? days,
+    List<GroupUser>? users, 
     List<TripAction>? actions,
   }) {
     return Trip(
@@ -53,7 +49,6 @@ class Trip {
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       users: users ?? this.users,
-      days: days ?? this.days,
       actions: actions ?? this.actions
     );
   }
@@ -67,8 +62,7 @@ class Trip {
       'coverImage': coverImage,
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
-      'users': users?.map((x) => x.toMap()).toList(),
-      'days': days?.map((x) => x.toMap()).toList(),
+      'users': users?.map((x) => x.toMap()).toList(), 
       'actions': actions?.map((x) => x.toMap()).toList(),
     };
   }
@@ -83,7 +77,6 @@ class Trip {
       startDate: DateTime.parse(map['startDate']),
       endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
       users: map['users'] != null ? List<GroupUser>.from(map['users']?.map((x) => GroupUser.fromMap(x))) : null,
-      days: map['trip_days'] != null ? List<TripDay>.from(map['trip_days']?.map((x) => TripDay.fromMap(x))) : null,
       actions: map['trip_actions'] != null ? List<TripAction>.from(map['trip_actions']?.map((x) => TripAction.fromMap(x))) : null,
     );
   }
@@ -94,7 +87,7 @@ class Trip {
 
   @override
   String toString() {
-    return 'Trip(id: $id, createdBy: $createdBy, name: $name, description: $description, coverImage: $coverImage, startDate: $startDate, endDate: $endDate, users: $users, days: $days, actions: $actions)';
+    return 'Trip(id: $id, createdBy: $createdBy, name: $name, description: $description, coverImage: $coverImage, startDate: $startDate, endDate: $endDate, users: $users, actions: $actions)';
   }
 
   @override
@@ -110,7 +103,6 @@ class Trip {
       other.startDate == startDate &&
       other.endDate == endDate &&
       listEquals(other.users, users) &&
-      listEquals(other.days, days) &&
       listEquals(other.actions, actions);
   }
 
@@ -124,7 +116,6 @@ class Trip {
       startDate.hashCode ^
       endDate.hashCode ^
       users.hashCode^
-      days.hashCode^
       actions.hashCode;
   }
 }
