@@ -4,21 +4,21 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/visas/model/visa_entry.model.dart';
-import 'package:traces/utils/misc/state_types.dart';
-import 'package:traces/utils/services/shared_preferencies_service.dart';
-import 'package:traces/utils/style/styles.dart';
-import 'package:traces/widgets/error_widgets.dart';
-import 'package:traces/widgets/widgets.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
-import 'bloc/visa_entry/visa_entry_bloc.dart';
+import '../../utils/misc/state_types.dart';
+import '../../utils/services/shared_preferencies_service.dart';
+import '../../utils/style/styles.dart';
+import '../../widgets/error_widgets.dart';
+import '../../widgets/widgets.dart';
 import 'bloc/visa_details/visa_details_bloc.dart';
-import 'model/visa.model.dart';
-import 'widgets/entryExit_delete_alert.dart';
-import 'visa_entry_details_view.dart';
+import 'bloc/visa_entry/visa_entry_bloc.dart';
 import 'helpers.dart';
+import 'model/visa.model.dart';
+import 'model/visa_entry.model.dart';
+import 'visa_entry_details_view.dart';
+import 'widgets/entryExit_delete_alert.dart';
 import 'widgets/visa_delete_alert.dart';
 
 class VisaDetailsView extends StatefulWidget {

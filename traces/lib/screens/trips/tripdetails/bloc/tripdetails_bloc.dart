@@ -7,6 +7,7 @@ import 'package:traces/screens/profile/model/group_model.dart';
 import 'package:traces/screens/profile/model/group_user_model.dart';
 import 'package:traces/screens/profile/repository/api_profile_repository.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/model/trip_details_tab.model.dart';
 import 'package:traces/screens/trips/repository/api_trips_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 
@@ -20,7 +21,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   TripDetailsBloc() : 
   _tripsRepository = new ApiTripsRepository(),
   _profileRepository = new ApiProfileRepository(),
-  super(TripDetailsInitial());
+  super(TripDetailsInitial(0));
 
   @override
   Stream<TripDetailsState> mapEventToState(TripDetailsEvent event) async* {
@@ -30,6 +31,8 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       yield* _mapUpdateTripDetailsToSuccessState(event);
     } else if (event is DeleteTripClicked){
       yield* _mapDeleteTripToState(event);
+    } else if (event is TabUpdated) {
+      yield* _mapTabUpdatedToState(event);
     }
   }
 
@@ -38,6 +41,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     yield TripDetailsSuccessState(     
       event.trip,
       event.members,
+      state.activeTab
     );
   }
 
@@ -53,10 +57,11 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
         yield TripDetailsSuccessState(     
           trip,
           family.users,
+          0
         );
       }      
     }on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString());
+      yield TripDetailsErrorState(e.toString(), state.activeTab);
     }
       
   }
@@ -64,10 +69,18 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   Stream<TripDetailsState> _mapDeleteTripToState(DeleteTripClicked event) async* {
     try{
       await _tripsRepository.deleteTrip(event.tripId);
-      yield TripDetailsDeleted();
+      yield TripDetailsDeleted(state.activeTab);
     }on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString());
+      yield TripDetailsErrorState(e.toString(), state.activeTab);
     }    
+  }
+
+  Stream<TripDetailsState> _mapTabUpdatedToState(TabUpdated event) async* {
+    yield TripDetailsSuccessState(     
+      state.trip!,
+      state.familyMembers!,
+      event.tab
+    ); 
     
   }
 

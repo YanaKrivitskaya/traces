@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class ColorsPalette {
   static const Color orange = Colors.orange;
   static const Color white = Colors.white;
+  static const Color black = Colors.black;
 
   static const Color back = const Color(0xFFFEFCFB); // back
 

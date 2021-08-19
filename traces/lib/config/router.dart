@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../constants/route_constants.dart';
 import '../screens/expenses.dart';
 import '../screens/home.dart';
@@ -138,12 +137,12 @@ class RouteGenerator {
             );
           }
           return _errorRoute();
-        }      
+        }        
       case tripsRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<TripsBloc>(
             create: (context) =>
-                TripsBloc(/*FirebaseTripsRepository()*/)..add(GetAllTrips()),
+                TripsBloc()..add(GetAllTrips()),
             child: TripsPage(),
           ),
       );
@@ -157,14 +156,13 @@ class RouteGenerator {
               child: StartPlanningView(),
             ),
           );
-      }
+      }      
       case tripDetailsRoute:
         {
           if (args is int) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<TripDetailsBloc>(
-                create: (context) => TripDetailsBloc(
-                   /* FirebaseTripsRepository()*/)..add(GetTripDetails(args)),
+                create: (context) => TripDetailsBloc()..add(GetTripDetails(args)),
                 child: TripDetailsView(tripId: args),
               ),
             );
