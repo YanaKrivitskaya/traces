@@ -1,12 +1,13 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/screens/profile/model/group_model.dart';
-import 'package:traces/screens/profile/repository/api_profile_repository.dart';
-import 'package:traces/screens/trips/model/trip.model.dart';
-import 'package:traces/screens/trips/model/trip_day.model.dart';
-import 'package:traces/screens/trips/repository/api_trips_repository.dart';
-import 'package:traces/utils/api/customException.dart';
+
+import '../../../../utils/api/customException.dart';
+import '../../../profile/model/group_model.dart';
+import '../../../profile/repository/api_profile_repository.dart';
+import '../../model/trip.model.dart';
+import '../../repository/api_trips_repository.dart';
 
 part 'startplanning_event.dart';
 part 'startplanning_state.dart';
@@ -59,21 +60,7 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
         Group family = await _profileRepository.getGroupUsers(familyGroup.id!);
         event.trip!.users = [family.users.firstWhere((u) => u.accountId == profile.accountId)];
 
-        Trip trip = await _tripsRepository.createTrip(event.trip!, profile.accountId);
-
-        //generate days
-        var daysCount = trip.endDate!.difference(trip.startDate!).inDays;
-          for (var i=0; i<=daysCount; i++){
-            var dayDate = trip.startDate!.add(new Duration(days: i));
-            var dayName = "Day ${i+1}";
-            var day = new TripDay(
-              name: dayName,
-              dayNumber: i+1,
-              date: dayDate
-            );
-
-            await _tripsRepository.createTripDay(day, trip.id!);
-          }
+        Trip trip = await _tripsRepository.createTrip(event.trip!, profile.accountId);        
 
         yield StartPlanningCreatedState(trip);
       } on CustomException catch(e){
