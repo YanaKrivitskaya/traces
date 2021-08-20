@@ -1,6 +1,9 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/tripdetails/route_view.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/style/styles.dart';
@@ -10,6 +13,7 @@ import 'header_appbar_widget.dart';
 import 'header_cover_widget.dart';
 import 'overview_view.dart';
 
+import 'package:timeline_tile/timeline_tile.dart';
 
 class TripDetailsView extends StatefulWidget{
   final int? tripId;  
@@ -26,10 +30,11 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
   //String tripTabKey = "tripTab"; used in sharedPrefs
 
   final List<Tab> detailsTabs = <Tab>[
-    Tab(text: 'Overview'),
-    Tab(text: 'Notes'),
-    Tab(text: 'Itinerary'),
-    Tab(text: 'Actions'),
+    Tab(text: 'Overview', icon: Icon(Icons.home)),
+    Tab(text: 'Route', icon: Icon(Icons.map)),
+    Tab(text: 'Notes', icon: Icon(Icons.description)),
+    Tab(text: 'Expenses', icon: Icon(Icons.attach_money)),
+    Tab(text: 'Activities', icon: Icon(Icons.assignment_turned_in)),
   ];
 
   @override
@@ -63,17 +68,19 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                 state.activeTab == 0 ? 
                 headerCoverWidget(state.trip, state.familyMembers, context) 
                 :
-                headerAppbarWidget(state.trip.name!, context),
+                headerAppbarWidget(state.trip.name!, context),                
                 Column(children: [
                   Container(child: TabBar(
-                    indicatorSize: TabBarIndicatorSize.tab,
+                    /*indicatorSize: TabBarIndicatorSize.tab,
                     indicator: BubbleTabIndicator(
-                      indicatorHeight: 35.0,
+                      indicatorHeight: 50.0,
                       indicatorColor: ColorsPalette.iconColor,
                       tabBarIndicatorSize: TabBarIndicatorSize.tab                              
-                    ),
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.black,                    
+                    ),*/
+                    unselectedLabelStyle: quicksandStyle(fontSize: 0.0),
+                    /*labelColor: Colors.white,
+                    unselectedLabelColor: Colors.black,  */
+                    isScrollable: true,              
                     controller: tabController,
                     tabs: detailsTabs,
                   )),
@@ -88,6 +95,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                           child: TabA(),
                         ),*/
                         tripDetailsOverview(state.trip),
+                        RouteView(trip: state.trip),
+                        //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                         Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                         Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                         Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
@@ -107,32 +116,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
       )
     );
   }
-
-      /*Widget _timelineDays(Trip trip){
-        return Container(child: ListView.builder(
-          shrinkWrap: true,         
-          itemCount: trip.days!.length,
-          itemBuilder: (context, position){
-            final day = trip.days![position];     
-            return TimelineTile(
-              alignment: TimelineAlign.manual,
-              lineXY: 0.1,
-              isFirst: position == 0,
-              isLast: position == trip.days!.length,
-              indicatorStyle: const IndicatorStyle(
-                width: 20,
-                color: Color(0xFF27AA69),
-                padding: EdgeInsets.all(6),
-              ),
-              endChild: Card(child: Text('${day.name} - ${DateFormat.yMMMd().format(day.date!)}'),),
-              beforeLineStyle: const LineStyle(
-                color: Color(0xFF27AA69),
-              ),
-            );
-          }
-        )
-        );
-      }*/
+      
 }
 
 
