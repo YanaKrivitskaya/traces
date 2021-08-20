@@ -78,7 +78,7 @@ class _RouteViewViewState extends State<RouteView>{
           ),
           padding: EdgeInsets.all(10.0),        
           child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-            Text('${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
+            Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
             SizedBox(height: 3.0,),
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               hasBooking != null && hasBooking ? Icon(Icons.home, color: ColorsPalette.juicyBlue,) : Container(),
