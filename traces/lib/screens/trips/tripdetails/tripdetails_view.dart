@@ -10,6 +10,8 @@ import 'bloc/tripdetails_bloc.dart';
 import 'header_appbar_widget.dart';
 import 'header_cover_widget.dart';
 import 'overview_view.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
 
 class TripDetailsView extends StatefulWidget{
   final int? tripId;  
@@ -33,6 +35,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
     Tab(text: 'Activities', icon: Icon(Icons.assignment_turned_in)),
   ];
 
+  var isDialOpen = ValueNotifier<bool>(false);
+
   @override
   void initState() {
     super.initState();
@@ -53,60 +57,113 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
   }
 
   @override
-  Widget build(BuildContext context) {    
-    return Scaffold(
-      body: BlocListener<TripDetailsBloc, TripDetailsState>(
+  Widget build(BuildContext context) {     
+
+    return BlocListener<TripDetailsBloc, TripDetailsState>(
         listener: (context, state){},
         child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
           builder: (context, state){
-            if(state is TripDetailsSuccessState){
-              return Column(children: [
-                state.activeTab == 0 ? 
-                headerCoverWidget(state.trip, state.familyMembers, context) 
-                :
-                headerAppbarWidget(state.trip.name!, context),                
-                Column(children: [
-                  Container(child: TabBar(                   
-                    unselectedLabelStyle: quicksandStyle(fontSize: 0.0),
-                    /*labelColor: Colors.white,
-                    unselectedLabelColor: Colors.black,  */
-                    isScrollable: true,              
-                    controller: tabController,
-                    tabs: detailsTabs,
-                  )),
-                  Container(
-                    height: state.activeTab == 0 ? MediaQuery.of(context).size.height * 0.5 : MediaQuery.of(context).size.height * 0.8,
-                    child: TabBarView(
-                      physics: AlwaysScrollableScrollPhysics(),
+            return Scaffold(       
+              floatingActionButton: _floatingButton(),       
+              body: (state is TripDetailsSuccessState) ? 
+                  Column(children: [
+                  state.activeTab == 0 ? 
+                  headerCoverWidget(state.trip, state.familyMembers, context) 
+                  :
+                  headerAppbarWidget(state.trip.name!, context),                
+                  Column(children: [
+                    Container(child: TabBar(                   
+                      unselectedLabelStyle: quicksandStyle(fontSize: 0.0),
+                      /*labelColor: Colors.white,
+                      unselectedLabelColor: Colors.black,  */
+                      isScrollable: true,              
                       controller: tabController,
-                      children: [
-                        /*BlocProvider(
-                          builder: (context) => BlocA(),
-                          child: TabA(),
-                        ),*/
-                        tripDetailsOverview(state.trip),
-                        RouteView(trip: state.trip),
-                        //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
-                        Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
-                        Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
-                        Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
-                        /*BlocProvider(
-                          builder: (context) => BlocB(),
-                          child: TabB(),
-                        ),*/
-                      ],
-                    ))
-                ],),                
-              ]);
-              //return ;
-            }
-            return loadingWidget(ColorsPalette.meditSea);            
+                      tabs: detailsTabs,
+                    )),
+                    Container(
+                      height: state.activeTab == 0 ? MediaQuery.of(context).size.height * 0.5 : MediaQuery.of(context).size.height * 0.8,
+                      child: TabBarView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        controller: tabController,
+                        children: [
+                          /*BlocProvider(
+                            builder: (context) => BlocA(),
+                            child: TabA(),
+                          ),*/
+                          tripDetailsOverview(state.trip),
+                          RouteView(trip: state.trip),
+                          //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
+                          Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
+                          Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
+                          Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
+                          /*BlocProvider(
+                            builder: (context) => BlocB(),
+                            child: TabB(),
+                          ),*/
+                        ],
+                      ))
+                  ],),                
+                ]) : loadingWidget(ColorsPalette.meditSea)             
+            );         
           }
         ),
-      )
-    );
+      );    
   }
-      
+
+  Widget _floatingButton() => SpeedDial(
+          foregroundColor: ColorsPalette.lynxWhite,
+          icon: Icons.add,
+          activeIcon: Icons.close,
+          spacing: 3,
+          openCloseDial: isDialOpen,
+          childPadding: EdgeInsets.all(5),
+          spaceBetweenChildren: 4,
+          renderOverlay: true,          
+          overlayOpacity: 0.3,         
+          tooltip: 'Add event',          
+          elevation: 8.0,          
+          animationSpeed: 200,          
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.description),
+              backgroundColor: ColorsPalette.juicyYellow,
+              foregroundColor: ColorsPalette.lynxWhite,
+              label: 'Note',
+              onTap: () {},
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.train),
+              backgroundColor: ColorsPalette.juicyOrange,
+              foregroundColor: ColorsPalette.lynxWhite,
+              label: 'Ticket',
+              onTap: () {},
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.hotel),
+              backgroundColor: ColorsPalette.juicyDarkBlue,
+              foregroundColor: Colors.white,
+              label: 'Booking',
+              visible: true,
+              onTap: () {}
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.attach_money),
+              backgroundColor: ColorsPalette.juicyGreen,
+              foregroundColor: Colors.white,
+              label: 'Expense',
+              visible: true,
+              onTap: () {}
+            ),            
+            SpeedDialChild(
+              child: Icon(Icons.assignment_turned_in),
+              backgroundColor: ColorsPalette.juicyBlue,
+              foregroundColor: Colors.white,
+              label: 'Activity',
+              visible: true,
+              onTap: () {}
+            ),
+          ],
+        );
 }
 
 
