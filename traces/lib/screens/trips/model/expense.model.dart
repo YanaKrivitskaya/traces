@@ -7,7 +7,7 @@ class Expense {
   final int? id; 
   final DateTime? date;
   final String name;
-  final String category;
+  final String? category;
   final String? description;
   final double? amount;
   final String? currency;
@@ -18,7 +18,7 @@ class Expense {
     this.id,
     this.date,
     required this.name,
-    required this.category,
+    this.category,
     this.description,
     this.amount,
     this.currency,
@@ -73,7 +73,7 @@ class Expense {
       name: map['name'],
       category: map['category'],
       description: map['description'],
-      amount: map['amount'],
+      amount: double.parse(map['amount']),
       currency: map['currency'],
       isPaid: map['isPaid'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,

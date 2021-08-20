@@ -5,65 +5,74 @@ import 'package:meta/meta.dart';
 @immutable
 class Ticket {
   final int? id; 
-  final int? expenseId; 
-  final String name;
-  final String? details;
-  final String? description;
+  final int? expenseId;
+  final String departureLocation;
+  final String arrivalLocation;
+  final DateTime? departureDatetime;
+  final DateTime? arrivalDatetime;
+  final String type;
+  final String? carrier;
+  final String? carrierNumber;
+  final int? quantity;
+  final String? seats;
   final DateTime? reservationDate;
-  final String? reservationNUmber;
-  final String? reservationUrl;
-  final DateTime? entryDate;
-  final DateTime? exitDate;
-  final int? guestsQuantity;
-  final String? image;
+  final String? reservationNumber;
+  final String? reservationUrl;  
   final DateTime? createdDate;
   final DateTime? updatedDate;
   Ticket({
     this.id,
     this.expenseId,
-    required this.name,
-    this.details,
-    this.description,
+    required this.departureLocation,
+    required this.arrivalLocation,
+    this.departureDatetime,
+    this.arrivalDatetime,
+    required this.type,
+    this.carrier,
+    this.carrierNumber,
+    this.quantity,
+    this.seats,
     this.reservationDate,
-    this.reservationNUmber,
+    this.reservationNumber,
     this.reservationUrl,
-    this.entryDate,
-    this.exitDate,
-    this.guestsQuantity,
-    this.image,
     this.createdDate,
     this.updatedDate,
   });
+  
 
   Ticket copyWith({
     int? id,
     int? expenseId,
-    String? name,
-    String? details,
-    String? description,
+    String? departureLocation,
+    String? arrivalLocation,
+    DateTime? departureDatetime,
+    DateTime? arrivalDatetime,
+    String? type,
+    String? carrier,
+    String? carrierNumber,
+    int? quantity,
+    String? seats,
     DateTime? reservationDate,
-    String? reservationNUmber,
+    String? reservationNumber,
     String? reservationUrl,
-    DateTime? entryDate,
-    DateTime? exitDate,
-    int? guestsQuantity,
-    String? image,
     DateTime? createdDate,
     DateTime? updatedDate,
   }) {
     return Ticket(
       id: id ?? this.id,
       expenseId: expenseId ?? this.expenseId,
-      name: name ?? this.name,
-      details: details ?? this.details,
-      description: description ?? this.description,
+      departureLocation: departureLocation ?? this.departureLocation,
+      arrivalLocation: arrivalLocation ?? this.arrivalLocation,
+      departureDatetime: departureDatetime ?? this.departureDatetime,
+      arrivalDatetime: arrivalDatetime ?? this.arrivalDatetime,
+      type: type ?? this.type,
+      carrier: carrier ?? this.carrier,
+      carrierNumber: carrierNumber ?? this.carrierNumber,
+      quantity: quantity ?? this.quantity,
+      seats: seats ?? this.seats,
       reservationDate: reservationDate ?? this.reservationDate,
-      reservationNUmber: reservationNUmber ?? this.reservationNUmber,
+      reservationNumber: reservationNumber ?? this.reservationNumber,
       reservationUrl: reservationUrl ?? this.reservationUrl,
-      entryDate: entryDate ?? this.entryDate,
-      exitDate: exitDate ?? this.exitDate,
-      guestsQuantity: guestsQuantity ?? this.guestsQuantity,
-      image: image ?? this.image,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
     );
@@ -73,16 +82,18 @@ class Ticket {
     return {
       'id': id,
       'expenseId': expenseId,
-      'name': name,
-      'details': details,
-      'description': description,
+      'departureLocation': departureLocation,
+      'arrivalLocation': arrivalLocation,
+      'departureDatetime': departureDatetime?.toIso8601String(),
+      'arrivalDatetime': arrivalDatetime?.toIso8601String(),
+      'type': type,
+      'carrier': carrier,
+      'carrierNumber': carrierNumber,
+      'quantity': quantity,
+      'seats': seats,
       'reservationDate': reservationDate?.toIso8601String(),
-      'reservationNUmber': reservationNUmber,
-      'reservationUrl': reservationUrl,
-      'entryDate': entryDate?.toIso8601String(),
-      'exitDate': exitDate?.toIso8601String(),
-      'guestsQuantity': guestsQuantity,
-      'image': image
+      'reservationNumber': reservationNumber,
+      'reservationUrl': reservationUrl
     };
   }
 
@@ -90,16 +101,18 @@ class Ticket {
     return Ticket(
       id: map['id'],
       expenseId: map['expenseId'],
-      name: map['name'],
-      details: map['details'],
-      description: map['description'],
+      departureLocation: map['departureLocation'],
+      arrivalLocation: map['arrivalLocation'],
+      departureDatetime: map['departureDatetime'] != null ? DateTime.parse(map['departureDatetime']) : null,
+      arrivalDatetime: map['arrivalDatetime'] != null ? DateTime.parse(map['arrivalDatetime']) : null,
+      type: map['type'],
+      carrier: map['carrier'],
+      carrierNumber: map['carrierNumber'],
+      quantity: map['quantity'],
+      seats: map['seats'],
       reservationDate: map['reservationDate'] != null ? DateTime.parse(map['reservationDate']) : null,
-      reservationNUmber: map['reservationNUmber'],
+      reservationNumber: map['reservationNumber'],
       reservationUrl: map['reservationUrl'],
-      entryDate: map['entryDate'] != null ? DateTime.parse(map['entryDate']) : null,
-      exitDate: map['exitDate'] != null ? DateTime.parse(map['exitDate']) : null,
-      guestsQuantity: map['guestsQuantity'],
-      image: map['image'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
     );
@@ -111,7 +124,7 @@ class Ticket {
 
   @override
   String toString() {
-    return 'Ticket(id: $id, expenseId: $expenseId, name: $name, details: $details, description: $description, reservationDate: $reservationDate, reservationNUmber: $reservationNUmber, reservationUrl: $reservationUrl, entryDate: $entryDate, exitDate: $exitDate, guestsQuantity: $guestsQuantity, image: $image, createdDate: $createdDate, updatedDate: $updatedDate)';
+    return 'Ticket(id: $id, expenseId: $expenseId, departureLocation: $departureLocation, arrivalLocation: $arrivalLocation, departureDatetime: $departureDatetime, arrivalDatetime: $arrivalDatetime, type: $type, carrier: $carrier, carrierNumber: $carrierNumber, quantity: $quantity, seats: $seats, reservationDate: $reservationDate, reservationNumber: $reservationNumber, reservationUrl: $reservationUrl, createdDate: $createdDate, updatedDate: $updatedDate)';
   }
 
   @override
@@ -121,16 +134,18 @@ class Ticket {
     return other is Ticket &&
       other.id == id &&
       other.expenseId == expenseId &&
-      other.name == name &&
-      other.details == details &&
-      other.description == description &&
+      other.departureLocation == departureLocation &&
+      other.arrivalLocation == arrivalLocation &&
+      other.departureDatetime == departureDatetime &&
+      other.arrivalDatetime == arrivalDatetime &&
+      other.type == type &&
+      other.carrier == carrier &&
+      other.carrierNumber == carrierNumber &&
+      other.quantity == quantity &&
+      other.seats == seats &&
       other.reservationDate == reservationDate &&
-      other.reservationNUmber == reservationNUmber &&
+      other.reservationNumber == reservationNumber &&
       other.reservationUrl == reservationUrl &&
-      other.entryDate == entryDate &&
-      other.exitDate == exitDate &&
-      other.guestsQuantity == guestsQuantity &&
-      other.image == image &&
       other.createdDate == createdDate &&
       other.updatedDate == updatedDate;
   }
@@ -139,16 +154,18 @@ class Ticket {
   int get hashCode {
     return id.hashCode ^
       expenseId.hashCode ^
-      name.hashCode ^
-      details.hashCode ^
-      description.hashCode ^
+      departureLocation.hashCode ^
+      arrivalLocation.hashCode ^
+      departureDatetime.hashCode ^
+      arrivalDatetime.hashCode ^
+      type.hashCode ^
+      carrier.hashCode ^
+      carrierNumber.hashCode ^
+      quantity.hashCode ^
+      seats.hashCode ^
       reservationDate.hashCode ^
-      reservationNUmber.hashCode ^
+      reservationNumber.hashCode ^
       reservationUrl.hashCode ^
-      entryDate.hashCode ^
-      exitDate.hashCode ^
-      guestsQuantity.hashCode ^
-      image.hashCode ^
       createdDate.hashCode ^
       updatedDate.hashCode;
   }

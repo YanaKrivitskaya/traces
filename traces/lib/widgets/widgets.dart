@@ -3,6 +3,13 @@ import 'package:traces/constants/color_constants.dart';
 
 typedef void StringCallback(String val);
 
+extension DateOnlyCompare on DateTime {
+  bool isSameDate(DateTime other) {
+    return this.year == other.year && this.month == other.month
+           && this.day == other.day;
+  }
+}
+
 Widget loadingWidget(Color color) => new Center(
   child: CircularProgressIndicator(
       valueColor: new AlwaysStoppedAnimation<Color>(color)

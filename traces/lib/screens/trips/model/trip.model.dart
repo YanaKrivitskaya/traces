@@ -82,6 +82,7 @@ class Trip {
   }
 
   factory Trip.fromMap(Map<String, dynamic> map) {
+    print(map.length);
     return Trip(
       id: map['id'],
       createdBy: map['createdBy'],

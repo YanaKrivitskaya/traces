@@ -1,8 +1,6 @@
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:traces/screens/trips/model/trip.model.dart';
+
 import 'package:traces/screens/trips/tripdetails/route_view.dart';
 
 import '../../../constants/color_constants.dart';
@@ -12,8 +10,6 @@ import 'bloc/tripdetails_bloc.dart';
 import 'header_appbar_widget.dart';
 import 'header_cover_widget.dart';
 import 'overview_view.dart';
-
-import 'package:timeline_tile/timeline_tile.dart';
 
 class TripDetailsView extends StatefulWidget{
   final int? tripId;  
@@ -70,13 +66,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                 :
                 headerAppbarWidget(state.trip.name!, context),                
                 Column(children: [
-                  Container(child: TabBar(
-                    /*indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: BubbleTabIndicator(
-                      indicatorHeight: 50.0,
-                      indicatorColor: ColorsPalette.iconColor,
-                      tabBarIndicatorSize: TabBarIndicatorSize.tab                              
-                    ),*/
+                  Container(child: TabBar(                   
                     unselectedLabelStyle: quicksandStyle(fontSize: 0.0),
                     /*labelColor: Colors.white,
                     unselectedLabelColor: Colors.black,  */
