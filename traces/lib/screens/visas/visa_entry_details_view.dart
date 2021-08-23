@@ -372,7 +372,7 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
               value: value,
               child: Row(
                 children: [
-                  transportIcon(value),
+                  transportIcon(value, ColorsPalette.mazarineBlue),
                   SizedBox(
                     width: 15.0,
                   ),
@@ -403,7 +403,7 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
               value: value,
               child: Row(
                 children: [
-                  transportIcon(value),
+                  transportIcon(value, ColorsPalette.mazarineBlue),
                   SizedBox(
                     width: 15.0,
                   ),

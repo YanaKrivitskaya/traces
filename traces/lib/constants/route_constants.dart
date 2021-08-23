@@ -17,3 +17,4 @@ const String noteDetailsRoute = '/noteDetails';
 const String visaDetailsRoute = '/visaDetails';
 const String visaEditRoute = '/visaEdit';
 const String visaAddEntryRoute = '/visaAddEntry';
+const String ticketCreateRoute = '/ticketCreate';

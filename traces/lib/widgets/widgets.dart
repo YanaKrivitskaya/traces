@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 typedef void StringCallback(String val);
 
@@ -9,6 +10,16 @@ extension DateOnlyCompare on DateTime {
            && this.day == other.day;
   }
 }
+
+Widget transportIcon(String? transport, Color color) => new Container(
+    child: transport == 'Train' ? FaIcon(FontAwesomeIcons.train, color: color)
+        : transport == 'Plane' ? FaIcon(FontAwesomeIcons.plane, color: color)
+        : transport =='Car/Bus' ? FaIcon(FontAwesomeIcons.car, color: color)
+        : transport =='Bus' ? FaIcon(FontAwesomeIcons.bus, color: color)
+        : transport == 'Ship' ? FaIcon(FontAwesomeIcons.ship, color: color)
+        : transport == 'On foot' ? FaIcon(FontAwesomeIcons.walking, color: color)
+        : Container()
+);
 
 Widget loadingWidget(Color color) => new Center(
   child: CircularProgressIndicator(

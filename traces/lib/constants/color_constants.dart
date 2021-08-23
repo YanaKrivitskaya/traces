@@ -25,6 +25,22 @@ class ColorsPalette {
     },
   );
 
+  static const MaterialColor matTicketCalendarColor = const MaterialColor(
+    0xFFEF6101,
+    const <int, Color>{
+      50: juicyOrange,
+      100: juicyOrange,
+      200: juicyOrange,
+      300: juicyOrange,
+      400: juicyOrange,
+      500: juicyOrange,
+      600: juicyOrange,
+      700: juicyOrange,
+      800: juicyOrange,
+      900: juicyOrange,
+    },
+  );
+
   static const Color iconColor = beniukonBronze;
   //static const Color iconColor = algalFuel;
   static const Color iconTitle = blueHorizon;

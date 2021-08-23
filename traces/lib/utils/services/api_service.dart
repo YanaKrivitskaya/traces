@@ -111,11 +111,13 @@ class ApiService {
     return responseJson;
   }
 
-  Future<dynamic> getSecure(String url) async{
+  Future<dynamic> getSecure(String url, {Map<String, dynamic>? queryParams}) async{
     print("getSecure");
     var responseJson;
 
-    Uri uri = Uri.parse(_baseUrl + url);
+    String queryString = Uri(queryParameters: queryParams).query;
+    
+    Uri uri = Uri.parse(_baseUrl + url + '?' + queryString);
     Map<String, String> headers = {      
       HttpHeaders.authorizationHeader: "Bearer $_accessToken",
       "device-info": _deviceId ?? ''

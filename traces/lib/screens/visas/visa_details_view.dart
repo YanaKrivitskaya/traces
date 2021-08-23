@@ -299,14 +299,14 @@ class VerticalListItem extends StatelessWidget {
                 child: Column(children: [
                   Text('${DateFormat.yMMMd().format(item.entryDate)}'),
                   Text('${item.entryCountry}, ${item.entryCity}'),
-                  transportIcon(item.entryTransport)],
+                  transportIcon(item.entryTransport, ColorsPalette.mazarineBlue)],
                 crossAxisAlignment:CrossAxisAlignment.start))]),
               //exit
               item.hasExit! ? Column(children: [ Container(width: MediaQuery.of(context).size.width *0.3,
                 child: Column(children: [
                   Text('${DateFormat.yMMMd().format(item.exitDate!)}'),
                   Text('${item.exitCountry}, ${item.exitCity}'),
-                  transportIcon(item.exitTransport)],
+                  transportIcon(item.exitTransport, ColorsPalette.mazarineBlue)],
                 crossAxisAlignment: CrossAxisAlignment.start))])
               : Container(),
               //duration

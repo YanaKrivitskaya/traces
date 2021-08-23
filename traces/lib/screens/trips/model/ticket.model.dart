@@ -6,16 +6,16 @@ import 'package:meta/meta.dart';
 class Ticket {
   final int? id; 
   final int? expenseId;
-  final String departureLocation;
-  final String arrivalLocation;
+  final String? departureLocation;
+  final String? arrivalLocation;
   final DateTime? departureDatetime;
   final DateTime? arrivalDatetime;
-  final String type;
+  final String? type;
   final String? carrier;
   final String? carrierNumber;
   final int? quantity;
   final String? seats;
-  final DateTime? reservationDate;
+  final String? details;
   final String? reservationNumber;
   final String? reservationUrl;  
   final DateTime? createdDate;
@@ -23,16 +23,16 @@ class Ticket {
   Ticket({
     this.id,
     this.expenseId,
-    required this.departureLocation,
-    required this.arrivalLocation,
+    this.departureLocation,
+    this.arrivalLocation,
     this.departureDatetime,
     this.arrivalDatetime,
-    required this.type,
+    this.type,
     this.carrier,
     this.carrierNumber,
     this.quantity,
     this.seats,
-    this.reservationDate,
+    this.details,
     this.reservationNumber,
     this.reservationUrl,
     this.createdDate,
@@ -52,7 +52,7 @@ class Ticket {
     String? carrierNumber,
     int? quantity,
     String? seats,
-    DateTime? reservationDate,
+    String? details,
     String? reservationNumber,
     String? reservationUrl,
     DateTime? createdDate,
@@ -70,7 +70,7 @@ class Ticket {
       carrierNumber: carrierNumber ?? this.carrierNumber,
       quantity: quantity ?? this.quantity,
       seats: seats ?? this.seats,
-      reservationDate: reservationDate ?? this.reservationDate,
+      details: details ?? this.details,
       reservationNumber: reservationNumber ?? this.reservationNumber,
       reservationUrl: reservationUrl ?? this.reservationUrl,
       createdDate: createdDate ?? this.createdDate,
@@ -91,7 +91,7 @@ class Ticket {
       'carrierNumber': carrierNumber,
       'quantity': quantity,
       'seats': seats,
-      'reservationDate': reservationDate?.toIso8601String(),
+      'details': details,
       'reservationNumber': reservationNumber,
       'reservationUrl': reservationUrl
     };
@@ -110,7 +110,7 @@ class Ticket {
       carrierNumber: map['carrierNumber'],
       quantity: map['quantity'],
       seats: map['seats'],
-      reservationDate: map['reservationDate'] != null ? DateTime.parse(map['reservationDate']) : null,
+      details: map['details'],
       reservationNumber: map['reservationNumber'],
       reservationUrl: map['reservationUrl'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
@@ -124,7 +124,7 @@ class Ticket {
 
   @override
   String toString() {
-    return 'Ticket(id: $id, expenseId: $expenseId, departureLocation: $departureLocation, arrivalLocation: $arrivalLocation, departureDatetime: $departureDatetime, arrivalDatetime: $arrivalDatetime, type: $type, carrier: $carrier, carrierNumber: $carrierNumber, quantity: $quantity, seats: $seats, reservationDate: $reservationDate, reservationNumber: $reservationNumber, reservationUrl: $reservationUrl, createdDate: $createdDate, updatedDate: $updatedDate)';
+    return 'Ticket(id: $id, expenseId: $expenseId, departureLocation: $departureLocation, arrivalLocation: $arrivalLocation, departureDatetime: $departureDatetime, arrivalDatetime: $arrivalDatetime, type: $type, carrier: $carrier, carrierNumber: $carrierNumber, quantity: $quantity, seats: $seats, details: $details, reservationNumber: $reservationNumber, reservationUrl: $reservationUrl, createdDate: $createdDate, updatedDate: $updatedDate)';
   }
 
   @override
@@ -143,7 +143,7 @@ class Ticket {
       other.carrierNumber == carrierNumber &&
       other.quantity == quantity &&
       other.seats == seats &&
-      other.reservationDate == reservationDate &&
+      other.details == details &&
       other.reservationNumber == reservationNumber &&
       other.reservationUrl == reservationUrl &&
       other.createdDate == createdDate &&
@@ -163,7 +163,7 @@ class Ticket {
       carrierNumber.hashCode ^
       quantity.hashCode ^
       seats.hashCode ^
-      reservationDate.hashCode ^
+      details.hashCode ^
       reservationNumber.hashCode ^
       reservationUrl.hashCode ^
       createdDate.hashCode ^

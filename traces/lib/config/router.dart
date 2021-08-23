@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/tripdetails/tickets/bloc/ticketcreate_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/tickets/ticket_create_view.dart';
 import '../constants/route_constants.dart';
 import '../screens/expenses.dart';
 import '../screens/home.dart';
@@ -168,6 +171,18 @@ class RouteGenerator {
             );
           }
           return _errorRoute();
+        }
+      case ticketCreateRoute:
+        {
+          if (args is Trip) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<TicketCreateBloc>(
+                create: (context) => TicketCreateBloc()..add(NewTicketMode()),
+                child: TicketCreateView(trip: args),
+              ),
+            );
+          }
+          return _errorRoute();          
         }
       case expensesRoute:
         return MaterialPageRoute(builder: (_) => ExpensesPage());
