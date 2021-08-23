@@ -148,7 +148,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               foregroundColor: Colors.white,
               label: 'Booking',
               visible: true,
-              onTap: () {}
+              onTap: () {
+                Navigator.pushNamed(context, bookingCreateRoute, arguments: trip);
+              }
             ),
             SpeedDialChild(
               child: Icon(Icons.attach_money),

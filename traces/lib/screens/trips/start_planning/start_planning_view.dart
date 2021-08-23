@@ -1,14 +1,13 @@
-import 'package:traces/constants/route_constants.dart';
-import 'package:traces/screens/trips/model/trip.model.dart';
-import 'package:traces/utils/style/styles.dart';
-import 'package:traces/widgets/widgets.dart';
-
-import 'bloc/startplanning_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../constants/color_constants.dart';
-import 'package:flutter/material.dart';
+import '../../../constants/route_constants.dart';
+import '../../../utils/style/styles.dart';
+import '../../../widgets/widgets.dart';
+import '../model/trip.model.dart';
+import 'bloc/startplanning_bloc.dart';
 
 class StartPlanningView extends StatefulWidget{  
   StartPlanningView();
