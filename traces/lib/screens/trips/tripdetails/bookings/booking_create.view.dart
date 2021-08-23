@@ -36,7 +36,7 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
     _nameController = new TextEditingController();
     _locationController = new TextEditingController();
     _detailsController = new TextEditingController();    
-    _guestsQuantityController = new TextEditingController();    
+    _guestsQuantityController = new TextEditingController(text: "2");    
     _reservNumberController = new TextEditingController();    
     _reservUrlController = new TextEditingController();      
   }

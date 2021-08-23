@@ -103,8 +103,8 @@ class Ticket {
       expenseId: map['expenseId'],
       departureLocation: map['departureLocation'],
       arrivalLocation: map['arrivalLocation'],
-      departureDatetime: map['departureDatetime'] != null ? DateTime.parse(map['departureDatetime']) : null,
-      arrivalDatetime: map['arrivalDatetime'] != null ? DateTime.parse(map['arrivalDatetime']) : null,
+      departureDatetime: map['departureDatetime'] != null ? DateTime.parse(map['departureDatetime']).toLocal() : null,
+      arrivalDatetime: map['arrivalDatetime'] != null ? DateTime.parse(map['arrivalDatetime']).toLocal() : null,
       type: map['type'],
       carrier: map['carrier'],
       carrierNumber: map['carrierNumber'],
@@ -113,8 +113,8 @@ class Ticket {
       details: map['details'],
       reservationNumber: map['reservationNumber'],
       reservationUrl: map['reservationUrl'],
-      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
-      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
+      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']).toLocal() : null,
+      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']).toLocal() : null,
     );
   }
 

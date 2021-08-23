@@ -85,6 +85,7 @@ class Booking {
   }
 
   factory Booking.fromMap(Map<String, dynamic> map) {
+    print(map.length);
     return Booking(
       id: map['id'],
       expenseId: map['expenseId'],
@@ -93,12 +94,12 @@ class Booking {
       details: map['details'],     
       reservationNumber: map['reservationNumber'],
       reservationUrl: map['reservationUrl'],
-      entryDate: map['entryDate'] != null ? DateTime.parse(map['entryDate']) : null,
-      exitDate: map['exitDate'] != null ? DateTime.parse(map['exitDate']) : null,
+      entryDate: map['entryDate'] != null ? DateTime.parse(map['entryDate']).toLocal() : null,
+      exitDate: map['exitDate'] != null ? DateTime.parse(map['exitDate']).toLocal() : null,
       guestsQuantity: map['guestsQuantity'],
       image: map['image'],
-      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
-      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
+      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']).toLocal() : null,
+      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']).toLocal() : null,
     );
   }
 

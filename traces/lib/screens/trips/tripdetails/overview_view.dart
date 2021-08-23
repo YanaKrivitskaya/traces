@@ -9,8 +9,11 @@ tripDetailsOverview(Trip trip) => Container(child: Row(
       padding: EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Description:', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
+          trip.description!= null ? Column(children: [
+            Text('Description:', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
           Text('${trip.description}', style: quicksandStyle(fontSize: 15.0),),
+          ],) : Container()
+          
         ])
     )
   ]));

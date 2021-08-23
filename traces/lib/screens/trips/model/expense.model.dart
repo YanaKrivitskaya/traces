@@ -69,15 +69,15 @@ class Expense {
   factory Expense.fromMap(Map<String, dynamic> map) {
     return Expense(
       id: map['id'],
-      date: map['date'] != null ? DateTime.parse(map['date']) : null,
+      date: map['date'] != null ? DateTime.parse(map['date']).toLocal() : null,
       name: map['name'],
       category: map['category'],
       description: map['description'],
       amount: double.parse(map['amount']),
       currency: map['currency'],
       isPaid: map['isPaid'],
-      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
-      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
+      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']).toLocal() : null,
+      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']).toLocal() : null,
     );
   }
 
