@@ -6,10 +6,9 @@ import 'package:meta/meta.dart';
 class Booking {
   final int? id; 
   final int? expenseId; 
-  final String name;
-  final String? details;
-  final String? description;
-  final DateTime? reservationDate;
+  final String? name;
+  final String? location;
+  final String? details; 
   final String? reservationNumber;
   final String? reservationUrl;
   final DateTime? entryDate;
@@ -21,10 +20,9 @@ class Booking {
   Booking({
     this.id,
     this.expenseId,
-    required this.name,
-    this.details,
-    this.description,
-    this.reservationDate,
+    this.name,
+    this.location,
+    this.details,    
     this.reservationNumber,
     this.reservationUrl,
     this.entryDate,
@@ -39,6 +37,7 @@ class Booking {
     int? id,
     int? expenseId,
     String? name,
+    String? location,
     String? details,
     String? description,
     DateTime? reservationDate,
@@ -55,9 +54,8 @@ class Booking {
       id: id ?? this.id,
       expenseId: expenseId ?? this.expenseId,
       name: name ?? this.name,
-      details: details ?? this.details,
-      description: description ?? this.description,
-      reservationDate: reservationDate ?? this.reservationDate,
+      location: location ?? this.location,
+      details: details ?? this.details,      
       reservationNumber: reservationNumber ?? this.reservationNumber,
       reservationUrl: reservationUrl ?? this.reservationUrl,
       entryDate: entryDate ?? this.entryDate,
@@ -73,9 +71,8 @@ class Booking {
     return {
       'id': id,
       'name': name,
-      'details': details,
-      'description': description,
-      'reservationDate': reservationDate?.toIso8601String(),
+      'location': location,
+      'details': details,     
       'reservationNumber': reservationNumber,
       'reservationUrl': reservationUrl,
       'entryDate': entryDate?.toIso8601String(),
@@ -92,9 +89,8 @@ class Booking {
       id: map['id'],
       expenseId: map['expenseId'],
       name: map['name'],
-      details: map['details'],
-      description: map['description'],
-      reservationDate: map['reservationDate'] != null ? DateTime.parse(map['reservationDate']) : null,
+      location: map['location'],
+      details: map['details'],     
       reservationNumber: map['reservationNumber'],
       reservationUrl: map['reservationUrl'],
       entryDate: map['entryDate'] != null ? DateTime.parse(map['entryDate']) : null,
@@ -112,7 +108,7 @@ class Booking {
 
   @override
   String toString() {
-    return 'Booking(id: $id, name: $name, details: $details, description: $description, reservationDate: $reservationDate, reservationNumber: $reservationNumber, reservationUrl: $reservationUrl, entryDate: $entryDate, exitDate: $exitDate, guestsQuantity: $guestsQuantity, image: $image, createdDate: $createdDate, updatedDate: $updatedDate)';
+    return 'Booking(id: $id, name: $name, details: $details, reservationNumber: $reservationNumber, reservationUrl: $reservationUrl, entryDate: $entryDate, exitDate: $exitDate, guestsQuantity: $guestsQuantity, image: $image, createdDate: $createdDate, updatedDate: $updatedDate)';
   }
 
   @override
@@ -123,9 +119,8 @@ class Booking {
       other.id == id &&
       other.expenseId == expenseId &&
       other.name == name &&
-      other.details == details &&
-      other.description == description &&
-      other.reservationDate == reservationDate &&
+      other.location == location &&
+      other.details == details &&      
       other.reservationNumber == reservationNumber &&
       other.reservationUrl == reservationUrl &&
       other.entryDate == entryDate &&
@@ -141,9 +136,8 @@ class Booking {
     return id.hashCode ^
       expenseId.hashCode ^
       name.hashCode ^
-      details.hashCode ^
-      description.hashCode ^
-      reservationDate.hashCode ^
+      location.hashCode ^
+      details.hashCode ^      
       reservationNumber.hashCode ^
       reservationUrl.hashCode ^
       entryDate.hashCode ^

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:traces/screens/trips/model/ticket.model.dart';
-import 'package:traces/screens/trips/model/trip.model.dart';
+import '../../../../constants/color_constants.dart';
+import '../../model/ticket.model.dart';
+import '../../model/trip.model.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/screens/trips/model/trip_settings.model.dart';
-import 'package:traces/screens/trips/tripdetails/tickets/bloc/ticketcreate_bloc.dart';
-import 'package:traces/utils/style/styles.dart';
-import 'package:traces/widgets/widgets.dart';
+import '../../model/trip_settings.model.dart';
+import 'bloc/ticketcreate_bloc.dart';
+import '../../../../utils/style/styles.dart';
+import '../../../../widgets/widgets.dart';
 
 class TicketCreateView extends StatefulWidget{
   final Trip trip;  
@@ -161,7 +161,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
               child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
-                  child: _trainDetailsForm(state),
+                  child: _ticketDetailsForm(state),
                 ),
               ),
             ) : loadingWidget(ColorsPalette.juicyYellow),
@@ -171,7 +171,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     );
   }
 
-  Widget _trainDetailsForm(TicketCreateState state) => 
+  Widget _ticketDetailsForm(TicketCreateState state) => 
     new Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Type', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),                    
       _typeSelector(state),
@@ -432,7 +432,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     final DateTime? picked = await showDatePicker (
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: ThemeData(primarySwatch: ColorsPalette.matTicketCalendarColor),
+          data: ThemeData(primarySwatch: ColorsPalette.matTripCalendarColor),
           child: child!,
         );
       },
@@ -452,7 +452,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     final DateTime? picked = await showDatePicker (   
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: ThemeData(primarySwatch: ColorsPalette.matTicketCalendarColor),
+          data: ThemeData(primarySwatch: ColorsPalette.matTripCalendarColor),
           child: child!,
         );
       },     
@@ -470,7 +470,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     final TimeOfDay? picked = await showTimePicker(
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: ThemeData(primarySwatch: ColorsPalette.matTicketCalendarColor),
+          data: ThemeData(primarySwatch: ColorsPalette.matTripCalendarColor),
           child: child!,
         );
       },
@@ -491,7 +491,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     final TimeOfDay? picked = await showTimePicker(
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: ThemeData(primarySwatch: ColorsPalette.matTicketCalendarColor),
+          data: ThemeData(primarySwatch: ColorsPalette.matTripCalendarColor),
           child: child!,
         );
       },

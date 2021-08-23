@@ -25,7 +25,7 @@ class ColorsPalette {
     },
   );
 
-  static const MaterialColor matTicketCalendarColor = const MaterialColor(
+  static const MaterialColor matTripCalendarColor = const MaterialColor(
     0xFFEF6101,
     const <int, Color>{
       50: juicyOrange,
