@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/constants/route_constants.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
 
 import 'package:traces/screens/trips/tripdetails/route_view.dart';
 
@@ -62,9 +64,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
     return BlocListener<TripDetailsBloc, TripDetailsState>(
         listener: (context, state){},
         child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
-          builder: (context, state){
+          builder: (context, state){            
             return Scaffold(       
-              floatingActionButton: _floatingButton(),       
+              floatingActionButton: _floatingButton(state.trip != null ? state.trip : null),       
               body: (state is TripDetailsSuccessState) ? 
                   Column(children: [
                   state.activeTab == 0 ? 
@@ -110,7 +112,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
       );    
   }
 
-  Widget _floatingButton() => SpeedDial(
+  Widget _floatingButton(Trip? trip) => SpeedDial(
           foregroundColor: ColorsPalette.lynxWhite,
           icon: Icons.add,
           activeIcon: Icons.close,
@@ -136,7 +138,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               backgroundColor: ColorsPalette.juicyOrange,
               foregroundColor: ColorsPalette.lynxWhite,
               label: 'Ticket',
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, ticketCreateRoute, arguments: trip); 
+              },
             ),
             SpeedDialChild(
               child: Icon(Icons.hotel),

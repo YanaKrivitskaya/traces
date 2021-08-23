@@ -31,7 +31,6 @@ class TripDetailsSuccessState extends TripDetailsState{
 
   @override
   List<Object> get props => [trip, familyMembers, activeTab];
-
 }
 
 class TripDetailsErrorState extends TripDetailsState{ 
