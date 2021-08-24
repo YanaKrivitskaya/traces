@@ -7,9 +7,9 @@ import 'package:traces/screens/profile/model/group_model.dart';
 import 'package:traces/screens/profile/model/group_user_model.dart';
 import 'package:traces/screens/profile/repository/api_profile_repository.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
-import 'package:traces/screens/trips/model/trip_details_tab.model.dart';
 import 'package:traces/screens/trips/repository/api_trips_repository.dart';
 import 'package:traces/utils/api/customException.dart';
+import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 part 'tripdetails_event.dart';
 part 'tripdetails_state.dart';
@@ -17,6 +17,7 @@ part 'tripdetails_state.dart';
 class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   final ApiTripsRepository _tripsRepository;
   final ApiProfileRepository _profileRepository;
+   SharedPreferencesService sharedPrefsService = SharedPreferencesService();
   
   TripDetailsBloc() : 
   _tripsRepository = new ApiTripsRepository(),
@@ -76,6 +77,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   }
 
   Stream<TripDetailsState> _mapTabUpdatedToState(TabUpdated event) async* {
+    await sharedPrefsService.writeInt(key: "tripTab", value: event.tab);
     yield TripDetailsSuccessState(     
       state.trip!,
       state.familyMembers!,
