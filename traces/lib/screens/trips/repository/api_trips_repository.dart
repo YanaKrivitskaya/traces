@@ -1,4 +1,4 @@
-import 'package:traces/screens/trips/model/api_trip_user.model.dart';
+import 'package:traces/screens/trips/model/api_models/api_trip_user.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 
 import '../../../utils/services/api_service.dart';

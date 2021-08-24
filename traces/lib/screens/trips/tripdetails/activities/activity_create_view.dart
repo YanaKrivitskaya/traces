@@ -104,7 +104,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-                title: Text('Create activity',
+                title: Text('Add activity',
                   style: quicksandStyle(fontSize: 30.0)),
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,

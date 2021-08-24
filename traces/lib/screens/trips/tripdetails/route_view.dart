@@ -85,8 +85,8 @@ class _RouteViewViewState extends State<RouteView>{
             Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
             SizedBox(height: 3.0,),
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              hasBooking != null && hasBooking ? Icon(Icons.home, color: ColorsPalette.juicyBlue,) : Container(),
-              tickets != null && tickets.length > 0 ? Icon(Icons.flight, color: ColorsPalette.juicyGreen,): Container(),
+              hasBooking != null && hasBooking ? Icon(Icons.home, color: ColorsPalette.juicyGreen,) : Container(),
+              tickets != null && tickets.length > 0 ? Icon(Icons.flight, color: ColorsPalette.juicyBlue,): Container(),
               hasActivity != null && hasActivity ? Icon(Icons.event_available, color: ColorsPalette.juicyOrange): Container(),
               hasExpense != null && hasExpense ? Icon(Icons.attach_money, color: ColorsPalette.juicyYellow): Container()
             ],)

@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'expense.model.dart';
+import '../expense.model.dart';
 
 @immutable
 class ApiExpenseModel {
