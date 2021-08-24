@@ -168,7 +168,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               foregroundColor: Colors.white,
               label: 'Activity',
               visible: true,
-              onTap: () {}
+              onTap: () {
+                Navigator.pushNamed(context, activityCreateRoute, arguments: trip); 
+              }
             ),
           ],
         );

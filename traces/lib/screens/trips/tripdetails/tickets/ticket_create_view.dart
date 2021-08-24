@@ -135,6 +135,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
               actions: [
                 IconButton(
                   onPressed: (){
+                    FocusScope.of(context).unfocus();
                     var isFormValid = _formKey.currentState!.validate();                 
 
                     if(isFormValid){

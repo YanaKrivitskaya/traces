@@ -5,55 +5,48 @@ import 'package:intl/intl.dart';
 import '../../../../constants/color_constants.dart';
 import '../../../../utils/style/styles.dart';
 import '../../../../widgets/widgets.dart';
-import '../../model/expense.model.dart';
+import '../../model/activity.model.dart';
 import '../../model/trip.model.dart';
-import '../../model/trip_settings.model.dart';
-import 'bloc/expensecreate_bloc.dart';
+import 'bloc/activitycreate_bloc.dart';
 
-class ExpenseCreateView extends StatefulWidget{
+class ActivityCreateView extends StatefulWidget{
   final Trip trip;  
 
-  ExpenseCreateView({required this.trip});
+  ActivityCreateView({required this.trip});
 
   @override
-  _ExpenseCreateViewViewState createState() => _ExpenseCreateViewViewState();
+  _ActivityCreateViewViewState createState() => _ActivityCreateViewViewState();
 }
 
+class _ActivityCreateViewViewState extends State<ActivityCreateView>{
 
-class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Expense? newExpense;
+  Activity? newActivity;
 
   TextEditingController? _nameController;
-  TextEditingController? _amountController;
-  TextEditingController? _categoryController;
   TextEditingController? _descriptionController;
 
   @override
   void initState() {
     super.initState();
     _nameController = new TextEditingController();
-    _amountController = new TextEditingController();    
-    _categoryController = new TextEditingController();    
     _descriptionController = new TextEditingController();
  
   }
 
   @override
   void dispose() {
-    _nameController!.dispose();  
-    _amountController!.dispose();
-    _categoryController!.dispose();   
+    _nameController!.dispose();
     _descriptionController!.dispose();   
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ExpenseCreateBloc, ExpenseCreateState>(
+    return BlocListener<ActivityCreateBloc, ActivityCreateState>(
       listener: (context, state) {
-        if(state is ExpenseCreateEdit && state.loading){
+        if(state is ActivityCreateEdit && state.loading){
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
@@ -71,7 +64,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
                 ),
             ));
           }
-          if(state is ExpenseCreateSuccess){
+          if(state is ActivityCreateSuccess){
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
@@ -86,7 +79,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
                 Navigator.pop(context);
               });
           }
-          if(state is ExpenseCreateError){
+          if(state is ActivityCreateError){
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
@@ -106,12 +99,12 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
               ));
           }
       },
-      child: BlocBuilder<ExpenseCreateBloc, ExpenseCreateState>(
+      child: BlocBuilder<ActivityCreateBloc, ActivityCreateState>(
         builder: (context, state){
           return Scaffold(
             appBar: AppBar(
-                centerTitle: true,
-                title: Text('Create expense',
+              centerTitle: true,
+                title: Text('Create activity',
                   style: quicksandStyle(fontSize: 30.0)),
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,
@@ -126,41 +119,40 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
                       var isFormValid = _formKey.currentState!.validate();                 
 
                       if(isFormValid){
-                        newExpense = state.expense!.copyWith(
+                        newActivity = state.activity!.copyWith(
                           name: _nameController!.text.trim(),                        
-                          description: _descriptionController!.text.trim(),
-                          amount: double.parse(_amountController!.text.trim()),
-                          currency: state.expense!.currency ?? TripSettings.currency.first,                        
-                          category: _categoryController!.text.trim(),
-                          isPaid: state.expense!.isPaid ?? true
+                          description: _descriptionController!.text.trim(),                          
+                          isPlanned: state.activity!.isPlanned ?? true,
+                          isCompleted: state.activity!.isCompleted ?? true
                         );                                    
-                        context.read<ExpenseCreateBloc>().add(ExpenseSubmitted(newExpense, widget.trip.id!));
+                        context.read<ActivityCreateBloc>().add(ActivitySubmitted(newActivity, null, widget.trip.id!));
                     }},
                     icon: Icon(Icons.check, color: ColorsPalette.juicyOrange))
                 ],
             ),
-            body: state.expense != null ? Container(
+            body: state.activity != null ? Container(
               padding: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0, bottom: 40.0),
               child:SingleChildScrollView(
                   child: Form(
                     key: _formKey,
-                    child: _expenseDetailsForm(state),
+                    child: _activityDetailsForm(state),
                   ),
                 )
             ) : loadingWidget(ColorsPalette.juicyOrange),
           );
-        },
+        }
       ),
     );
   }
 
-  Widget _expenseDetailsForm(ExpenseCreateState state) => 
-    new Column(crossAxisAlignment:  CrossAxisAlignment.start, children: [
+  Widget _activityDetailsForm(ActivityCreateState state) => new Column(
+    crossAxisAlignment:  CrossAxisAlignment.start,
+    children: [
       Text('Name', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
       TextFormField(
         decoration: InputDecoration(
           isDense: true,                      
-          hintText: "e.g., Tea in Lisboa"                      
+          hintText: "e.g., Boat trip"                      
         ),
         style:  quicksandStyle(fontSize: 18.0),
         controller: _nameController,
@@ -174,95 +166,80 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
         Icon(Icons.date_range),
         SizedBox(width: 20.0),
         InkWell(
-          child: state.expense!.date != null 
-            ? Text('${DateFormat.yMMMd().format( state.expense!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
+          child: state.activity!.date != null 
+            ? Text('${DateFormat.yMMMd().format( state.activity!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
             : Text('Date', style: quicksandStyle(fontSize: 18.0)),
           onTap: () => _selectDate(context, state, widget.trip)
         )],),
       SizedBox(height: 20.0,),
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [          
-          Text('Amount', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
-          SizedBox(height: 10.0),
-          SizedBox(width:  MediaQuery.of(context).size.width * 0.40,
-            child: TextFormField(
-              decoration: InputDecoration(
-                isDense: true,                      
-                hintText: "e.g., 10.25"                      
-              ),
-              style:  quicksandStyle(fontSize: 18.0),
-              controller: _amountController,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {                        
-                return value!.isEmpty ? 'Required field' : null;
-              }
-            )
-          )
-        ]),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Currency', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
-          SizedBox(width:  MediaQuery.of(context).size.width * 0.40,
-            child: _currencySelector(state)
-          )
-        ])
-      ]),
-      SizedBox(height: 10.0,),
-      Row(
-        children: [
-          SizedBox(
-              height: 24.0,
-              width: 24.0,
-              child: Checkbox(
-                value: state.expense!.isPaid ?? true,
-                onChanged: (value) {
-                  context.read<ExpenseCreateBloc>().add(PaidUpdated(value!));      
-                },
-              ),
-          ),
-          SizedBox(width: 15.0,),
-          Text('Paid', style: quicksandStyle(fontSize: 18.0)),
-        ],
-      ),
-      SizedBox(height: 10.0),
       Text('Description', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
       TextFormField(
         decoration: InputDecoration(
           isDense: true,                      
-          hintText: "e.g., two black teas"                      
+          hintText: "e.g., Trip over Tejo river"                      
         ),
         minLines: 5,
         maxLines: 10,
         style:  quicksandStyle(fontSize: 18.0),
         controller: _descriptionController
-      )
-    ]);
-
-    Widget _currencySelector(ExpenseCreateState state) =>
-      new DropdownButtonFormField<String>(
-        value: state.expense!.currency ?? TripSettings.currency.first,
-        isExpanded: true,        
-        items:
-          TripSettings.currency.map((String value) {
-          return new DropdownMenuItem<String>(
-              value: value,
-              child: Row(
-                children: [                  
-                  new Text(value),
-                ],
-              ));
-        }).toList(),
-        onChanged: (String? value) {
-          state.expense = state.expense!.copyWith(currency: value);
-          FocusScope.of(context).unfocus();
-        },
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: (value) {
-          return value == null ? 'Required field' : null;
-        },
-      );
+      ),
+      SizedBox(height: 10.0,),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.40,
+            child:  Row(children: [
+              SizedBox(
+                height: 24.0,
+                width: 24.0,
+                child: Checkbox(
+                  value: state.activity!.isPlanned ?? true,
+                  onChanged: (value) {
+                    context.read<ActivityCreateBloc>().add(PlannedUpdated(value!));      
+                  },
+                ),
+            ),
+            SizedBox(width: 15.0,),
+            Text('Planned', style: quicksandStyle(fontSize: 18.0)),
+            ],),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.40,
+            child: Row(children: [
+              SizedBox(
+                height: 24.0,
+                width: 24.0,
+                child: Checkbox(
+                  value: state.activity!.isCompleted ?? true,
+                  onChanged: (value) {
+                    context.read<ActivityCreateBloc>().add(CompletedUpdated(value!));      
+                  },
+                ),
+            ),
+            SizedBox(width: 15.0,),
+            Text('Completed', style: quicksandStyle(fontSize: 18.0)),
+            ],)  ,
+          )                  
+        ],
+      ),
+      SizedBox(height: 20.0),
+      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        ElevatedButton(
+          child: Text("Add expense"), 
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+              backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyOrange),
+              foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
+            ),
+            onPressed: (){ }
+        )
+      ])
+    ],
+  );
 
   Future<Null> _selectDate(
-    BuildContext context, ExpenseCreateState state, Trip trip) async {
+    BuildContext context, ActivityCreateState state, Trip trip) async {
     FocusScope.of(context).unfocus();
     final DateTime? picked = await showDatePicker (
       builder: (BuildContext context, Widget? child) {
@@ -272,12 +249,12 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
         );
       },
       context: context,   
-      initialDate: state.expense!.date ?? trip.startDate ?? DateTime.now(),      
+      initialDate: state.activity!.date ?? trip.startDate ?? DateTime.now(),      
       firstDate: trip.startDate ?? DateTime(2015),
       lastDate: trip.endDate ?? DateTime(2101),        
     );
     if (picked != null) {
-      context.read<ExpenseCreateBloc>().add(DateUpdated(picked));      
+      context.read<ActivityCreateBloc>().add(DateUpdated(picked));      
     }
   }
 

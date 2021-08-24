@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 class Activity {
   final int? id;
   final int? expenseId;
-  final String name;
+  final String? name;
   final DateTime? date;
   final String? description;
   final String? image;
@@ -15,7 +15,7 @@ class Activity {
   Activity({
     this.id,
     this.expenseId,
-    required this.name,    
+    this.name,    
     this.description,
     this.date,
     this.image,
@@ -63,7 +63,7 @@ class Activity {
       expenseId: map['expenseId'],
       name: map['name'],
       description: map['description'],
-      date: map['date'] != null ? DateTime.parse(map['date']) : null,
+      date: map['date'] != null ? DateTime.parse(map['date']).toLocal() : null,
       image: map['image'],
       isPlanned: map['isPlanned'],
       isCompleted: map['isCompleted'],

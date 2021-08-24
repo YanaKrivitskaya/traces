@@ -20,3 +20,4 @@ const String visaAddEntryRoute = '/visaAddEntry';
 const String ticketCreateRoute = '/ticketCreate';
 const String bookingCreateRoute = '/bookingCreate';
 const String expenseCreateRoute = '/expenseCreate';
+const String activityCreateRoute = '/activityCreate';
