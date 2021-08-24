@@ -111,7 +111,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
           return Scaffold(
             appBar: AppBar(
                 centerTitle: true,
-                title: Text('Create expense',
+                title: Text('Add expense',
                   style: quicksandStyle(fontSize: 30.0)),
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,

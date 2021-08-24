@@ -114,7 +114,7 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
           return Scaffold(
               appBar: AppBar(
                 centerTitle: true,
-                title: Text('Create booking',
+                title: Text('Add booking',
                   style: quicksandStyle(fontSize: 30.0)),
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,
@@ -196,7 +196,7 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
               Icon(Icons.date_range),
               state.booking?.exitDate != null 
                 ?  Text('${DateFormat.yMMMd().format(state.booking!.exitDate!)}', style: quicksandStyle(fontSize: 18.0))
-                : Text("End Date", style:  quicksandStyle(fontSize: 18.0)),
+                : Text("Exit Date", style:  quicksandStyle(fontSize: 18.0)),
             ],
            ),
           onTap: () => _selectDates(context, state, widget.trip),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
 
-import 'trip.model.dart';
+import '../trip.model.dart';
 
 @immutable
 class ApiTicketModel {

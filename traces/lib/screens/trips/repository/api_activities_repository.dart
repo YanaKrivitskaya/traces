@@ -1,7 +1,7 @@
 
 
 import 'package:traces/screens/trips/model/activity.model.dart';
-import 'package:traces/screens/trips/model/api_activity.model.dart';
+import 'package:traces/screens/trips/model/api_models/api_activity.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 
 import '../../../utils/services/api_service.dart';

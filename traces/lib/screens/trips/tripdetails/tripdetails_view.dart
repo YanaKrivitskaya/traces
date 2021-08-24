@@ -31,7 +31,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
 
   final List<Tab> detailsTabs = <Tab>[
     Tab(text: 'Overview', icon: Icon(Icons.home)),
-    Tab(text: 'Route', icon: Icon(Icons.map)),
+    Tab(text: 'Route', icon: Icon(Icons.map)),    
     Tab(text: 'Notes', icon: Icon(Icons.description)),
     Tab(text: 'Expenses', icon: Icon(Icons.attach_money)),
     Tab(text: 'Activities', icon: Icon(Icons.assignment_turned_in)),
@@ -94,7 +94,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                           ),*/
                           tripDetailsOverview(state.trip),
                           RouteView(trip: state.trip),
-                          //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
+                          //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),                          
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),

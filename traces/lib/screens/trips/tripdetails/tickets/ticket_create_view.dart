@@ -124,7 +124,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-              title: Text('Create ticket',
+              title: Text('Add ticket',
                 style: quicksandStyle(fontSize: 30.0)),
               backgroundColor: ColorsPalette.white,
               elevation: 0,

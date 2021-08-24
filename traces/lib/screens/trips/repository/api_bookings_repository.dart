@@ -1,4 +1,4 @@
-import 'package:traces/screens/trips/model/api_booking.model.dart';
+import 'package:traces/screens/trips/model/api_models/api_booking.model.dart';
 import 'package:traces/screens/trips/model/booking.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 

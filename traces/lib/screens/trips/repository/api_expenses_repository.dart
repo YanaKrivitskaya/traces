@@ -1,4 +1,4 @@
-import 'package:traces/screens/trips/model/api_expense.model.dart';
+import 'package:traces/screens/trips/model/api_models/api_expense.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 
