@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/style/styles.dart';
@@ -14,14 +15,17 @@ import 'bloc/tripdetails_bloc.dart';
 import 'tripMembers/bloc/tripmembers_bloc.dart';
 import 'tripMembers/tripMembers_dialog.dart';
 
-Widget headerCoverWidget(Trip trip, List<GroupUser> familyMembers, BuildContext context) => new Stack(
+Widget headerCoverWidget(Trip trip, List<GroupUser> familyMembers, BuildContext context, SharedPreferencesService sharedPrefsService, String key) => new Stack(
   alignment: AlignmentDirectional.bottomCenter,
   children: [
     _coverImage(trip.coverImage),
     //back button
     Positioned(top: 35, left: 10,
       child: InkWell(
-        onTap: (){Navigator.pop(context);},
+        onTap: (){
+          sharedPrefsService.remove(key: key);
+          Navigator.pop(context);
+          },
         child:Icon(Icons.arrow_back, color: ColorsPalette.black)
       ),
     ),

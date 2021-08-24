@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../../utils/style/styles.dart';
 
-Widget headerAppbarWidget(String tripName, BuildContext context) => new Container(
+Widget headerAppbarWidget(String tripName, BuildContext context, SharedPreferencesService sharedPrefsService, String key) => new Container(
   padding: EdgeInsets.only(top: 35.0, left: 10.0),
   child: Row(
   children: [
     InkWell(
         onTap: () {
+          sharedPrefsService.remove(key: key);
           Navigator.pop(context);
         },
         child: const Icon(Icons.arrow_back)),

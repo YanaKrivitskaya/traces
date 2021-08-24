@@ -4,6 +4,7 @@ import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 
 import 'package:traces/screens/trips/tripdetails/route_view.dart';
+import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/style/styles.dart';
@@ -27,7 +28,9 @@ class TripDetailsView extends StatefulWidget{
 class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProviderStateMixin{
   late TabController tabController;
 
-  //String tripTabKey = "tripTab"; used in sharedPrefs
+  SharedPreferencesService sharedPrefsService = SharedPreferencesService();
+
+  String tripTabKey = "tripTab";
 
   final List<Tab> detailsTabs = <Tab>[
     Tab(text: 'Overview', icon: Icon(Icons.home)),
@@ -62,7 +65,10 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
   Widget build(BuildContext context) {     
 
     return BlocListener<TripDetailsBloc, TripDetailsState>(
-        listener: (context, state){},
+        listener: (context, state){
+          int? tabValue = sharedPrefsService.readInt(key: tripTabKey);
+          tabController.index = tabValue ?? 0;
+        },
         child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
           builder: (context, state){            
             return Scaffold(       
@@ -70,9 +76,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               body: (state is TripDetailsSuccessState) ? 
                   Column(children: [
                   state.activeTab == 0 ? 
-                  headerCoverWidget(state.trip, state.familyMembers, context) 
+                  headerCoverWidget(state.trip, state.familyMembers, context, sharedPrefsService, tripTabKey) 
                   :
-                  headerAppbarWidget(state.trip.name!, context),                
+                  headerAppbarWidget(state.trip.name!, context, sharedPrefsService, tripTabKey),                
                   Column(children: [
                     Container(child: TabBar(                   
                       unselectedLabelStyle: quicksandStyle(fontSize: 0.0),
