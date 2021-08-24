@@ -125,6 +125,7 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
                 actions: [
                   IconButton(
                     onPressed: (){
+                      FocusScope.of(context).unfocus();
                       var isFormValid = _formKey.currentState!.validate();                 
 
                       if(isFormValid){
