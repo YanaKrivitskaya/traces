@@ -5,4 +5,11 @@ class TripSettings{
     "Plane",
     "Ship"
   ];
+
+  static const List<String> currency = [    
+    "USD",
+    "EUR",
+    "BYN",
+    "RUB"
+  ];
 }
