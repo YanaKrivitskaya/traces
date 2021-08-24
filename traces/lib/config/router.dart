@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/bloc/bookingcreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/booking_create.view.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expense_create_view.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/bloc/ticketcreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_create_view.dart';
 import '../constants/route_constants.dart';
@@ -193,6 +195,18 @@ class RouteGenerator {
               builder: (_) => BlocProvider<BookingCreateBloc>(
                 create: (context) => BookingCreateBloc()..add(NewBookingMode()),
                 child: BookingCreateView(trip: args),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }
+      case expenseCreateRoute:
+        {
+          if (args is Trip) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<ExpenseCreateBloc>(
+                create: (context) => ExpenseCreateBloc()..add(NewExpenseMode()),
+                child: ExpenseCreateView(trip: args),
               ),
             );
           }

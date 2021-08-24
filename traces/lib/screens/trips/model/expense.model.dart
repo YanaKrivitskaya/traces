@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 class Expense {
   final int? id; 
   final DateTime? date;
-  final String name;
+  final String? name;
   final String? category;
   final String? description;
   final double? amount;
@@ -17,7 +17,7 @@ class Expense {
   Expense({
     this.id,
     this.date,
-    required this.name,
+    this.name,
     this.category,
     this.description,
     this.amount,

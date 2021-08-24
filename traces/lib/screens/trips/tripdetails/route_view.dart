@@ -65,6 +65,10 @@ class _RouteViewViewState extends State<RouteView>{
         a.date != null && a.date!.isSameDate(date)
       ).isNotEmpty;
 
+      var hasExpense = trip.expenses?.where((e) => 
+        e.date != null && e.date!.isSameDate(date)
+      ).isNotEmpty;
+
       var tickets = trip.tickets?.where((t) => 
          t.departureDatetime != null && t.departureDatetime  != null  &&
         (t.departureDatetime !.isBefore(date) || t.departureDatetime !.isSameDate(date)) &&
@@ -83,7 +87,8 @@ class _RouteViewViewState extends State<RouteView>{
             Row(mainAxisAlignment: MainAxisAlignment.start, children: [
               hasBooking != null && hasBooking ? Icon(Icons.home, color: ColorsPalette.juicyBlue,) : Container(),
               tickets != null && tickets.length > 0 ? Icon(Icons.flight, color: ColorsPalette.juicyGreen,): Container(),
-              hasActivity != null && hasActivity ? Icon(Icons.event_available, color: ColorsPalette.juicyOrange): Container()
+              hasActivity != null && hasActivity ? Icon(Icons.event_available, color: ColorsPalette.juicyOrange): Container(),
+              hasExpense != null && hasExpense ? Icon(Icons.attach_money, color: ColorsPalette.juicyYellow): Container()
             ],)
           ],)),
       ));
