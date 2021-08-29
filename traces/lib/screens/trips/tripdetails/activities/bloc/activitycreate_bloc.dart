@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/profile/repository/api_profile_repository.dart';
+import 'package:traces/screens/trips/model/activity_category.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/activity.model.dart';
 import 'package:traces/screens/trips/repository/api_activities_repository.dart';
@@ -12,11 +13,11 @@ part 'activitycreate_event.dart';
 part 'activitycreate_state.dart';
 
 class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> {
-  final ApiActivitiesRepository _activitysRepository;
+  final ApiActivitiesRepository _activitiesRepository;
   final ApiProfileRepository _profileRepository;
   
   ActivityCreateBloc() : 
-  _activitysRepository = new ApiActivitiesRepository(),
+  _activitiesRepository = new ApiActivitiesRepository(),
   _profileRepository = new ApiProfileRepository(),
   super(ActivityCreateInitial(null));
 
@@ -74,7 +75,7 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
     print(event.activity.toString());
 
     try{
-      Activity activity = await _activitysRepository.createActivity(event.activity!, event.expense, event.tripId);
+      Activity activity = await _activitiesRepository.createActivity(event.activity!, event.expense, event.tripId, null);
       yield ActivityCreateSuccess(activity);
     }on CustomException catch(e){
         yield ActivityCreateError(event.activity, e.toString());

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/screens/trips/model/expense_category.model.dart';
 
 import '../../../../../utils/api/customException.dart';
 import '../../../model/expense.model.dart';
@@ -15,7 +16,7 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
 
   ExpenseCreateBloc() : 
   _expensesRepository = new ApiExpensesRepository(),
-  super(ExpenseCreateInitial(null));
+  super(ExpenseCreateInitial(null, null));
 
   @override
   Stream<ExpenseCreateState> mapEventToState(
@@ -33,7 +34,9 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
   }
 
   Stream<ExpenseCreateState> _mapNewExpenseModeToState(NewExpenseMode event) async* {
-    yield ExpenseCreateEdit(new Expense(), false);
+    List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
+
+    yield ExpenseCreateEdit(new Expense(), categories, false);
   }
 
   Stream<ExpenseCreateState> _mapDateUpdatedToState(DateUpdated event) async* {
@@ -42,7 +45,7 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
 
     Expense updExpense = expense.copyWith(date: event.date);
 
-    yield ExpenseCreateEdit(updExpense, false);
+    yield ExpenseCreateEdit(updExpense, state.categories, false);
   }
 
   Stream<ExpenseCreateState> _mapPaidUpdatedToState(PaidUpdated event) async* {
@@ -51,18 +54,23 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
 
     Expense updExpense = expense.copyWith(isPaid: event.isPaid);
 
-    yield ExpenseCreateEdit(updExpense, false);
+    yield ExpenseCreateEdit(updExpense, state.categories, false);
   }
 
   Stream<ExpenseCreateState> _mapExpenseSubmittedToState(ExpenseSubmitted event) async* {
-    yield ExpenseCreateEdit(event.expense, true);
+    yield ExpenseCreateEdit(event.expense, state.categories, true);
     print(event.expense.toString());
 
+    var category = event.expense!.category!;
+
     try{
-      Expense expense = await _expensesRepository.createExpense(event.expense!, event.tripId);
-      yield ExpenseCreateSuccess(expense);
+      if(category.id == null){
+        category = (await _expensesRepository.createExpenseCategory(event.expense!.category!))!;
+      }
+      Expense expense = await _expensesRepository.createExpense(event.expense!, event.tripId, category.id!);
+      yield ExpenseCreateSuccess(expense, state.categories);
     }on CustomException catch(e){
-        yield ExpenseCreateError(event.expense, e.toString());
+        yield ExpenseCreateError(event.expense, state.categories, e.toString());
     }   
   }
 }

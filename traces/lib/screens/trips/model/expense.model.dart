@@ -1,64 +1,59 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
+import 'package:traces/screens/trips/model/expense_category.model.dart';
 
 @immutable
 class Expense {
-  final int? id; 
+  final int? id;
   final DateTime? date;
-  final String? name;
-  final String? category;
   final String? description;
   final double? amount;
   final String? currency;
   final bool? isPaid;
   final DateTime? createdDate;
   final DateTime? updatedDate;
+  final ExpenseCategory? category;
   Expense({
     this.id,
-    this.date,
-    this.name,
-    this.category,
+    this.date,    
     this.description,
     this.amount,
     this.currency,
     this.isPaid,
     this.createdDate,
-    this.updatedDate
+    this.updatedDate,
+    this.category
   });
 
   Expense copyWith({
     int? id,
-    DateTime? date,
-    String? name,
-    String? category,
+    DateTime? date,    
     String? description,
     double? amount,
     String? currency,
     bool? isPaid,
     DateTime? createdDate,
-    DateTime? updatedDate
+    DateTime? updatedDate,
+    ExpenseCategory? category
   }) {
     return Expense(
       id: id ?? this.id,
-      date: date ?? this.date,
-      name: name ?? this.name,
-      category: category ?? this.category,
+      date: date ?? this.date,      
       description: description ?? this.description,
       amount: amount ?? this.amount,
       currency: currency ?? this.currency,
       isPaid: isPaid ?? this.isPaid,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
+      category: category ?? this.category
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'date': date?.toIso8601String(),
-      'name': name,
-      'category': category,
+      'date': date?.toIso8601String(),     
       'description': description,
       'amount': amount,
       'currency': currency,
@@ -69,15 +64,14 @@ class Expense {
   factory Expense.fromMap(Map<String, dynamic> map) {
     return Expense(
       id: map['id'],
-      date: map['date'] != null ? DateTime.parse(map['date']).toLocal() : null,
-      name: map['name'],
-      category: map['category'],
+      date: map['date'] != null ? DateTime.parse(map['date']).toLocal() : null,    
       description: map['description'],
       amount: double.parse(map['amount']),
       currency: map['currency'],
       isPaid: map['isPaid'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']).toLocal() : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']).toLocal() : null,
+      category: map['category'] != null ? ExpenseCategory.fromMap(map['category']) : null
     );
   }
 
@@ -87,7 +81,7 @@ class Expense {
 
   @override
   String toString() {
-    return 'Expense(id: $id, date: $date, name: $name, category: $category, description: $description, amount: $amount, currency: $currency, isPaid: $isPaid)';
+    return 'Expense(id: $id, date: $date, description: $description, amount: $amount, currency: $currency, isPaid: $isPaid)';
   }
 
   @override
@@ -96,9 +90,7 @@ class Expense {
   
     return other is Expense &&
       other.id == id &&
-      other.date == date &&
-      other.name == name &&
-      other.category == category &&
+      other.date == date &&     
       other.description == description &&
       other.amount == amount &&
       other.currency == currency &&
@@ -110,9 +102,7 @@ class Expense {
   @override
   int get hashCode {
     return id.hashCode ^
-      date.hashCode ^
-      name.hashCode ^
-      category.hashCode ^
+      date.hashCode ^   
       description.hashCode ^
       amount.hashCode ^
       currency.hashCode ^

@@ -2,39 +2,40 @@ part of 'expensecreate_bloc.dart';
 
 abstract class ExpenseCreateState {
   Expense? expense;
+  List<ExpenseCategory>? categories;
 
-  ExpenseCreateState(this.expense);
+  ExpenseCreateState(this.expense, this.categories);
 
   @override
-  List<Object?> get props => [expense];
+  List<Object?> get props => [expense, categories];
 }
 
 class ExpenseCreateInitial extends ExpenseCreateState {
-  ExpenseCreateInitial(Expense? expense) : super(expense);
+  ExpenseCreateInitial(Expense? expense, List<ExpenseCategory>? categories) : super(expense, categories);
 }
 
 class ExpenseCreateEdit extends ExpenseCreateState {
   final bool loading;
 
-  ExpenseCreateEdit(Expense? expense, this.loading) : super(expense);
+  ExpenseCreateEdit(Expense? expense, List<ExpenseCategory>? categories, this.loading) : super(expense, categories);
 
   @override
-  List<Object?> get props => [expense, loading];
+  List<Object?> get props => [expense, categories, loading];
 }
 
 class ExpenseCreateError extends ExpenseCreateState {
   final String error;
 
-  ExpenseCreateError(Expense? expense, this.error) : super(expense);
+  ExpenseCreateError(Expense? expense, List<ExpenseCategory>? categories, this.error) : super(expense, categories);
 
   @override
-  List<Object?> get props => [expense, error];
+  List<Object?> get props => [expense, categories, error];
 }
 
 class ExpenseCreateSuccess extends ExpenseCreateState {
 
-  ExpenseCreateSuccess(Expense? expense) : super(expense);
+  ExpenseCreateSuccess(Expense? expense, List<ExpenseCategory>? categories) : super(expense, categories);
 
   @override
-  List<Object?> get props => [expense];
+  List<Object?> get props => [expense, categories];
 }

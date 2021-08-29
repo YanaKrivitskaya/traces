@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/trips/model/expense_category.model.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../../../../constants/color_constants.dart';
 import '../../../../utils/style/styles.dart';
@@ -117,21 +119,28 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
                 elevation: 0,
                 leading: IconButton(
                   icon: Icon(Icons.close_rounded),
-                  onPressed: ()=> Navigator.pop(context)
+                  onPressed: (){
+                    FocusScope.of(context).unfocus();
+                    Navigator.pop(context);
+                  }
                 ),
                 actions: [
                   IconButton(
                     onPressed: (){
                       FocusScope.of(context).unfocus();
-                      var isFormValid = _formKey.currentState!.validate();                 
+                      var isFormValid = _formKey.currentState!.validate();
+
+                      var category = new ExpenseCategory(name: _categoryController!.text.trim());
+                      if(state.categories != null){
+                        category = state.categories!.firstWhere((c) => c.name! == _categoryController!.text.trim(), orElse: () => category);
+                      }
 
                       if(isFormValid){
-                        newExpense = state.expense!.copyWith(
-                          name: _nameController!.text.trim(),                        
+                        newExpense = state.expense!.copyWith(                                               
                           description: _descriptionController!.text.trim(),
                           amount: double.parse(_amountController!.text.trim()),
                           currency: state.expense!.currency ?? TripSettings.currency.first,                        
-                          category: _categoryController!.text.trim(),
+                          category: category,
                           isPaid: state.expense!.isPaid ?? true
                         );                                    
                         context.read<ExpenseCreateBloc>().add(ExpenseSubmitted(newExpense, widget.trip.id!));
@@ -156,19 +165,8 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
 
   Widget _expenseDetailsForm(ExpenseCreateState state) => 
     new Column(crossAxisAlignment:  CrossAxisAlignment.start, children: [
-      Text('Name', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
-      TextFormField(
-        decoration: InputDecoration(
-          isDense: true,                      
-          hintText: "e.g., Tea in Lisboa"                      
-        ),
-        style:  quicksandStyle(fontSize: 18.0),
-        controller: _nameController,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: (value) {                        
-          return value!.isEmpty ? 'Required field' : null;
-        },
-      ),
+      Text('Category', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
+      _categorySelector(state),
       SizedBox(height: 20.0),
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         Icon(Icons.date_range),
@@ -280,5 +278,42 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
       context.read<ExpenseCreateBloc>().add(DateUpdated(picked));      
     }
   }
+  
+  Widget _categorySelector(ExpenseCreateState state) => new TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: this._categoryController,      
+      ),
+      suggestionsCallback: (pattern) {
+        {
+          var filteredCategories = state.categories != null ? state.categories!
+              .where((c) => c.name!.toLowerCase().startsWith(pattern.toLowerCase()))
+              .toList() : [];
+          if (filteredCategories.length > 0) {
+            return filteredCategories;
+          }   
+          return [];    
+        }       
+      },     
+      hideOnLoading: true,
+      hideOnEmpty: true,
+      itemBuilder: (context, dynamic category) {
+        return ListTile(
+          title: Text(category.name),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (dynamic suggestion) {
+        this._categoryController!.text = suggestion.name;
+        FocusScope.of(context).unfocus();
+      },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Required field';
+        }
+        return null;
+      });
 
 }

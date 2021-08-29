@@ -2,11 +2,12 @@ part of 'activitycreate_bloc.dart';
 
 abstract class ActivityCreateState {
   Activity? activity;
+  List<ActivityCategory>? categories;
 
   ActivityCreateState(this.activity);
 
   @override
-  List<Object?> get props => [activity];
+  List<Object?> get props => [activity, categories];
 }
 
 class ActivityCreateInitial extends ActivityCreateState {

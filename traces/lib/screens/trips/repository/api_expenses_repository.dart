@@ -1,12 +1,14 @@
 import 'package:traces/screens/trips/model/api_models/api_expense.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/model/expense_category.model.dart';
 
 import '../../../utils/services/api_service.dart';
 
 class ApiExpensesRepository{
   ApiService apiProvider = ApiService();
   String expensesUrl = 'expenses/';
+  String expenseCategoryUrl = 'expense-categories/';
 
   Future<List<Expense>?> getTripExpenses(int tripId) async{    
     print("getTripExpenses");
@@ -21,6 +23,27 @@ class ApiExpensesRepository{
     return expenseResponse;
   }
 
+  Future<List<ExpenseCategory>?> getExpenseCategories() async{    
+    print("getExpenseCategories");    
+    
+    final response = await apiProvider.getSecure(expenseCategoryUrl);
+      
+    var expenseResponse = response["categories"] != null ? 
+      response['categories'].map<ExpenseCategory>((map) => ExpenseCategory.fromMap(map)).toList() : null;
+    return expenseResponse;
+  }
+
+  Future<ExpenseCategory?> createExpenseCategory(ExpenseCategory category)async{
+    print("createExpenseCategory");    
+
+    final response = await apiProvider.postSecure(expenseCategoryUrl, category.toJson());
+      
+    var expenseResponse = response["category"] != null ? 
+      ExpenseCategory.fromMap(response['category']) : null;
+    return expenseResponse;
+  }
+
+
   Future<Expense?> getExpenseById(int expenseId) async{
     print("getExpenseById");
     final response = await apiProvider.getSecure("$expensesUrl$expenseId");
@@ -30,10 +53,10 @@ class ApiExpensesRepository{
     return expenseResponse;
     }
 
-    Future<Expense> createExpense(Expense expense, int tripId)async{
+  Future<Expense> createExpense(Expense expense, int tripId, int categoryId)async{
     print("createExpense");
 
-    ApiExpenseModel apiModel = ApiExpenseModel(expense: expense, tripId: tripId);
+    ApiExpenseModel apiModel = ApiExpenseModel(expense: expense, tripId: tripId, categoryId: categoryId);
 
     final response = await apiProvider.postSecure(expensesUrl, apiModel.toJson());
       
