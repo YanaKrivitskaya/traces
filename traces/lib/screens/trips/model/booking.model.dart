@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
 
 @immutable
 class Booking {
@@ -17,6 +18,7 @@ class Booking {
   final String? image;
   final DateTime? createdDate;
   final DateTime? updatedDate;
+  final Expense? expense;
   Booking({
     this.id,
     this.expenseId,
@@ -31,6 +33,7 @@ class Booking {
     this.image,
     this.createdDate,
     this.updatedDate,
+    this.expense
   });
 
   Booking copyWith({
@@ -49,6 +52,7 @@ class Booking {
     String? image,
     DateTime? createdDate,
     DateTime? updatedDate,
+    Expense? expense
   }) {
     return Booking(
       id: id ?? this.id,
@@ -64,6 +68,7 @@ class Booking {
       image: image ?? this.image,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
+      expense: expense ?? this.expense
     );
   }
 
@@ -100,6 +105,7 @@ class Booking {
       image: map['image'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']).toLocal() : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']).toLocal() : null,
+      expense: map['expense'] != null ? Expense.fromMap(map['expense']) : null
     );
   }
 

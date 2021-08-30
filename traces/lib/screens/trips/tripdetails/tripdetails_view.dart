@@ -76,9 +76,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               body: (state is TripDetailsSuccessState) ? 
                   Column(children: [
                   state.activeTab == 0 ? 
-                  headerCoverWidget(state.trip, state.familyMembers, context, sharedPrefsService, tripTabKey) 
+                  headerCoverWidget(state.trip!, state.familyMembers!, context, sharedPrefsService, tripTabKey) 
                   :
-                  headerAppbarWidget(state.trip.name!, context, sharedPrefsService, tripTabKey),                
+                  headerAppbarWidget(state.trip!.name!, context, sharedPrefsService, tripTabKey),                
                   Column(children: [
                     Container(child: TabBar(                   
                       unselectedLabelStyle: quicksandStyle(fontSize: 0.0),
@@ -98,8 +98,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                             builder: (context) => BlocA(),
                             child: TabA(),
                           ),*/
-                          tripDetailsOverview(state.trip),
-                          RouteView(trip: state.trip),
+                          tripDetailsOverview(state.trip!),
+                          RouteView(trip: state.trip!),
                           //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),                          
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),

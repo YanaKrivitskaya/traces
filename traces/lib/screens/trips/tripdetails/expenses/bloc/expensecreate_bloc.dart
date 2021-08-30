@@ -30,6 +30,8 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
       yield* _mapExpenseSubmittedToState(event);
     } else if (event is PaidUpdated) {
       yield* _mapPaidUpdatedToState(event);
+    } else if (event is AddExpenseMode) {
+      yield* _mapAddExpenseModeToState(event);
     }
   }
 
@@ -37,6 +39,22 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
     List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
 
     yield ExpenseCreateEdit(new Expense(), categories, false);
+  }
+
+  Stream<ExpenseCreateState> _mapAddExpenseModeToState(AddExpenseMode event) async* {
+
+    List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
+
+    Expense newExpense;
+
+    if(event.category != null){
+      ExpenseCategory? category = categories!.firstWhere((c) => c.name == event.category, orElse: () => new ExpenseCategory(name: event.category));
+      newExpense = event.expense!.copyWith(category: category);
+    }else{
+      newExpense = event.expense!;
+    }
+
+    yield ExpenseCreateEdit(newExpense, categories, false);
   }
 
   Stream<ExpenseCreateState> _mapDateUpdatedToState(DateUpdated event) async* {

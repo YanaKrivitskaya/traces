@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
+import 'package:traces/screens/trips/widgets/create_expense_dialog.dart';
 
 import '../../../../constants/color_constants.dart';
 import '../../../../utils/style/styles.dart';
@@ -130,13 +133,14 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
 
                       if(isFormValid){
                         newBooking = state.booking!.copyWith(
-                          name: _nameController!.text.trim(),                        
+                          name: _nameController!.text.trim(),
+                          location: _locationController!.text.trim(),
                           reservationNumber: _reservNumberController!.text.trim(),
                           reservationUrl: _reservUrlController!.text.trim(),
                           details: _detailsController!.text.trim(),                        
                           guestsQuantity: int.parse(_guestsQuantityController!.text.trim())
                         );                                    
-                        context.read<BookingCreateBloc>().add(BookingSubmitted(newBooking, null, widget.trip.id!));
+                        context.read<BookingCreateBloc>().add(BookingSubmitted(newBooking, state.booking!.expense, widget.trip.id!));
                     }},
                     icon: Icon(Icons.check, color: ColorsPalette.juicyOrange))
                 ],
@@ -216,6 +220,7 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
       _reservationdetails(state),
       SizedBox(height: 20.0),
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        state.booking!.expense == null ?
         ElevatedButton(
           child: Text("Add expense"), 
             style: ButtonStyle(
@@ -223,8 +228,31 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
               backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyOrange),
               foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
             ),
-            onPressed: (){ }
-        )
+            onPressed: () {
+              Expense expense; 
+              String category = 'Booking';
+              if(state.booking!.expense != null){
+                expense = state.booking!.expense!;
+              }else{                
+                String description = 'Booking ${_nameController!.text.trim()}';
+                if(_locationController!.text.length > 0){
+                  description += ', ${_locationController!.text.trim()}';
+                }
+                expense = new Expense(date: DateTime.now(), description: description);
+              }
+              
+              showDialog(                
+                  barrierDismissible: false, context: context, builder: (_) =>
+                    BlocProvider<ExpenseCreateBloc>(
+                      create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(category, expense)),
+                      child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                        if(val != null){
+                          context.read<BookingCreateBloc>().add(ExpenseUpdated(val));                
+                        }
+                      }),
+                    )
+                  );}
+        ) : _expenseDetails(state)
       ])
     ]);   
 
@@ -282,6 +310,29 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
         style:  quicksandStyle(fontSize: 18.0),
         controller: _detailsController
       )
+    ]
+  ); 
+
+  Widget _expenseDetails(BookingCreateState state) => new Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Expense', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+        Text('${state.booking!.expense!.amount} ${state.booking!.expense!.currency}', style: quicksandStyle(fontSize: 18.0)),
+        IconButton(onPressed: (){
+          showDialog(                
+            barrierDismissible: false, context: context, builder: (_) =>
+              BlocProvider<ExpenseCreateBloc>(
+                create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(state.booking!.expense!.category!.name, state.booking!.expense!)),
+                  child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                    if(val != null){
+                      context.read<BookingCreateBloc>().add(ExpenseUpdated(val));
+                    }
+                  }),
+              )
+          );
+        }, icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange))
+      ],),      
     ]
   ); 
 }

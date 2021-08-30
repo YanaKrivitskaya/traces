@@ -58,6 +58,7 @@ class Expense {
       'amount': amount,
       'currency': currency,
       'isPaid': isPaid,
+      'category': category?.toMap()
     };
   }
 

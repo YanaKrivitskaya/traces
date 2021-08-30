@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:traces/constants/color_constants.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/model/expense_category.model.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/model/trip_settings.model.dart';
+import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/trips/model/expense_category.model.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
+import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/widgets.dart';
 
-import '../../../../constants/color_constants.dart';
-import '../../../../utils/style/styles.dart';
-import '../../../../widgets/widgets.dart';
-import '../../model/expense.model.dart';
-import '../../model/trip.model.dart';
-import '../../model/trip_settings.model.dart';
-import 'bloc/expensecreate_bloc.dart';
+class CreateExpenseDialog extends StatefulWidget {
 
-class ExpenseCreateView extends StatefulWidget{
-  final Trip trip;  
+  final Trip? trip;
+  final ExpenseCallback? callback;
 
-  ExpenseCreateView({required this.trip});
+  const CreateExpenseDialog({Key? key, this.trip, this.callback}) : super(key: key);
 
-  @override
-  _ExpenseCreateViewViewState createState() => _ExpenseCreateViewViewState();
+   @override
+  _CreateExpenseDialogState createState() => new _CreateExpenseDialogState();
 }
 
-
-class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
+class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Expense? newExpense;
-
   TextEditingController? _amountController;
   TextEditingController? _categoryController;
   TextEditingController? _descriptionController;
@@ -47,117 +47,76 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
     _descriptionController!.dispose();   
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return BlocListener<ExpenseCreateBloc, ExpenseCreateState>(
-      listener: (context, state) {
-        if(state is ExpenseCreateEdit && state.loading){
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-              backgroundColor: ColorsPalette.juicyOrange,
-              content: Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: [SizedBox(
-                      child: CircularProgressIndicator(
-                        valueColor: new AlwaysStoppedAnimation<Color>(
-                            ColorsPalette.lynxWhite),
-                      ),
-                      height: 30.0,
-                      width: 30.0,
-                    ),
-                ],
-                ),
-            ));
-          }
-          if(state is ExpenseCreateSuccess){
-            ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-              backgroundColor: ColorsPalette.juicyOrange,
-              content: Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: [ 
-                    Icon(Icons.check, color: ColorsPalette.lynxWhite,)
-                ],
-                ),
-              ));
-              Future.delayed(const Duration(seconds: 1), () {
-                Navigator.pop(context);
-              });
-          }
-          if(state is ExpenseCreateError){
-            ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-              backgroundColor: ColorsPalette.redPigment,
-              content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Container(width: 250,
-                  child: Text(
-                    state.error,
-                    style: quicksandStyle(color: ColorsPalette.lynxWhite),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
-                  ),
-                ),
-                Icon(Icons.error, color: ColorsPalette.lynxWhite)
-                ],
-                ),
-              ));
-          }
+      listener: (context, state){
+        if(state is ExpenseCreateEdit){
+          if(_categoryController!.text.length == 0 && state.expense!.category != null) _categoryController!.text = state.expense!.category!.name!;
+          if(_descriptionController!.text.length == 0) _descriptionController!.text = state.expense!.description ?? '';
+          if(_amountController!.text.length == 0 && state.expense!.amount != null) _amountController!.text = state.expense!.amount.toString();
+        }
       },
       child: BlocBuilder<ExpenseCreateBloc, ExpenseCreateState>(
-        builder: (context, state){
-          return Scaffold(
-            appBar: AppBar(
-                centerTitle: true,
-                title: Text('Add expense',
-                  style: quicksandStyle(fontSize: 30.0)),
-                backgroundColor: ColorsPalette.white,
-                elevation: 0,
-                leading: IconButton(
-                  icon: Icon(Icons.close_rounded),
-                  onPressed: (){
-                    FocusScope.of(context).unfocus();
-                    Navigator.pop(context);
-                  }
-                ),
-                actions: [
-                  IconButton(
-                    onPressed: (){
-                      FocusScope.of(context).unfocus();
-                      var isFormValid = _formKey.currentState!.validate();
-
-                      var category = new ExpenseCategory(name: _categoryController!.text.trim());
-                      if(state.categories != null){
-                        category = state.categories!.firstWhere((c) => c.name! == _categoryController!.text.trim(), orElse: () => category);
-                      }
-
-                      if(isFormValid){
-                        newExpense = state.expense!.copyWith(                                               
-                          description: _descriptionController!.text.trim(),
-                          amount: double.parse(_amountController!.text.trim()),
-                          currency: state.expense!.currency ?? TripSettings.currency.first,                        
-                          category: category,
-                          isPaid: state.expense!.isPaid ?? true
-                        );                                    
-                        context.read<ExpenseCreateBloc>().add(ExpenseSubmitted(newExpense, widget.trip.id!));
-                    }},
-                    icon: Icon(Icons.check, color: ColorsPalette.juicyOrange))
-                ],
-            ),
-            body: state.expense != null ? Container(
-              padding: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0, bottom: 40.0),
-              child:SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: _expenseDetailsForm(state),
-                  ),
+      bloc: BlocProvider.of(context),
+      builder: (context, state){
+        if(state is ExpenseCreateEdit && !state.loading){
+          return AlertDialog(
+            insetPadding: EdgeInsets.all(30.0),
+            title: Text("Add Expense"),
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: SingleChildScrollView(            
+                child: Column( crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [  
+                    Form(
+                      key: _formKey,
+                      child: _expenseDetailsForm(state),
+                    )                  
+                  ],
                 )
-            ) : loadingWidget(ColorsPalette.juicyOrange),
+              )
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Add', style: TextStyle(color: ColorsPalette.meditSea)),
+                onPressed: () {
+                  var isFormValid = _formKey.currentState!.validate();
+
+                  var category = new ExpenseCategory(name: _categoryController!.text.trim());
+                  if(state.categories != null){
+                    category = state.categories!.firstWhere((c) => c.name! == _categoryController!.text.trim(), orElse: () => category);
+                  }                  
+
+                  if(isFormValid){
+                    Expense newExpense = state.expense!.copyWith(                                               
+                      description: _descriptionController!.text.trim(),
+                      amount: double.parse(_amountController!.text.trim()),
+                      currency: state.expense!.currency ?? TripSettings.currency.first,                        
+                      category: category,
+                      isPaid: state.expense!.isPaid ?? true
+                    );
+                    widget.callback!(newExpense);
+                    Navigator.pop(context);
+                  }                  
+                },
+              ),
+              TextButton(
+                child: Text('Cancel', style: TextStyle(color: ColorsPalette.meditSea),),
+                onPressed: () {
+                  widget.callback!(null);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           );
-        },
-      ),
-    );
+        }
+        return loadingWidget(ColorsPalette.freshYellow);
+        
+      }
+    ),
+    );    
   }
 
   Widget _expenseDetailsForm(ExpenseCreateState state) => 
@@ -170,16 +129,16 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
         SizedBox(width: 20.0),
         InkWell(
           child: state.expense!.date != null 
-            ? Text('${DateFormat.yMMMd().format( state.expense!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
+            ? Text('${DateFormat.yMMMd().format(state.expense!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
             : Text('Date', style: quicksandStyle(fontSize: 18.0)),
-          onTap: () => _selectDate(context, state, widget.trip)
+          onTap: () => _selectDate(context, state, widget.trip!)
         )],),
       SizedBox(height: 20.0,),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [          
           Text('Amount', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
           SizedBox(height: 9.0),
-          SizedBox(width:  MediaQuery.of(context).size.width * 0.40,
+          SizedBox(width:  MediaQuery.of(context).size.width * 0.30,
             child: TextFormField(
               decoration: InputDecoration(
                 isDense: true,                      
@@ -196,7 +155,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
         ]),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Currency', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
-          SizedBox(width:  MediaQuery.of(context).size.width * 0.40,
+          SizedBox(width:  MediaQuery.of(context).size.width * 0.30,
             child: _currencySelector(state)
           )
         ])
@@ -244,8 +203,8 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
           return new DropdownMenuItem<String>(
               value: value,
               child: Row(
-                children: [                  
-                  new Text(value),
+                children: [
+                  new Text(value)
                 ],
               ));
         }).toList(),
@@ -270,8 +229,8 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
         );
       },
       context: context,   
-      initialDate: state.expense!.date ?? trip.startDate ?? DateTime.now(),      
-      firstDate: trip.startDate ?? DateTime(2015),
+      initialDate: state.expense!.date ?? DateTime.now(),      
+      firstDate: DateTime(2015),
       lastDate: trip.endDate ?? DateTime(2101),        
     );
     if (picked != null) {
@@ -315,5 +274,6 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
         }
         return null;
       });
-
 }
+
+  

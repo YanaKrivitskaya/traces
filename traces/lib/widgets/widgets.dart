@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
 
 typedef void StringCallback(String val);
+
+typedef void ExpenseCallback(Expense? val);
 
 extension DateOnlyCompare on DateTime {
   bool isSameDate(DateTime other) {
