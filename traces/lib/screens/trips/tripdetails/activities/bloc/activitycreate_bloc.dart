@@ -19,7 +19,7 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
   ActivityCreateBloc() : 
   _activitiesRepository = new ApiActivitiesRepository(),
   _profileRepository = new ApiProfileRepository(),
-  super(ActivityCreateInitial(null));
+  super(ActivityCreateInitial(null, null));
 
   @override
   Stream<ActivityCreateState> mapEventToState(
@@ -39,7 +39,8 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
   }
 
    Stream<ActivityCreateState> _mapNewActivityModeToState(NewActivityMode event) async* {
-    yield ActivityCreateEdit(new Activity(), false);
+    List<ActivityCategory>? categories = await _activitiesRepository.getActivityCategories();
+    yield ActivityCreateEdit(new Activity(), categories, false);
   }
 
   Stream<ActivityCreateState> _mapArrivalDateUpdatedToState(DateUpdated event) async* {
@@ -48,7 +49,7 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
 
     Activity updActivity = activity.copyWith(date: event.date);
 
-    yield ActivityCreateEdit(updActivity, false);
+    yield ActivityCreateEdit(updActivity, state.categories, false);
   }
 
   Stream<ActivityCreateState> _mapPlannedUpdatedToState(PlannedUpdated event) async* {
@@ -57,7 +58,7 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
 
     Activity updActivity = activity.copyWith(isPlanned: event.isPlanned);
 
-    yield ActivityCreateEdit(updActivity, false);
+    yield ActivityCreateEdit(updActivity, state.categories, false);
   }
 
     Stream<ActivityCreateState> _mapCompletedUpdatedToState(CompletedUpdated event) async* {
@@ -66,19 +67,23 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
 
     Activity updActivity = activity.copyWith(isCompleted: event.isCompleted);
 
-    yield ActivityCreateEdit(updActivity, false);
+    yield ActivityCreateEdit(updActivity, state.categories, false);
   }
 
 
   Stream<ActivityCreateState> _mapActivitySubmittedToState(ActivitySubmitted event) async* {
-    yield ActivityCreateEdit(event.activity, true);
-    print(event.activity.toString());
+    yield ActivityCreateEdit(event.activity, state.categories, true);
+    
+    var category = event.activity!.category;
 
     try{
-      Activity activity = await _activitiesRepository.createActivity(event.activity!, event.expense, event.tripId, null);
-      yield ActivityCreateSuccess(activity);
+      if(category != null && category.id == null){
+        category = (await _activitiesRepository.createActivityCategory(category))!;
+      }
+      Activity activity = await _activitiesRepository.createActivity(event.activity!, event.expense, event.tripId, category?.id);
+      yield ActivityCreateSuccess(activity, state.categories);
     }on CustomException catch(e){
-        yield ActivityCreateError(event.activity, e.toString());
+        yield ActivityCreateError(event.activity, state.categories, e.toString());
     }    
   }
 }

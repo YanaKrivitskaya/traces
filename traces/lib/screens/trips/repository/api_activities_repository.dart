@@ -35,6 +35,16 @@ class ApiActivitiesRepository{
     return activityResponse;
   }
 
+  Future<ActivityCategory?> createActivityCategory(ActivityCategory category)async{
+    print("createActivityCategory");    
+
+    final response = await apiProvider.postSecure(activityCategoryUrl, category.toJson());
+      
+    var activityResponse = response["category"] != null ? 
+      ActivityCategory.fromMap(response['category']) : null;
+    return activityResponse;
+  }
+
   Future<Activity?> getActivityById(int activityId) async{
     print("getActivityById");
     final response = await apiProvider.getSecure("$activitiesUrl$activityId");

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:traces/screens/trips/model/activity_category.model.dart';
 
 import '../../../../constants/color_constants.dart';
 import '../../../../utils/style/styles.dart';
@@ -25,12 +27,14 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
   Activity? newActivity;
 
   TextEditingController? _nameController;
+  TextEditingController? _categoryController;
   TextEditingController? _descriptionController;
 
   @override
   void initState() {
     super.initState();
     _nameController = new TextEditingController();
+    _categoryController = new TextEditingController();
     _descriptionController = new TextEditingController();
  
   }
@@ -38,6 +42,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
   @override
   void dispose() {
     _nameController!.dispose();
+    _categoryController!.dispose();
     _descriptionController!.dispose();   
     super.dispose();
   }
@@ -116,14 +121,20 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
                   IconButton(
                     onPressed: (){
                       FocusScope.of(context).unfocus();
-                      var isFormValid = _formKey.currentState!.validate();                 
+                      var isFormValid = _formKey.currentState!.validate(); 
+
+                      var category = new ActivityCategory(name: _categoryController!.text.trim());
+                      if(state.categories != null){
+                        category = state.categories!.firstWhere((c) => c.name! == _categoryController!.text.trim(), orElse: () => category);
+                      }                
 
                       if(isFormValid){
                         newActivity = state.activity!.copyWith(
                           name: _nameController!.text.trim(),                        
                           description: _descriptionController!.text.trim(),                          
                           isPlanned: state.activity!.isPlanned ?? true,
-                          isCompleted: state.activity!.isCompleted ?? true
+                          isCompleted: state.activity!.isCompleted ?? true,
+                          category: category,
                         );                                    
                         context.read<ActivityCreateBloc>().add(ActivitySubmitted(newActivity, null, widget.trip.id!));
                     }},
@@ -161,6 +172,9 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
           return value!.isEmpty ? 'Required field' : null;
         },
       ),
+      SizedBox(height: 20.0),
+      Text('Category', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
+      _categorySelector(state),
       SizedBox(height: 20.0),
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         Icon(Icons.date_range),
@@ -257,5 +271,43 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
       context.read<ActivityCreateBloc>().add(DateUpdated(picked));      
     }
   }
+
+  Widget _categorySelector(ActivityCreateState state) => new TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: this._categoryController,      
+      ),
+      suggestionsCallback: (pattern) {
+        {
+          var filteredCategories = state.categories != null ? state.categories!
+              .where((c) => c.name!.toLowerCase().startsWith(pattern.toLowerCase()))
+              .toList() : [];
+          if (filteredCategories.length > 0) {
+            return filteredCategories;
+          }   
+          return [];    
+        }       
+      },     
+      hideOnLoading: true,
+      hideOnEmpty: true,
+      itemBuilder: (context, dynamic category) {
+        return ListTile(
+          title: Text(category.name),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (dynamic suggestion) {
+        this._categoryController!.text = suggestion.name;
+        FocusScope.of(context).unfocus();
+      },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Required field';
+        }
+        return null;
+      });
+
 
 }
