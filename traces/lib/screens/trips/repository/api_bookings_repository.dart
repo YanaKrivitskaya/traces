@@ -12,7 +12,7 @@ class ApiBookingsRepository{
     print("getTripBookings");
     
     final queryParameters = {
-      'tripid': tripId
+      'tripId': tripId.toString()
     };
     final response = await apiProvider.getSecure(bookingsUrl, queryParams: queryParameters);
       

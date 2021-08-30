@@ -66,7 +66,7 @@ Widget _homeMenu(AppTheme? _theme, BuildContext context) => new Scaffold(
                 Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _menuTile(FontAwesomeIcons.route, _theme, '1-trips.png', 'Trips', context, tripsRoute),
-                    _menuTile(FontAwesomeIcons.plane, _theme, '4-flights.png', 'Flights', context, flightsRoute),
+                    _menuTile(FontAwesomeIcons.plane, _theme, '4-flights.png', 'Tickets', context, flightsRoute),
                     _menuTile(FontAwesomeIcons.passport, _theme, '7-visas.png', 'Visas', context, visasRoute),
                   ],
                 ),
@@ -80,7 +80,7 @@ Widget _homeMenu(AppTheme? _theme, BuildContext context) => new Scaffold(
                 Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _menuTile(FontAwesomeIcons.clipboard, _theme, '3-notes.png', 'Notes', context, notesRoute),
-                    _menuTile(FontAwesomeIcons.hotel, _theme, '6-hotels.png', 'Hotels', context, hotelsRoute),
+                    _menuTile(FontAwesomeIcons.hotel, _theme, '6-hotels.png', 'Bookings', context, hotelsRoute),
                     _menuTile(FontAwesomeIcons.cog, _theme, '9-settings.png', 'Settings', context, settingsRoute)
                   ],
                 )

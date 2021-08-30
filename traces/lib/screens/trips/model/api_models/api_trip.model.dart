@@ -1,6 +1,8 @@
 
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
+
 import '../trip.model.dart';
 
 @immutable

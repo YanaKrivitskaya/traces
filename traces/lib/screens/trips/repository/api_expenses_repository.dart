@@ -14,7 +14,7 @@ class ApiExpensesRepository{
     print("getTripExpenses");
     
     final queryParameters = {
-      'tripid': tripId
+      'tripId': tripId.toString()
     };
     final response = await apiProvider.getSecure(expensesUrl, queryParams: queryParameters);
       

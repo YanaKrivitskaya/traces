@@ -16,7 +16,7 @@ class ApiActivitiesRepository{
     print("getTripActivities");
     
     final queryParameters = {
-      'tripid': tripId
+      'tripId': tripId.toString()
     };
     final response = await apiProvider.getSecure(activitiesUrl, queryParams: queryParameters);
       
