@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
+import 'package:traces/screens/trips/model/activity_category.model.dart';
 
 @immutable
 class Activity {
@@ -12,6 +13,7 @@ class Activity {
   final String? image;
   final bool? isPlanned;
   final bool? isCompleted;
+  final ActivityCategory? category;
   Activity({
     this.id,
     this.expenseId,
@@ -21,6 +23,7 @@ class Activity {
     this.image,
     this.isPlanned,
     this.isCompleted,
+    this.category
   });
 
   Activity copyWith({
@@ -32,6 +35,7 @@ class Activity {
     String? image,
     bool? isPlanned,
     bool? isCompleted,
+    ActivityCategory? category
   }) {
     return Activity(
       id: id ?? this.id,
@@ -42,6 +46,7 @@ class Activity {
       image: image ?? this.image,
       isPlanned: isPlanned ?? this.isPlanned,
       isCompleted: isCompleted ?? this.isCompleted,
+      category: category ?? this.category
     );
   }
 
@@ -67,6 +72,7 @@ class Activity {
       image: map['image'],
       isPlanned: map['isPlanned'],
       isCompleted: map['isCompleted'],
+      category: map['category'] != null ? ActivityCategory.fromMap(map['category']) : null
     );
   }
 
