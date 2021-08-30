@@ -17,6 +17,11 @@ class TripDetailsInitial extends TripDetailsState {
     : super(trip, familyMembers, activeTab);
 }
 
+class TripDetailsLoading extends TripDetailsState {
+  TripDetailsLoading(int activeTab, {Trip? trip, List<GroupUser>? familyMembers}) 
+    : super(trip, familyMembers, activeTab);
+}
+
 class TripDetailsDeleted extends TripDetailsState {
   TripDetailsDeleted(int activeTab, {Trip? trip, List<GroupUser>? familyMembers}) : super(trip, familyMembers, activeTab);
 }

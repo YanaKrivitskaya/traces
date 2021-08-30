@@ -111,7 +111,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                         ],
                       ))
                   ],),                
-                ]) : loadingWidget(ColorsPalette.meditSea)             
+                ]) : loadingWidget(ColorsPalette.meditSea)
             );         
           }
         ),
@@ -145,7 +145,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               foregroundColor: ColorsPalette.lynxWhite,
               label: 'Ticket',
               onTap: () {
-                Navigator.pushNamed(context, ticketCreateRoute, arguments: trip); 
+                Navigator.pushNamed(context, ticketCreateRoute, arguments: trip).then((value){
+                  context.read<TripDetailsBloc>().add(UpdateTickets(trip!.id!));
+                });
               },
             ),
             SpeedDialChild(
@@ -155,7 +157,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               label: 'Booking',
               visible: true,
               onTap: () {
-                Navigator.pushNamed(context, bookingCreateRoute, arguments: trip);
+                Navigator.pushNamed(context, bookingCreateRoute, arguments: trip).then((value){
+                  context.read<TripDetailsBloc>().add(UpdateBookings(trip!.id!));
+                });
               }
             ),
             SpeedDialChild(
@@ -165,7 +169,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               label: 'Expense',
               visible: true,
               onTap: () {
-                Navigator.pushNamed(context, expenseCreateRoute, arguments: trip); 
+                Navigator.pushNamed(context, expenseCreateRoute, arguments: trip).then((value){
+                  context.read<TripDetailsBloc>().add(UpdateExpenses(trip!.id!));
+                }); 
               }
             ),            
             SpeedDialChild(
@@ -175,7 +181,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               label: 'Activity',
               visible: true,
               onTap: () {
-                Navigator.pushNamed(context, activityCreateRoute, arguments: trip); 
+                Navigator.pushNamed(context, activityCreateRoute, arguments: trip).then((value){
+                  context.read<TripDetailsBloc>().add(UpdateActivities(trip!.id!));
+                });
               }
             ),
           ],

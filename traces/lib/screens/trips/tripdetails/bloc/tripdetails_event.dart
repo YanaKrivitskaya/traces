@@ -45,6 +45,41 @@ class TabUpdated extends TripDetailsEvent{
 
   @override
   String toString() => 'UpdateTab { tab: $tab }';
+}
 
+class UpdateExpenses extends TripDetailsEvent{
+  final int tripId;
+
+  const UpdateExpenses(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
+
+class UpdateBookings extends TripDetailsEvent{
+  final int tripId;
+
+  const UpdateBookings(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
+
+class UpdateTickets extends TripDetailsEvent{
+  final int tripId;
+
+  const UpdateTickets(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
+
+class UpdateActivities extends TripDetailsEvent{
+  final int tripId;
+
+  const UpdateActivities(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
 }
 
