@@ -30,6 +30,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
   Activity? newActivity;
 
   TextEditingController? _nameController;
+  TextEditingController? _locationController;
   TextEditingController? _categoryController;
   TextEditingController? _descriptionController;
 
@@ -37,6 +38,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
   void initState() {
     super.initState();
     _nameController = new TextEditingController();
+    _locationController = new TextEditingController();
     _categoryController = new TextEditingController();
     _descriptionController = new TextEditingController();
  
@@ -45,6 +47,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
   @override
   void dispose() {
     _nameController!.dispose();
+    _locationController!.dispose();
     _categoryController!.dispose();
     _descriptionController!.dispose();   
     super.dispose();
@@ -133,7 +136,8 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
 
                       if(isFormValid){
                         newActivity = state.activity!.copyWith(
-                          name: _nameController!.text.trim(),                        
+                          name: _nameController!.text.trim(),
+                          location: _locationController!.text.trim(),
                           description: _descriptionController!.text.trim(),                          
                           isPlanned: state.activity!.isPlanned ?? true,
                           isCompleted: state.activity!.isCompleted ?? true,
@@ -162,6 +166,16 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
   Widget _activityDetailsForm(ActivityCreateState state) => new Column(
     crossAxisAlignment:  CrossAxisAlignment.start,
     children: [
+      Text('Location', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
+      TextFormField(
+        decoration: InputDecoration(
+          isDense: true,                      
+          hintText: "e.g., Lisboa"                      
+        ),
+        style:  quicksandStyle(fontSize: 18.0),
+        controller: _locationController
+      ),
+      SizedBox(height: 20.0),
       Text('Name', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
       TextFormField(
         decoration: InputDecoration(
