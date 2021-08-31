@@ -28,6 +28,8 @@ class BookingCreateBloc extends Bloc<BookingCreateEvent, BookingCreateState> {
       yield* _mapDateUpdatedToState(event);
     } else if (event is BookingSubmitted) {
       yield* _mapBookingSubmittedToState(event);
+    } else if (event is ExpenseUpdated) {
+      yield* _mapExpenseUpdatedToState(event);
     }
   }
 
@@ -40,6 +42,15 @@ class BookingCreateBloc extends Bloc<BookingCreateEvent, BookingCreateState> {
     Booking booking = state.booking ?? new Booking();
 
     Booking updBooking = booking.copyWith(entryDate: event.startDate, exitDate: event.endDate);
+
+    yield BookingCreateEdit(updBooking, false);
+  }
+
+  Stream<BookingCreateState> _mapExpenseUpdatedToState(ExpenseUpdated event) async* {
+    
+    Booking booking = state.booking ?? new Booking();
+
+    Booking updBooking = booking.copyWith(expense: event.expense);
 
     yield BookingCreateEdit(updBooking, false);
   }

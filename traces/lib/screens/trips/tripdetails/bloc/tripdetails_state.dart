@@ -1,7 +1,7 @@
 part of 'tripdetails_bloc.dart';
 
 @immutable
-abstract class TripDetailsState extends Equatable{
+abstract class TripDetailsState{
   final Trip? trip;
   final List<GroupUser>? familyMembers;
   final int activeTab;
@@ -27,15 +27,9 @@ class TripDetailsDeleted extends TripDetailsState {
 }
 
 class TripDetailsSuccessState extends TripDetailsState{
-  final Trip trip;
-  final List<GroupUser> familyMembers;
-  final int activeTab;
 
-  TripDetailsSuccessState(this.trip, this.familyMembers, this.activeTab) 
+  TripDetailsSuccessState(Trip trip, List<GroupUser> familyMembers, int activeTab) 
     : super(trip, familyMembers, activeTab);
-
-  @override
-  List<Object> get props => [trip, familyMembers, activeTab];
 }
 
 class TripDetailsErrorState extends TripDetailsState{ 

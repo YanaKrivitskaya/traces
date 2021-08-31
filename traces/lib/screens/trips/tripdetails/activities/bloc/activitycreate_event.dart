@@ -7,10 +7,10 @@ abstract class ActivityCreateEvent {
 
 class NewActivityMode extends ActivityCreateEvent {}
 
-class DateUpdated extends ActivityCreateEvent {
+class ActivityDateUpdated extends ActivityCreateEvent {
   final DateTime date;
  
-  DateUpdated(this.date);
+  ActivityDateUpdated(this.date);
 
   List<Object> get props => [date];
 }
@@ -29,6 +29,14 @@ class CompletedUpdated extends ActivityCreateEvent {
   CompletedUpdated(this.isCompleted);
 
   List<Object> get props => [isCompleted];
+}
+
+class ExpenseUpdated extends ActivityCreateEvent {
+  final Expense expense;  
+
+  ExpenseUpdated(this.expense);
+
+  List<Object> get props => [expense];
 }
 
 class ActivitySubmitted extends ActivityCreateEvent {

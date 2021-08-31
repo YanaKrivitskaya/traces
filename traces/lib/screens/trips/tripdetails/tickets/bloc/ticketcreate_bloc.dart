@@ -33,6 +33,8 @@ class TicketCreateBloc extends Bloc<TicketCreateEvent, TicketCreateState> {
       yield* _mapDepartureDateUpdatedToState(event);
     }  else if (event is TicketSubmitted) {
       yield* _mapTicketSubmittedToState(event);
+    } else if (event is ExpenseUpdated) {
+      yield* _mapExpenseUpdatedToState(event);
     }
   }
 
@@ -58,6 +60,15 @@ class TicketCreateBloc extends Bloc<TicketCreateEvent, TicketCreateState> {
     yield TicketCreateEdit(updTicket, false);
   }
 
+  Stream<TicketCreateState> _mapExpenseUpdatedToState(ExpenseUpdated event) async* {
+    
+    Ticket ticket = state.ticket ?? new Ticket();
+
+    Ticket updTicket = ticket.copyWith(expense: event.expense);
+
+    yield TicketCreateEdit(updTicket, false);
+  }
+
   Stream<TicketCreateState> _mapTicketSubmittedToState(TicketSubmitted event) async* {
     yield TicketCreateEdit(event.ticket, true);
     print(event.ticket.toString());
@@ -67,27 +78,6 @@ class TicketCreateBloc extends Bloc<TicketCreateEvent, TicketCreateState> {
       yield TicketCreateSuccess(ticket);
     }on CustomException catch(e){
         yield TicketCreateError(event.ticket, e.toString());
-    }
-
-    /*if(event.trip!.startDate == null || event.trip!.endDate == null){
-      var error = 'Please choose the dates';
-      yield StartPlanningErrorState(event.trip, error);
-    }
-    else{
-      try{
-        var profile = await _profileRepository.getProfileWithGroups();      
-        var familyGroup = profile.groups!.firstWhere((g) => g.name == "Family");
-
-        Group family = await _profileRepository.getGroupUsers(familyGroup.id!);
-        event.trip!.users = [family.users.firstWhere((u) => u.accountId == profile.accountId)];
-
-        Trip trip = await _tripsRepository.createTrip(event.trip!, profile.accountId);        
-
-        yield TicketCreateSuccess(ticket);
-      } on CustomException catch(e){
-        
-      }
-      
-    }    */
+    }   
   }
 }

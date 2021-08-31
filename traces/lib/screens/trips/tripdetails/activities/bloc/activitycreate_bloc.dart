@@ -27,7 +27,7 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
   ) async* {
     if (event is NewActivityMode) {
       yield* _mapNewActivityModeToState(event);
-    } else if (event is DateUpdated) {
+    } else if (event is ActivityDateUpdated) {
       yield* _mapArrivalDateUpdatedToState(event);
     } else if (event is PlannedUpdated) {
       yield* _mapPlannedUpdatedToState(event);
@@ -35,6 +35,8 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
       yield* _mapCompletedUpdatedToState(event);
     }else if (event is ActivitySubmitted) {
       yield* _mapActivitySubmittedToState(event);
+    } else if (event is ExpenseUpdated) {
+      yield* _mapExpenseUpdatedToState(event);
     }
   }
 
@@ -43,7 +45,7 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
     yield ActivityCreateEdit(new Activity(), categories, false);
   }
 
-  Stream<ActivityCreateState> _mapArrivalDateUpdatedToState(DateUpdated event) async* {
+  Stream<ActivityCreateState> _mapArrivalDateUpdatedToState(ActivityDateUpdated event) async* {
     
     Activity activity = state.activity ?? new Activity();
 
@@ -66,6 +68,15 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
     Activity activity = state.activity ?? new Activity();
 
     Activity updActivity = activity.copyWith(isCompleted: event.isCompleted);
+
+    yield ActivityCreateEdit(updActivity, state.categories, false);
+  }
+
+  Stream<ActivityCreateState> _mapExpenseUpdatedToState(ExpenseUpdated event) async* {
+    
+    Activity activity = state.activity ?? new Activity();
+
+    Activity updActivity = activity.copyWith(expense: event.expense);
 
     yield ActivityCreateEdit(updActivity, state.categories, false);
   }

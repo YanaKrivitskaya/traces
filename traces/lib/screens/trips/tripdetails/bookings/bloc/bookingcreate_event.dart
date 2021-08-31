@@ -16,6 +16,14 @@ class DateRangeUpdated extends BookingCreateEvent {
   List<Object> get props => [startDate, endDate];
 }
 
+class ExpenseUpdated extends BookingCreateEvent {
+  final Expense expense;  
+
+  ExpenseUpdated(this.expense);
+
+  List<Object> get props => [expense];
+}
+
 class BookingSubmitted extends BookingCreateEvent {
   final Booking? booking;
   final Expense? expense;

@@ -66,6 +66,25 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
 
     return BlocListener<TripDetailsBloc, TripDetailsState>(
         listener: (context, state){
+          if(state is TripDetailsErrorState){
+            ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(
+              backgroundColor: ColorsPalette.redPigment,
+              content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Container(width: 250,
+                  child: Text(
+                    state.error,
+                    style: quicksandStyle(color: ColorsPalette.lynxWhite),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 5,
+                  ),
+                ),
+                Icon(Icons.error, color: ColorsPalette.lynxWhite)
+                ],
+                ),
+              ));
+          }
           int? tabValue = sharedPrefsService.readInt(key: tripTabKey);
           tabController.index = tabValue ?? 0;
         },
@@ -76,9 +95,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               body: (state is TripDetailsSuccessState) ? 
                   Column(children: [
                   state.activeTab == 0 ? 
-                  headerCoverWidget(state.trip, state.familyMembers, context, sharedPrefsService, tripTabKey) 
+                  headerCoverWidget(state.trip!, state.familyMembers!, context, sharedPrefsService, tripTabKey) 
                   :
-                  headerAppbarWidget(state.trip.name!, context, sharedPrefsService, tripTabKey),                
+                  headerAppbarWidget(state.trip!.name!, context, sharedPrefsService, tripTabKey),                
                   Column(children: [
                     Container(child: TabBar(                   
                       unselectedLabelStyle: quicksandStyle(fontSize: 0.0),
@@ -98,8 +117,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                             builder: (context) => BlocA(),
                             child: TabA(),
                           ),*/
-                          tripDetailsOverview(state.trip),
-                          RouteView(trip: state.trip),
+                          tripDetailsOverview(state.trip!),
+                          RouteView(trip: state.trip!),
                           //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),                          
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
@@ -173,7 +192,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                   context.read<TripDetailsBloc>().add(UpdateExpenses(trip!.id!));
                 }); 
               }
-            ),            
+            ),
             SpeedDialChild(
               child: Icon(Icons.assignment_turned_in),
               backgroundColor: ColorsPalette.juicyBlue,

@@ -7,6 +7,16 @@ abstract class ExpenseCreateEvent {
 
 class NewExpenseMode extends ExpenseCreateEvent {}
 
+class AddExpenseMode extends ExpenseCreateEvent {
+  final String? category;
+  late final Expense? expense;
+
+  AddExpenseMode(this.category, this.expense);
+
+  List<Object?> get props => [category, expense];
+}
+
+
 class DateUpdated extends ExpenseCreateEvent {
   final DateTime date;
 
@@ -22,7 +32,6 @@ class PaidUpdated extends ExpenseCreateEvent {
 
   List<Object> get props => [isPaid];
 }
-
 
 class ExpenseSubmitted extends ExpenseCreateEvent {
   final Expense? expense;
