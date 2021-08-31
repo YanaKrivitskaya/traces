@@ -32,11 +32,11 @@ class CompletedUpdated extends ActivityCreateEvent {
 }
 
 class ExpenseUpdated extends ActivityCreateEvent {
-  final Expense expense;  
+  final Expense? expense;  
 
   ExpenseUpdated(this.expense);
 
-  List<Object> get props => [expense];
+  List<Object?> get props => [expense];
 }
 
 class ActivitySubmitted extends ActivityCreateEvent {

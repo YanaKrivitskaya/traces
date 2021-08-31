@@ -371,7 +371,12 @@ Widget _expenseDetails(ActivityCreateState state) => new Column(
                   }),
               )
           );
-        }, icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange))
+        }, 
+        icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange)),
+        IconButton(onPressed: (){
+          context.read<ActivityCreateBloc>().add(ExpenseUpdated(null));
+        }, 
+        icon: Icon(Icons.close, color: ColorsPalette.black))
       ],),      
     ]
   ); 
