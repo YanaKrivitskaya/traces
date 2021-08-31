@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:traces/screens/trips/model/activity_category.model.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
+import 'package:traces/screens/trips/widgets/create_expense_dialog.dart';
 
 import '../../../../constants/color_constants.dart';
 import '../../../../utils/style/styles.dart';
@@ -136,7 +139,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
                           isCompleted: state.activity!.isCompleted ?? true,
                           category: category,
                         );                                    
-                        context.read<ActivityCreateBloc>().add(ActivitySubmitted(newActivity, null, widget.trip.id!));
+                        context.read<ActivityCreateBloc>().add(ActivitySubmitted(newActivity, state.activity!.expense, widget.trip.id!));
                     }},
                     icon: Icon(Icons.check, color: ColorsPalette.juicyOrange))
                 ],
@@ -239,6 +242,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
       ),
       SizedBox(height: 20.0),
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        state.activity!.expense == null ?
         ElevatedButton(
           child: Text("Add expense"), 
             style: ButtonStyle(
@@ -246,8 +250,34 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
               backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyOrange),
               foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
             ),
-            onPressed: (){ }
-        )
+            onPressed: (){
+              Expense expense;
+              String category = 'Activity';
+              if(_categoryController!.text.length > 0){
+                category = _categoryController!.text.trim();
+              }
+              
+              if(state.activity!.expense != null){
+                expense = state.activity!.expense!;
+              }else{                
+                String description = 'Activity ${_nameController!.text.trim()}';
+                
+                expense = new Expense(date: DateTime.now(), description: description);
+              }
+              
+              showDialog(                
+                  barrierDismissible: false, context: context, builder: (_) =>
+                    BlocProvider<ExpenseCreateBloc>(
+                      create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(category, expense)),
+                      child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                        if(val != null){
+                          context.read<ActivityCreateBloc>().add(ExpenseUpdated(val));                
+                        }
+                      }),
+                    )
+                  );
+            }
+        ) : _expenseDetails(state)
       ])
     ],
   );
@@ -268,7 +298,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
       lastDate: trip.endDate ?? DateTime(2101),        
     );
     if (picked != null) {
-      context.read<ActivityCreateBloc>().add(DateUpdated(picked));      
+      context.read<ActivityCreateBloc>().add(ActivityDateUpdated(picked));      
     }
   }
 
@@ -309,5 +339,27 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
         return null;
       });
 
+Widget _expenseDetails(ActivityCreateState state) => new Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Expense', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+        Text('${state.activity!.expense!.amount} ${state.activity!.expense!.currency}', style: quicksandStyle(fontSize: 18.0)),
+        IconButton(onPressed: (){
+          showDialog(                
+            barrierDismissible: false, context: context, builder: (_) =>
+              BlocProvider<ExpenseCreateBloc>(
+                create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(state.activity!.expense!.category!.name, state.activity!.expense!)),
+                  child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                    if(val != null){
+                      context.read<ActivityCreateBloc>().add(ExpenseUpdated(val));
+                    }
+                  }),
+              )
+          );
+        }, icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange))
+      ],),      
+    ]
+  ); 
 
 }

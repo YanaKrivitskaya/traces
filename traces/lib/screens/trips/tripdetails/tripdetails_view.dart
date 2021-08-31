@@ -66,6 +66,25 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
 
     return BlocListener<TripDetailsBloc, TripDetailsState>(
         listener: (context, state){
+          if(state is TripDetailsErrorState){
+            ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(
+              backgroundColor: ColorsPalette.redPigment,
+              content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Container(width: 250,
+                  child: Text(
+                    state.error,
+                    style: quicksandStyle(color: ColorsPalette.lynxWhite),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 5,
+                  ),
+                ),
+                Icon(Icons.error, color: ColorsPalette.lynxWhite)
+                ],
+                ),
+              ));
+          }
           int? tabValue = sharedPrefsService.readInt(key: tripTabKey);
           tabController.index = tabValue ?? 0;
         },
@@ -173,7 +192,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                   context.read<TripDetailsBloc>().add(UpdateExpenses(trip!.id!));
                 }); 
               }
-            ),            
+            ),
             SpeedDialChild(
               child: Icon(Icons.assignment_turned_in),
               backgroundColor: ColorsPalette.juicyBlue,

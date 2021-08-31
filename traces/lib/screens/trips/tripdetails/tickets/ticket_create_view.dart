@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
+import 'package:traces/screens/trips/widgets/create_expense_dialog.dart';
 import '../../../../constants/color_constants.dart';
 import '../../model/ticket.model.dart';
 import '../../model/trip.model.dart';
@@ -151,7 +154,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
                         quantity: int.parse(_quantityController!.text.trim()),
                         type: state.ticket!.type ?? TripSettings.ticketType.first
                       );                                    
-                      context.read<TicketCreateBloc>().add(TicketSubmitted(newTicket, null, widget.trip.id!, null));
+                      context.read<TicketCreateBloc>().add(TicketSubmitted(newTicket, state.ticket!.expense, widget.trip.id!, null));
                     } 
                   }, 
                   icon:  Icon(Icons.check, color: ColorsPalette.juicyOrange,))
@@ -188,6 +191,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
       _reservationdetails(state),
       SizedBox(height: 20.0),
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        state.ticket!.expense == null ?
         ElevatedButton(
           child: Text("Add expense"), 
             style: ButtonStyle(
@@ -195,8 +199,31 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
               backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyOrange),
               foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
             ),
-            onPressed: (){ }
-        )
+            onPressed: (){
+              Expense expense;
+              String category = 'Ticket';
+                            
+              if(state.ticket!.expense != null){
+                expense = state.ticket!.expense!;
+              }else{                
+                String description = '${state.ticket!.type ?? TripSettings.ticketType.first} ticket ${_depLocationController!.text.trim()} - ${_arrivalLocationController!.text.trim()}';
+                
+                expense = new Expense(date: DateTime.now(), description: description);
+              }
+              
+              showDialog(                
+                  barrierDismissible: false, context: context, builder: (_) =>
+                    BlocProvider<ExpenseCreateBloc>(
+                      create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(category, expense)),
+                      child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                        if(val != null){
+                          context.read<TicketCreateBloc>().add(ExpenseUpdated(val));                
+                        }
+                      }),
+                    )
+                  );
+            }
+        ) : _expenseDetails(state)
       ])
     ]);                
 
@@ -508,5 +535,28 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
       
     }
   }
+
+  Widget _expenseDetails(TicketCreateState state) => new Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Expense', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+        Text('${state.ticket!.expense!.amount} ${state.ticket!.expense!.currency}', style: quicksandStyle(fontSize: 18.0)),
+        IconButton(onPressed: (){
+          showDialog(                
+            barrierDismissible: false, context: context, builder: (_) =>
+              BlocProvider<ExpenseCreateBloc>(
+                create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(state.ticket!.expense!.category!.name, state.ticket!.expense!)),
+                  child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                    if(val != null){
+                      context.read<TicketCreateBloc>().add(ExpenseUpdated(val));
+                    }
+                  }),
+              )
+          );
+        }, icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange))
+      ],),      
+    ]
+  );
 
 }

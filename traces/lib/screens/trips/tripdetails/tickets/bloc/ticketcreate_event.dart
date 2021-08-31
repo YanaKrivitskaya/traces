@@ -23,6 +23,14 @@ class ArrivalDateUpdated extends TicketCreateEvent {
   List<Object> get props => [arrivalDate];
 }
 
+class ExpenseUpdated extends TicketCreateEvent {
+  final Expense expense;  
+
+  ExpenseUpdated(this.expense);
+
+  List<Object> get props => [expense];
+}
+
 class TicketSubmitted extends TicketCreateEvent {
   final Ticket? ticket;
   final Expense? expense;
