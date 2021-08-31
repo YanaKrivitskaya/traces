@@ -9,6 +9,7 @@ class Activity {
   final int? id;
   final int? expenseId;
   final String? name;
+  final String? location;
   final DateTime? date;
   final String? description;
   final String? image;
@@ -19,7 +20,8 @@ class Activity {
   Activity({
     this.id,
     this.expenseId,
-    this.name,    
+    this.name,
+    this.location,   
     this.description,
     this.date,
     this.image,
@@ -32,7 +34,8 @@ class Activity {
   Activity copyWith({
     int? id,
     int? expenseId,
-    String? name,    
+    String? name,
+    String? location,  
     String? description,
     DateTime? date,
     String? image,
@@ -44,7 +47,8 @@ class Activity {
     return Activity(
       id: id ?? this.id,
       expenseId: expenseId ?? this.expenseId,
-      name: name ?? this.name,     
+      name: name ?? this.name,
+      location: location ?? this.location,
       description: description ?? this.description,
       date: date ?? this.date,
       image: image ?? this.image,
@@ -59,6 +63,7 @@ class Activity {
     return {
       'id': id,
       'name': name,
+      'location': location,
       'description': description,
       'date': date?.toIso8601String(),
       'image': image,
@@ -72,6 +77,7 @@ class Activity {
       id: map['id'],
       expenseId: map['expenseId'],
       name: map['name'],
+      location: map['location'],
       description: map['description'],
       date: map['date'] != null ? DateTime.parse(map['date']).toLocal() : null,
       image: map['image'],
@@ -88,7 +94,7 @@ class Activity {
 
   @override
   String toString() {
-    return 'TripAction(id: $id, name: $name, description: $description, date: $date, image: $image, isPlanned: $isPlanned, isCompleted: $isCompleted)';
+    return 'Activity(id: $id, name: $name)';
   }
 
   @override
@@ -99,6 +105,7 @@ class Activity {
       other.id == id &&
       other.expenseId == expenseId &&
       other.name == name &&
+      other.location == location &&
       other.description == description &&
       other.date == date &&
       other.image == image &&
@@ -111,6 +118,7 @@ class Activity {
     return id.hashCode ^
       expenseId.hashCode ^
       name.hashCode ^
+      location.hashCode ^
       description.hashCode ^
       date.hashCode ^
       image.hashCode ^
