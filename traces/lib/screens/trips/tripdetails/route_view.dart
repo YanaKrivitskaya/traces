@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:traces/utils/style/styles.dart';
 import '../../../widgets/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RouteView extends StatefulWidget{
   final Trip trip;  
@@ -55,19 +56,15 @@ class _RouteViewViewState extends State<RouteView>{
 
     Widget _dayCard(Trip trip, int dayNumber, DateTime date){      
       
-      var hasBooking = trip.bookings?.where((b) => 
+      var bookings = trip.bookings?.where((b) => 
         b.entryDate != null && b.exitDate != null  &&
         (b.entryDate!.isBefore(date) || b.entryDate!.isSameDate(date)) &&
         (b.exitDate!.isAfter(date) || b.exitDate!.isSameDate(date))
-      ).isNotEmpty;
+      );
 
-      var hasActivity = trip.activities?.where((a) => 
+      var activities = trip.activities?.where((a) => 
         a.date != null && a.date!.isSameDate(date)
-      ).isNotEmpty;
-
-      var hasExpense = trip.expenses?.where((e) => 
-        e.date != null && e.date!.isSameDate(date)
-      ).isNotEmpty;
+      );
 
       var tickets = trip.tickets?.where((t) => 
          t.departureDatetime != null && t.departureDatetime  != null  &&
@@ -84,12 +81,17 @@ class _RouteViewViewState extends State<RouteView>{
           child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
             Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
             SizedBox(height: 3.0,),
-            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              hasBooking != null && hasBooking ? Icon(Icons.home, color: ColorsPalette.juicyGreen,) : Container(),
-              tickets != null && tickets.length > 0 ? Icon(Icons.flight, color: ColorsPalette.juicyBlue,): Container(),
-              hasActivity != null && hasActivity ? Icon(Icons.event_available, color: ColorsPalette.juicyOrange): Container(),
-              hasExpense != null && hasExpense ? Icon(Icons.attach_money, color: ColorsPalette.juicyYellow): Container()
-            ],)
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                bookings != null ? Row(children:
+                  [for(var booking in bookings) Row(children: [FaIcon(FontAwesomeIcons.home, color: ColorsPalette.juicyGreen), SizedBox(width: 10.0)])]
+                ) : Container(),             
+                tickets != null ? Row(children: [for(var ticket in tickets) Row(children: [transportIcon(ticket.type, ColorsPalette.juicyBlue), SizedBox(width: 10.0)])]) : Container(),
+                activities != null ? Row(children: [
+                  for(var activity in activities) Row(children: [FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.juicyOrange), SizedBox(width: 10.0)])
+                ]) : Container()
+              ],))            
           ],)),
       ));
        
