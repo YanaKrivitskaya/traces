@@ -554,7 +554,11 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
                   }),
               )
           );
-        }, icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange))
+        }, icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange)),
+        IconButton(onPressed: (){
+          context.read<TicketCreateBloc>().add(ExpenseUpdated(null));
+        }, 
+        icon: Icon(Icons.close, color: ColorsPalette.black))
       ],),      
     ]
   );

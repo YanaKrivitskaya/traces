@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/expense_category.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_settings.model.dart';
-import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -146,6 +146,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
               ),
               style:  quicksandStyle(fontSize: 18.0),
               controller: _amountController,
+              keyboardType: TextInputType.number,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {                        
                 return value!.isEmpty ? 'Required field' : null;

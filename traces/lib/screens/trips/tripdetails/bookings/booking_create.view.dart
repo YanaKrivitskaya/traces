@@ -331,7 +331,11 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
                   }),
               )
           );
-        }, icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange))
+        }, icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange)),
+        IconButton(onPressed: (){
+          context.read<BookingCreateBloc>().add(ExpenseUpdated(null));
+        }, 
+        icon: Icon(Icons.close, color: ColorsPalette.black))
       ],),      
     ]
   ); 
