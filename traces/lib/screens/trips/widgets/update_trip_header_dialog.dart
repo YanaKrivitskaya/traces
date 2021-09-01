@@ -20,17 +20,20 @@ class UpdateTripHeaderDialog extends StatefulWidget {
 
 class _UpdateTripHeaderDialogState extends State<UpdateTripHeaderDialog>{
   TextEditingController? _tripNameController;
+  TextEditingController? _tripDescriptionController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _tripNameController = new TextEditingController();    
+    _tripNameController = new TextEditingController();
+    _tripDescriptionController = new TextEditingController();
   }
 
   @override
   void dispose() {
-    _tripNameController!.dispose();   
+    _tripNameController!.dispose();  
+    _tripDescriptionController!.dispose();   
     super.dispose();
   }
 
@@ -47,6 +50,7 @@ class _UpdateTripHeaderDialogState extends State<UpdateTripHeaderDialog>{
         bloc: BlocProvider.of(context),
         builder: (context, state){
           if(_tripNameController!.text.length == 0 && state.trip != null) _tripNameController!.text = state.trip!.name!;
+          if(_tripDescriptionController!.text.length == 0 && state.trip!.description != null) _tripDescriptionController!.text = state.trip!.description!;
           return AlertDialog(
             title: Text("Trip details"),
             content: SingleChildScrollView(            
@@ -67,7 +71,8 @@ class _UpdateTripHeaderDialogState extends State<UpdateTripHeaderDialog>{
 
                   if(isFormValid){
                     Trip trip = state.trip!.copyWith(                                               
-                      name: _tripNameController!.text.trim()                      
+                      name: _tripNameController!.text.trim(),
+                      description: _tripDescriptionController!.text.trim(),
                     );
                     context.read<TripDetailsBloc>().add(UpdateTripClicked(trip));
                     
@@ -98,6 +103,18 @@ class _UpdateTripHeaderDialogState extends State<UpdateTripHeaderDialog>{
         ),
         style:  quicksandStyle(fontSize: 18.0),
         controller: _tripNameController
+      ),
+      SizedBox(height: 20.0,),
+      Text('Description', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
+      TextFormField(
+        decoration: InputDecoration(
+          isDense: true,                      
+          hintText: "e.g., Trip over Tejo river"                      
+        ),
+        minLines: 5,
+        maxLines: 10,
+        style:  quicksandStyle(fontSize: 18.0),
+        controller: _tripDescriptionController
       ),
       SizedBox(height: 20.0),
       Row(children: [
