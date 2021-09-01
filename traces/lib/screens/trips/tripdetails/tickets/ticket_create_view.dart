@@ -470,7 +470,9 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
       lastDate: trip.endDate ?? DateTime(2101),        
     );
     if (picked != null) {
-      context.read<TicketCreateBloc>().add(DepartureDateUpdated(picked));      
+      var time = TimeOfDay.fromDateTime(state.ticket!.departureDatetime ?? DateTime.now());
+      var ticketDate = new DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
+      context.read<TicketCreateBloc>().add(DepartureDateUpdated(ticketDate));      
     }
   }
 
@@ -490,7 +492,9 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
       lastDate: trip.endDate ?? DateTime(2101),        
     );
     if (picked != null) {
-      context.read<TicketCreateBloc>().add(ArrivalDateUpdated(picked));      
+      var time = TimeOfDay.fromDateTime(state.ticket!.arrivalDatetime ?? DateTime.now());
+      var ticketDate = new DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
+      context.read<TicketCreateBloc>().add(ArrivalDateUpdated(ticketDate));      
     }
   }
 
