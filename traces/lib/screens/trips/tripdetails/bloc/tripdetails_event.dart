@@ -83,3 +83,12 @@ class UpdateActivities extends TripDetailsEvent{
   List<Object?> get props => [tripId];
 }
 
+class GetImage extends TripDetailsEvent{
+  final File? image;
+
+  const GetImage(this.image);
+
+  @override
+  List<Object?> get props => [image];
+}
+

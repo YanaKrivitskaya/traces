@@ -52,6 +52,8 @@ dev_dependencies:
   google_nav_bar: ^5.0.5
   flutter_speed_dial: ^4.2.0
   bubble_tab_indicator: ^0.1.6
+  image_picker: ^0.8.3+3
+  image_cropper: ^1.4.1
   flutter_test:
     sdk: flutter
 

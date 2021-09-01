@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:traces/utils/api/customException.dart';
 import 'package:traces/utils/services/secure_storage_service.dart';
@@ -182,6 +183,38 @@ class ApiService {
     return responseJson;  
   }
 
+  Future<dynamic> postSecureMultipart(String url, String? body, File? file) async{
+    print("postSecure");
+    var responseJson;    
+    
+    var request = http.MultipartRequest("POST", Uri.parse(_baseUrl + url));
+
+    request.headers["Content-Type"] = "multipart/form-data";
+    request.headers["Authorization"] = "Bearer $_accessToken";
+    request.headers["device-info"] = _deviceId ?? '';
+
+    if(file != null){
+      request.files.add(http.MultipartFile.fromBytes("file", file.readAsBytesSync(), filename: file.path));
+    }
+    
+    try{
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      responseJson = await  _response(response);      
+    }on SocketException catch(e) {
+      throw ConnectionException('No Internet connection');
+    }on UnauthorizedException catch(e) {
+      await refreshToken();
+     
+      request.headers["Authorization"] = "Bearer $_accessToken";
+      
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      responseJson = await  _response(response);       
+    }
+    return responseJson;  
+  }
+
   Future<dynamic> putSecure(String url, String body) async{
     print("putSecure");
     var responseJson;
@@ -278,4 +311,5 @@ class ApiService {
             'Server Error. StatusCode: ${response.statusCode}. Error: ${errorMessage}');
     }
   }  
+
 }

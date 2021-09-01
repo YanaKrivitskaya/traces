@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:traces/screens/trips/model/api_models/api_trip_user.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 
@@ -44,6 +46,17 @@ class ApiTripsRepository{
     final response = await apiProvider.putSecure("$tripsUrl${trip.id}", trip.toJson());
       
     var tripResponse = Trip.fromMap(response['trip']);
+    return tripResponse;
+  }
+
+  Future<Trip> updateTripImage(File image, int tripId)async{
+    print("updateTripImage");
+    
+    //ApiTripModel apiModel = ApiTripModel(userId: userId, trip: trip);
+
+    final response = await apiProvider.postSecureMultipart("$tripsUrl${tripId}/image", null, image);
+      
+    var tripResponse = Trip.fromMap(response['response']);
     return tripResponse;
   }
 

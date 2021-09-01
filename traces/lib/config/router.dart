@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
@@ -7,6 +9,7 @@ import 'package:traces/screens/trips/tripdetails/bookings/bloc/bookingcreate_blo
 import 'package:traces/screens/trips/tripdetails/bookings/booking_create.view.dart';
 import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/expenses/expense_create_view.dart';
+import 'package:traces/screens/trips/tripdetails/image_crop_view.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/bloc/ticketcreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_create_view.dart';
 import '../constants/route_constants.dart';
@@ -221,6 +224,18 @@ class RouteGenerator {
               builder: (_) => BlocProvider<ActivityCreateBloc>(
                 create: (context) => ActivityCreateBloc()..add(NewActivityMode()),
                 child: ActivityCreateView(trip: args),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }
+      case imageCropRoute:
+        {
+          if (args is File) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<TripDetailsBloc>(
+                create: (context) => TripDetailsBloc(),
+                child: ImageCropView(args),
               ),
             );
           }

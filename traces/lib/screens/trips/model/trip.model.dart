@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:traces/screens/trips/model/booking.model.dart';
@@ -14,7 +15,7 @@ class Trip {
   final int? createdBy;
   final String? name;
   final String? description;
-  final String? coverImage;  
+  final Uint8List? coverImage;  
   final DateTime? startDate;
   final DateTime? endDate;
   List<GroupUser>? users;
@@ -43,7 +44,7 @@ class Trip {
     int? createdBy,
     String? name,
     String? description,
-    String? coverImage,
+    Uint8List? coverImage,
     DateTime? startDate,
     DateTime? endDate,
     List<GroupUser>? users, 
@@ -82,13 +83,17 @@ class Trip {
   }
 
   factory Trip.fromMap(Map<String, dynamic> map) {
-    print(map.length);
+    if(map['coverImage'] != null){
+      var cover = map['coverImage']['data'];
+      var coverArray = map['coverImage']['data'].cast<int>();
+    }
+    
     return Trip(
       id: map['id'],
       createdBy: map['createdBy'],
       name: map['name'],
       description: map['description'],
-      coverImage: map['coverImage'],
+      coverImage: map['coverImage'] != null ? Uint8List.fromList(map['coverImage']['data'].cast<int>()) : null,
       startDate: DateTime.parse(map['startDate']).toLocal(),
       endDate: map['endDate'] != null ? DateTime.parse(map['endDate']).toLocal() : null,
       users: map['users'] != null ? List<GroupUser>.from(map['users']?.map((x) => GroupUser.fromMap(x))) : null,
