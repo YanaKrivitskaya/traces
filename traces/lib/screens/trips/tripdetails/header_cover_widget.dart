@@ -1,8 +1,12 @@
 
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/constants/route_constants.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../../constants/color_constants.dart';
@@ -15,6 +19,8 @@ import 'bloc/tripdetails_bloc.dart';
 import 'tripMembers/bloc/tripmembers_bloc.dart';
 import 'tripMembers/tripMembers_dialog.dart';
 
+import 'package:image_picker/image_picker.dart';
+
 Widget headerCoverWidget(Trip trip, List<GroupUser> familyMembers, BuildContext context, SharedPreferencesService sharedPrefsService, String key) => new Stack(
   alignment: AlignmentDirectional.bottomCenter,
   children: [
@@ -26,7 +32,7 @@ Widget headerCoverWidget(Trip trip, List<GroupUser> familyMembers, BuildContext 
           sharedPrefsService.remove(key: key);
           Navigator.pop(context);
           },
-        child:Icon(Icons.arrow_back, color: ColorsPalette.black)
+        child:Icon(Icons.arrow_back, color: ColorsPalette.white)
       ),
     ),
     Positioned(top: 20, right: 10,
@@ -38,15 +44,15 @@ Widget headerCoverWidget(Trip trip, List<GroupUser> familyMembers, BuildContext 
   ],
 );
 
-Widget _coverImage(String? imageUrl) => new Container(
+Widget _coverImage(Uint8List? imageUrl) => new Container(
     margin: EdgeInsets.only(bottom: 20.0),
     child: imageUrl != null ? 
-      CachedNetworkImage(
+      /*CachedNetworkImage(
         placeholder: (context, url) => _defaultImage(),
         imageUrl: imageUrl,
         colorBlendMode: BlendMode.dstATop,
         color: Colors.black.withOpacity(0.8),
-      ) 
+      ) */Image.memory(imageUrl)
       : _defaultImage(),
     decoration: BoxDecoration(
       color: const Color(0xFF4B6584),
@@ -62,7 +68,8 @@ Widget _defaultImage() {
   );
 }
 
-Widget _popupMenu(Trip trip, BuildContext context) => PopupMenuButton<int>(  
+Widget _popupMenu(Trip trip, BuildContext context) => PopupMenuButton<int>( 
+  icon: Icon(Icons.more_vert, color: ColorsPalette.white,),
   itemBuilder: (context) => [
     PopupMenuItem(
       value: 1,
@@ -71,6 +78,9 @@ Widget _popupMenu(Trip trip, BuildContext context) => PopupMenuButton<int>(
       value: 2,
       child: Text("Delete",style: TextStyle(color: ColorsPalette.meditSea)))],
   onSelected: (value) async{
+    if(value == 1){
+      _showSelectionDialog(context, trip.id!);
+    }
     if(value == 2){
       showDialog<String>(
         context: context,
@@ -93,14 +103,17 @@ Widget _tripInfoCard(Trip trip, List<GroupUser> familyMembers, BuildContext cont
     child: Container(
       margin: EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width * 0.7,
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [                                
-          Text(trip.name!, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [     
+          Container(width: MediaQuery.of(context).size.width * 0.5,child: Text(trip.name!, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),),                        
+          
           Text('${DateFormat.yMMMd().format(trip.startDate!)} - ${DateFormat.yMMMd().format(trip.endDate!)}', style: quicksandStyle(fontSize: 15.0))                                    
         ],),
         InkWell( child: _tripMembers(trip.users, familyMembers),
           onTap: (){ showDialog(
-            barrierDismissible: false, context: context, builder: (_) =>
+            barrierDismissible: false, 
+            context: context, 
+            builder: (_) =>
               BlocProvider<TripMembersBloc>(
                 create: (context) => TripMembersBloc()..add(GetMembers(trip.id)),
                   child: TripMembersDialog(
@@ -144,3 +157,51 @@ Widget _tripMembers(List<GroupUser>? tripMembers, List<GroupUser> familyMembers)
       radius: 15.0
     ),
   );
+
+  Future selectOrTakePhoto(ImageSource imageSource, BuildContext context, int tripId) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: imageSource);
+
+    if(pickedFile != null){
+      Navigator.pushNamed(context, imageCropRoute, arguments: File(pickedFile.path)).then((imageFile) {
+        if(imageFile != null){
+          context.read<TripDetailsBloc>().add(GetImage(imageFile as File));
+        } 
+        
+        //context.read<TripDetailsBloc>().add(GetTripDetails(tripId));
+      });
+    }
+
+    /*setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        Navigator.pushNamed(context, routeEdit, arguments: _image);
+      } else
+        print('No photo was selected or taken');
+    });*/
+  }
+
+  Future _showSelectionDialog(BuildContext context, int tripId) async {
+    await showDialog(
+      context: context,
+      builder: (_) => new SimpleDialog(
+        title: Text('Select photo'),
+        children: <Widget>[
+          SimpleDialogOption(
+            child: Text('From gallery'),
+            onPressed: () {
+              selectOrTakePhoto(ImageSource.gallery, context, tripId);
+              Navigator.pop(context);
+            },
+          ),
+          SimpleDialogOption(
+            child: Text('Take a photo'),
+            onPressed: () {
+              selectOrTakePhoto(ImageSource.camera, context, tripId);
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }

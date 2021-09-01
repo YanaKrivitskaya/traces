@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -54,6 +55,8 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       yield* _mapUpdateActivitiesToState(event);
     } else if (event is UpdateTickets) {
       yield* _mapUpdateTicketsToState(event);
+    } else if (event is GetImage) {
+      yield* _mapGetImageToState(event);
     }
   }
 
@@ -182,6 +185,30 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     } on Exception catch (e){
       yield TripDetailsErrorState(e.toString(), state.activeTab);
     }
+  }
+
+  Stream<TripDetailsState> _mapGetImageToState(GetImage event) async* {
+    try{
+      var image = state.trip?.coverImage;
+      Trip updTrip = state.trip!;
+
+      if(event.image != null){
+        image = event.image!.readAsBytesSync();
+        updTrip = await _tripsRepository.updateTripImage(event.image!, updTrip.id!);
+      }      
+
+      yield TripDetailsSuccessState(     
+        updTrip,
+        state.familyMembers!,
+        state.activeTab
+      );
+    }on CustomException catch(e){
+      yield TripDetailsErrorState(e.toString(), state.activeTab);
+    } on Exception catch (e){
+      yield TripDetailsErrorState(e.toString(), state.activeTab);
+    }
+    
+    
   }
 
 }
