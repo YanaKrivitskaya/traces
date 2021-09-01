@@ -57,6 +57,10 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       yield* _mapUpdateTicketsToState(event);
     } else if (event is GetImage) {
       yield* _mapGetImageToState(event);
+    } else if (event is UpdateTripClicked) {
+      yield* _mapUpdateTripToState(event);
+    }else if (event is DateRangeUpdated) {
+      yield* _mapDateRangeUpdatedToState(event);
     }
   }
 
@@ -97,6 +101,30 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     }on CustomException catch(e){
       yield TripDetailsErrorState(e.toString(), state.activeTab);
     }    
+  }
+
+  Stream<TripDetailsState> _mapUpdateTripToState(UpdateTripClicked event) async* {
+    try{
+      Trip trip = await _tripsRepository.updateTrip(event.updTrip, 0);
+      yield TripDetailsUpdated(           
+          state.activeTab, trip
+        );
+    }on CustomException catch(e){
+      yield TripDetailsErrorState(e.toString(), state.activeTab);
+    }    
+  }
+
+  Stream<TripDetailsState> _mapDateRangeUpdatedToState(DateRangeUpdated event) async* {
+    
+    Trip trip = state.trip ?? new Trip();
+
+    Trip updTrip = trip.copyWith(startDate: event.startDate, endDate: event.endDate);
+
+    yield TripDetailsSuccessState(     
+          updTrip,
+          state.familyMembers!,
+          state.activeTab
+        );
   }
 
   Stream<TripDetailsState> _mapTabUpdatedToState(TabUpdated event) async* {

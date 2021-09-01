@@ -93,7 +93,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
             return Scaffold(       
               floatingActionButton: _floatingButton(state.trip != null ? state.trip : null),       
               body: (state is TripDetailsSuccessState) ? 
-                  Column(children: [
+              SingleChildScrollView(
+                child: Column(children: [
                   state.activeTab == 0 ? 
                   headerCoverWidget(state.trip!, state.familyMembers!, context, sharedPrefsService, tripTabKey) 
                   :
@@ -130,7 +131,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                         ],
                       ))
                   ],),                
-                ]) : loadingWidget(ColorsPalette.meditSea)
+                ])
+              ) : loadingWidget(ColorsPalette.meditSea)
             );         
           }
         ),

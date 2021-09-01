@@ -26,6 +26,10 @@ class TripDetailsDeleted extends TripDetailsState {
   TripDetailsDeleted(int activeTab, {Trip? trip, List<GroupUser>? familyMembers}) : super(trip, familyMembers, activeTab);
 }
 
+class TripDetailsUpdated extends TripDetailsState {
+  TripDetailsUpdated(int activeTab, Trip trip, {List<GroupUser>? familyMembers}) : super(trip, familyMembers, activeTab);
+}
+
 class TripDetailsSuccessState extends TripDetailsState{
 
   TripDetailsSuccessState(Trip trip, List<GroupUser> familyMembers, int activeTab) 

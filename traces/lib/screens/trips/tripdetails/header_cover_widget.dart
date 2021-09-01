@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:traces/constants/route_constants.dart';
+import 'package:traces/screens/trips/widgets/update_trip_header_dialog.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../../constants/color_constants.dart';
@@ -104,11 +105,27 @@ Widget _tripInfoCard(Trip trip, List<GroupUser> familyMembers, BuildContext cont
       margin: EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width * 0.7,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [     
+        InkWell(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [     
           Container(width: MediaQuery.of(context).size.width * 0.5,child: Text(trip.name!, style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),),                        
           
           Text('${DateFormat.yMMMd().format(trip.startDate!)} - ${DateFormat.yMMMd().format(trip.endDate!)}', style: quicksandStyle(fontSize: 15.0))                                    
         ],),
+          onTap: (){
+            showDialog<String>(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (_) => BlocProvider.value(
+                value: context.read<TripDetailsBloc>(),
+                child: UpdateTripHeaderDialog(
+                  trip: trip,
+                  callback: (val) =>
+                    val == 'Update' ? context.read<TripDetailsBloc>().add(GetTripDetails(trip.id!)) : '',
+                ),
+              ));
+          },
+        ),
+        
         InkWell( child: _tripMembers(trip.users, familyMembers),
           onTap: (){ showDialog(
             barrierDismissible: false, 
@@ -166,19 +183,9 @@ Widget _tripMembers(List<GroupUser>? tripMembers, List<GroupUser> familyMembers)
       Navigator.pushNamed(context, imageCropRoute, arguments: File(pickedFile.path)).then((imageFile) {
         if(imageFile != null){
           context.read<TripDetailsBloc>().add(GetImage(imageFile as File));
-        } 
-        
-        //context.read<TripDetailsBloc>().add(GetTripDetails(tripId));
+        }
       });
     }
-
-    /*setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        Navigator.pushNamed(context, routeEdit, arguments: _image);
-      } else
-        print('No photo was selected or taken');
-    });*/
   }
 
   Future _showSelectionDialog(BuildContext context, int tripId) async {
