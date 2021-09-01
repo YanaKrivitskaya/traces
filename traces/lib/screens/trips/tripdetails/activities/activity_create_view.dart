@@ -194,14 +194,32 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
       _categorySelector(state),
       SizedBox(height: 20.0),
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Icon(Icons.date_range),
-        SizedBox(width: 20.0),
-        InkWell(
-          child: state.activity!.date != null 
-            ? Text('${DateFormat.yMMMd().format( state.activity!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
-            : Text('Date', style: quicksandStyle(fontSize: 18.0)),
-          onTap: () => _selectDate(context, state, widget.trip)
-        )],),
+        Container(
+          width:  MediaQuery.of(context).size.width * 0.45,
+          child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Icon(Icons.date_range),
+            SizedBox(width: 20.0),
+            InkWell(
+              child: state.activity!.date != null 
+                ? Text('${DateFormat.yMMMd().format( state.activity!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
+                : Text('Date', style: quicksandStyle(fontSize: 18.0)),
+              onTap: () => _selectDate(context, state, widget.trip)
+            )
+          ]),
+        ),        
+        Container(
+          width:  MediaQuery.of(context).size.width * 0.45,
+          child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Icon(Icons.schedule),
+            SizedBox(width: 20.0),
+            InkWell(
+              child: state.activity!.date != null 
+                ? Text('${DateFormat.jm().format(state.activity!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
+                : Text('Time', style: quicksandStyle(fontSize: 18.0)),
+              onTap: () => _selectTime(context, state, widget.trip),
+            )],),
+        )  
+        ],),
       SizedBox(height: 20.0,),
       Text('Description', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
       TextFormField(
@@ -312,7 +330,30 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
       lastDate: trip.endDate ?? DateTime(2101),        
     );
     if (picked != null) {
-      context.read<ActivityCreateBloc>().add(ActivityDateUpdated(picked));      
+      var time = TimeOfDay.fromDateTime(state.activity!.date ?? DateTime.now());
+      var activityDate = new DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
+      context.read<ActivityCreateBloc>().add(ActivityDateUpdated(activityDate));      
+    }
+  }
+
+  Future<Null> _selectTime(BuildContext context, ActivityCreateState state, Trip trip) async {
+    final TimeOfDay? picked = await showTimePicker(
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData(primarySwatch: ColorsPalette.matTripCalendarColor),
+          child: child!,
+        );
+      },
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(state.activity!.date ?? DateTime.now()),
+    );
+    if (picked != null) {
+      if(state.activity!.date != null){      
+        var date = state.activity!.date!;
+        var activityDate = new DateTime(date.year, date.month, date.day, picked.hour, picked.minute);
+        context.read<ActivityCreateBloc>().add(ActivityDateUpdated(activityDate));    
+      }
+      
     }
   }
 

@@ -185,28 +185,63 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
           return value!.isEmpty ? 'Required field' : null;
         },
       ),
-      SizedBox(height: 10.0),      
+      SizedBox(height: 10.0),
       SizedBox(
-        width:  MediaQuery.of(context).size.width * 0.7,
+        width:  MediaQuery.of(context).size.width * 0.9,
         child:
         InkWell(      
-          child: Row(
-            mainAxisAlignment:MainAxisAlignment.spaceBetween,
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment:MainAxisAlignment.start,
             children: [
-              Icon(Icons.date_range),
+              Row(mainAxisAlignment:MainAxisAlignment.spaceBetween, children: [
+                Icon(Icons.date_range),
               state.booking?.entryDate != null 
                 ?  Text('${DateFormat.yMMMd().format(state.booking!.entryDate!)}', style: quicksandStyle(fontSize: 18.0))
                 : Text("Entry Date", style:  quicksandStyle(fontSize: 18.0)),
-              Icon(Icons.date_range),
+              ],),
+              SizedBox(height: 10.0),
+              Row(mainAxisAlignment:MainAxisAlignment.spaceBetween, children: [
+                 Icon(Icons.date_range),
               state.booking?.exitDate != null 
                 ?  Text('${DateFormat.yMMMd().format(state.booking!.exitDate!)}', style: quicksandStyle(fontSize: 18.0))
                 : Text("Exit Date", style:  quicksandStyle(fontSize: 18.0)),
+              ],)             
             ],
            ),
+           Column(children: [
+             Container(
+              width:  MediaQuery.of(context).size.width * 0.45,
+              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Icon(Icons.schedule),
+                SizedBox(width: 20.0),
+                InkWell(
+                  child: state.booking!.entryDate != null 
+                    ? Text('${DateFormat.jm().format(state.booking!.entryDate!)}', style: quicksandStyle(fontSize: 18.0)) 
+                    : Text('Time', style: quicksandStyle(fontSize: 18.0)),
+                  onTap: () => _selectCheckInTime(context, state, widget.trip),
+                )],),
+            ),
+            SizedBox(height: 10.0),
+            Container(
+              width:  MediaQuery.of(context).size.width * 0.45,
+              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Icon(Icons.schedule),
+                SizedBox(width: 20.0),
+                InkWell(
+                  child: state.booking!.exitDate != null 
+                    ? Text('${DateFormat.jm().format(state.booking!.exitDate!)}', style: quicksandStyle(fontSize: 18.0)) 
+                    : Text('Time', style: quicksandStyle(fontSize: 18.0)),
+                  onTap: () => _selectCheckOutTime(context, state, widget.trip),
+                )],),
+            )
+           ],)
+          ],),
           onTap: () => _selectDates(context, state, widget.trip),
         )
       ),
-      SizedBox(height: 10.0),
+      SizedBox(height: 10.0),      
       Text('Guests #', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
       TextFormField(
         decoration: InputDecoration(
@@ -271,8 +306,52 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
       lastDate: trip.endDate ?? DateTime(2101),
       helpText: 'Booking dates'
       );
-    if (picked != null) {      
-      context.read<BookingCreateBloc>().add(DateRangeUpdated(picked.start, picked.end));      
+    if (picked != null) {
+      var checkInTime = TimeOfDay.fromDateTime(state.booking!.entryDate ?? DateTime.now());
+      var checkOutTime = TimeOfDay.fromDateTime(state.booking!.exitDate ?? DateTime.now());
+      var checkInDate = new DateTime(picked.start.year, picked.start.month, picked.start.day, checkInTime.hour, checkInTime.minute);
+      var checkOutDate = new DateTime(picked.end.year, picked.end.month, picked.end.day, checkOutTime.hour, checkOutTime.minute);
+      context.read<BookingCreateBloc>().add(DateRangeUpdated(checkInDate, checkOutDate));      
+    }
+  }
+
+  Future<Null> _selectCheckInTime(BuildContext context, BookingCreateState state, Trip trip) async {
+    final TimeOfDay? picked = await showTimePicker(
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData(primarySwatch: ColorsPalette.matTripCalendarColor),
+          child: child!,
+        );
+      },
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(state.booking!.entryDate ?? DateTime.now()),
+    );
+    if (picked != null) {
+      if(state.booking!.entryDate != null && state.booking!.exitDate != null){      
+        var date = state.booking!.entryDate!;
+        var checkInDate = new DateTime(date.year, date.month, date.day, picked.hour, picked.minute);
+        context.read<BookingCreateBloc>().add(DateRangeUpdated(checkInDate, state.booking!.exitDate!));    
+      }      
+    }
+  }
+
+  Future<Null> _selectCheckOutTime(BuildContext context, BookingCreateState state, Trip trip) async {
+    final TimeOfDay? picked = await showTimePicker(
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData(primarySwatch: ColorsPalette.matTripCalendarColor),
+          child: child!,
+        );
+      },
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(state.booking!.entryDate ?? DateTime.now()),
+    );
+    if (picked != null) {
+      if(state.booking!.entryDate != null && state.booking!.exitDate != null){      
+        var date = state.booking!.exitDate!;
+        var checkOutDate = new DateTime(date.year, date.month, date.day, picked.hour, picked.minute);
+        context.read<BookingCreateBloc>().add(DateRangeUpdated(state.booking!.entryDate!, checkOutDate));    
+      }      
     }
   }
 
