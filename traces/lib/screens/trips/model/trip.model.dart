@@ -75,7 +75,7 @@ class Trip {
       'createdBy': createdBy,
       'name': name,
       'description': description,
-      'coverImage': coverImage,
+      //'coverImage': coverImage,
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
       'users': users?.map((x) => x.toMap()).toList()      

@@ -5,14 +5,11 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/widgets/widgets.dart';
-
 
 class ImageCropView extends StatefulWidget {
   final File image;
- // final ImageCallback? callback;
 
-  const ImageCropView(this.image/*, this.callback*/);
+  const ImageCropView(this.image);
 
   @override
   _ImageCropViewState createState() => _ImageCropViewState();
@@ -54,10 +51,7 @@ Future<Null> _cropImage() async {
           title: 'Cropper',
         ));
 
-    if (croppedFile != null) {
-      //imageFile = croppedFile;
-      //context.read<TripDetailsBloc>().add(GetImage(imageFile));
-      // widget.callback!(croppedFile);
+    if (croppedFile != null) {      
       Navigator.pop(context, croppedFile);
     }else{
       Navigator.pop(context, null);
