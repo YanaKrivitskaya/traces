@@ -294,7 +294,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
     );
     if (picked != null) {
       var time = TimeOfDay.fromDateTime(state.expense!.date ?? DateTime.now());
-      var expenseDate = new DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
+      var expenseDate = new DateTime.utc(picked.year, picked.month, picked.day, time.hour, time.minute);
       context.read<ExpenseCreateBloc>().add(DateUpdated(expenseDate));      
     }
   }
@@ -313,7 +313,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
     if (picked != null) {
       if(state.expense!.date != null){      
         var date = state.expense!.date!;
-        var expenseDate = new DateTime(date.year, date.month, date.day, picked.hour, picked.minute);
+        var expenseDate = new DateTime.utc(date.year, date.month, date.day, picked.hour, picked.minute);
         context.read<ExpenseCreateBloc>().add(DateUpdated(expenseDate));    
       }
       

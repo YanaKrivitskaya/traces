@@ -79,7 +79,7 @@ class Activity {
       name: map['name'],
       location: map['location'],
       description: map['description'],
-      date: map['date'] != null ? DateTime.parse(map['date']).toLocal() : null,
+      date: map['date'] != null ? DateTime.parse(map['date']) : null,
       image: map['image'],
       isPlanned: map['isPlanned'],
       isCompleted: map['isCompleted'],

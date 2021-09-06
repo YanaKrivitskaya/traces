@@ -211,8 +211,10 @@ class _StartPlanningViewState extends State<StartPlanningView>{
         lastDate: DateTime(2101),
         helpText: 'Trip dates'
       );
-    if (picked != null) {      
-      context.read<StartPlanningBloc>().add(DateRangeUpdated(picked.start, picked.end));      
+    if (picked != null) {
+      var startDate = DateTime.utc(picked.start.year, picked.start.month, picked.start.day);
+      var endDate = DateTime.utc(picked.end.year, picked.end.month, picked.end.day);
+      context.read<StartPlanningBloc>().add(DateRangeUpdated(startDate, endDate));      
     }
   }
 

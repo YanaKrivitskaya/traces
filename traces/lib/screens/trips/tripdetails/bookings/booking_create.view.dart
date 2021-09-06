@@ -273,7 +273,9 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
                 if(_locationController!.text.length > 0){
                   description += ', ${_locationController!.text.trim()}';
                 }
-                expense = new Expense(date: DateTime.now(), description: description);
+                DateTime now = DateTime.now();
+                DateTime date = new DateTime.utc(now.year, now.month, now.day);
+                expense = new Expense(date: date, description: description);
               }
               
               showDialog(                
@@ -309,8 +311,8 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
     if (picked != null) {
       var checkInTime = TimeOfDay.fromDateTime(state.booking!.entryDate ?? DateTime.now());
       var checkOutTime = TimeOfDay.fromDateTime(state.booking!.exitDate ?? DateTime.now());
-      var checkInDate = new DateTime(picked.start.year, picked.start.month, picked.start.day, checkInTime.hour, checkInTime.minute);
-      var checkOutDate = new DateTime(picked.end.year, picked.end.month, picked.end.day, checkOutTime.hour, checkOutTime.minute);
+      var checkInDate = new DateTime.utc(picked.start.year, picked.start.month, picked.start.day, checkInTime.hour, checkInTime.minute);
+      var checkOutDate = new DateTime.utc(picked.end.year, picked.end.month, picked.end.day, checkOutTime.hour, checkOutTime.minute);
       context.read<BookingCreateBloc>().add(DateRangeUpdated(checkInDate, checkOutDate));      
     }
   }
@@ -329,7 +331,7 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
     if (picked != null) {
       if(state.booking!.entryDate != null && state.booking!.exitDate != null){      
         var date = state.booking!.entryDate!;
-        var checkInDate = new DateTime(date.year, date.month, date.day, picked.hour, picked.minute);
+        var checkInDate = new DateTime.utc(date.year, date.month, date.day, picked.hour, picked.minute);
         context.read<BookingCreateBloc>().add(DateRangeUpdated(checkInDate, state.booking!.exitDate!));    
       }      
     }
@@ -349,7 +351,7 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
     if (picked != null) {
       if(state.booking!.entryDate != null && state.booking!.exitDate != null){      
         var date = state.booking!.exitDate!;
-        var checkOutDate = new DateTime(date.year, date.month, date.day, picked.hour, picked.minute);
+        var checkOutDate = new DateTime.utc(date.year, date.month, date.day, picked.hour, picked.minute);
         context.read<BookingCreateBloc>().add(DateRangeUpdated(state.booking!.entryDate!, checkOutDate));    
       }      
     }

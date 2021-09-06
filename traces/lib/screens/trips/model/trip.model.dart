@@ -69,7 +69,7 @@ class Trip {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {    
     return {
       'id': id,
       'createdBy': createdBy,
@@ -94,8 +94,8 @@ class Trip {
       name: map['name'],
       description: map['description'],
       coverImage: map['coverImage'] != null ? Uint8List.fromList(map['coverImage']['data'].cast<int>()) : null,
-      startDate: DateTime.parse(map['startDate']).toLocal(),
-      endDate: map['endDate'] != null ? DateTime.parse(map['endDate']).toLocal() : null,
+      startDate: DateTime.parse(map['startDate']),
+      endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
       users: map['users'] != null ? List<GroupUser>.from(map['users']?.map((x) => GroupUser.fromMap(x))) : null,
       activities: map['activities'] != null ? List<Activity>.from(map['activities']?.map((x) => Activity.fromMap(x))) : null,
       expenses: map['expenses'] != null ? List<Expense>.from(map['expenses']?.map((x) => Expense.fromMap(x))) : null,

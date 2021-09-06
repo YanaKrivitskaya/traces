@@ -293,8 +293,10 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
                 expense = state.activity!.expense!;
               }else{                
                 String description = 'Activity ${_nameController!.text.trim()}';
+                DateTime now = DateTime.now();
+                DateTime date = new DateTime.utc(now.year, now.month, now.day);
                 
-                expense = new Expense(date: DateTime.now(), description: description);
+                expense = new Expense(date: date, description: description);
               }
               
               showDialog(                
@@ -331,7 +333,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
     );
     if (picked != null) {
       var time = TimeOfDay.fromDateTime(state.activity!.date ?? DateTime.now());
-      var activityDate = new DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
+      var activityDate = new DateTime.utc(picked.year, picked.month, picked.day, time.hour, time.minute);
       context.read<ActivityCreateBloc>().add(ActivityDateUpdated(activityDate));      
     }
   }
@@ -350,7 +352,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
     if (picked != null) {
       if(state.activity!.date != null){      
         var date = state.activity!.date!;
-        var activityDate = new DateTime(date.year, date.month, date.day, picked.hour, picked.minute);
+        var activityDate = new DateTime.utc(date.year, date.month, date.day, picked.hour, picked.minute);
         context.read<ActivityCreateBloc>().add(ActivityDateUpdated(activityDate));    
       }
       

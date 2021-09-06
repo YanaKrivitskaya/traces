@@ -99,12 +99,12 @@ class Booking {
       details: map['details'],     
       reservationNumber: map['reservationNumber'],
       reservationUrl: map['reservationUrl'],
-      entryDate: map['entryDate'] != null ? DateTime.parse(map['entryDate']).toLocal() : null,
-      exitDate: map['exitDate'] != null ? DateTime.parse(map['exitDate']).toLocal() : null,
+      entryDate: map['entryDate'] != null ? DateTime.parse(map['entryDate']) : null,
+      exitDate: map['exitDate'] != null ? DateTime.parse(map['exitDate']) : null,
       guestsQuantity: map['guestsQuantity'],
       image: map['image'],
-      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']).toLocal() : null,
-      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']).toLocal() : null,
+      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
+      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
       expense: map['expense'] != null ? Expense.fromMap(map['expense']) : null
     );
   }

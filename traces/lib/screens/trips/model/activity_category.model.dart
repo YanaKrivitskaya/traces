@@ -41,8 +41,8 @@ class ActivityCategory {
     return ActivityCategory(
       id: map['id'],
       name: map['name'],
-      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']).toLocal() : null,
-      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']).toLocal() : null,
+      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
+      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
     );
   }
 

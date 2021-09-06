@@ -207,14 +207,15 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
                 expense = state.ticket!.expense!;
               }else{                
                 String description = '${state.ticket!.type ?? TripSettings.ticketType.first} ticket ${_depLocationController!.text.trim()} - ${_arrivalLocationController!.text.trim()}';
-                
-                expense = new Expense(date: DateTime.now(), description: description);
+                DateTime now = DateTime.now();
+                DateTime date = new DateTime.utc(now.year, now.month, now.day);
+                expense = new Expense(date: date, description: description);
               }
               
               showDialog(                
                   barrierDismissible: false, context: context, builder: (_) =>
                     BlocProvider<ExpenseCreateBloc>(
-                      create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(category, expense)),
+                      create: (context) =>ExpenseCreateBloc()..add(AddExpenseMode(category, expense)),
                       child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
                         if(val != null){
                           context.read<TicketCreateBloc>().add(ExpenseUpdated(val));                
@@ -471,7 +472,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     );
     if (picked != null) {
       var time = TimeOfDay.fromDateTime(state.ticket!.departureDatetime ?? DateTime.now());
-      var ticketDate = new DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
+      var ticketDate = new DateTime.utc(picked.year, picked.month, picked.day, time.hour, time.minute);
       context.read<TicketCreateBloc>().add(DepartureDateUpdated(ticketDate));      
     }
   }
@@ -493,7 +494,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     );
     if (picked != null) {
       var time = TimeOfDay.fromDateTime(state.ticket!.arrivalDatetime ?? DateTime.now());
-      var ticketDate = new DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
+      var ticketDate = new DateTime.utc(picked.year, picked.month, picked.day, time.hour, time.minute);
       context.read<TicketCreateBloc>().add(ArrivalDateUpdated(ticketDate));      
     }
   }
@@ -512,7 +513,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     if (picked != null) {
       if(state.ticket!.departureDatetime != null){      
         var date = state.ticket!.departureDatetime!;
-        var ticketDate = new DateTime(date.year, date.month, date.day, picked.hour, picked.minute);
+        var ticketDate = new DateTime.utc(date.year, date.month, date.day, picked.hour, picked.minute);
         context.read<TicketCreateBloc>().add(DepartureDateUpdated(ticketDate));    
       }
       
@@ -533,7 +534,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     if (picked != null) {
       if(state.ticket!.arrivalDatetime != null){      
         var date = state.ticket!.arrivalDatetime!;
-        var ticketDate = new DateTime(date.year, date.month, date.day, picked.hour, picked.minute);
+        var ticketDate = new DateTime.utc(date.year, date.month, date.day, picked.hour, picked.minute);
         context.read<TicketCreateBloc>().add(ArrivalDateUpdated(ticketDate));    
       }
       

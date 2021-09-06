@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:intl/intl.dart';
-import 'package:timeline_tile/timeline_tile.dart';
-import 'package:traces/constants/route_constants.dart';
-import 'package:traces/screens/trips/model/activity.model.dart';
-import 'package:traces/screens/trips/model/booking.model.dart';
-import 'package:traces/screens/trips/model/ticket.model.dart';
-import 'package:traces/screens/trips/model/trip.model.dart';
-import 'package:traces/screens/trips/model/trip_arguments.model.dart';
-import 'package:traces/screens/trips/model/trip_day.model.dart';
-import 'package:traces/screens/trips/model/trip_object.model.dart';
-import 'package:traces/screens/trips/trip_day/bloc/tripday_bloc.dart';
-import 'package:traces/screens/trips/widgets/trip_helpers.dart';
-import 'package:traces/utils/style/styles.dart';
-import '../../../widgets/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:intl/intl.dart';
+import 'package:timeline_tile/timeline_tile.dart';
+
+import '../../../constants/color_constants.dart';
+import '../../../constants/route_constants.dart';
+import '../../../utils/style/styles.dart';
+import '../../../widgets/widgets.dart';
+import '../model/activity.model.dart';
+import '../model/booking.model.dart';
+import '../model/ticket.model.dart';
+import '../model/trip.model.dart';
+import '../model/trip_arguments.model.dart';
+import '../model/trip_day.model.dart';
+import '../model/trip_object.model.dart';
+import '../widgets/trip_helpers.dart';
+import 'bloc/tripday_bloc.dart';
 
 class TripDayView extends StatefulWidget{
   Trip trip;
