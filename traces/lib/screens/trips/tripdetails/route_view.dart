@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
+import 'package:traces/constants/route_constants.dart';
+import 'package:traces/screens/trips/model/ticket.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+import 'package:traces/screens/trips/model/trip_arguments.model.dart';
+import 'package:traces/screens/trips/model/trip_day.model.dart';
+import 'package:traces/screens/trips/model/trip_object.model.dart';
+import 'package:traces/screens/trips/widgets/trip_helpers.dart';
 import 'package:traces/utils/style/styles.dart';
 import '../../../widgets/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RouteView extends StatefulWidget{
   final Trip trip;  
@@ -54,7 +59,7 @@ class _RouteViewViewState extends State<RouteView>{
         );
       }
 
-    Widget _dayCard(Trip trip, int dayNumber, DateTime date){      
+    Widget _dayCard(Trip trip, int dayNumber, DateTime date){
       
       var bookings = trip.bookings?.where((b) => 
         b.entryDate != null && b.exitDate != null  &&
@@ -72,29 +77,83 @@ class _RouteViewViewState extends State<RouteView>{
         (t.arrivalDatetime!.isAfter(date) || t.arrivalDatetime!.isSameDate(date))
       ).toList();
 
-      return Container(child: Card(
-        child: Container(
-          constraints: const BoxConstraints(
-            minHeight: 60,
-          ),
-          padding: EdgeInsets.all(10.0),        
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-            Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
-            SizedBox(height: 3.0,),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                bookings != null ? Row(children:
-                  [for(var booking in bookings) Row(children: [FaIcon(FontAwesomeIcons.home, color: ColorsPalette.juicyGreen), SizedBox(width: 10.0)])]
-                ) : Container(),             
-                tickets != null ? Row(children: [for(var ticket in tickets) Row(children: [transportIcon(ticket.type, ColorsPalette.juicyBlue), SizedBox(width: 10.0)])]) : Container(),
-                activities != null ? Row(children: [
-                  for(var activity in activities) Row(children: [FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.juicyOrange), SizedBox(width: 10.0)])
-                ]) : Container()
-              ],))            
-          ],)),
+      List<TripEvent> tripEvents = [];
+
+      bookings?.forEach((booking) {
+        var objectDate = new DateTime(date.year, date.month, date.day, 23, 59);;
+        if(booking.entryDate!.isSameDate(date)) objectDate = booking.entryDate!;
+        if(booking.exitDate!.isSameDate(date)) objectDate = booking.exitDate!;
+        
+        tripEvents.add(new TripEvent(
+          type: TripEventType.Booking,
+          id: booking.id!,
+          startDate: objectDate,
+          event: booking
+        ));
+      });
+
+      activities?.forEach((activity) {
+        tripEvents.add(new TripEvent(
+          type: TripEventType.Activity,
+          id: activity.id!,
+          startDate: activity.date!,
+          event: activity
+        ));
+      });
+
+      tickets?.forEach((ticket) {
+        var startDate = null;
+        var endDate = null;
+        if(ticket.arrivalDatetime!.isSameDate(date)) endDate = ticket.arrivalDatetime!;
+        if(ticket.departureDatetime!.isSameDate(date)) startDate = ticket.departureDatetime!;
+
+        tripEvents.add(new TripEvent(
+          type: TripEventType.Ticket,
+          id: ticket.id!,
+          startDate: startDate,
+          endDate: endDate,
+          //objectType: ticket.type,
+          event: ticket
+        ));
+      });
+
+      return Container(child: InkWell(child: 
+        Card(
+          child: Container(
+            constraints: const BoxConstraints(
+              minHeight: 60,
+            ),
+            padding: EdgeInsets.all(10.0),        
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
+              Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
+              SizedBox(height: 3.0,),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  for(var tripEvent in _sortObjects(tripEvents)) Row(children: [getObjectIcon(tripEvent.type, tripEvent.event), SizedBox(width: 10.0)])              
+                ],))          ],)),
+        ),
+        onTap: (){
+          TripDay tripDay = new TripDay(
+            tripId: trip.id!,
+            date: date,
+            tripEvents: tripEvents,
+            dayNumber: dayNumber 
+          );
+
+          TripDayArguments args = new TripDayArguments(day: tripDay, trip: trip);
+
+          Navigator.of(context).pushNamed(tripDayRoute, arguments: args);
+        },
       ));
        
     }
 
+  List<TripEvent> _sortObjects(List<TripEvent> objects) {
+    objects.sort((a, b) {
+      return a.startDate!.millisecondsSinceEpoch
+          .compareTo(b.startDate!.millisecondsSinceEpoch);
+    });
+    return objects;
+  }
 }

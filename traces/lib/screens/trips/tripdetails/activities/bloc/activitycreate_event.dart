@@ -5,7 +5,13 @@ abstract class ActivityCreateEvent {
   List<Object?> get props => [];
 }
 
-class NewActivityMode extends ActivityCreateEvent {}
+class NewActivityMode extends ActivityCreateEvent {
+  final DateTime? date;
+ 
+  NewActivityMode(this.date);
+
+  List<Object?> get props => [date];
+}
 
 class ActivityDateUpdated extends ActivityCreateEvent {
   final DateTime date;

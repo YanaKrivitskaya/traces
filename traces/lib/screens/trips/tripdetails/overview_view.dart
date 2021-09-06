@@ -22,15 +22,22 @@ tripDetailsOverview(Trip trip, BuildContext context) {
   }
 
   List<String> expenseList = [];
+  List<String> plannedExpenseList = [];
   if(trip.expenses != null){
     Map<String, List<Expense>> expenses = trip.expenses!.groupListsBy((element) => element.currency!);
 
     expenses.forEach((key, group) {
       double sum = 0.0;
+      double sumPlanned = 0.0;
       group.forEach((expense) {
-        sum += expense.amount!;
+        if(expense.isPaid != null && expense.isPaid!){
+          sum += expense.amount!;
+        } else{
+          sumPlanned += expense.amount!;
+        }        
       });
-      expenseList.add(sum.toString() + ' ' + key);
+      sum > 0 ? expenseList.add(sum.toString() + ' ' + key) : null;
+      sumPlanned > 0 ? plannedExpenseList.add(sumPlanned.toString() + ' ' + key) : null;
     });      
   }
   
@@ -101,6 +108,21 @@ tripDetailsOverview(Trip trip, BuildContext context) {
               ],),
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 for(var expense in expenseList) Text(expense, style: quicksandStyle(fontSize: 18.0))
+              ],)
+            ],)
+          ),
+        ) : Container(),
+        plannedExpenseList.length > 0 ? Expanded(
+          child: Container(
+            //color: ColorsPalette.beekeeper,
+            width: MediaQuery.of(context).size.width * 0.9,
+            margin: EdgeInsets.all(10.0),            
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('Planned expenses:', style: quicksandStyle(fontSize: 20.0, color: ColorsPalette.juicyOrange))                
+              ],),
+              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                for(var expense in plannedExpenseList) Text(expense, style: quicksandStyle(fontSize: 18.0))
               ],)
             ],)
           ),

@@ -24,26 +24,6 @@ int daysBetween(DateTime from, DateTime to) {
    return (to.difference(from).inHours / 24).round();
 }
 
-/*extension UtilListExtension on List{
-  groupBy(String key) {
-    try {
-      List<Map<String, dynamic>> result = [];
-      List<String> keys = [];
-
-      this.forEach((f) => keys.add(f[key]));
-
-      [...keys.toSet()].forEach((k) {
-        List data = [...this.where((e) => e[key] == k)];
-        result.add({k: data});
-      });
-
-      return result;
-    } catch (e, s) {
-      //printCatchNReport(e, s);
-      return this;
-    }
-  }
-}*/
 
 Widget transportIcon(String? transport, Color color) => new Container(
     child: transport == 'Train' ? FaIcon(FontAwesomeIcons.train, color: color)

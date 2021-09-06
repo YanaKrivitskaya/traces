@@ -38,7 +38,7 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
   Stream<ExpenseCreateState> _mapNewExpenseModeToState(NewExpenseMode event) async* {
     List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
 
-    yield ExpenseCreateEdit(new Expense(), categories, false);
+    yield ExpenseCreateEdit(new Expense(date: event.date), categories, false);
   }
 
   Stream<ExpenseCreateState> _mapAddExpenseModeToState(AddExpenseMode event) async* {

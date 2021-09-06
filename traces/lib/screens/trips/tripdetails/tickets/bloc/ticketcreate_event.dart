@@ -5,7 +5,13 @@ abstract class TicketCreateEvent {
   List<Object?> get props => [];
 }
 
-class NewTicketMode extends TicketCreateEvent {}
+class NewTicketMode extends TicketCreateEvent {
+  final DateTime? date;
+ 
+  NewTicketMode(this.date);
+
+  List<Object?> get props => [date];
+}
 
 class DepartureDateUpdated extends TicketCreateEvent {
   final DateTime departureDate;
