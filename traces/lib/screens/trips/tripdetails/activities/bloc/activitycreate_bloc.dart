@@ -42,7 +42,7 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
 
    Stream<ActivityCreateState> _mapNewActivityModeToState(NewActivityMode event) async* {
     List<ActivityCategory>? categories = await _activitiesRepository.getActivityCategories();
-    yield ActivityCreateEdit(new Activity(), categories, false);
+    yield ActivityCreateEdit(new Activity(date: event.date), categories, false);
   }
 
   Stream<ActivityCreateState> _mapArrivalDateUpdatedToState(ActivityDateUpdated event) async* {

@@ -34,7 +34,7 @@ class BookingCreateBloc extends Bloc<BookingCreateEvent, BookingCreateState> {
   }
 
   Stream<BookingCreateState> _mapNewBookingModeToState(NewBookingMode event) async* {
-    yield BookingCreateEdit(new Booking(), false);
+    yield BookingCreateEdit(new Booking(entryDate: event.date), false);
   }
 
   Stream<BookingCreateState> _mapDateUpdatedToState(DateRangeUpdated event) async* {

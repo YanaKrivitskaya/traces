@@ -22,3 +22,4 @@ const String bookingCreateRoute = '/bookingCreate';
 const String expenseCreateRoute = '/expenseCreate';
 const String activityCreateRoute = '/activityCreate';
 const String imageCropRoute = '/imageCrop';
+const String tripDayRoute = '/tripDay';

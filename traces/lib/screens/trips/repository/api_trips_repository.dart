@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:traces/screens/trips/model/api_models/api_trip_user.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/model/trip_day.model.dart';
+import 'package:intl/intl.dart';
 
 import '../../../utils/services/api_service.dart';
 
@@ -25,6 +27,17 @@ class ApiTripsRepository{
     var tripResponse = response["trip"] != null ? 
       Trip.fromMap(response['trip']) : null;
     return tripResponse;
+    }
+
+    Future<dynamic> getTripDay(int tripId, DateTime date) async{
+    print("getTripDay");
+    var date1 = date.toUtc();
+    String convertedDate = new DateFormat("yyyy-MM-dd").format(date.toUtc());
+    final response = await apiProvider.getSecure("$tripsUrl$tripId/day/$convertedDate");
+      
+    /*var tripResponse = response["tripDay"] != null ? 
+      TripDay.fromMap(response['tripDay']) : null;*/
+    return response;
     }
 
     Future<Trip> createTrip(Trip trip, int userId)async{

@@ -3,6 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/model/trip_arguments.model.dart';
+import 'package:traces/screens/trips/model/trip_day.model.dart';
+import 'package:traces/screens/trips/model/trip_object.model.dart';
+import 'package:traces/screens/trips/trip_day/bloc/tripday_bloc.dart';
+import 'package:traces/screens/trips/trip_day/trip_day_view.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_create_view.dart';
 import 'package:traces/screens/trips/tripdetails/activities/bloc/activitycreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/bloc/bookingcreate_bloc.dart';
@@ -12,6 +17,7 @@ import 'package:traces/screens/trips/tripdetails/expenses/expense_create_view.da
 import 'package:traces/screens/trips/tripdetails/image_crop_view.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/bloc/ticketcreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_create_view.dart';
+import 'package:traces/screens/trips/widgets/trip_helpers.dart';
 import '../constants/route_constants.dart';
 import '../screens/expenses.dart';
 import '../screens/home.dart';
@@ -183,11 +189,11 @@ class RouteGenerator {
         }
       case ticketCreateRoute:
         {
-          if (args is Trip) {
+          if (args is EventArguments) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<TicketCreateBloc>(
-                create: (context) => TicketCreateBloc()..add(NewTicketMode()),
-                child: TicketCreateView(trip: args),
+                create: (context) => TicketCreateBloc()..add(NewTicketMode(args.date)),
+                child: TicketCreateView(trip: args.trip),
               ),
             );
           }
@@ -195,11 +201,11 @@ class RouteGenerator {
         }
       case bookingCreateRoute:
         {
-          if (args is Trip) {
+          if (args is EventArguments) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<BookingCreateBloc>(
-                create: (context) => BookingCreateBloc()..add(NewBookingMode()),
-                child: BookingCreateView(trip: args),
+                create: (context) => BookingCreateBloc()..add(NewBookingMode(args.date)),
+                child: BookingCreateView(trip: args.trip),
               ),
             );
           }
@@ -207,11 +213,11 @@ class RouteGenerator {
         }
       case expenseCreateRoute:
         {
-          if (args is Trip) {
+          if (args is EventArguments) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<ExpenseCreateBloc>(
-                create: (context) => ExpenseCreateBloc()..add(NewExpenseMode()),
-                child: ExpenseCreateView(trip: args),
+                create: (context) => ExpenseCreateBloc()..add(NewExpenseMode(args.date)),
+                child: ExpenseCreateView(trip: args.trip),
               ),
             );
           }
@@ -219,11 +225,11 @@ class RouteGenerator {
         }
       case activityCreateRoute:
         {
-          if (args is Trip) {
+          if (args is EventArguments) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<ActivityCreateBloc>(
-                create: (context) => ActivityCreateBloc()..add(NewActivityMode()),
-                child: ActivityCreateView(trip: args),
+                create: (context) => ActivityCreateBloc()..add(NewActivityMode(args.date)),
+                child: ActivityCreateView(trip: args.trip),
               ),
             );
           }
@@ -236,6 +242,18 @@ class RouteGenerator {
               builder: (_) => BlocProvider<TripDetailsBloc>(
                 create: (context) => TripDetailsBloc(),
                 child: ImageCropView(args),
+              ),
+            );
+          }
+        return _errorRoute();          
+      }
+      case tripDayRoute:
+        {
+          if (args is TripDayArguments) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<TripDayBloc>(
+                create: (context) => TripDayBloc()..add(TripDayLoaded(args.day)),
+                child: TripDayView(trip: args.trip),
               ),
             );
           }

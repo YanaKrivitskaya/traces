@@ -39,7 +39,7 @@ class TicketCreateBloc extends Bloc<TicketCreateEvent, TicketCreateState> {
   }
 
    Stream<TicketCreateState> _mapNewTicketModeToState(NewTicketMode event) async* {
-    yield TicketCreateEdit(new Ticket(), false);
+    yield TicketCreateEdit(new Ticket(departureDatetime: event.date), false);
   }
 
   Stream<TicketCreateState> _mapArrivalDateUpdatedToState(ArrivalDateUpdated event) async* {

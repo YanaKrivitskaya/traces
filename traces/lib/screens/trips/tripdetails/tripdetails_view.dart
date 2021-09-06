@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 
 import 'package:traces/screens/trips/tripdetails/route_view.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
@@ -31,7 +32,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
   SharedPreferencesService sharedPrefsService = SharedPreferencesService();
 
   String tripTabKey = "tripTab";
-
+ 
   final List<Tab> detailsTabs = <Tab>[
     Tab(text: 'Overview', icon: Icon(Icons.home)),
     Tab(text: 'Route', icon: Icon(Icons.map)),    
@@ -89,9 +90,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
           tabController.index = tabValue ?? 0;
         },
         child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
-          builder: (context, state){            
+          builder: (context, state){           
             return Scaffold(       
-              floatingActionButton: _floatingButton(state.trip != null ? state.trip : null),       
+              floatingActionButton: state.trip != null ? _floatingButton(state.trip!) : Container(),       
               body: (state is TripDetailsSuccessState) ? 
               SingleChildScrollView(
                 child: Column(children: [
@@ -137,76 +138,79 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
       );    
   }
 
-  Widget _floatingButton(Trip? trip) => SpeedDial(
+  Widget _floatingButton(Trip trip) {
+    EventArguments args = new EventArguments(trip: trip);
+    return SpeedDial(
+      foregroundColor: ColorsPalette.lynxWhite,
+      icon: Icons.add,
+      activeIcon: Icons.close,
+      spacing: 3,
+      openCloseDial: isDialOpen,
+      childPadding: EdgeInsets.all(5),
+      spaceBetweenChildren: 4,
+      renderOverlay: true,
+      overlayOpacity: 0.4,         
+      tooltip: 'Add event',          
+      elevation: 8.0,          
+      animationSpeed: 200,          
+      children: [
+        SpeedDialChild(
+          child: Icon(Icons.description),
+          backgroundColor: ColorsPalette.juicyYellow,
           foregroundColor: ColorsPalette.lynxWhite,
-          icon: Icons.add,
-          activeIcon: Icons.close,
-          spacing: 3,
-          openCloseDial: isDialOpen,
-          childPadding: EdgeInsets.all(5),
-          spaceBetweenChildren: 4,
-          renderOverlay: true,          
-          overlayOpacity: 0.3,         
-          tooltip: 'Add event',          
-          elevation: 8.0,          
-          animationSpeed: 200,          
-          children: [
-            SpeedDialChild(
-              child: Icon(Icons.description),
-              backgroundColor: ColorsPalette.juicyYellow,
-              foregroundColor: ColorsPalette.lynxWhite,
-              label: 'Note',
-              onTap: () {},
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.train),
-              backgroundColor: ColorsPalette.juicyOrange,
-              foregroundColor: ColorsPalette.lynxWhite,
-              label: 'Ticket',
-              onTap: () {
-                Navigator.pushNamed(context, ticketCreateRoute, arguments: trip).then((value){
-                  context.read<TripDetailsBloc>().add(UpdateTickets(trip!.id!));
-                });
-              },
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.hotel),
-              backgroundColor: ColorsPalette.juicyDarkBlue,
-              foregroundColor: Colors.white,
-              label: 'Booking',
-              visible: true,
-              onTap: () {
-                Navigator.pushNamed(context, bookingCreateRoute, arguments: trip).then((value){
-                  context.read<TripDetailsBloc>().add(UpdateBookings(trip!.id!));
-                });
-              }
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.attach_money),
-              backgroundColor: ColorsPalette.juicyGreen,
-              foregroundColor: Colors.white,
-              label: 'Expense',
-              visible: true,
-              onTap: () {
-                Navigator.pushNamed(context, expenseCreateRoute, arguments: trip).then((value){
-                  context.read<TripDetailsBloc>().add(UpdateExpenses(trip!.id!));
-                }); 
-              }
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.assignment_turned_in),
-              backgroundColor: ColorsPalette.juicyBlue,
-              foregroundColor: Colors.white,
-              label: 'Activity',
-              visible: true,
-              onTap: () {
-                Navigator.pushNamed(context, activityCreateRoute, arguments: trip).then((value){
-                  context.read<TripDetailsBloc>().add(UpdateActivities(trip!.id!));
-                });
-              }
-            ),
-          ],
-        );
+          label: 'Note',
+          onTap: () {},
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.train),
+          backgroundColor: ColorsPalette.juicyOrange,
+          foregroundColor: ColorsPalette.lynxWhite,
+          label: 'Ticket',
+          onTap: () {
+            Navigator.pushNamed(context, ticketCreateRoute, arguments: args).then((value){
+              context.read<TripDetailsBloc>().add(UpdateTickets(trip.id!));
+            });
+          },
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.hotel),
+          backgroundColor: ColorsPalette.juicyDarkBlue,
+          foregroundColor: Colors.white,
+          label: 'Booking',
+          visible: true,
+          onTap: () {
+            Navigator.pushNamed(context, bookingCreateRoute, arguments: args).then((value){
+              context.read<TripDetailsBloc>().add(UpdateBookings(trip.id!));
+            });
+          }
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.attach_money),
+          backgroundColor: ColorsPalette.juicyGreen,
+          foregroundColor: Colors.white,
+          label: 'Expense',
+          visible: true,
+          onTap: () {
+            Navigator.pushNamed(context, expenseCreateRoute, arguments: args).then((value){
+              context.read<TripDetailsBloc>().add(UpdateExpenses(trip.id!));
+            }); 
+          }
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.assignment_turned_in),
+          backgroundColor: ColorsPalette.juicyBlue,
+          foregroundColor: Colors.white,
+          label: 'Activity',
+          visible: true,
+          onTap: () {
+            Navigator.pushNamed(context, activityCreateRoute, arguments: args).then((value){
+              context.read<TripDetailsBloc>().add(UpdateActivities(trip.id!));
+            });
+          }
+        ),
+      ],
+    );
+  }
 }
 
 

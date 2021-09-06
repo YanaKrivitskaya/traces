@@ -5,7 +5,13 @@ abstract class ExpenseCreateEvent {
   List<Object?> get props => [];
 }
 
-class NewExpenseMode extends ExpenseCreateEvent {}
+class NewExpenseMode extends ExpenseCreateEvent {
+  final DateTime? date;
+ 
+  NewExpenseMode(this.date);
+
+  List<Object?> get props => [date];
+}
 
 class AddExpenseMode extends ExpenseCreateEvent {
   final String? category;

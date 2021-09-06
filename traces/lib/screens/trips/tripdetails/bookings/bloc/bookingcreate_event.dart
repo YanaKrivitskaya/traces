@@ -5,7 +5,13 @@ abstract class BookingCreateEvent {
   List<Object?> get props => [];
 }
 
-class NewBookingMode extends BookingCreateEvent {}
+class NewBookingMode extends BookingCreateEvent {
+  final DateTime? date;
+ 
+  NewBookingMode(this.date);
+
+  List<Object?> get props => [date];
+}
 
 class DateRangeUpdated extends BookingCreateEvent {
   final DateTime startDate;
