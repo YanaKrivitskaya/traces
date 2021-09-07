@@ -55,7 +55,7 @@ class Activity {
       isPlanned: isPlanned ?? this.isPlanned,
       isCompleted: isCompleted ?? this.isCompleted,
       category: category ?? this.category,
-      expense: expense
+      expense: expense ?? this.expense
     );
   }
 

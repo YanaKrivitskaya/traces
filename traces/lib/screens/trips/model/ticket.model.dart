@@ -79,7 +79,7 @@ class Ticket {
       reservationUrl: reservationUrl ?? this.reservationUrl,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
-      expense: expense
+      expense: expense ?? this.expense
     );
   }
 
