@@ -17,6 +17,7 @@ import '../model/trip_day.model.dart';
 import '../model/trip_object.model.dart';
 import '../widgets/trip_helpers.dart';
 import 'bloc/tripday_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TripDayView extends StatefulWidget{
   Trip trip;
@@ -59,13 +60,12 @@ class _TripDayState extends State<TripDayView>{
           }
       },
       child: BlocBuilder<TripDayBloc, TripDayState>(
-        builder: (context, state){
-          if (tripDay != null)
+        builder: (context, state){          
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-                title: Text('${DateFormat.yMMMd().format(tripDay!.date)}',
-                  style: quicksandStyle(fontSize: 30.0)),
+                title: tripDay != null ? Text('${DateFormat.yMMMd().format(tripDay!.date)}',
+                  style: quicksandStyle(fontSize: 30.0)) : null,
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,
                 leading: IconButton(
@@ -73,38 +73,42 @@ class _TripDayState extends State<TripDayView>{
                   onPressed: ()=> Navigator.pop(context)
                 )
             ),
-            floatingActionButton: _floatingButton(widget.trip, tripDay!.date),
+            floatingActionButton: tripDay != null ? _floatingButton(widget.trip, tripDay!) : null,
             body: tripDay != null && tripDay!.tripEvents.length > 0 ? Container(
               padding: EdgeInsets.only(bottom: 50.0),
               child: _timelineDay(tripDay!),
-            ) : Container(child: Text('You have no scheduled events for this day', style: quicksandStyle(fontSize: 18.0))),
-          ); 
-          else return loadingWidget(ColorsPalette.juicyGreen);
+            ) : tripDay == null ? loadingWidget(ColorsPalette.juicyYellow) 
+              : Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [
+                  FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.juicyOrange, size: 40.0),
+                  SizedBox(height: 20.0,),
+                  Text('You have no scheduled events for this day', style: quicksandStyle(fontSize: 18.0))
+                ])),
+          );
         },
       ),
     );
   }
 
-  Widget _timelineDay(TripDay day){
-    var events = day.tripEvents.length;
+  Widget _timelineDay(TripDay day){    
+    var events = sortObjects(day.tripEvents);
     return Container(padding: EdgeInsets.only(left: 20.0, right: 20.0), child: ListView.builder(
       shrinkWrap: true,         
-      itemCount: events,
+      itemCount: events.length,
       itemBuilder: (context, position){
-        var tripEvent = day.tripEvents[position];
-        DateTime startDate = tripEvent.startDate!;
+        var tripEvent = events[position];
+        DateTime? startDate = tripEvent.startDate;
         DateTime? endDate = tripEvent.endDate;
         return TimelineTile(              
           alignment: TimelineAlign.manual,
           lineXY: 0.19,
           isFirst: position == 0,
-          isLast: position == events - 1,
+          isLast: position == events.length - 1,
           indicatorStyle: IndicatorStyle(
             indicator: getObjectIcon(tripEvent.type, tripEvent.event),                
             padding: EdgeInsets.all(8),
           ),
-          startChild: Text('${DateFormat.Hm().format(startDate)} ${endDate != null 
-            && tripEvent.type == TripEventType.Ticket ?' - ' + DateFormat.Hm().format(endDate) : ''}'),
+          startChild: Text('${startDate != null ? DateFormat.Hm().format(startDate) : ''} ${startDate != null && endDate != null 
+            && tripEvent.type == TripEventType.Ticket ?' - ' : ''} ${ endDate != null && tripEvent.type == TripEventType.Ticket ? DateFormat.Hm().format(endDate) : ''}'),
           endChild: _eventCard(tripEvent),
           beforeLineStyle: const LineStyle(
             color:ColorsPalette.christmasGrey,
@@ -130,7 +134,7 @@ class _TripDayState extends State<TripDayView>{
                 //Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
                 SizedBox(height: 3.0,),
                 SingleChildScrollView(                  
-                  child:Text('${booking.details}', style: quicksandStyle(fontSize: 16.0,)))
+                  child:Text('${booking.details}', style: quicksandStyle(fontSize: 15.0,)))
               ],)),
           ),
           onTap: (){},
@@ -145,14 +149,17 @@ class _TripDayState extends State<TripDayView>{
             child: Container(
               constraints: const BoxConstraints(
                 minHeight: 60,
+                maxHeight: 200
               ),
               padding: EdgeInsets.all(10.0),        
               child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
                 Text('${ticket.departureLocation} - ${ticket.arrivalLocation}', style: quicksandStyle(fontSize: 16.0,)),
                 //Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
                 SizedBox(height: 3.0,),
+                Text('${ticket.carrier} - ${ticket.carrierNumber}', style: quicksandStyle(fontSize: 15.0,)),
+                SizedBox(height: 3.0,),
                 SingleChildScrollView(                  
-                  child:Text('${ticket.details}', style: quicksandStyle(fontSize: 16.0,)))
+                  child:Text('${ticket.details}', style: quicksandStyle(fontSize: 15.0,)))
               ],)),
           ),
           onTap: (){},
@@ -174,7 +181,7 @@ class _TripDayState extends State<TripDayView>{
                 //Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
                 SizedBox(height: 3.0,),
                 SingleChildScrollView(                  
-                  child:Text('${activity.description}', style: quicksandStyle(fontSize: 16.0,)))
+                  child:Text('${activity.description}', style: quicksandStyle(fontSize: 15.0,)))
               ],)),
           ),
           onTap: (){},
@@ -185,8 +192,8 @@ class _TripDayState extends State<TripDayView>{
     }       
   }
 
-  Widget _floatingButton(Trip trip, DateTime date) {
-    EventArguments args = new EventArguments(trip: trip, date: date);
+  Widget _floatingButton(Trip trip, TripDay day) {
+    EventArguments args = new EventArguments(trip: trip, date: day.date);
     return SpeedDial(
       foregroundColor: ColorsPalette.lynxWhite,
       icon: Icons.add,
@@ -215,7 +222,7 @@ class _TripDayState extends State<TripDayView>{
           label: 'Ticket',
           onTap: () {
             Navigator.pushNamed(context, ticketCreateRoute, arguments: args).then((value){
-              //context.read<TripDetailsBloc>().add(UpdateTickets(trip!.id!));
+              value != null ? context.read<TripDayBloc>().add(TripDayLoaded(tripDay!)) : '';
             });
           },
         ),
@@ -227,7 +234,7 @@ class _TripDayState extends State<TripDayView>{
           visible: true,
           onTap: () {
             Navigator.pushNamed(context, bookingCreateRoute, arguments: args).then((value){
-              //context.read<TripDetailsBloc>().add(UpdateBookings(trip!.id!));
+              value != null ? context.read<TripDayBloc>().add(TripDayLoaded(tripDay!)) : '';
             });
           }
         ),
@@ -239,7 +246,7 @@ class _TripDayState extends State<TripDayView>{
           visible: true,
           onTap: () {
             Navigator.pushNamed(context, expenseCreateRoute, arguments: args).then((value){
-              //context.read<TripDetailsBloc>().add(UpdateExpenses(trip!.id!));
+              context.read<TripDayBloc>().add(TripDayLoaded(tripDay!));
             }); 
           }
         ),
@@ -251,7 +258,7 @@ class _TripDayState extends State<TripDayView>{
           visible: true,
           onTap: () {
             Navigator.pushNamed(context, activityCreateRoute, arguments: args).then((value){
-              //context.read<TripDetailsBloc>().add(UpdateActivities(trip!.id!));
+              value != null ? context.read<TripDayBloc>().add(TripDayLoaded(tripDay!)) : '';
             });
           }
         ),

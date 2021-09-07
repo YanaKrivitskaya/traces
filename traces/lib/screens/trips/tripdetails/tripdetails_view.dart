@@ -112,13 +112,12 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                       child: TabBarView(
                         physics: AlwaysScrollableScrollPhysics(),
                         controller: tabController,
-                        children: [
-                          /*BlocProvider(
-                            builder: (context) => BlocA(),
-                            child: TabA(),
-                          ),*/
+                        children: [                          
                           tripDetailsOverview(state.trip!, context),
-                          RouteView(trip: state.trip!),
+                          BlocProvider.value(
+                            value: context.read<TripDetailsBloc>(),
+                            child: RouteView(trip: state.trip!),
+                          ),                                                  
                           //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),                          
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
@@ -168,7 +167,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
           label: 'Ticket',
           onTap: () {
             Navigator.pushNamed(context, ticketCreateRoute, arguments: args).then((value){
-              context.read<TripDetailsBloc>().add(UpdateTickets(trip.id!));
+              value != null ? context.read<TripDetailsBloc>().add(UpdateTickets(trip.id!)) : '';
             });
           },
         ),
@@ -180,7 +179,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
           visible: true,
           onTap: () {
             Navigator.pushNamed(context, bookingCreateRoute, arguments: args).then((value){
-              context.read<TripDetailsBloc>().add(UpdateBookings(trip.id!));
+              value != null ? context.read<TripDetailsBloc>().add(UpdateBookings(trip.id!)) : '';
             });
           }
         ),
@@ -204,7 +203,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
           visible: true,
           onTap: () {
             Navigator.pushNamed(context, activityCreateRoute, arguments: args).then((value){
-              context.read<TripDetailsBloc>().add(UpdateActivities(trip.id!));
+              value != null ? context.read<TripDetailsBloc>().add(UpdateActivities(trip.id!)) : '';
             });
           }
         ),

@@ -8,9 +8,11 @@ import 'package:timeline_tile/timeline_tile.dart';
 import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 import 'package:traces/screens/trips/model/trip_day.model.dart';
 import 'package:traces/screens/trips/model/trip_object.model.dart';
+import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import 'package:traces/screens/trips/widgets/trip_helpers.dart';
 import 'package:traces/utils/style/styles.dart';
 import '../../../widgets/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RouteView extends StatefulWidget{
   final Trip trip;  
@@ -80,7 +82,7 @@ class _RouteViewViewState extends State<RouteView>{
       List<TripEvent> tripEvents = [];
 
       bookings?.forEach((booking) {
-        var objectDate = new DateTime(date.year, date.month, date.day, 23, 59);;
+        var objectDate = new DateTime.utc(date.year, date.month, date.day, 23, 59);
         if(booking.entryDate!.isSameDate(date)) objectDate = booking.entryDate!;
         if(booking.exitDate!.isSameDate(date)) objectDate = booking.exitDate!;
         
@@ -130,30 +132,23 @@ class _RouteViewViewState extends State<RouteView>{
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  for(var tripEvent in _sortObjects(tripEvents)) Row(children: [getObjectIcon(tripEvent.type, tripEvent.event), SizedBox(width: 10.0)])              
-                ],))          ],)),
+                  for(var tripEvent in sortObjects(tripEvents)) Row(children: [getObjectIcon(tripEvent.type, tripEvent.event), SizedBox(width: 10.0)])              
+                ],))],)),
         ),
         onTap: (){
           TripDay tripDay = new TripDay(
             tripId: trip.id!,
             date: date,
-            tripEvents: tripEvents,
-            dayNumber: dayNumber 
+            tripEvents: tripEvents
           );
 
           TripDayArguments args = new TripDayArguments(day: tripDay, trip: trip);
 
-          Navigator.of(context).pushNamed(tripDayRoute, arguments: args);
+          Navigator.of(context).pushNamed(tripDayRoute, arguments: args).then((value) => {
+            BlocProvider.of<TripDetailsBloc>(context)..add(GetTripDetails(trip.id!))
+          });
         },
       ));
        
-    }
-
-  List<TripEvent> _sortObjects(List<TripEvent> objects) {
-    objects.sort((a, b) {
-      return a.startDate!.millisecondsSinceEpoch
-          .compareTo(b.startDate!.millisecondsSinceEpoch);
-    });
-    return objects;
-  }
+    }  
 }
