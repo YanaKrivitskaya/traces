@@ -99,7 +99,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
                 ),
               ));
               Future.delayed(const Duration(seconds: 1), () {
-                Navigator.pop(context);
+                Navigator.pop(context, 1);
               });
           }
           if(state is TicketCreateError){

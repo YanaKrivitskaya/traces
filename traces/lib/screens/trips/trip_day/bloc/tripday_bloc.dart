@@ -26,7 +26,7 @@ class TripDayBloc extends Bloc<TripDayEvent, TripDayState> {
   }
 
   Stream<TripDayState> _mapTripDayLoadedToState(TripDayLoaded event) async* {
-    //var day = await _tripsRepository.getTripDay(event.tripDay.tripId, event.tripDay.date);
-    yield TripDaySuccess(event.tripDay);
+    var day = await _tripsRepository.getTripDay(event.tripDay.tripId, event.tripDay.date);
+    yield TripDaySuccess(day);
   }
 }

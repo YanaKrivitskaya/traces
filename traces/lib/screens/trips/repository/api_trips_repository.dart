@@ -35,9 +35,9 @@ class ApiTripsRepository{
     String convertedDate = new DateFormat("yyyy-MM-dd").format(date.toUtc());
     final response = await apiProvider.getSecure("$tripsUrl$tripId/day/$convertedDate");
       
-    /*var tripResponse = response["tripDay"] != null ? 
-      TripDay.fromMap(response['tripDay']) : null;*/
-    return response;
+    var tripResponse = response["tripDay"] != null ? 
+      TripDay.fromMap(response['tripDay'], date) : null;
+    return tripResponse;
     }
 
     Future<Trip> createTrip(Trip trip, int userId)async{

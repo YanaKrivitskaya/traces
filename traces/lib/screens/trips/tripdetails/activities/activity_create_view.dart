@@ -87,7 +87,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
                 ),
               ));
               Future.delayed(const Duration(seconds: 1), () {
-                Navigator.pop(context);
+                Navigator.pop(context, 1);
               });
           }
           if(state is ActivityCreateError){

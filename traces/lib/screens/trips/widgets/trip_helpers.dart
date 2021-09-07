@@ -20,3 +20,11 @@ Widget getObjectIcon(TripEventType type, dynamic event) {
         return Container();
     }
   }
+
+List<TripEvent> sortObjects(List<TripEvent> objects) {
+    objects.sort((a, b) {
+      return a.startDate!.millisecondsSinceEpoch
+          .compareTo(b.startDate!.millisecondsSinceEpoch);
+    });
+    return objects;
+  }
