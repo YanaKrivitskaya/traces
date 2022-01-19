@@ -5,11 +5,11 @@ import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
 import 'package:traces/screens/trips/widgets/create_expense_dialog.dart';
 
-import '../../../../constants/color_constants.dart';
-import '../../../../utils/style/styles.dart';
-import '../../../../widgets/widgets.dart';
-import '../../model/booking.model.dart';
-import '../../model/trip.model.dart';
+import '../../../../../constants/color_constants.dart';
+import '../../../../../utils/style/styles.dart';
+import '../../../../../widgets/widgets.dart';
+import '../../../model/booking.model.dart';
+import '../../../model/trip.model.dart';
 import 'bloc/bookingcreate_bloc.dart';
 
 class BookingCreateView extends StatefulWidget{
@@ -110,6 +110,14 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
                 ],
                 ),
               ));
+          }
+          if(state is BookingCreateEdit && !state.loading && state.booking != null){
+            _nameController!.text == '' ? _nameController!.text = state.booking!.name ?? '' : null;
+            _locationController!.text == '' ? _locationController!.text = state.booking!.location ?? '' : null;
+            _detailsController!.text == '' ? _detailsController!.text = state.booking!.details ?? '' : null;            
+            _reservUrlController!.text == '' ? _reservUrlController!.text = state.booking!.reservationUrl ?? '' : null; 
+            _reservNumberController!.text == '' ? _reservNumberController!.text = state.booking!.reservationNumber ?? '' : null;    
+            _guestsQuantityController!.text == '' ? _guestsQuantityController!.text = state.booking!.guestsQuantity?.toString() ?? '1' : null;       
           }
       },
       child: BlocBuilder<BookingCreateBloc, BookingCreateState>(

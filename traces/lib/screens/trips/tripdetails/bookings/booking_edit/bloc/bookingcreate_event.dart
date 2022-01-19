@@ -13,6 +13,14 @@ class NewBookingMode extends BookingCreateEvent {
   List<Object?> get props => [date];
 }
 
+class EditBookingMode extends BookingCreateEvent {
+  final Booking booking;
+ 
+  EditBookingMode(this.booking);
+
+  List<Object?> get props => [booking];
+}
+
 class DateRangeUpdated extends BookingCreateEvent {
   final DateTime startDate;
   final DateTime endDate;

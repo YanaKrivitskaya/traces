@@ -2,28 +2,24 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/screens/profile/repository/api_profile_repository.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
 import 'package:traces/screens/trips/repository/api_tickets_repository.dart';
-import 'package:traces/screens/trips/repository/api_trips_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 
-part 'ticketcreate_event.dart';
-part 'ticketcreate_state.dart';
+part 'ticketedit_event.dart';
+part 'ticketedit_state.dart';
 
-class TicketCreateBloc extends Bloc<TicketCreateEvent, TicketCreateState> {
+class TicketEditBloc extends Bloc<TicketEditEvent, TicketEditState> {
   final ApiTicketsRepository _ticketsRepository;
-  final ApiProfileRepository _profileRepository;
   
-  TicketCreateBloc() : 
+  TicketEditBloc() : 
   _ticketsRepository = new ApiTicketsRepository(),
-  _profileRepository = new ApiProfileRepository(),
   super(TicketCreateInitial(null));
 
   @override
-  Stream<TicketCreateState> mapEventToState(
-    TicketCreateEvent event,
+  Stream<TicketEditState> mapEventToState(
+    TicketEditEvent event,
   ) async* {
     if (event is NewTicketMode) {
       yield* _mapNewTicketModeToState(event);
@@ -35,14 +31,20 @@ class TicketCreateBloc extends Bloc<TicketCreateEvent, TicketCreateState> {
       yield* _mapTicketSubmittedToState(event);
     } else if (event is ExpenseUpdated) {
       yield* _mapExpenseUpdatedToState(event);
+    } else if (event is EditTicketMode) {
+      yield* _mapEditTicketModeToState(event);
     }
   }
 
-   Stream<TicketCreateState> _mapNewTicketModeToState(NewTicketMode event) async* {
+  Stream<TicketEditState> _mapNewTicketModeToState(NewTicketMode event) async* {
     yield TicketCreateEdit(new Ticket(departureDatetime: event.date), false);
   }
 
-  Stream<TicketCreateState> _mapArrivalDateUpdatedToState(ArrivalDateUpdated event) async* {
+  Stream<TicketEditState> _mapEditTicketModeToState(EditTicketMode event) async* {
+    yield TicketCreateEdit(event.ticket, false);
+  }
+
+  Stream<TicketEditState> _mapArrivalDateUpdatedToState(ArrivalDateUpdated event) async* {
     
     Ticket ticket = state.ticket ?? new Ticket();
 
@@ -51,7 +53,7 @@ class TicketCreateBloc extends Bloc<TicketCreateEvent, TicketCreateState> {
     yield TicketCreateEdit(updTicket, false);
   }
 
-  Stream<TicketCreateState> _mapDepartureDateUpdatedToState(DepartureDateUpdated event) async* {
+  Stream<TicketEditState> _mapDepartureDateUpdatedToState(DepartureDateUpdated event) async* {
     
     Ticket ticket = state.ticket ?? new Ticket();
 
@@ -60,7 +62,7 @@ class TicketCreateBloc extends Bloc<TicketCreateEvent, TicketCreateState> {
     yield TicketCreateEdit(updTicket, false);
   }
 
-  Stream<TicketCreateState> _mapExpenseUpdatedToState(ExpenseUpdated event) async* {
+  Stream<TicketEditState> _mapExpenseUpdatedToState(ExpenseUpdated event) async* {
     
     Ticket ticket = state.ticket ?? new Ticket();
 
@@ -69,12 +71,17 @@ class TicketCreateBloc extends Bloc<TicketCreateEvent, TicketCreateState> {
     yield TicketCreateEdit(updTicket, false);
   }
 
-  Stream<TicketCreateState> _mapTicketSubmittedToState(TicketSubmitted event) async* {
-    yield TicketCreateEdit(event.ticket, true);
-    print(event.ticket.toString());
+  Stream<TicketEditState> _mapTicketSubmittedToState(TicketSubmitted event) async* {
+    yield TicketCreateEdit(event.ticket, true);    
 
     try{
-      Ticket ticket = await _ticketsRepository.createTicket(event.ticket!, event.expense, event.userId, event.tripId);
+      Ticket ticket;
+      if(event.ticket!.id != null){
+        ticket = await _ticketsRepository.updateTicket(event.ticket!, event.ticket!.expense, event.tripId);
+      } else {
+        ticket = await _ticketsRepository.createTicket(event.ticket!, event.expense, event.userId, event.tripId);
+      }
+      
       yield TicketCreateSuccess(ticket);
     }on CustomException catch(e){
         yield TicketCreateError(event.ticket, e.toString());

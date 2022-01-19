@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:traces/screens/trips/model/expense.model.dart';
-import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
-import 'package:traces/screens/trips/widgets/create_expense_dialog.dart';
-import '../../../../constants/color_constants.dart';
-import '../../model/ticket.model.dart';
-import '../../model/trip.model.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../model/trip_settings.model.dart';
-import 'bloc/ticketcreate_bloc.dart';
-import '../../../../utils/style/styles.dart';
-import '../../../../widgets/widgets.dart';
+import 'package:intl/intl.dart';
 
-class TicketCreateView extends StatefulWidget{
+import '../../../../../constants/color_constants.dart';
+import '../../../../../utils/style/styles.dart';
+import '../../../../../widgets/widgets.dart';
+import '../../../model/expense.model.dart';
+import '../../../model/ticket.model.dart';
+import '../../../model/trip.model.dart';
+import '../../../model/trip_settings.model.dart';
+import '../../../widgets/create_expense_dialog.dart';
+import '../../expenses/bloc/expensecreate_bloc.dart';
+import 'bloc/ticketedit_bloc.dart';
+
+class TicketEditView extends StatefulWidget{
   final Trip trip;  
 
-  TicketCreateView({required this.trip});
+  TicketEditView({required this.trip});
 
   @override
-  _TicketCreateViewViewState createState() => _TicketCreateViewViewState();
+  _TicketEditViewState createState() => _TicketEditViewState();
 }
 
-class _TicketCreateViewViewState extends State<TicketCreateView>{
+class _TicketEditViewState extends State<TicketEditView>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Ticket? newTicket;
@@ -67,7 +68,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TicketCreateBloc, TicketCreateState>(
+    return BlocListener<TicketEditBloc, TicketEditState>(
       listener:(context, state){
         if(state is TicketCreateEdit && state.loading){
           ScaffoldMessenger.of(context)
@@ -86,6 +87,18 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
                 ],
                 ),
             ));
+          }
+          if(state is TicketCreateEdit && !state.loading && state.ticket != null){
+            _depLocationController!.text == '' ? _depLocationController!.text = state.ticket!.departureLocation ?? '' : '';
+            _arrivalLocationController!.text == '' ? _arrivalLocationController!.text = state.ticket!.arrivalLocation ?? '' : '';
+            _carrierController!.text == '' ? _carrierController!.text = state.ticket!.carrier ?? '' : '';
+            _carrierNumberController!.text == '' ? _carrierNumberController!.text = state.ticket!.carrierNumber ?? '' : '';
+            _quantityController!.text == '' ? _quantityController!.text = state.ticket!.quantity?.toString() ?? '' : '';
+            _seatsController!.text == '' ? _seatsController!.text = state.ticket!.seats ?? '' : '';
+            _detailsController!.text == '' ? _detailsController!.text = state.ticket!.details ?? '' : '';
+            _reservNumberController!.text == '' ? _reservNumberController!.text = state.ticket!.reservationNumber ?? '' : '';
+            _reservUrlController!.text == '' ? _reservUrlController!.text = state.ticket!.reservationUrl ?? '' : '';
+            _quantityController!.text == '' ? _quantityController!.text = state.ticket!.quantity?.toString() ?? '1' : '';
           }
           if(state is TicketCreateSuccess){
             ScaffoldMessenger.of(context)
@@ -122,12 +135,12 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
               ));
           }
       },
-      child: BlocBuilder<TicketCreateBloc, TicketCreateState>(
+      child: BlocBuilder<TicketEditBloc, TicketEditState>(
         builder: (context, state){
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-              title: Text('Add ticket',
+              title: Text('Ticket',
                 style: quicksandStyle(fontSize: 30.0)),
               backgroundColor: ColorsPalette.white,
               elevation: 0,
@@ -142,19 +155,8 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
                     var isFormValid = _formKey.currentState!.validate();                 
 
                     if(isFormValid){
-                      newTicket = state.ticket!.copyWith(
-                        departureLocation: _depLocationController!.text.trim(),
-                        arrivalLocation: _arrivalLocationController!.text.trim(),
-                        carrier: _carrierController!.text.trim(),
-                        carrierNumber: _carrierNumberController!.text.trim(),
-                        reservationNumber: _reservNumberController!.text.trim(),
-                        reservationUrl: _reservUrlController!.text.trim(),
-                        details: _detailsController!.text.trim(),
-                        seats: _seatsController!.text.trim(),
-                        quantity: int.parse(_quantityController!.text.trim()),
-                        type: state.ticket!.type ?? TripSettings.ticketType.first
-                      );                                    
-                      context.read<TicketCreateBloc>().add(TicketSubmitted(newTicket, state.ticket!.expense, widget.trip.id!, null));
+                      newTicket = createTicketModel(state);                                    
+                      context.read<TicketEditBloc>().add(TicketSubmitted(newTicket, state.ticket!.expense, widget.trip.id!, null));
                     } 
                   }, 
                   icon:  Icon(Icons.check, color: ColorsPalette.juicyOrange,))
@@ -175,7 +177,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     );
   }
 
-  Widget _ticketDetailsForm(TicketCreateState state) => 
+  Widget _ticketDetailsForm(TicketEditState state) => 
     new Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Type', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),                    
       _typeSelector(state),
@@ -218,7 +220,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
                       create: (context) =>ExpenseCreateBloc()..add(AddExpenseMode(category, expense)),
                       child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
                         if(val != null){
-                          context.read<TicketCreateBloc>().add(ExpenseUpdated(val));                
+                          context.read<TicketEditBloc>().add(ExpenseUpdated(val));                
                         }
                       }),
                     )
@@ -228,7 +230,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
       ])
     ]);                
 
-  Widget _typeSelector(TicketCreateState state) =>
+  Widget _typeSelector(TicketEditState state) =>
       new DropdownButtonFormField<String>(
         value: state.ticket!.type ?? TripSettings.ticketType.first,
         isExpanded: true,        
@@ -238,7 +240,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
               value: value,
               child: Row(
                 children: [
-                  transportIcon(value, ColorsPalette.juicyOrange),
+                  transportIcon(value, ColorsPalette.natureGreen),
                   SizedBox(
                     width: 15.0,
                   ),
@@ -256,7 +258,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
         },
       );
 
-  Widget _departureDetails(TicketCreateState state) => new Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  Widget _departureDetails(TicketEditState state) => new Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Text('Departure', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),                   
     TextFormField(
       decoration: InputDecoration(
@@ -291,7 +293,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
           SizedBox(width: 20.0),
           InkWell(
             child: state.ticket!.departureDatetime != null 
-              ? Text('${DateFormat.jm().format(state.ticket!.departureDatetime!)}', style: quicksandStyle(fontSize: 18.0)) 
+              ? Text('${DateFormat.Hm().format(state.ticket!.departureDatetime!)}', style: quicksandStyle(fontSize: 18.0)) 
               : Text('Time', style: quicksandStyle(fontSize: 18.0)),
             onTap: () => _selectDepTime(context, state, widget.trip),
           )],),
@@ -299,7 +301,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     ])
   ]);  
 
-  Widget _arrivalDetails(TicketCreateState state) => new Column(
+  Widget _arrivalDetails(TicketEditState state) => new Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text('Arrival', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),                   
@@ -336,7 +338,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
             SizedBox(width: 20.0),
             InkWell(
               child: state.ticket!.arrivalDatetime != null 
-                ? Text('${DateFormat.jm().format(state.ticket!.arrivalDatetime!)}', style: quicksandStyle(fontSize: 18.0)) 
+                ? Text('${DateFormat.Hm().format(state.ticket!.arrivalDatetime!)}', style: quicksandStyle(fontSize: 18.0)) 
                 : Text('Time', style: quicksandStyle(fontSize: 18.0)),
               onTap: () => _selectArrivalTime(context, state, widget.trip),
             )]),
@@ -345,7 +347,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     ]
   );
 
-  Widget _carrierDetails(TicketCreateState state) => new Column(
+  Widget _carrierDetails(TicketEditState state) => new Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -379,7 +381,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     ]
   );
 
-  Widget _seatsDetails(TicketCreateState state) => new Column(
+  Widget _seatsDetails(TicketEditState state) => new Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -418,7 +420,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     ]
   );
 
-  Widget _reservationdetails(TicketCreateState state) => new Column(
+  Widget _reservationdetails(TicketEditState state) => new Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text('Reservation #', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
@@ -456,7 +458,7 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
   );
 
   Future<Null> _selectDepDate(
-    BuildContext context, TicketCreateState state, Trip trip) async {
+    BuildContext context, TicketEditState state, Trip trip) async {
     FocusScope.of(context).unfocus();
     final DateTime? picked = await showDatePicker (
       builder: (BuildContext context, Widget? child) {
@@ -473,12 +475,12 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     if (picked != null) {
       var time = TimeOfDay.fromDateTime(state.ticket!.departureDatetime ?? DateTime.now());
       var ticketDate = new DateTime.utc(picked.year, picked.month, picked.day, time.hour, time.minute);
-      context.read<TicketCreateBloc>().add(DepartureDateUpdated(ticketDate));      
+      context.read<TicketEditBloc>().add(DepartureDateUpdated(ticketDate));      
     }
   }
 
   Future<Null> _selectArrivalDate(
-    BuildContext context, TicketCreateState state, Trip trip) async {
+    BuildContext context, TicketEditState state, Trip trip) async {
     FocusScope.of(context).unfocus();
     final DateTime? picked = await showDatePicker (   
       builder: (BuildContext context, Widget? child) {
@@ -495,11 +497,11 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
     if (picked != null) {
       var time = TimeOfDay.fromDateTime(state.ticket!.arrivalDatetime ?? DateTime.now());
       var ticketDate = new DateTime.utc(picked.year, picked.month, picked.day, time.hour, time.minute);
-      context.read<TicketCreateBloc>().add(ArrivalDateUpdated(ticketDate));      
+      context.read<TicketEditBloc>().add(ArrivalDateUpdated(ticketDate));      
     }
   }
 
-  Future<Null> _selectDepTime(BuildContext context, TicketCreateState state, Trip trip) async {
+  Future<Null> _selectDepTime(BuildContext context, TicketEditState state, Trip trip) async {
     final TimeOfDay? picked = await showTimePicker(
       builder: (BuildContext context, Widget? child) {
         return Theme(
@@ -514,13 +516,13 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
       if(state.ticket!.departureDatetime != null){      
         var date = state.ticket!.departureDatetime!;
         var ticketDate = new DateTime.utc(date.year, date.month, date.day, picked.hour, picked.minute);
-        context.read<TicketCreateBloc>().add(DepartureDateUpdated(ticketDate));    
+        context.read<TicketEditBloc>().add(DepartureDateUpdated(ticketDate));    
       }
       
     }
   }
 
-  Future<Null> _selectArrivalTime(BuildContext context, TicketCreateState state, Trip trip) async {
+  Future<Null> _selectArrivalTime(BuildContext context, TicketEditState state, Trip trip) async {
     final TimeOfDay? picked = await showTimePicker(
       builder: (BuildContext context, Widget? child) {
         return Theme(
@@ -535,13 +537,13 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
       if(state.ticket!.arrivalDatetime != null){      
         var date = state.ticket!.arrivalDatetime!;
         var ticketDate = new DateTime.utc(date.year, date.month, date.day, picked.hour, picked.minute);
-        context.read<TicketCreateBloc>().add(ArrivalDateUpdated(ticketDate));    
+        context.read<TicketEditBloc>().add(ArrivalDateUpdated(ticketDate));    
       }
       
     }
   }
 
-  Widget _expenseDetails(TicketCreateState state) => new Column(
+  Widget _expenseDetails(TicketEditState state) => new Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text('Expense', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
@@ -554,18 +556,33 @@ class _TicketCreateViewViewState extends State<TicketCreateView>{
                 create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(state.ticket!.expense!.category!.name, state.ticket!.expense!)),
                   child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
                     if(val != null){
-                      context.read<TicketCreateBloc>().add(ExpenseUpdated(val));
+                      context.read<TicketEditBloc>().add(ExpenseUpdated(val));
                     }
                   }),
               )
           );
         }, icon: Icon(Icons.edit, color: ColorsPalette.juicyOrange)),
         IconButton(onPressed: (){
-          context.read<TicketCreateBloc>().add(ExpenseUpdated(null));
+          context.read<TicketEditBloc>().add(ExpenseUpdated(null));
         }, 
         icon: Icon(Icons.close, color: ColorsPalette.black))
       ],),      
     ]
   );
+
+  Ticket createTicketModel(TicketEditState state){
+    return state.ticket!.copyWith(
+      departureLocation: _depLocationController!.text.trim(),
+      arrivalLocation: _arrivalLocationController!.text.trim(),
+      carrier: _carrierController!.text.trim(),
+      carrierNumber: _carrierNumberController!.text.trim(),
+      reservationNumber: _reservNumberController!.text.trim(),
+      reservationUrl: _reservUrlController!.text.trim(),
+      details: _detailsController!.text.trim(),
+      seats: _seatsController!.text.trim(),
+      quantity: int.parse(_quantityController!.text.trim()),
+      type: state.ticket!.type ?? TripSettings.ticketType.first
+    );   
+  } 
 
 }

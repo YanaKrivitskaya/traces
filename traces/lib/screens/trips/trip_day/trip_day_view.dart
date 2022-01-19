@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -137,7 +138,13 @@ class _TripDayState extends State<TripDayView>{
                   child:Text('${booking.details}', style: quicksandStyle(fontSize: 15.0,)))
               ],)),
           ),
-          onTap: (){},
+          onTap: (){
+            BookingViewArguments args = new BookingViewArguments(bookingId: booking.id!, trip: widget.trip);
+
+            Navigator.of(context).pushNamed(bookingViewRoute, arguments: args).then((value) => {
+              BlocProvider.of<TripDayBloc>(context)..add(TripDayLoaded(tripDay!))
+            });
+          },
         )
         );
       }
@@ -162,7 +169,13 @@ class _TripDayState extends State<TripDayView>{
                   child:Text('${ticket.details}', style: quicksandStyle(fontSize: 15.0,)))
               ],)),
           ),
-          onTap: (){},
+          onTap: (){
+            TicketViewArguments args = new TicketViewArguments(ticketId: ticket.id!, trip: widget.trip);
+
+            Navigator.of(context).pushNamed(ticketViewRoute, arguments: args).then((value) => {
+              BlocProvider.of<TripDayBloc>(context)..add(TripDayLoaded(tripDay!))
+            });
+          },
         )
         );
       }
@@ -184,7 +197,13 @@ class _TripDayState extends State<TripDayView>{
                   child:Text('${activity.description}', style: quicksandStyle(fontSize: 15.0,)))
               ],)),
           ),
-          onTap: (){},
+          onTap: (){
+            ActivityViewArguments args = new ActivityViewArguments(activityId: activity.id!, trip: widget.trip);
+
+            Navigator.of(context).pushNamed(activityViewRoute, arguments: args).then((value) => {
+              BlocProvider.of<TripDayBloc>(context)..add(TripDayLoaded(tripDay!))
+            });
+          },
         )
         );
       }
@@ -217,7 +236,7 @@ class _TripDayState extends State<TripDayView>{
         ),
         SpeedDialChild(
           child: Icon(Icons.train),
-          backgroundColor: ColorsPalette.juicyOrange,
+          backgroundColor: ColorsPalette.juicyBlue,
           foregroundColor: ColorsPalette.lynxWhite,
           label: 'Ticket',
           onTap: () {

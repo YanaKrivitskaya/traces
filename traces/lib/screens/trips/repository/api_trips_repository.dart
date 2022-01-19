@@ -32,7 +32,7 @@ class ApiTripsRepository{
     Future<dynamic> getTripDay(int tripId, DateTime date) async{
     print("getTripDay");
     var date1 = date.toUtc();
-    String convertedDate = new DateFormat("yyyy-MM-dd").format(date.toUtc());
+    String convertedDate = new DateFormat("yyyy-MM-dd hh:mm:ss").format(date.toLocal());
     final response = await apiProvider.getSecure("$tripsUrl$tripId/day/$convertedDate");
       
     var tripResponse = response["tripDay"] != null ? 

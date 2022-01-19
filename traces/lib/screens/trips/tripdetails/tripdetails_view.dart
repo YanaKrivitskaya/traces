@@ -162,7 +162,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
         ),
         SpeedDialChild(
           child: Icon(Icons.train),
-          backgroundColor: ColorsPalette.juicyOrange,
+          backgroundColor: ColorsPalette.juicyBlue,
           foregroundColor: ColorsPalette.lynxWhite,
           label: 'Ticket',
           onTap: () {
