@@ -41,10 +41,12 @@ class ApiTicketsRepository{
     return ticketResponse;
   }
 
-  Future<Ticket> updateTicket(Ticket ticket)async{
+  Future<Ticket> updateTicket(Ticket ticket, Expense? expense, int tripId)async{
     print("updateTicket");
 
-    final response = await apiProvider.putSecure("$ticketsUrl${ticket.id}", ticket.toJson());
+    ApiTicketModel apiModel = ApiTicketModel(ticket: ticket, expense: expense, tripId: tripId);
+
+    final response = await apiProvider.putSecure("$ticketsUrl${ticket.id}", apiModel.toJson());
       
     var ticketResponse = Ticket.fromMap(response['tickets']);
     return ticketResponse;

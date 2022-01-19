@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-
-import '../../../../../utils/api/customException.dart';
-import '../../../model/booking.model.dart';
-import '../../../model/expense.model.dart';
-import '../../../repository/api_bookings_repository.dart';
+import 'package:traces/screens/trips/model/booking.model.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/repository/api_bookings_repository.dart';
+import 'package:traces/utils/api/customException.dart';
 
 part 'bookingcreate_event.dart';
 part 'bookingcreate_state.dart';
@@ -30,11 +29,17 @@ class BookingCreateBloc extends Bloc<BookingCreateEvent, BookingCreateState> {
       yield* _mapBookingSubmittedToState(event);
     } else if (event is ExpenseUpdated) {
       yield* _mapExpenseUpdatedToState(event);
+    } else if (event is EditBookingMode) {
+      yield* _mapEditBookingModeToState(event);
     }
   }
 
   Stream<BookingCreateState> _mapNewBookingModeToState(NewBookingMode event) async* {
     yield BookingCreateEdit(new Booking(entryDate: event.date), false);
+  }
+
+  Stream<BookingCreateState> _mapEditBookingModeToState(EditBookingMode event) async* {
+    yield BookingCreateEdit(event.booking, false);
   }
 
   Stream<BookingCreateState> _mapDateUpdatedToState(DateRangeUpdated event) async* {
@@ -60,7 +65,12 @@ class BookingCreateBloc extends Bloc<BookingCreateEvent, BookingCreateState> {
     print(event.booking.toString());
 
     try{
-      Booking booking = await _bookingsRepository.createBooking(event.booking!, event.expense, event.tripId);
+      Booking booking;
+      if(event.booking!.id != null){
+        booking = await _bookingsRepository.updateBooking(event.booking!, event.expense, event.tripId);
+      }else{
+        booking = await _bookingsRepository.createBooking(event.booking!, event.expense, event.tripId);
+      }      
       yield BookingCreateSuccess(booking);
     }on CustomException catch(e){
         yield BookingCreateError(event.booking, e.toString());

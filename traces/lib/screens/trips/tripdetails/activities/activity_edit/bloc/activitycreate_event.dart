@@ -13,6 +13,14 @@ class NewActivityMode extends ActivityCreateEvent {
   List<Object?> get props => [date];
 }
 
+class EditActivityMode extends ActivityCreateEvent {
+  final Activity activity;
+ 
+  EditActivityMode(this.activity);
+
+  List<Object?> get props => [activity];
+}
+
 class ActivityDateUpdated extends ActivityCreateEvent {
   final DateTime date;
  

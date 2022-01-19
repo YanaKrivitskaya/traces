@@ -64,7 +64,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
         if(state is ExpenseCreateEdit && !state.loading){
           return AlertDialog(
             insetPadding: EdgeInsets.all(30.0),
-            title: Text("Add Expense"),
+            title: Text("Expense"),
             content: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: SingleChildScrollView(            
@@ -80,7 +80,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
             ),
             actions: <Widget>[
               TextButton(
-                child: Text('Add', style: TextStyle(color: ColorsPalette.meditSea)),
+                child: Text('Done', style: TextStyle(color: ColorsPalette.meditSea)),
                 onPressed: () {
                   var isFormValid = _formKey.currentState!.validate();
 

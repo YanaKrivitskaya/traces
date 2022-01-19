@@ -7,8 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:traces/utils/api/customException.dart';
 
 class ApiProvider{
-  //final String _baseUrl = "http://192.168.7.200:3002/";
-  final String _baseUrl = "http://10.0.2.2:8080/";
+  final String _baseUrl = "http://192.168.7.200:3002/";
+  //final String _baseUrl = "http://10.0.2.2:8080/";
   final _storage = FlutterSecureStorage();
 
   Future<dynamic> get(String url) async{

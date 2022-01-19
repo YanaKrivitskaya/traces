@@ -41,10 +41,12 @@ class ApiBookingsRepository{
     return bookingResponse;
   }
 
-  Future<Booking> updateBooking(Booking booking)async{
+  Future<Booking> updateBooking(Booking booking, Expense? expense, int tripId)async{
     print("updateBooking");
 
-    final response = await apiProvider.putSecure("$bookingsUrl${booking.id}", booking.toJson());
+    ApiBookingModel apiModel = ApiBookingModel(booking: booking, expense: expense, tripId: tripId);
+
+    final response = await apiProvider.putSecure("$bookingsUrl${booking.id}", apiModel.toJson());
       
     var bookingResponse = Booking.fromMap(response['bookings']);
     return bookingResponse;

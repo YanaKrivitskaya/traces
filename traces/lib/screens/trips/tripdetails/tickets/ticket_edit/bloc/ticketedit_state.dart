@@ -1,19 +1,19 @@
-part of 'ticketcreate_bloc.dart';
+part of 'ticketedit_bloc.dart';
 
-abstract class TicketCreateState {
+abstract class TicketEditState {
   Ticket? ticket;
 
-  TicketCreateState(this.ticket);
+  TicketEditState(this.ticket);
 
   @override
   List<Object?> get props => [ticket];
 }
 
-class TicketCreateInitial extends TicketCreateState {
+class TicketCreateInitial extends TicketEditState {
   TicketCreateInitial(Ticket? ticket) : super(ticket);
 }
 
-class TicketCreateEdit extends TicketCreateState {
+class TicketCreateEdit extends TicketEditState {
   final bool loading;
 
   TicketCreateEdit(Ticket? ticket, this.loading) : super(ticket);
@@ -22,7 +22,7 @@ class TicketCreateEdit extends TicketCreateState {
   List<Object?> get props => [ticket, loading];
 }
 
-class TicketCreateError extends TicketCreateState {
+class TicketCreateError extends TicketEditState {
   final String error;
 
   TicketCreateError(Ticket? ticket, this.error) : super(ticket);
@@ -31,7 +31,7 @@ class TicketCreateError extends TicketCreateState {
   List<Object?> get props => [ticket, error];
 }
 
-class TicketCreateSuccess extends TicketCreateState {
+class TicketCreateSuccess extends TicketEditState {
 
   TicketCreateSuccess(Ticket? ticket) : super(ticket);
 

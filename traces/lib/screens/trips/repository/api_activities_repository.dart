@@ -65,10 +65,12 @@ class ApiActivitiesRepository{
     return activityResponse;
   }
 
-  Future<Activity> updateActivity(Activity activity)async{
+  Future<Activity> updateActivity(Activity activity, Expense? expense, int tripId, int? categoryId)async{
     print("updateActivity");
 
-    final response = await apiProvider.putSecure("$activitiesUrl${activity.id}", activity.toJson());
+    ApiActivityModel apiModel = ApiActivityModel(activity: activity, expense: expense, tripId: tripId, categoryId: categoryId);
+
+    final response = await apiProvider.putSecure("$activitiesUrl${activity.id}", apiModel.toJson());
       
     var activityResponse = Activity.fromMap(response['activities']);
     return activityResponse;

@@ -4,15 +4,15 @@ import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:traces/screens/trips/model/activity_category.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
 import 'package:traces/screens/trips/widgets/create_expense_dialog.dart';
 
-import '../../../../constants/color_constants.dart';
-import '../../../../utils/style/styles.dart';
-import '../../../../widgets/widgets.dart';
-import '../../model/activity.model.dart';
-import '../../model/trip.model.dart';
-import 'bloc/activitycreate_bloc.dart';
+import '../../../../../constants/color_constants.dart';
+import '../../../../../utils/style/styles.dart';
+import '../../../../../widgets/widgets.dart';
+import '../../../model/activity.model.dart';
+import '../../../model/trip.model.dart';
 
 class ActivityCreateView extends StatefulWidget{
   final Trip trip;  
@@ -109,13 +109,19 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
                 ),
               ));
           }
+          if(state is ActivityCreateEdit && !state.loading && state.activity != null){
+            _nameController!.text == '' ? _nameController!.text = state.activity!.name ?? '' : '';
+            _locationController!.text == '' ? _locationController!.text = state.activity!.location ?? '' : '';
+            _descriptionController!.text == '' ? _descriptionController!.text = state.activity!.description ?? '' : '';            
+            _categoryController!.text == '' ? _categoryController!.text = state.activity!.category?.name ?? '' : '';            
+          }
       },
       child: BlocBuilder<ActivityCreateBloc, ActivityCreateState>(
         builder: (context, state){
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-                title: Text('Add activity',
+                title: Text('Activity',
                   style: quicksandStyle(fontSize: 30.0)),
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,

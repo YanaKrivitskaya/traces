@@ -37,12 +37,19 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
       yield* _mapActivitySubmittedToState(event);
     } else if (event is ExpenseUpdated) {
       yield* _mapExpenseUpdatedToState(event);
+    } else if (event is EditActivityMode) {
+      yield* _mapEditActivityModeToState(event);
     }
   }
 
    Stream<ActivityCreateState> _mapNewActivityModeToState(NewActivityMode event) async* {
     List<ActivityCategory>? categories = await _activitiesRepository.getActivityCategories();
     yield ActivityCreateEdit(new Activity(date: event.date), categories, false);
+  }
+
+   Stream<ActivityCreateState> _mapEditActivityModeToState(EditActivityMode event) async* {
+    List<ActivityCategory>? categories = await _activitiesRepository.getActivityCategories();
+    yield ActivityCreateEdit(event.activity, categories, false);
   }
 
   Stream<ActivityCreateState> _mapArrivalDateUpdatedToState(ActivityDateUpdated event) async* {
@@ -91,7 +98,12 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
       if(category != null && category.id == null){
         category = (await _activitiesRepository.createActivityCategory(category))!;
       }
-      Activity activity = await _activitiesRepository.createActivity(event.activity!, event.expense, event.tripId, category?.id);
+      Activity activity;
+      if(state.activity!.id != null){
+        activity = await _activitiesRepository.updateActivity(event.activity!, event.expense, event.tripId, category?.id);
+      }else{
+        activity = await _activitiesRepository.createActivity(event.activity!, event.expense, event.tripId, category?.id);
+      }      
       yield ActivityCreateSuccess(activity, state.categories);
     }on CustomException catch(e){
         yield ActivityCreateError(event.activity, state.categories, e.toString());

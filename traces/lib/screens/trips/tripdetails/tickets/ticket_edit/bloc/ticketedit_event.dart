@@ -1,11 +1,11 @@
-part of 'ticketcreate_bloc.dart';
+part of 'ticketedit_bloc.dart';
 
 @immutable
-abstract class TicketCreateEvent {
+abstract class TicketEditEvent {
   List<Object?> get props => [];
 }
 
-class NewTicketMode extends TicketCreateEvent {
+class NewTicketMode extends TicketEditEvent {
   final DateTime? date;
  
   NewTicketMode(this.date);
@@ -13,7 +13,15 @@ class NewTicketMode extends TicketCreateEvent {
   List<Object?> get props => [date];
 }
 
-class DepartureDateUpdated extends TicketCreateEvent {
+class EditTicketMode extends TicketEditEvent {
+  final Ticket ticket;
+ 
+  EditTicketMode(this.ticket);
+
+  List<Object?> get props => [ticket];
+}
+
+class DepartureDateUpdated extends TicketEditEvent {
   final DateTime departureDate;
  
   DepartureDateUpdated(this.departureDate);
@@ -21,7 +29,7 @@ class DepartureDateUpdated extends TicketCreateEvent {
   List<Object> get props => [departureDate];
 }
 
-class ArrivalDateUpdated extends TicketCreateEvent {
+class ArrivalDateUpdated extends TicketEditEvent {
   final DateTime arrivalDate;
  
   ArrivalDateUpdated(this.arrivalDate);
@@ -29,7 +37,7 @@ class ArrivalDateUpdated extends TicketCreateEvent {
   List<Object> get props => [arrivalDate];
 }
 
-class ExpenseUpdated extends TicketCreateEvent {
+class ExpenseUpdated extends TicketEditEvent {
   final Expense? expense;  
 
   ExpenseUpdated(this.expense);
@@ -37,7 +45,7 @@ class ExpenseUpdated extends TicketCreateEvent {
   List<Object?> get props => [expense];
 }
 
-class TicketSubmitted extends TicketCreateEvent {
+class TicketSubmitted extends TicketEditEvent {
   final Ticket? ticket;
   final Expense? expense;
   final int tripId;

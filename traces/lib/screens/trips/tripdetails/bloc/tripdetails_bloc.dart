@@ -85,7 +85,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
         yield TripDetailsSuccessState(     
           trip,
           family.users,
-          0
+          state.activeTab
         );
       }      
     }on CustomException catch(e){
