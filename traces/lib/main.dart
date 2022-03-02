@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ import 'utils/services/api_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
   await ApiService.init();
   await SharedPreferencesService.init();
   Bloc.observer = SimpleBlocDelegate();
