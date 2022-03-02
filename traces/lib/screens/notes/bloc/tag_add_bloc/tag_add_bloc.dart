@@ -16,35 +16,25 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
   TagAddBloc()
       : _notesRepository = new ApiNotesRepository(), 
         _tagsRepository = new ApiTagsRepository(), 
-        super(TagAddState.empty());
+        super(TagAddState.empty()){
+          on<GetTags>(_onGetTags);
+          on<AddTag>(_onAddTag);
+          on<UpdateNoteTag>(_onUpdateNoteTag);
+          on<TagChanged>(_onTagChanged);
+        }
 
-  @override
-  Stream<TagAddState> mapEventToState(
-    TagAddEvent event,
-  ) async* {
-    if (event is GetTags) {
-      yield* _mapGetTagsToState();
-    } else if (event is AddTag) {
-      yield* _mapAddTagToState(event);
-    } else if (event is UpdateNoteTag) {
-      yield* _mapUpdateNoteTagToState(event);
-    } else if (event is TagChanged) {
-      yield* _mapTagChangedToState(event);
-    }
-  }
-
-  Stream<TagAddState> _mapGetTagsToState() async* {
-    yield TagAddState.loading();
+  void _onGetTags(GetTags event, Emitter<TagAddState> emit) async{
+    emit(TagAddState.loading());
     try{
       var tags = await _tagsRepository.getTags();
-      yield TagAddState.success(allTags: tags, filteredTags: tags);
+      return emit(TagAddState.success(allTags: tags, filteredTags: tags));
     } on CustomException catch(e){
-      yield TagAddState.failure(allTags: state.allTags, filteredTags: state.filteredTags, error: e);
-    }    
+      return emit(TagAddState.failure(allTags: state.allTags, filteredTags: state.filteredTags, error: e));
+    }  
   }
 
-  Stream<TagAddState> _mapAddTagToState(AddTag event) async* {
-    yield state.update(stateStatus: StateStatus.Loading);
+  void _onAddTag(AddTag event, Emitter<TagAddState> emit) async{
+    emit(state.update(stateStatus: StateStatus.Loading));
 
     try{
       Tag tag = await _tagsRepository.createTag(event.tag);
@@ -52,29 +42,26 @@ class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
 
       add(TagChanged(tagName: tag.name));    
     }on CustomException catch(e){
-      yield TagAddState.failure(allTags: state.allTags, filteredTags: state.filteredTags, error: e);
+      return emit(TagAddState.failure(allTags: state.allTags, filteredTags: state.filteredTags, error: e));
     } 
-    
   }
 
-  Stream<TagAddState> _mapUpdateNoteTagToState(UpdateNoteTag event) async* {
+  void _onUpdateNoteTag(UpdateNoteTag event, Emitter<TagAddState> emit) async{
     try{
       event.isChecked!      
       ? await _notesRepository.addNoteTag(event.noteId, event.tagId)
       : await _notesRepository.deleteNoteTag(event.noteId, event.tagId);
-      yield TagAddState.success(allTags: state.allTags, filteredTags: state.filteredTags);
+      return emit(TagAddState.success(allTags: state.allTags, filteredTags: state.filteredTags));
     }on CustomException catch(e){
-      yield TagAddState.failure(allTags: state.allTags, filteredTags: state.filteredTags, error: e);
+      return emit(TagAddState.failure(allTags: state.allTags, filteredTags: state.filteredTags, error: e));
     } 
-    
   }
 
-  Stream<TagAddState> _mapTagChangedToState(TagChanged event) async*{
-    yield state.update(stateStatus: StateStatus.Loading);
+  void _onTagChanged(TagChanged event, Emitter<TagAddState> emit) async{
+    emit(state.update(stateStatus: StateStatus.Loading));
 
     List<Tag> filteredTags = state.allTags!.where((t) => t.name!.toLowerCase().contains(event.tagName!.toLowerCase())).toList();
 
-    yield state.update(filteredTags: filteredTags, stateStatus: StateStatus.Success);
+    return emit(state.update(filteredTags: filteredTags, stateStatus: StateStatus.Success));
   }
-
 }
