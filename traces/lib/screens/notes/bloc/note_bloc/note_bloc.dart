@@ -62,7 +62,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   }
 
   void _onUpdateSortFilter(UpdateSortFilter event, Emitter<NoteState> emit) async{
-    emit(NoteState.loading());
+    //emit(NoteState.loading());
     return emit(state.update(
       sortField: event.sortField, 
       sortDirection: event.sortDirection));
