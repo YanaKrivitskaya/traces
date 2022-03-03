@@ -1,14 +1,13 @@
-import 'package:traces/constants/route_constants.dart';
-import 'package:traces/screens/trips/model/trip.model.dart';
-import 'package:traces/utils/style/styles.dart';
-import 'package:traces/widgets/widgets.dart';
-
-import 'bloc/startplanning_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../constants/color_constants.dart';
-import 'package:flutter/material.dart';
+import '../../../constants/route_constants.dart';
+import '../../../utils/style/styles.dart';
+import '../../../widgets/widgets.dart';
+import '../model/trip.model.dart';
+import 'bloc/startplanning_bloc.dart';
 
 class StartPlanningView extends StatefulWidget{  
   StartPlanningView();
@@ -35,7 +34,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
   }
 
   @override
-  Widget build(BuildContext context) {   
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -212,8 +211,10 @@ class _StartPlanningViewState extends State<StartPlanningView>{
         lastDate: DateTime(2101),
         helpText: 'Trip dates'
       );
-    if (picked != null) {      
-      context.read<StartPlanningBloc>().add(DateRangeUpdated(picked.start, picked.end));      
+    if (picked != null) {
+      var startDate = DateTime.utc(picked.start.year, picked.start.month, picked.start.day);
+      var endDate = DateTime.utc(picked.end.year, picked.end.month, picked.end.day);
+      context.read<StartPlanningBloc>().add(DateRangeUpdated(startDate, endDate));      
     }
   }
 

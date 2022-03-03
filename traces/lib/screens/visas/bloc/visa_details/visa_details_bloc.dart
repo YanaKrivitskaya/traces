@@ -1,12 +1,10 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/utils/api/customException.dart';
-import 'package:traces/utils/services/shared_preferencies_service.dart';
 
+import '../../../../utils/api/customException.dart';
 import '../../../../utils/misc/state_types.dart';
+import '../../../../utils/services/shared_preferencies_service.dart';
 import '../../../profile/model/group_model.dart';
 import '../../../profile/repository/api_profile_repository.dart';
 import '../../model/visa.model.dart';
@@ -24,60 +22,46 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
   VisaDetailsBloc(): 
     profileRepository = new ApiProfileRepository(),
     visasRepository = new ApiVisasRepository(),
-    super(VisaDetailsState.empty());
+    super(VisaDetailsState.empty()){
+      on<GetVisaDetails>(_onGetVisaDetails);
+      on<NewVisaMode>(_onNewVisaMode);
+      on<SaveVisaClicked>(_onSaveVisaClicked);
+      on<VisaSubmitted>(_onVisaSubmitted);
+      on<DateFromChanged>(_onDateFromChanged);
+      on<DateToChanged>(_onDateToChanged);
+      on<EditVisaClicked>(_onEditVisaClicked);
+      on<DeleteVisaClicked>(_onDeleteVisaClicked);
+      on<TabUpdatedClicked>(_onTabUpdatedClicked);
+    } 
 
-  @override
-  Stream<VisaDetailsState> mapEventToState(VisaDetailsEvent event) async* {
-    if (event is GetVisaDetails) {
-      yield* _mapGetVisaDetailsToState(event);
-    } else if (event is NewVisaMode) {
-      yield* _mapNewVisaModeToState(event);
-    } else if (event is SaveVisaClicked) {
-      yield* _mapSaveVisaClickedToState(event.visa!);
-    } else if (event is VisaSubmitted) {
-      yield* _mapVisaSubmittedToState(event);
-    } else if (event is DateFromChanged) {
-      yield* _mapDateFromChangedToState(event);
-    } else if (event is DateToChanged) {
-      yield* _mapDateToChangedToState(event);
-    } else if (event is EditVisaClicked) {
-      yield* _mapEditVisaModeToState(event);
-    } else if (event is DeleteVisaClicked) {
-      yield* _mapDeleteVisaEventToState(event);
-    } else if (event is TabUpdatedClicked) {
-      yield* _mapTabUpdatedToState(event);
-    }
-  }
-  
-  Stream<VisaDetailsState> _mapGetVisaDetailsToState(GetVisaDetails event) async* {
+  void _onGetVisaDetails(GetVisaDetails event, Emitter<VisaDetailsState> emit) async{
     var currentState = state;
-    yield VisaDetailsState.loading();
+    emit(VisaDetailsState.loading());
     
     try{
       Visa? visa = await visasRepository.getVisaById(event.visaId);      
 
-      yield VisaDetailsState.success(visa: visa);      
+      emit(VisaDetailsState.success(visa: visa));      
     }on CustomException catch(e){
       if(currentState.visa != null) {
-        yield VisaDetailsState.success(visa: currentState.visa);
-        yield state.update(errorMessage: e);
+        emit(VisaDetailsState.success(visa: currentState.visa));
+        emit(state.update(errorMessage: e));
       } else{
-        yield VisaDetailsState.failure(error: e);
+        emit(VisaDetailsState.failure(error: e));
       }      
     }
-    
-  }
+  } 
 
-  Stream<VisaDetailsState> _mapDeleteVisaEventToState(DeleteVisaClicked event) async* {
+  void _onDeleteVisaClicked(DeleteVisaClicked event, Emitter<VisaDetailsState> emit) async{
     try{
       await visasRepository.deleteVisa(event.visaId!);
     }on CustomException catch(e){
-      yield state.update(errorMessage: e);
-    }    
-  }
+      emit(state.update(errorMessage: e));
+    }
+  } 
 
-  Stream<VisaDetailsState> _mapNewVisaModeToState(NewVisaMode event) async* {
-    yield VisaDetailsState.loading();
+  void _onNewVisaMode(NewVisaMode event, Emitter<VisaDetailsState> emit) async{
+    emit(VisaDetailsState.loading());
 
     try{
       List<Group> accountGroups = await profileRepository.getGroups();
@@ -90,19 +74,18 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
         endDate: DateTime.now()
       );
 
-      yield VisaDetailsState.editing(
+      emit(VisaDetailsState.editing(
         visa: visa,
         members: family,
-        autovalidate: false); 
+        autovalidate: false)); 
     }on CustomException catch(e){
-      yield VisaDetailsState.failure(error: e);
+      emit(VisaDetailsState.failure(error: e));
     }
   }
 
-  Stream<VisaDetailsState> _mapEditVisaModeToState(
-      EditVisaClicked event) async* {
+  void _onEditVisaClicked(EditVisaClicked event, Emitter<VisaDetailsState> emit) async{
     var currentState = state;
-    yield VisaDetailsState.loading();
+    emit(VisaDetailsState.loading());
 
     try{
       Visa? visa = await visasRepository.getVisaById(event.visaId);
@@ -112,41 +95,38 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
 
       Group family = await profileRepository.getGroupUsers(familyGroup.id!);
 
-      yield VisaDetailsState.editing(
+      emit(VisaDetailsState.editing(
         visa: visa,        
         members: family,
-        autovalidate: false);
+        autovalidate: false));
     }on CustomException catch(e){
       if(currentState.visa != null) {
-        yield VisaDetailsState.editing(
+        emit(VisaDetailsState.editing(
           visa: currentState.visa,        
           members: currentState.familyGroup,
-          autovalidate: false);
-        yield state.update(errorMessage: e);
+          autovalidate: false));
+        emit(state.update(errorMessage: e));
       } else{
-        yield VisaDetailsState.failure(error: e);
+        emit(VisaDetailsState.failure(error: e));
       }   
-    }       
-  }
+    }   
+  }  
 
-  Stream<VisaDetailsState> _mapDateFromChangedToState(
-      DateFromChanged event) async* {
+  void _onDateFromChanged(DateFromChanged event, Emitter<VisaDetailsState> emit) async{
     Visa updVisa = state.visa!;
     updVisa = updVisa.copyWith(startDate: event.dateFrom);
 
-    yield state.update(visa: updVisa);
-  }
+    emit(state.update(visa: updVisa));
+  } 
 
-  Stream<VisaDetailsState> _mapDateToChangedToState(
-      DateToChanged event) async* {
-    Visa updVisa = state.visa!;
+  void _onDateToChanged(DateToChanged event, Emitter<VisaDetailsState> emit) async{
+     Visa updVisa = state.visa!;
     updVisa = updVisa.copyWith(endDate: event.dateTo);
 
-    yield state.update(visa: updVisa);
-  }
+    emit(state.update(visa: updVisa));
+  } 
 
-  Stream<VisaDetailsState> _mapVisaSubmittedToState(
-      VisaSubmitted event) async* {
+  void _onVisaSubmitted(VisaSubmitted event, Emitter<VisaDetailsState> emit) async{
     String errorMessage = "";
 
     if (!event.isFormValid) {
@@ -159,36 +139,36 @@ class VisaDetailsBloc extends Bloc<VisaDetailsEvent, VisaDetailsState> {
     }
 
     if (errorMessage.isNotEmpty) {
-      yield state.update(errorMessage: CustomException(Error.BadRequest, errorMessage));
+      emit(state.update(errorMessage: CustomException(Error.BadRequest, errorMessage)));
     } else {
       add(SaveVisaClicked(event.visa));
     }
   }
 
-  Stream<VisaDetailsState> _mapSaveVisaClickedToState(Visa visa) async* {
-    yield state.copyWith(status: StateStatus.Loading, mode: StateMode.Edit);
+  void _onSaveVisaClicked(SaveVisaClicked event, Emitter<VisaDetailsState> emit) async{
+    emit(state.copyWith(status: StateStatus.Loading, mode: StateMode.Edit));
+
+    var visa = event.visa;
 
     try{
-      if (visa.id != null) {
-        visa = await visasRepository.updateVisa(visa, visa.user!.userId!);
+      if (visa?.id != null) {
+        visa = await visasRepository.updateVisa(visa!, visa.user!.userId!);
       } else {
-        visa = await visasRepository.createVisa(visa, visa.user!.userId!);          
+        visa = await visasRepository.createVisa(visa!, visa.user!.userId!);          
       }
 
-      yield VisaDetailsState.success(
+      emit(VisaDetailsState.success(
         visa: visa,        
-        members: state.familyGroup);
+        members: state.familyGroup));
     }on CustomException catch(e){
-      if(state.visa != null) yield state.update(errorMessage: e);
-      else yield VisaDetailsState.failure(error: e);
+      /*if(state.visa != null) emit(state.update(errorMessage: e));
+      else */emit(VisaDetailsState.failure(error: e, visa: state.visa, members: state.familyGroup));
     }
-            
-  }
+  } 
 
-  Stream<VisaDetailsState> _mapTabUpdatedToState(
-      TabUpdatedClicked event) async* {
+  void _onTabUpdatedClicked(TabUpdatedClicked event, Emitter<VisaDetailsState> emit) async{
     await sharedPrefsService.writeInt(key: "visaTab", value: event.index);
     
-    yield state.update();
+    emit(state.update());
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:traces/utils/api/customException.dart';
 import 'package:traces/utils/services/secure_storage_service.dart';
@@ -9,6 +10,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 class ApiService {
   static ApiService? _instance;
   static String _baseUrl = "http://10.0.2.2:8080/";
+  //static String _baseUrl = "http://192.168.7.200:3002/";
+  //static String _baseUrl = "http://178.124.197.224:8002/";
   static SecureStorage? _storage;
   static String? _accessToken;
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
@@ -111,11 +114,13 @@ class ApiService {
     return responseJson;
   }
 
-  Future<dynamic> getSecure(String url) async{
+  Future<dynamic> getSecure(String url, {Map<String, dynamic>? queryParams}) async{
     print("getSecure");
     var responseJson;
 
-    Uri uri = Uri.parse(_baseUrl + url);
+    String queryString = Uri(queryParameters: queryParams).query;
+    
+    Uri uri = Uri.parse(_baseUrl + url + '?' + queryString);
     Map<String, String> headers = {      
       HttpHeaders.authorizationHeader: "Bearer $_accessToken",
       "device-info": _deviceId ?? ''
@@ -176,6 +181,38 @@ class ApiService {
       headers["authorization"] = "Bearer $_accessToken";
       
       responseJson = await sendPost(uri, headers, body);      
+    }
+    return responseJson;  
+  }
+
+  Future<dynamic> postSecureMultipart(String url, String? body, File? file) async{
+    print("postSecure");
+    var responseJson;    
+    
+    var request = http.MultipartRequest("POST", Uri.parse(_baseUrl + url));
+
+    request.headers["Content-Type"] = "multipart/form-data";
+    request.headers["Authorization"] = "Bearer $_accessToken";
+    request.headers["device-info"] = _deviceId ?? '';
+
+    if(file != null){
+      request.files.add(http.MultipartFile.fromBytes("file", file.readAsBytesSync(), filename: file.path));
+    }
+    
+    try{
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      responseJson = await  _response(response);      
+    }on SocketException catch(e) {
+      throw ConnectionException('No Internet connection');
+    }on UnauthorizedException catch(e) {
+      await refreshToken();
+     
+      request.headers["Authorization"] = "Bearer $_accessToken";
+      
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      responseJson = await  _response(response);       
     }
     return responseJson;  
   }
@@ -276,4 +313,5 @@ class ApiService {
             'Server Error. StatusCode: ${response.statusCode}. Error: ${errorMessage}');
     }
   }  
+
 }

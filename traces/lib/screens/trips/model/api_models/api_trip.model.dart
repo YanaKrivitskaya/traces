@@ -1,7 +1,9 @@
 
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'trip.model.dart';
+
+import '../trip.model.dart';
 
 @immutable
 class ApiTripModel {
@@ -18,15 +20,5 @@ class ApiTripModel {
       'trip': trip.toMap(),
     };
   }
-
-  /*factory ApiTripModel.fromMap(Map<String, dynamic> map) {
-    return ApiTripModel(
-      userId: map['userId'],
-      trip: Trip.fromMap(map['trip']),
-    );
-  }*/
-
   String toJson() => json.encode(toMap());
-
-  //factory ApiTripModel.fromJson(String source) => ApiTripModel.fromMap(json.decode(source));
 }

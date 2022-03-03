@@ -1,12 +1,13 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/screens/profile/model/group_model.dart';
-import 'package:traces/screens/profile/repository/api_profile_repository.dart';
-import 'package:traces/screens/trips/model/trip.model.dart';
-import 'package:traces/screens/trips/model/trip_day.model.dart';
-import 'package:traces/screens/trips/repository/api_trips_repository.dart';
-import 'package:traces/utils/api/customException.dart';
+
+import '../../../../utils/api/customException.dart';
+import '../../../profile/model/group_model.dart';
+import '../../../profile/repository/api_profile_repository.dart';
+import '../../model/trip.model.dart';
+import '../../repository/api_trips_repository.dart';
 
 part 'startplanning_event.dart';
 part 'startplanning_state.dart';
@@ -18,38 +19,26 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
   StartPlanningBloc() : 
   _tripsRepository = new ApiTripsRepository(),
   _profileRepository = new ApiProfileRepository(),
-  super(StartPlanningInitial(null));
+  super(StartPlanningInitial(null)){
+    on<NewTripMode>((event, emit) => emit(StartPlanningSuccessState(new Trip(), false)));
+    on<DateRangeUpdated>(_onDateRangeUpdated);
+    on<StartPlanningSubmitted>(_onStartPlanningSubmitted);
+  } 
 
-  @override
-  Stream<StartPlanningState> mapEventToState(StartPlanningEvent event) async* {
-    if (event is NewTripMode) {
-      yield* _mapNewTripModeToState(event);
-    } else if (event is DateRangeUpdated) {
-      yield* _mapDateRangeUpdatedToState(event);
-    } else if (event is StartPlanningSubmitted) {
-      yield* _mapStartPlanningSubmittedToState(event);
-    }
-  }
-
-  Stream<StartPlanningState> _mapNewTripModeToState(NewTripMode event) async* {
-    yield StartPlanningSuccessState(new Trip(), false);
-  }
-
-  Stream<StartPlanningState> _mapDateRangeUpdatedToState(DateRangeUpdated event) async* {
-    
+  void _onDateRangeUpdated(DateRangeUpdated event, Emitter<StartPlanningState> emit) async{
     Trip trip = state.trip ?? new Trip();
 
     Trip updTrip = trip.copyWith(startDate: event.startDate, endDate: event.endDate);
 
-    yield StartPlanningSuccessState(updTrip, false);
-  }
+    emit(StartPlanningSuccessState(updTrip, false));
+  } 
 
-  Stream<StartPlanningState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
-    yield StartPlanningSuccessState(event.trip, true);
+  void _onStartPlanningSubmitted(StartPlanningSubmitted event, Emitter<StartPlanningState> emit) async{
+    emit(StartPlanningSuccessState(event.trip, true));
 
     if(event.trip!.startDate == null || event.trip!.endDate == null){
       var error = 'Please choose the dates';
-      yield StartPlanningErrorState(event.trip, error);
+      emit(StartPlanningErrorState(event.trip, error));
     }
     else{
       try{
@@ -59,28 +48,13 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
         Group family = await _profileRepository.getGroupUsers(familyGroup.id!);
         event.trip!.users = [family.users.firstWhere((u) => u.accountId == profile.accountId)];
 
-        Trip trip = await _tripsRepository.createTrip(event.trip!, profile.accountId);
+        Trip trip = await _tripsRepository.createTrip(event.trip!, profile.accountId);        
 
-        //generate days
-        var daysCount = trip.endDate!.difference(trip.startDate!).inDays;
-          for (var i=0; i<=daysCount; i++){
-            var dayDate = trip.startDate!.add(new Duration(days: i));
-            var dayName = "Day ${i+1}";
-            var day = new TripDay(
-              name: dayName,
-              dayNumber: i+1,
-              date: dayDate
-            );
-
-            await _tripsRepository.createTripDay(day, trip.id!);
-          }
-
-        yield StartPlanningCreatedState(trip);
+        emit(StartPlanningCreatedState(trip));
       } on CustomException catch(e){
-        
+        emit(StartPlanningErrorState(event.trip, e.toString()));
       }
       
-    }    
+    } 
   }
-
 }

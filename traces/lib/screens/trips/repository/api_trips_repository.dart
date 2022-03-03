@@ -1,6 +1,9 @@
-import 'package:traces/screens/trips/model/api_trip_user.model.dart';
+import 'dart:io';
+
+import 'package:traces/screens/trips/model/api_models/api_trip_user.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_day.model.dart';
+import 'package:intl/intl.dart';
 
 import '../../../utils/services/api_service.dart';
 
@@ -26,6 +29,17 @@ class ApiTripsRepository{
     return tripResponse;
     }
 
+    Future<dynamic> getTripDay(int tripId, DateTime date) async{
+    print("getTripDay");
+    var date1 = date.toUtc();
+    String convertedDate = new DateFormat("yyyy-MM-dd hh:mm:ss").format(date.toLocal());
+    final response = await apiProvider.getSecure("$tripsUrl$tripId/day/$convertedDate");
+      
+    var tripResponse = response["tripDay"] != null ? 
+      TripDay.fromMap(response['tripDay'], date) : null;
+    return tripResponse;
+    }
+
     Future<Trip> createTrip(Trip trip, int userId)async{
     print("createTrip");
 
@@ -48,6 +62,17 @@ class ApiTripsRepository{
     return tripResponse;
   }
 
+  Future<Trip> updateTripImage(File image, int tripId)async{
+    print("updateTripImage");
+    
+    //ApiTripModel apiModel = ApiTripModel(userId: userId, trip: trip);
+
+    final response = await apiProvider.postSecureMultipart("$tripsUrl${tripId}/image", null, image);
+      
+    var tripResponse = Trip.fromMap(response['response']);
+    return tripResponse;
+  }
+
   Future<Trip> updateTripUsers(int tripId, List<int> userIds)async{
     print("updateTripUsers");
     
@@ -65,14 +90,5 @@ class ApiTripsRepository{
     final response = await apiProvider.deleteSecure("$tripsUrl$tripId}");     
     
     return response["response"];
-  }
-  
-  Future<Trip> createTripDay(TripDay day, int tripId)async{
-    print("createTripDay");
-
-    final response = await apiProvider.postSecure("$tripsUrl/$tripId/days", day.toJson());
-      
-    var tripResponse = Trip.fromMap(response['trip']);
-    return tripResponse;
-  }
+  } 
 }

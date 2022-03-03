@@ -34,3 +34,79 @@ class DeleteTripClicked extends TripDetailsEvent{
   @override
   List<Object?> get props => [tripId];
 }
+
+class UpdateTripClicked extends TripDetailsEvent{
+  final Trip updTrip;
+
+  const UpdateTripClicked(this.updTrip);
+
+  @override
+  List<Object?> get props => [updTrip];
+}
+
+class DateRangeUpdated extends TripDetailsEvent {
+  final DateTime startDate;
+  final DateTime endDate;
+
+  DateRangeUpdated(this.startDate, this.endDate);
+
+  List<Object> get props => [startDate, endDate];
+}
+
+class TabUpdated extends TripDetailsEvent{
+  final int tab;
+
+  const TabUpdated(this.tab);
+
+  @override
+  List<Object> get props => [tab];
+
+  @override
+  String toString() => 'UpdateTab { tab: $tab }';
+}
+
+class UpdateExpenses extends TripDetailsEvent{
+  final int tripId;
+
+  const UpdateExpenses(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
+
+class UpdateBookings extends TripDetailsEvent{
+  final int tripId;
+
+  const UpdateBookings(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
+
+class UpdateTickets extends TripDetailsEvent{
+  final int tripId;
+
+  const UpdateTickets(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
+
+class UpdateActivities extends TripDetailsEvent{
+  final int tripId;
+
+  const UpdateActivities(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
+
+class GetImage extends TripDetailsEvent{
+  final File? image;
+
+  const GetImage(this.image);
+
+  @override
+  List<Object?> get props => [image];
+}
+

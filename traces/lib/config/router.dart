@@ -1,5 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/screens/trips/model/ticket.model.dart';
+import 'package:traces/screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/activities/activity_view/activity_view.dart';
+import 'package:traces/screens/trips/tripdetails/activities/activity_view/bloc/activityview_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/bookings/booking_edit/bloc/bookingcreate_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/bookings/booking_view/bloc/bookingview_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/bookings/booking_view/booking_view.dart';
+import 'package:traces/screens/trips/tripdetails/tickets/ticket_edit/bloc/ticketedit_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/tickets/ticket_edit/ticket_edit_view.dart';
+import 'package:traces/screens/trips/tripdetails/tickets/ticket_view/bloc/ticketview_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/tickets/ticket_view/ticket_view.dart';
 
 import '../constants/route_constants.dart';
 import '../screens/expenses.dart';
@@ -17,9 +30,17 @@ import '../screens/settings/bloc/settings_bloc.dart';
 import '../screens/settings/settings_page.dart';
 import '../screens/settings/themes_settings_view.dart';
 import '../screens/trips/bloc/trips_bloc.dart';
+import '../screens/trips/model/trip_arguments.model.dart';
 import '../screens/trips/start_planning/bloc/startplanning_bloc.dart';
 import '../screens/trips/start_planning/start_planning_view.dart';
+import '../screens/trips/trip_day/bloc/tripday_bloc.dart';
+import '../screens/trips/trip_day/trip_day_view.dart';
+import '../screens/trips/tripdetails/activities/activity_edit/activity_create_view.dart';
 import '../screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
+import '../screens/trips/tripdetails/bookings/booking_edit/booking_create.view.dart';
+import '../screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
+import '../screens/trips/tripdetails/expenses/expense_create_view.dart';
+import '../screens/trips/tripdetails/image_crop_view.dart';
 import '../screens/trips/tripdetails/tripdetails_view.dart';
 import '../screens/trips/trips_page.dart';
 import '../screens/visas/bloc/visa/visa_bloc.dart';
@@ -138,12 +159,12 @@ class RouteGenerator {
             );
           }
           return _errorRoute();
-        }      
+        }        
       case tripsRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<TripsBloc>(
             create: (context) =>
-                TripsBloc(/*FirebaseTripsRepository()*/)..add(GetAllTrips()),
+                TripsBloc()..add(GetAllTrips()),
             child: TripsPage(),
           ),
       );
@@ -157,20 +178,163 @@ class RouteGenerator {
               child: StartPlanningView(),
             ),
           );
-      }
+      }      
       case tripDetailsRoute:
         {
           if (args is int) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<TripDetailsBloc>(
-                create: (context) => TripDetailsBloc(
-                   /* FirebaseTripsRepository()*/)..add(GetTripDetails(args)),
+                create: (context) => TripDetailsBloc()..add(GetTripDetails(args)),
                 child: TripDetailsView(tripId: args),
               ),
             );
           }
           return _errorRoute();
         }
+      case ticketCreateRoute:
+      {
+        if (args is EventArguments) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider<TicketEditBloc>(
+              create: (context) => TicketEditBloc()..add(NewTicketMode(args.date)),
+              child: TicketEditView(trip: args.trip),
+            ),
+          );
+        }
+        return _errorRoute();          
+      }
+      case ticketEditRoute:
+      {
+        if (args is TicketEditArguments) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider<TicketEditBloc>(
+              create: (context) => TicketEditBloc()..add(EditTicketMode(args.ticket)),
+              child: TicketEditView(trip: args.trip),
+            ),
+          );
+        }
+        return _errorRoute();          
+      }
+      case ticketViewRoute:
+      {
+        if (args is TicketViewArguments) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider<TicketViewBloc>(
+              create: (context) => TicketViewBloc()..add(GetTicketDetails(args.ticketId)),
+              child: TicketView(trip: args.trip),
+            ),
+          );
+        }
+        return _errorRoute();          
+      }
+      case bookingCreateRoute:
+        {
+          if (args is EventArguments) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<BookingCreateBloc>(
+                create: (context) => BookingCreateBloc()..add(NewBookingMode(args.date)),
+                child: BookingCreateView(trip: args.trip),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }
+      case bookingViewRoute:
+      {
+        if (args is BookingViewArguments) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider<BookingViewBloc>(
+              create: (context) => BookingViewBloc()..add(GetBookingDetails(args.bookingId)),
+              child: BookingView(trip: args.trip),
+            ),
+          );
+        }
+        return _errorRoute();          
+      }
+       case bookingEditRoute:
+      {
+        if (args is BookingEditArguments) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider<BookingCreateBloc>(
+              create: (context) => BookingCreateBloc()..add(EditBookingMode(args.booking)),
+              child: BookingCreateView(trip: args.trip),
+            ),
+          );
+        }
+        return _errorRoute();          
+      }
+      case expenseCreateRoute:
+        {
+          if (args is EventArguments) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<ExpenseCreateBloc>(
+                create: (context) => ExpenseCreateBloc()..add(NewExpenseMode(args.date)),
+                child: ExpenseCreateView(trip: args.trip),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }
+      case activityCreateRoute:
+        {
+          if (args is EventArguments) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<ActivityCreateBloc>(
+                create: (context) => ActivityCreateBloc()..add(NewActivityMode(args.date)),
+                child: ActivityCreateView(trip: args.trip),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }
+      case activityViewRoute:
+      {
+        if (args is ActivityViewArguments) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider<ActivityViewBloc>(
+              create: (context) => ActivityViewBloc()..add(GetActivityDetails(args.activityId)),
+              child: ActivityView(trip: args.trip),
+            ),
+          );
+        }
+        return _errorRoute();          
+      }
+       case activityEditRoute:
+      {
+        if (args is ActivityEditArguments) {
+          return MaterialPageRoute(
+            builder: (_) => BlocProvider<ActivityCreateBloc>(
+              create: (context) => ActivityCreateBloc()..add(EditActivityMode(args.activity)),
+              child: ActivityCreateView(trip: args.trip),
+            ),
+          );
+        }
+        return _errorRoute();          
+      }
+      case imageCropRoute:
+        {
+          if (args is File) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<TripDetailsBloc>(
+                create: (context) => TripDetailsBloc(),
+                child: ImageCropView(args),
+              ),
+            );
+          }
+        return _errorRoute();          
+      }
+      case tripDayRoute:
+        {
+          if (args is TripDayArguments) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<TripDayBloc>(
+                create: (context) => TripDayBloc()..add(TripDayLoaded(args.day)),
+                child: TripDayView(trip: args.trip),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }       
       case expensesRoute:
         return MaterialPageRoute(builder: (_) => ExpensesPage());
       case hotelsRoute:

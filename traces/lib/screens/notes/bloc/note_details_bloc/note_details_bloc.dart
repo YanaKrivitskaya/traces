@@ -13,37 +13,26 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
 
   NoteDetailsBloc():
     _notesRepository = new ApiNotesRepository(), 
-    super(InitialNoteDetailsState(null));
+    super(InitialNoteDetailsState(null)){
+      on<GetNoteDetails>(_onGetNoteDetails);
+      on<EditModeClicked>(_onEditModeClicked);
+      on<SaveNoteClicked>(_onSaveNoteClicked);
+      on<DeleteNote>(_onDeleteNote);
+      on<NewNoteMode>(_onNewNoteMode);
+    }  
 
-  @override
-  Stream<NoteDetailsState> mapEventToState(
-    NoteDetailsEvent event,
-  ) async* {
-    if(event is GetNoteDetails){
-      yield* _mapGetNoteDetailsToState(event);
-    }else if(event is NewNoteMode){
-      yield* _mapNewNoteModeToState(event);
-    }else if(event is EditModeClicked){
-      yield* _mapEditModeToState(event);
-    }else if(event is SaveNoteClicked){
-      yield* _mapSaveNoteToState(event);
-    }else if (event is DeleteNote) {
-      yield* _mapDeleteNoteToState(event);
-    }
-  }
-
-  Stream<NoteDetailsState> _mapGetNoteDetailsToState(GetNoteDetails event) async*{
-    yield LoadingDetailsState(null);
+  void _onGetNoteDetails(GetNoteDetails event, Emitter<NoteDetailsState> emit) async{
+    emit(LoadingDetailsState(null));
 
     try{
       Note? note = await _notesRepository.getNoteById(event.noteId);
-      yield ViewDetailsState(note, null);
+      return emit(ViewDetailsState(note, null));
     } on CustomException catch(e){
-      yield ErrorDetailsState(state.note, e);
+      return emit (ErrorDetailsState(state.note, e));
     }
   }
 
-  Stream<NoteDetailsState> _mapSaveNoteToState(SaveNoteClicked event) async*{
+  void _onSaveNoteClicked(SaveNoteClicked event, Emitter<NoteDetailsState> emit) async{
     Note? note;
     
     try{
@@ -57,29 +46,29 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
       note = await _notesRepository.addNewNote(newNote);
     }
     
-      yield ViewDetailsState(note, null);
+      return emit(ViewDetailsState(note, null));
     } on CustomException catch(e){
-      yield ErrorDetailsState(state.note, e);
-    }    
+      return emit(ErrorDetailsState(state.note, e));
+    }
   }
 
-  Stream<NoteDetailsState> _mapDeleteNoteToState(DeleteNote event) async* {
+  void _onDeleteNote(DeleteNote event, Emitter<NoteDetailsState> emit) async{
     var currentState = state;
-    yield LoadingDetailsState(null);
+    emit(LoadingDetailsState(null));
 
     try{
       await _notesRepository.deleteNote(event.note!.id);
-      yield ViewDetailsState(currentState.note, true);
+      return emit(ViewDetailsState(currentState.note, true));
     }on CustomException catch(e){
-       yield ErrorDetailsState(currentState.note, e);
+       return emit(ErrorDetailsState(currentState.note, e));
     }   
   }
 
-  Stream<NoteDetailsState> _mapNewNoteModeToState(NewNoteMode event) async*{
-    yield EditDetailsState(new Note());
+  void _onNewNoteMode(NewNoteMode event, Emitter<NoteDetailsState> emit) async{
+    return emit(EditDetailsState(new Note()));
   }
 
-  Stream<NoteDetailsState> _mapEditModeToState(EditModeClicked event) async*{
-    yield EditDetailsState(event.note);
-  }
+  void _onEditModeClicked(EditModeClicked event, Emitter<NoteDetailsState> emit) async{
+    return emit(EditDetailsState(event.note));
+  }  
 }

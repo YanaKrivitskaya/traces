@@ -21,7 +21,7 @@ class TripsPage extends StatelessWidget{
             title: Text('Trips', style: GoogleFonts.quicksand(textStyle: 
               TextStyle(fontSize: 30.0))),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back, color: ColorsPalette.black),
               onPressed: (){
                 Navigator.pop(context);
               },

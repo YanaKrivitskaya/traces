@@ -1,9 +1,7 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:traces/utils/api/customException.dart';
 
+import '../../../../utils/api/customException.dart';
 import '../../../../utils/misc/state_types.dart';
 import '../../model/visa.model.dart';
 import '../../model/visa_entry.model.dart';
@@ -17,26 +15,16 @@ class VisaEntryBloc extends Bloc<VisaEntryEvent, VisaEntryState> {
 
   VisaEntryBloc():
     _visasRepository = new ApiVisasRepository(),
-    super(VisaEntryState.empty());
+    super(VisaEntryState.empty()){
+      on<GetEntryDetails>(_onGetEntryDetails);
+      on<SubmitEntry>(_onSubmitEntry);
+      on<EntryDateChanged>(_onEntryDateChanged);
+      on<ExitDateChanged>(_onExitDateChanged);
+      on<DeleteEntry>(_onDeleteEntry);
+    } 
 
-  @override
-  Stream<VisaEntryState> mapEventToState(VisaEntryEvent event) async* {
-    if (event is GetEntryDetails) {
-      yield* _mapGetEntryDetailsToState(event);
-    } else if (event is SubmitEntry) {
-      yield* _mapSubmitEntryToState(event);
-    } else if (event is EntryDateChanged) {
-      yield* _mapEntryDateChangedToState(event);
-    } else if (event is ExitDateChanged) {
-      yield* _mapExitDateChangedToState(event);
-    } else if (event is DeleteEntry) {
-      yield* _mapDeleteEntryToState(event);
-    }
-  }
-
-  Stream<VisaEntryState> _mapGetEntryDetailsToState(
-      GetEntryDetails event) async* {
-    yield VisaEntryState.loading();
+  void _onGetEntryDetails(GetEntryDetails event, Emitter<VisaEntryState> emit) async{
+    emit(VisaEntryState.loading());
 
     VisaEntry? entry;
 
@@ -49,13 +37,13 @@ class VisaEntryBloc extends Bloc<VisaEntryEvent, VisaEntryState> {
     else
       entry = event.entry;    
 
-    yield VisaEntryState.editing(
-        visa: event.visa, entryExit: entry);
-  }
+    emit(VisaEntryState.editing(
+        visa: event.visa, entryExit: entry));
+  } 
 
-  Stream<VisaEntryState> _mapSubmitEntryToState(SubmitEntry event) async* {
+  void _onSubmitEntry(SubmitEntry event, Emitter<VisaEntryState> emit) async{
     var currentState = state;
-    yield VisaEntryState.loading();
+    emit(VisaEntryState.loading());
 
     try{
       VisaEntry entry;
@@ -72,36 +60,34 @@ class VisaEntryBloc extends Bloc<VisaEntryEvent, VisaEntryState> {
             await _visasRepository.updateVisaEntry(event.visa!.id!, event.entry!);
       }
     
-      yield VisaEntryState.success(visa: event.visa, entryExit: entry);
+      emit(VisaEntryState.success(visa: event.visa, entryExit: entry));
     }on CustomException catch(e){
       if(currentState.visaEntry != null){
-        yield VisaEntryState.success(visa: event.visa, entryExit: currentState.visaEntry);
-        yield state.update(error: e);
+        emit(VisaEntryState.success(visa: event.visa, entryExit: currentState.visaEntry));
+        emit(state.update(error: e));
       }else 
-      yield VisaEntryState.failure(error: e);
+      emit(VisaEntryState.failure(error: e));
     }    
-  }
+  } 
 
-  Stream<VisaEntryState> _mapDeleteEntryToState(DeleteEntry event) async* {
+  void _onDeleteEntry(DeleteEntry event, Emitter<VisaEntryState> emit) async{
     try{
        await _visasRepository.deleteVisaEntry(event.visa!.id!, event.entry!.id!);       
-       yield state.update(entryDeleted: true);
+       emit(state.update(entryDeleted: true));
     }on CustomException catch(e){
-      yield state.update(error: e);
+      emit(state.update(error: e));
     }   
-  }
+  } 
 
-  Stream<VisaEntryState> _mapEntryDateChangedToState(
-      EntryDateChanged event) async* {    
+  void _onEntryDateChanged(EntryDateChanged event, Emitter<VisaEntryState> emit) async{
     state.visaEntry = state.visaEntry!.copyWith(entryDate: event.entryDate);
 
-    yield state.update(visaEntry: state.visaEntry);
-  }
+    emit(state.update(visaEntry: state.visaEntry));
+  } 
 
-  Stream<VisaEntryState> _mapExitDateChangedToState(
-      ExitDateChanged event) async* {
+  void _onExitDateChanged(ExitDateChanged event, Emitter<VisaEntryState> emit) async{
     state.visaEntry = state.visaEntry!.copyWith(exitDate: event.exitDate);
 
-    yield state.update(visaEntry: state.visaEntry);
-  }
+    emit(state.update(visaEntry: state.visaEntry));
+  } 
 }

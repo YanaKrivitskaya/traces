@@ -4,21 +4,21 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/visas/model/visa_entry.model.dart';
-import 'package:traces/utils/misc/state_types.dart';
-import 'package:traces/utils/services/shared_preferencies_service.dart';
-import 'package:traces/utils/style/styles.dart';
-import 'package:traces/widgets/error_widgets.dart';
-import 'package:traces/widgets/widgets.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
-import 'bloc/visa_entry/visa_entry_bloc.dart';
+import '../../utils/misc/state_types.dart';
+import '../../utils/services/shared_preferencies_service.dart';
+import '../../utils/style/styles.dart';
+import '../../widgets/error_widgets.dart';
+import '../../widgets/widgets.dart';
 import 'bloc/visa_details/visa_details_bloc.dart';
-import 'model/visa.model.dart';
-import 'widgets/entryExit_delete_alert.dart';
-import 'visa_entry_details_view.dart';
+import 'bloc/visa_entry/visa_entry_bloc.dart';
 import 'helpers.dart';
+import 'model/visa.model.dart';
+import 'model/visa_entry.model.dart';
+import 'visa_entry_details_view.dart';
+import 'widgets/entryExit_delete_alert.dart';
 import 'widgets/visa_delete_alert.dart';
 
 class VisaDetailsView extends StatefulWidget {
@@ -43,7 +43,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
   ];
 
   void initState() { 
-    slidableController = SlidableController(); 
+    //slidableController = SlidableController(); 
     tabController = TabController(length: detailsTabs.length, vsync: this);
     
     tabController!.addListener(handleTabSelection);
@@ -165,7 +165,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
   Widget _editAction(VisaDetailsState state) => new IconButton(
         icon: FaIcon(FontAwesomeIcons.edit, color: ColorsPalette.lynxWhite),
         onPressed: () {
-          Navigator.popAndPushNamed(context, visaEditRoute,
+          Navigator.pushNamed(context, visaEditRoute,
               arguments: state.visa!.id);
         },
       );
@@ -235,17 +235,15 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                 itemBuilder: (builderContext, position) {
                   final entryExit = entries[position];
                   return Column(children: [
-                    Slidable(key: Key(entryExit.id!.toString()),
-                      controller: slidableController,
-                      direction: Axis.horizontal,                      
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
-                      child: VerticalListItem(entryExit, visa),
-                        secondaryActions: <Widget>[
-                          IconSlideAction(
-                            color: ColorsPalette.carminePink, 
+                    Slidable(key: Key(entryExit.id!.toString()),                      
+                      endActionPane: ActionPane(
+                        motion: const DrawerMotion(),
+                        extentRatio: 0.25,
+                        children: [
+                          SlidableAction(
+                            backgroundColor: ColorsPalette.carminePink, 
                             icon: FontAwesomeIcons.trashAlt, 
-                            onTap: () => showDialog<String>(
+                            onPressed: (context) => showDialog<String>(
                               context: context,
                               barrierDismissible: false, // user must tap button!
                               builder: (_) => BlocProvider<VisaEntryBloc>(                                   
@@ -257,25 +255,27 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                                         val == 'Delete' ? context.read<VisaDetailsBloc>().add(GetVisaDetails(visa!.id!)) : '',
                                     ),
                                   )), 
-                          ), 
-                        ], 
-                      ),
-                        Divider(color: ColorsPalette.mazarineBlue)
-                      ]);                      
-                    }))
-                    : Column(children: [Container(child: Align(
-                      child: Text("No entries"),
-                      alignment: Alignment.centerLeft))])
-                    ],
-                  )
+                          )
+                        ],
+                      ),                      
+                      direction: Axis.horizontal,                      
+                      child: VerticalListItem(entryExit, visa),                        
+                    ),
+                    Divider(color: ColorsPalette.mazarineBlue)
+                  ]);                      
+                }))
+          : Column(children: [Container(child: Align(
+            child: Text("No entries"),
+            alignment: Alignment.centerLeft))])
+          ],
+          )
               /*Container(height: MediaQuery.of(context).size.height * 0.4,
               child: SingleChildScrollView(child: ,
                 ))*/
-            ]
-          )
-        )
-      );
-
+        ]
+      )
+    )
+  );
 }
 
 class VerticalListItem extends StatelessWidget {
@@ -286,10 +286,10 @@ class VerticalListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-        Slidable.of(context)?.renderingMode == SlidableRenderingMode.none
+      onTap: () =>{},
+        /*Slidable.of(context)?.renderingMode == SlidableRenderingMode.none
           ? Slidable.of(context)?.open()
-          : Slidable.of(context)?.close(),
+          : Slidable.of(context)?.close(),*/
       child: Container(padding: EdgeInsets.only(top: 10.0),
         child: Column(children: [
           InkWell(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -299,14 +299,14 @@ class VerticalListItem extends StatelessWidget {
                 child: Column(children: [
                   Text('${DateFormat.yMMMd().format(item.entryDate)}'),
                   Text('${item.entryCountry}, ${item.entryCity}'),
-                  transportIcon(item.entryTransport)],
+                  transportIcon(item.entryTransport, ColorsPalette.mazarineBlue)],
                 crossAxisAlignment:CrossAxisAlignment.start))]),
               //exit
               item.hasExit! ? Column(children: [ Container(width: MediaQuery.of(context).size.width *0.3,
                 child: Column(children: [
                   Text('${DateFormat.yMMMd().format(item.exitDate!)}'),
                   Text('${item.exitCountry}, ${item.exitCity}'),
-                  transportIcon(item.exitTransport)],
+                  transportIcon(item.exitTransport, ColorsPalette.mazarineBlue)],
                 crossAxisAlignment: CrossAxisAlignment.start))])
               : Container(),
               //duration

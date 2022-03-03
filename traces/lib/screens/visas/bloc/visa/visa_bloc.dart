@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -17,23 +15,18 @@ class VisaBloc extends Bloc<VisaEvent, VisaState> {
 
   VisaBloc(): 
         visasRepository = new ApiVisasRepository(),
-        super(VisaState.empty());
+        super(VisaState.empty()){
+          on<GetAllVisas>(_onGetAllVisas);
+        }
 
-  @override
-  Stream<VisaState> mapEventToState(VisaEvent event) async* {
-    if (event is GetAllVisas) {
-      yield* _mapGetVisasToState(event);
-    }
-  }
-
-  Stream<VisaState> _mapGetVisasToState(GetAllVisas event) async* {
-    yield VisaState.loading();
+  void _onGetAllVisas(GetAllVisas event, Emitter<VisaState> emit) async{
+    emit(VisaState.loading());
 
     try{
       var visas = await visasRepository.getVisas();
-      yield VisaState.success(allVisas: visas);
+      return emit(VisaState.success(allVisas: visas));
     } on CustomException catch(e){
-      yield VisaState.failure(error: e);
-    }  
-  }
+      return emit(VisaState.failure(error: e));
+    } 
+  }  
 }

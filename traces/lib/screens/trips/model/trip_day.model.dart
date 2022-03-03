@@ -1,105 +1,92 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/screens/trips/model/activity.model.dart';
+import 'package:traces/screens/trips/model/booking.model.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/model/ticket.model.dart';
 
-import 'package:traces/screens/trips/model/trip_action.model.dart';
+import 'package:traces/screens/trips/model/trip_object.model.dart';
+import '../../../widgets/widgets.dart';
 
 @immutable
 class TripDay {
-  final int? id;
-  final DateTime? date;
-  final String name;
-  final String? description;
-  final String? image;
-  final int? dayNumber;
-  final List<TripAction>? actions;
-  
+  final List<TripEvent> tripEvents;
+  final int tripId;
+  final DateTime date;
+   
   TripDay({
-    this.id,
-    this.date,
-    required this.name,
-    this.description,
-    this.image,
-    this.dayNumber,
-    this.actions,
+    required this.tripEvents,
+    required this.tripId,
+    required this.date
   });
 
+
   TripDay copyWith({
-    int? id,
-    DateTime? date,
-    String? name,
-    String? description,
-    String? image,
-    int? dayNumber,
-    List<TripAction>? actions,
+    List<TripEvent>? tripEvents,
+    int? tripId,
+    DateTime? date
   }) {
     return TripDay(
-      id: id ?? this.id,
-      date: date ?? this.date,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      image: image ?? this.image,
-      dayNumber: dayNumber ?? this.dayNumber,
-      actions: actions ?? this.actions,
+      tripEvents: tripEvents ?? this.tripEvents,
+      tripId: tripId ?? this.tripId,
+      date: date ?? this.date
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'date': date?.toIso8601String(),
-      'name': name,
-      'description': description,
-      'image': image,
-      'dayNumber': dayNumber,
-      'actions': actions?.map((x) => x.toMap()).toList(),
-    };
-  }
+  factory TripDay.fromMap(Map<String, dynamic> map, DateTime date) {
+    List<TripEvent> tripEvents = [];
+    
+    var activities =  map['activities'] != null ? 
+      List<Activity>.from(map['activities']?.map((x) => Activity.fromMap(x))) : null;
+    var expenses =  map['expenses'] != null ? 
+      List<Expense>.from(map['expenses']?.map((x) => Expense.fromMap(x))) : null;
+    var tickets =  map['tickets'] != null ? 
+      List<Ticket>.from(map['tickets']?.map((x) => Ticket.fromMap(x))) : null;
+    var bookings =  map['bookings'] != null ? 
+      List<Booking>.from(map['bookings']?.map((x) => Booking.fromMap(x))) : null;
 
-  factory TripDay.fromMap(Map<String, dynamic> map) {
+    bookings?.forEach((booking) {     
+      var objectDate = new DateTime.utc(date.year, date.month, date.day, 23, 59);
+      if(booking.entryDate!.isSameDate(date)) objectDate = booking.entryDate!;
+      if(booking.exitDate!.isSameDate(date)) objectDate = booking.exitDate!;
+
+      tripEvents.add(new TripEvent(
+        type: TripEventType.Booking,
+        id: booking.id!,
+        startDate: objectDate,
+        event: booking
+      ));
+    });
+
+    activities?.forEach((activity) {
+      tripEvents.add(new TripEvent(
+        type: TripEventType.Activity,
+        id: activity.id!,
+        startDate: activity.date!,
+        event: activity
+      ));
+    });
+
+    tickets?.forEach((ticket) {
+      var startDate;
+      var endDate;
+      if(ticket.arrivalDatetime!.isSameDate(date)) endDate = ticket.arrivalDatetime!;
+      if(ticket.departureDatetime!.isSameDate(date)) startDate = ticket.departureDatetime!;
+
+      tripEvents.add(new TripEvent(
+        type: TripEventType.Ticket,
+        id: ticket.id!,
+        startDate: startDate,
+        endDate: endDate,        
+        event: ticket
+      ));
+    });
+
     return TripDay(
-      id: map['id'],
-      date: DateTime.parse(map['date']),
-      name: map['name'],
-      description: map['description'],
-      image: map['image'],
-      dayNumber: map['dayNumber'],
-      actions: map['actions'] != null ? List<TripAction>.from(map['actions']?.map((x) => TripAction.fromMap(x))) : null,
+      tripEvents: tripEvents,
+      tripId: int.parse(map['tripId']),
+      date: date,
     );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory TripDay.fromJson(String source) => TripDay.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'TripDay(id: $id, date: $date, name: $name, description: $description, image: $image, dayNumber: $dayNumber, actions: $actions)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-  
-    return other is TripDay &&
-      other.id == id &&
-      other.date == date &&
-      other.name == name &&
-      other.description == description &&
-      other.image == image &&
-      other.dayNumber == dayNumber &&
-      listEquals(other.actions, actions);
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-      date.hashCode ^
-      name.hashCode ^
-      description.hashCode ^
-      image.hashCode ^
-      dayNumber.hashCode ^
-      actions.hashCode;
   }
 }

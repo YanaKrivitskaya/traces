@@ -1,39 +1,61 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
+import 'package:traces/screens/trips/model/activity_category.model.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
 
 @immutable
-class TripAction {
+class Activity {
   final int? id;
-  final String name;
+  final int? expenseId;
+  final String? name;
+  final String? location;
+  final DateTime? date;
   final String? description;
   final String? image;
   final bool? isPlanned;
   final bool? isCompleted;
-  TripAction({
+  final ActivityCategory? category;
+  final Expense? expense;
+  Activity({
     this.id,
-    required this.name,
+    this.expenseId,
+    this.name,
+    this.location,   
     this.description,
+    this.date,
     this.image,
     this.isPlanned,
     this.isCompleted,
+    this.category,
+    this.expense
   });
 
-  TripAction copyWith({
+  Activity copyWith({
     int? id,
+    int? expenseId,
     String? name,
+    String? location,  
     String? description,
+    DateTime? date,
     String? image,
     bool? isPlanned,
     bool? isCompleted,
+    ActivityCategory? category,
+    Expense? expense
   }) {
-    return TripAction(
+    return Activity(
       id: id ?? this.id,
+      expenseId: expenseId ?? this.expenseId,
       name: name ?? this.name,
+      location: location ?? this.location,
       description: description ?? this.description,
+      date: date ?? this.date,
       image: image ?? this.image,
       isPlanned: isPlanned ?? this.isPlanned,
       isCompleted: isCompleted ?? this.isCompleted,
+      category: category ?? this.category,
+      expense: expense ?? this.expense
     );
   }
 
@@ -41,41 +63,51 @@ class TripAction {
     return {
       'id': id,
       'name': name,
+      'location': location,
       'description': description,
+      'date': date?.toIso8601String(),
       'image': image,
       'isPlanned': isPlanned,
       'isCompleted': isCompleted,
     };
   }
 
-  factory TripAction.fromMap(Map<String, dynamic> map) {
-    return TripAction(
+  factory Activity.fromMap(Map<String, dynamic> map) {
+    return Activity(
       id: map['id'],
+      expenseId: map['expenseId'],
       name: map['name'],
+      location: map['location'],
       description: map['description'],
+      date: map['date'] != null ? DateTime.parse(map['date']) : null,
       image: map['image'],
       isPlanned: map['isPlanned'],
       isCompleted: map['isCompleted'],
+      category: map['category'] != null ? ActivityCategory.fromMap(map['category']) : null, 
+      expense: map['expense'] != null ? Expense.fromMap(map['expense']) : null
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory TripAction.fromJson(String source) => TripAction.fromMap(json.decode(source));
+  factory Activity.fromJson(String source) => Activity.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'TripAction(id: $id, name: $name, description: $description, image: $image, isPlanned: $isPlanned, isCompleted: $isCompleted)';
+    return 'Activity(id: $id, name: $name)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
   
-    return other is TripAction &&
+    return other is Activity &&
       other.id == id &&
+      other.expenseId == expenseId &&
       other.name == name &&
+      other.location == location &&
       other.description == description &&
+      other.date == date &&
       other.image == image &&
       other.isPlanned == isPlanned &&
       other.isCompleted == isCompleted;
@@ -84,8 +116,11 @@ class TripAction {
   @override
   int get hashCode {
     return id.hashCode ^
+      expenseId.hashCode ^
       name.hashCode ^
+      location.hashCode ^
       description.hashCode ^
+      date.hashCode ^
       image.hashCode ^
       isPlanned.hashCode ^
       isCompleted.hashCode;

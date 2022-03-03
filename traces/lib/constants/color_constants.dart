@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class ColorsPalette {
   static const Color orange = Colors.orange;
   static const Color white = Colors.white;
+  static const Color black = Colors.black;
 
   static const Color back = const Color(0xFFFEFCFB); // back
 
@@ -21,6 +22,22 @@ class ColorsPalette {
       700: const Color(0xFF273C75),
       800: const Color(0xFF273C75),
       900: const Color(0xFF273C75),
+    },
+  );
+
+  static const MaterialColor matTripCalendarColor = const MaterialColor(
+    0xFFEF6101,
+    const <int, Color>{
+      50: juicyOrange,
+      100: juicyOrange,
+      200: juicyOrange,
+      300: juicyOrange,
+      400: juicyOrange,
+      500: juicyOrange,
+      600: juicyOrange,
+      700: juicyOrange,
+      800: juicyOrange,
+      900: juicyOrange,
     },
   );
 
@@ -126,12 +143,15 @@ class ColorsPalette {
   //Color Palette #4146 - Nature
   static const Color natureDarkGreen = const Color(0xFF1F1D08);
   static const Color natureDarkBlue = const Color(0xFF101321);
-  static const Color natureGreen = const Color(0xFF94AE3F); 
+  static const Color natureGreen = const Color(0xFF94AE3F);
+  static const Color natureGreenLight = const Color(0xFFcad79f); 
   static const Color natureBlue = const Color(0xFF243754);
   static const Color natureWhite = const Color(0xFFEBEBEB);//trips
 
   //Color Palette #4088 - Juicy
   static const Color juicyOrange = const Color(0xFFEF6101);
+  static const Color juicyOrangeLight = const Color(0xFFf9c099);
+  static const Color juicyOrangeDark = const Color(0xFF783101);
   static const Color juicyYellow = const Color(0xFFFDAC07);
   static const Color juicyGreen = const Color(0xFF47802B); 
   static const Color juicyBlue = const Color(0xFF045658);

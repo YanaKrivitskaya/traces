@@ -14,10 +14,10 @@ class VerticalUserListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-        Slidable.of(context)?.renderingMode == SlidableRenderingMode.none
+      onTap: () =>{},
+        /*Slidable.of(context)?.animation? == SlidableRenderingMode.none
           ? Slidable.of(context)?.open()
-          : Slidable.of(context)?.close(),
+          : Slidable.of(context)?.close(),*/
       child: InkWell(
         child: ListTile(
           leading: avatar(user.name, 20.0, ColorsPalette.meditSea, 15.0),
