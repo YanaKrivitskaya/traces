@@ -30,6 +30,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
       //yield NoteState.failure(error: e.message);
     }
   }
+  
   void _onThemeSelected(ThemeSelected event, Emitter<SettingsState> emit) async{
      return emit(SuccessSettingsState(event.theme, state.userTheme));
   }  

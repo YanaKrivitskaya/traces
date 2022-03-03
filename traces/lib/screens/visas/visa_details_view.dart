@@ -165,7 +165,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
   Widget _editAction(VisaDetailsState state) => new IconButton(
         icon: FaIcon(FontAwesomeIcons.edit, color: ColorsPalette.lynxWhite),
         onPressed: () {
-          Navigator.popAndPushNamed(context, visaEditRoute,
+          Navigator.pushNamed(context, visaEditRoute,
               arguments: state.visa!.id);
         },
       );
