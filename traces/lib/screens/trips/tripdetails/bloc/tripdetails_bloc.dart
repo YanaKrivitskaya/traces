@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:equatable/equatable.dart';
 import 'package:traces/screens/profile/model/group_model.dart';
 import 'package:traces/screens/profile/model/group_user_model.dart';
 import 'package:traces/screens/profile/repository/api_profile_repository.dart';
@@ -35,45 +33,30 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   _bookingsRepository = new ApiBookingsRepository(),
   _ticketsRepository = new ApiTicketsRepository(),
   _activitiesRepository = new ApiActivitiesRepository(),
-  super(TripDetailsInitial(0));
-
-  @override
-  Stream<TripDetailsState> mapEventToState(TripDetailsEvent event) async* {
-    if (event is GetTripDetails) {
-      yield* _mapGetTripDetailsToState(event);
-    } else if (event is UpdateTripDetailsSuccess){
-      yield* _mapUpdateTripDetailsToSuccessState(event);
-    } else if (event is DeleteTripClicked){
-      yield* _mapDeleteTripToState(event);
-    } else if (event is TabUpdated) {
-      yield* _mapTabUpdatedToState(event);
-    } else if (event is UpdateExpenses) {
-      yield* _mapUpdateExpensesToState(event);
-    } else if (event is UpdateBookings) {
-      yield* _mapUpdateBookingsToState(event);
-    } else if (event is UpdateActivities) {
-      yield* _mapUpdateActivitiesToState(event);
-    } else if (event is UpdateTickets) {
-      yield* _mapUpdateTicketsToState(event);
-    } else if (event is GetImage) {
-      yield* _mapGetImageToState(event);
-    } else if (event is UpdateTripClicked) {
-      yield* _mapUpdateTripToState(event);
-    }else if (event is DateRangeUpdated) {
-      yield* _mapDateRangeUpdatedToState(event);
-    }
+  super(TripDetailsInitial(0)){
+    on<GetTripDetails>(_onGetTripDetails);
+    on<UpdateTripDetailsSuccess>(_onUpdateTripDetailsSuccess);
+    on<DeleteTripClicked>(_onDeleteTripClicked);
+    on<TabUpdated>(_onTabUpdated);
+    on<UpdateExpenses>(_onUpdateExpenses);
+    on<UpdateBookings>(_onUpdateBookings);
+    on<UpdateActivities>(_onUpdateActivities);
+    on<UpdateTickets>(_onUpdateTickets);
+    on<GetImage>(_onGetImage);
+    on<UpdateTripClicked>(_onUpdateTripClicked);
+    on<DateRangeUpdated>(_onDateRangeUpdated);
   }
 
-  Stream<TripDetailsState> _mapUpdateTripDetailsToSuccessState(
-      UpdateTripDetailsSuccess event) async* {
-    yield TripDetailsSuccessState(     
+  void _onUpdateTripDetailsSuccess(
+      UpdateTripDetailsSuccess event, Emitter<TripDetailsState> emit) async {
+    emit(TripDetailsSuccessState(     
       event.trip,
       event.members,
       state.activeTab
-    );
+    ));
   }
 
-  Stream<TripDetailsState> _mapGetTripDetailsToState(GetTripDetails event) async* {
+  void _onGetTripDetails(GetTripDetails event, Emitter<TripDetailsState> emit) async {
     try{
       Trip? trip = await _tripsRepository.getTripById(event.tripId);
       var profile = await _profileRepository.getProfileWithGroups();      
@@ -82,140 +65,138 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       Group family = await _profileRepository.getGroupUsers(familyGroup.id!);
       
       if(trip != null){
-        yield TripDetailsSuccessState(     
+        emit(TripDetailsSuccessState(     
           trip,
           family.users,
           state.activeTab
-        );
+        ));
       }      
     }on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     }
       
   }
 
-  Stream<TripDetailsState> _mapDeleteTripToState(DeleteTripClicked event) async* {
+  void _onDeleteTripClicked(DeleteTripClicked event, Emitter<TripDetailsState> emit) async {
     try{
       await _tripsRepository.deleteTrip(event.tripId);
-      yield TripDetailsDeleted(state.activeTab);
+      emit(TripDetailsDeleted(state.activeTab));
     }on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     }    
   }
 
-  Stream<TripDetailsState> _mapUpdateTripToState(UpdateTripClicked event) async* {
+  void _onUpdateTripClicked(UpdateTripClicked event, Emitter<TripDetailsState> emit) async {
     try{
       Trip trip = await _tripsRepository.updateTrip(event.updTrip, 0);
-      yield TripDetailsUpdated(           
-          state.activeTab, trip
-        );
+      emit(TripDetailsUpdated(state.activeTab, trip));
     }on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     }    
   }
 
-  Stream<TripDetailsState> _mapDateRangeUpdatedToState(DateRangeUpdated event) async* {
+  void _onDateRangeUpdated(DateRangeUpdated event, Emitter<TripDetailsState> emit) async {
     
     Trip trip = state.trip ?? new Trip();
 
     Trip updTrip = trip.copyWith(startDate: event.startDate, endDate: event.endDate);
 
-    yield TripDetailsSuccessState(     
+    emit(TripDetailsSuccessState(     
           updTrip,
           state.familyMembers!,
           state.activeTab
-        );
+        ));
   }
 
-  Stream<TripDetailsState> _mapTabUpdatedToState(TabUpdated event) async* {
+  void _onTabUpdated(TabUpdated event, Emitter<TripDetailsState> emit) async {
     await sharedPrefsService.writeInt(key: "tripTab", value: event.tab);
-    yield TripDetailsSuccessState(     
+    emit(TripDetailsSuccessState(     
       state.trip!,
       state.familyMembers!,
       event.tab
-    );
+    ));
   }
 
-  Stream<TripDetailsState> _mapUpdateExpensesToState(UpdateExpenses event) async* {    
-    yield TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers);
+  void _onUpdateExpenses(UpdateExpenses event, Emitter<TripDetailsState> emit) async {    
+    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
     try{
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
 
       Trip trip = state.trip!.copyWith(expenses: expenses);
 
-      yield TripDetailsSuccessState(     
+      emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
         state.activeTab
-      );
+      ));
     } on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     } on Exception catch (e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     }
   }
 
-  Stream<TripDetailsState> _mapUpdateActivitiesToState(UpdateActivities event) async* {    
-    yield TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers);
+  void _onUpdateActivities(UpdateActivities event, Emitter<TripDetailsState> emit) async {    
+    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
     try{
       var activities = await _activitiesRepository.getTripActivities(event.tripId);
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
 
       Trip trip = state.trip!.copyWith(expenses: expenses, activities: activities);
 
-      yield TripDetailsSuccessState(     
+      emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
         state.activeTab
-      );
+      ));
     } on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     } on Exception catch (e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     }
   }
 
-  Stream<TripDetailsState> _mapUpdateBookingsToState(UpdateBookings event) async* {    
-    yield TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers);
+  void _onUpdateBookings(UpdateBookings event, Emitter<TripDetailsState> emit) async {    
+    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
     try{
       var bookings = await _bookingsRepository.getTripBookings(event.tripId);
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
 
       Trip trip = state.trip!.copyWith(expenses: expenses, bookings: bookings);
 
-      yield TripDetailsSuccessState(     
+      emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
         state.activeTab
-      );
+      ));
     } on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     } on Exception catch (e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     }
   }
 
-  Stream<TripDetailsState> _mapUpdateTicketsToState(UpdateTickets event) async* {    
-    yield TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers);
+  void _onUpdateTickets(UpdateTickets event, Emitter<TripDetailsState> emit) async {    
+    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
     try{
       var tickets = await _ticketsRepository.getTripTickets(event.tripId);
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
 
       Trip trip = state.trip!.copyWith(expenses: expenses, tickets: tickets);
 
-      yield TripDetailsSuccessState(     
+      emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
         state.activeTab
-      );
+      ));
     } on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     } on Exception catch (e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     }
   }
 
-  Stream<TripDetailsState> _mapGetImageToState(GetImage event) async* {
+  void _onGetImage(GetImage event, Emitter<TripDetailsState> emit) async {
     try{
       var image = state.trip?.coverImage;
       Trip updTrip = state.trip!;
@@ -225,15 +206,15 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
         updTrip = await _tripsRepository.updateTripImage(event.image!, updTrip.id!);
       }      
 
-      yield TripDetailsSuccessState(     
+      emit(TripDetailsSuccessState(     
         updTrip,
         state.familyMembers!,
         state.activeTab
-      );
+      ));
     }on CustomException catch(e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     } on Exception catch (e){
-      yield TripDetailsErrorState(e.toString(), state.activeTab);
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
     }
     
     

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/profile/repository/api_profile_repository.dart';
@@ -19,78 +17,65 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
   ActivityCreateBloc() : 
   _activitiesRepository = new ApiActivitiesRepository(),
   _profileRepository = new ApiProfileRepository(),
-  super(ActivityCreateInitial(null, null));
+  super(ActivityCreateInitial(null, null)){
+    on<NewActivityMode>(_onNewActivityMode);
+    on<EditActivityMode>(_onEditActivityMode);
+    on<ActivityDateUpdated>(_onActivityDateUpdated);
+    on<PlannedUpdated>(_onPlannedUpdated);
+    on<CompletedUpdated>(_onCompletedUpdated);
+    on<ExpenseUpdated>(_onExpenseUpdated);
+    on<ActivitySubmitted>(_onActivitySubmitted);
+  } 
 
-  @override
-  Stream<ActivityCreateState> mapEventToState(
-    ActivityCreateEvent event,
-  ) async* {
-    if (event is NewActivityMode) {
-      yield* _mapNewActivityModeToState(event);
-    } else if (event is ActivityDateUpdated) {
-      yield* _mapArrivalDateUpdatedToState(event);
-    } else if (event is PlannedUpdated) {
-      yield* _mapPlannedUpdatedToState(event);
-    }  else if (event is CompletedUpdated) {
-      yield* _mapCompletedUpdatedToState(event);
-    }else if (event is ActivitySubmitted) {
-      yield* _mapActivitySubmittedToState(event);
-    } else if (event is ExpenseUpdated) {
-      yield* _mapExpenseUpdatedToState(event);
-    } else if (event is EditActivityMode) {
-      yield* _mapEditActivityModeToState(event);
-    }
-  }
-
-   Stream<ActivityCreateState> _mapNewActivityModeToState(NewActivityMode event) async* {
+   void _onNewActivityMode(NewActivityMode event, Emitter<ActivityCreateState> emit) async {
     List<ActivityCategory>? categories = await _activitiesRepository.getActivityCategories();
-    yield ActivityCreateEdit(new Activity(date: event.date), categories, false);
+    emit(ActivityCreateEdit(new Activity(date: event.date), categories, false));
   }
 
-   Stream<ActivityCreateState> _mapEditActivityModeToState(EditActivityMode event) async* {
+   void _onEditActivityMode(EditActivityMode event, Emitter<ActivityCreateState> emit) async {
     List<ActivityCategory>? categories = await _activitiesRepository.getActivityCategories();
-    yield ActivityCreateEdit(event.activity, categories, false);
+    emit(ActivityCreateEdit(event.activity, categories, false));
   }
 
-  Stream<ActivityCreateState> _mapArrivalDateUpdatedToState(ActivityDateUpdated event) async* {
+  void _onActivityDateUpdated(ActivityDateUpdated event, Emitter<ActivityCreateState> emit) async {
     
     Activity activity = state.activity ?? new Activity();
 
     Activity updActivity = activity.copyWith(date: event.date);
 
-    yield ActivityCreateEdit(updActivity, state.categories, false);
+    emit(ActivityCreateEdit(updActivity, state.categories, false));
   }
 
-  Stream<ActivityCreateState> _mapPlannedUpdatedToState(PlannedUpdated event) async* {
+  void _onPlannedUpdated(PlannedUpdated event, Emitter<ActivityCreateState> emit) async {
     
     Activity activity = state.activity ?? new Activity();
 
     Activity updActivity = activity.copyWith(isPlanned: event.isPlanned);
 
-    yield ActivityCreateEdit(updActivity, state.categories, false);
+    emit(ActivityCreateEdit(updActivity, state.categories, false));
   }
 
-    Stream<ActivityCreateState> _mapCompletedUpdatedToState(CompletedUpdated event) async* {
+    void _onCompletedUpdated(CompletedUpdated event, Emitter<ActivityCreateState> emit) async {
     
     Activity activity = state.activity ?? new Activity();
 
     Activity updActivity = activity.copyWith(isCompleted: event.isCompleted);
 
-    yield ActivityCreateEdit(updActivity, state.categories, false);
+    emit(ActivityCreateEdit(updActivity, state.categories, false));
   }
 
-  Stream<ActivityCreateState> _mapExpenseUpdatedToState(ExpenseUpdated event) async* {
+  void _onExpenseUpdated(ExpenseUpdated event, Emitter<ActivityCreateState> emit) async {
     
     Activity activity = state.activity ?? new Activity();
 
     Activity updActivity = activity.copyWith(expense: event.expense);
 
-    yield ActivityCreateEdit(updActivity, state.categories, false);
+    emit(ActivityCreateEdit(updActivity, state.categories, false));
   }
 
 
-  Stream<ActivityCreateState> _mapActivitySubmittedToState(ActivitySubmitted event) async* {
-    yield ActivityCreateEdit(event.activity, state.categories, true);
+  void _onActivitySubmitted(ActivitySubmitted event, Emitter<ActivityCreateState> emit) async {
+    emit(ActivityCreateEdit(event.activity, state.categories, true));
     
     var category = event.activity!.category;
 
@@ -104,9 +89,9 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
       }else{
         activity = await _activitiesRepository.createActivity(event.activity!, event.expense, event.tripId, category?.id);
       }      
-      yield ActivityCreateSuccess(activity, state.categories);
+      emit(ActivityCreateSuccess(activity, state.categories));
     }on CustomException catch(e){
-        yield ActivityCreateError(event.activity, state.categories, e.toString());
+        emit(ActivityCreateError(event.activity, state.categories, e.toString()));
     }    
   }
 }

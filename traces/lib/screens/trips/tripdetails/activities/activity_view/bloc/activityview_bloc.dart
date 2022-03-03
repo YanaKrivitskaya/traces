@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -13,27 +12,17 @@ class ActivityViewBloc extends Bloc<ActivityViewEvent, ActivityViewState> {
   final ApiActivitiesRepository _activitiesRepository;
   ActivityViewBloc() : 
   _activitiesRepository = new ApiActivitiesRepository(),
-  super(ActivityViewInitial(null));
-
-  @override
-  Stream<ActivityViewState> mapEventToState(
-    ActivityViewEvent event,
-  ) async* {
-    if (event is GetActivityDetails) {
-      yield* _mapGetActivityDetailsToState(event);
-    }
-  }
-
-  Stream<ActivityViewState> _mapGetActivityDetailsToState(GetActivityDetails event) async* {
-    yield ActivityViewLoading(state.activity);
-    try{
-      Activity? activity = await _activitiesRepository.getActivityById(event.activityId);
-            
-      yield ActivityViewSuccess(activity);
-            
-    }on CustomException catch(e){
-      yield ActivityViewError(state.activity, e.toString());
-    }
-      
-  }
+  super(ActivityViewInitial(null)){
+    on<GetActivityDetails>((event, emit) async{
+      emit(ActivityViewLoading(state.activity));
+      try{
+        Activity? activity = await _activitiesRepository.getActivityById(event.activityId);
+              
+        emit(ActivityViewSuccess(activity));
+              
+      }on CustomException catch(e){
+        emit(ActivityViewError(state.activity, e.toString()));
+      }
+    });
+  }  
 }

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:equatable/equatable.dart';
 
 import 'package:bloc/bloc.dart';
@@ -15,26 +14,16 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
  
   TripsBloc() 
   : _tripsRepository = new ApiTripsRepository(),
-    super(TripsInitial());
-
-  @override
-  Stream<TripsState> mapEventToState(TripsEvent event) async* {
-    if (event is GetAllTrips) {
-      yield* _mapGetTripsToState(event);
-    } else if (event is UpdateTripsList) {
-      yield* mapUpdateTripsListToState(event);
+    super(TripsInitial()){
+      on<GetAllTrips>(_onGetAllTrips);
+      on<UpdateTripsList>((event, emit) => emit(TripsSuccessState(event.trips)));
     }
-  }
 
-  Stream<TripsState> mapUpdateTripsListToState(UpdateTripsList event) async*{
-    yield TripsSuccessState(event.trips);
-  }
-
-  Stream<TripsState> _mapGetTripsToState(GetAllTrips event) async*{
-    yield TripsLoadingState();
+  void _onGetAllTrips(GetAllTrips event, Emitter<TripsState> emit) async{
+    emit(TripsLoadingState());
     try{
       var trips = await _tripsRepository.getTrips();
-      yield TripsSuccessState(trips);
+      emit(TripsSuccessState(trips));
     } on CustomException catch(e){
       //yield T(error: e);
     }  
