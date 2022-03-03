@@ -11,6 +11,6 @@ Project for trips planning.
 - [ ] Hotels
 - [ ] Flights
 - [ ] Maps
-- [ ] Trips
+- [x] Trips
 
 
