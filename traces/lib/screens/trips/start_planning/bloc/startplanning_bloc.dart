@@ -19,38 +19,26 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
   StartPlanningBloc() : 
   _tripsRepository = new ApiTripsRepository(),
   _profileRepository = new ApiProfileRepository(),
-  super(StartPlanningInitial(null));
+  super(StartPlanningInitial(null)){
+    on<NewTripMode>((event, emit) => emit(StartPlanningSuccessState(new Trip(), false)));
+    on<DateRangeUpdated>(_onDateRangeUpdated);
+    on<StartPlanningSubmitted>(_onStartPlanningSubmitted);
+  } 
 
-  @override
-  Stream<StartPlanningState> mapEventToState(StartPlanningEvent event) async* {
-    if (event is NewTripMode) {
-      yield* _mapNewTripModeToState(event);
-    } else if (event is DateRangeUpdated) {
-      yield* _mapDateRangeUpdatedToState(event);
-    } else if (event is StartPlanningSubmitted) {
-      yield* _mapStartPlanningSubmittedToState(event);
-    }
-  }
-
-  Stream<StartPlanningState> _mapNewTripModeToState(NewTripMode event) async* {
-    yield StartPlanningSuccessState(new Trip(), false);
-  }
-
-  Stream<StartPlanningState> _mapDateRangeUpdatedToState(DateRangeUpdated event) async* {
-    
+  void _onDateRangeUpdated(DateRangeUpdated event, Emitter<StartPlanningState> emit) async{
     Trip trip = state.trip ?? new Trip();
 
     Trip updTrip = trip.copyWith(startDate: event.startDate, endDate: event.endDate);
 
-    yield StartPlanningSuccessState(updTrip, false);
-  }
+    emit(StartPlanningSuccessState(updTrip, false));
+  } 
 
-  Stream<StartPlanningState> _mapStartPlanningSubmittedToState(StartPlanningSubmitted event) async* {
-    yield StartPlanningSuccessState(event.trip, true);
+  void _onStartPlanningSubmitted(StartPlanningSubmitted event, Emitter<StartPlanningState> emit) async{
+    emit(StartPlanningSuccessState(event.trip, true));
 
     if(event.trip!.startDate == null || event.trip!.endDate == null){
       var error = 'Please choose the dates';
-      yield StartPlanningErrorState(event.trip, error);
+      emit(StartPlanningErrorState(event.trip, error));
     }
     else{
       try{
@@ -62,12 +50,11 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
 
         Trip trip = await _tripsRepository.createTrip(event.trip!, profile.accountId);        
 
-        yield StartPlanningCreatedState(trip);
+        emit(StartPlanningCreatedState(trip));
       } on CustomException catch(e){
-        
+        emit(StartPlanningErrorState(event.trip, e.toString()));
       }
       
-    }    
+    } 
   }
-
 }

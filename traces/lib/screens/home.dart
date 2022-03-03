@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
 Widget _homeMenu(AppTheme? _theme, BuildContext context) => new Scaffold(
       appBar: AppBar(
         title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))),
+        backgroundColor: ColorsPalette.mainColor,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app, color: ColorsPalette.lynxWhite),

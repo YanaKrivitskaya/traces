@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:traces/screens/settings/model/app_theme.dart';
@@ -12,44 +10,35 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
   SharedPreferencesService sharedPrefsService = SharedPreferencesService();
 
   SettingsBloc():
-      super(InitialSettingsState());
+      super(InitialSettingsState()){
+        on<GetAppSettings>(_onGetAppSettings);
+        on<ThemeSelected>(_onThemeSelected);
+        on<SubmitTheme>(_onSubmitTheme);
+      }
 
-  @override
-  Stream<SettingsState> mapEventToState(SettingsEvent event) async* {
-    if (event is GetAppSettings) {
-      yield* _mapGetAppSettingsToState();
-    } else if (event is ThemeSelected) {
-      yield* _mapThemeSelectedToState(event.theme);
-    }else if (event is SubmitTheme) {
-      yield* _mapSubmitThemeToState(event.theme);
-    }
-  }
-
-   Stream<SettingsState> _mapGetAppSettingsToState() async* {     
-
+  void _onGetAppSettings(GetAppSettings event, Emitter<SettingsState> emit) async{
     try{
       var theme = sharedPrefsService.readString(key: "appTheme");
       if(theme != null){
         var userTheme = AppThemes.firstWhere((t) => t.name == theme);
-        yield SuccessSettingsState(userTheme, userTheme);
+        return emit(SuccessSettingsState(userTheme, userTheme));
       }else{
-        yield SuccessSettingsState(AppThemes.first, AppThemes.first);
+        return emit(SuccessSettingsState(AppThemes.first, AppThemes.first));
       }
     }catch(e){
       print(e);
       //yield NoteState.failure(error: e.message);
-    }    
+    }
   }
-
-  Stream<SettingsState> _mapThemeSelectedToState(AppTheme? theme) async* {
-     yield SuccessSettingsState(theme, state.userTheme);
-  }
-
-  Stream<SettingsState> _mapSubmitThemeToState(AppTheme theme) async* {
-    await sharedPrefsService.writeString(key: "appTheme", value: theme.name);
-
-     yield SuccessSettingsState(theme, theme);
+  
+  void _onThemeSelected(ThemeSelected event, Emitter<SettingsState> emit) async{
+     return emit(SuccessSettingsState(event.theme, state.userTheme));
   }  
+
+  void _onSubmitTheme(SubmitTheme event, Emitter<SettingsState> emit) async{
+    await sharedPrefsService.writeString(key: "appTheme", value: event.theme.name);
+     return emit(SuccessSettingsState(event.theme, event.theme));
+  }
 }
 
  

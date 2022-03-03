@@ -43,7 +43,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
   ];
 
   void initState() { 
-    slidableController = SlidableController(); 
+    //slidableController = SlidableController(); 
     tabController = TabController(length: detailsTabs.length, vsync: this);
     
     tabController!.addListener(handleTabSelection);
@@ -165,7 +165,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
   Widget _editAction(VisaDetailsState state) => new IconButton(
         icon: FaIcon(FontAwesomeIcons.edit, color: ColorsPalette.lynxWhite),
         onPressed: () {
-          Navigator.popAndPushNamed(context, visaEditRoute,
+          Navigator.pushNamed(context, visaEditRoute,
               arguments: state.visa!.id);
         },
       );
@@ -235,17 +235,15 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                 itemBuilder: (builderContext, position) {
                   final entryExit = entries[position];
                   return Column(children: [
-                    Slidable(key: Key(entryExit.id!.toString()),
-                      controller: slidableController,
-                      direction: Axis.horizontal,                      
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
-                      child: VerticalListItem(entryExit, visa),
-                        secondaryActions: <Widget>[
-                          IconSlideAction(
-                            color: ColorsPalette.carminePink, 
+                    Slidable(key: Key(entryExit.id!.toString()),                      
+                      endActionPane: ActionPane(
+                        motion: const DrawerMotion(),
+                        extentRatio: 0.25,
+                        children: [
+                          SlidableAction(
+                            backgroundColor: ColorsPalette.carminePink, 
                             icon: FontAwesomeIcons.trashAlt, 
-                            onTap: () => showDialog<String>(
+                            onPressed: (context) => showDialog<String>(
                               context: context,
                               barrierDismissible: false, // user must tap button!
                               builder: (_) => BlocProvider<VisaEntryBloc>(                                   
@@ -257,25 +255,27 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                                         val == 'Delete' ? context.read<VisaDetailsBloc>().add(GetVisaDetails(visa!.id!)) : '',
                                     ),
                                   )), 
-                          ), 
-                        ], 
-                      ),
-                        Divider(color: ColorsPalette.mazarineBlue)
-                      ]);                      
-                    }))
-                    : Column(children: [Container(child: Align(
-                      child: Text("No entries"),
-                      alignment: Alignment.centerLeft))])
-                    ],
-                  )
+                          )
+                        ],
+                      ),                      
+                      direction: Axis.horizontal,                      
+                      child: VerticalListItem(entryExit, visa),                        
+                    ),
+                    Divider(color: ColorsPalette.mazarineBlue)
+                  ]);                      
+                }))
+          : Column(children: [Container(child: Align(
+            child: Text("No entries"),
+            alignment: Alignment.centerLeft))])
+          ],
+          )
               /*Container(height: MediaQuery.of(context).size.height * 0.4,
               child: SingleChildScrollView(child: ,
                 ))*/
-            ]
-          )
-        )
-      );
-
+        ]
+      )
+    )
+  );
 }
 
 class VerticalListItem extends StatelessWidget {
@@ -286,10 +286,10 @@ class VerticalListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-        Slidable.of(context)?.renderingMode == SlidableRenderingMode.none
+      onTap: () =>{},
+        /*Slidable.of(context)?.renderingMode == SlidableRenderingMode.none
           ? Slidable.of(context)?.open()
-          : Slidable.of(context)?.close(),
+          : Slidable.of(context)?.close(),*/
       child: Container(padding: EdgeInsets.only(top: 10.0),
         child: Column(children: [
           InkWell(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,

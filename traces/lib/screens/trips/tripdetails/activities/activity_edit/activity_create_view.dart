@@ -126,7 +126,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,
                 leading: IconButton(
-                  icon: Icon(Icons.close_rounded),
+                  icon: Icon(Icons.close_rounded, color:ColorsPalette.black),
                   onPressed: ()=> Navigator.pop(context)
                 ),
                 actions: [

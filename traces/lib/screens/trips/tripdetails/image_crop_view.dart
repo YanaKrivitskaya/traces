@@ -35,7 +35,7 @@ class _ImageCropViewState extends State<ImageCropView> {
   }
 
 Future<Null> _cropImage() async {
-    File? croppedFile = await ImageCropper.cropImage(
+    File? croppedFile = await ImageCropper().cropImage(
         sourcePath: imageFile!.path,
         compressQuality: 50,
         aspectRatio: CropAspectRatio(ratioX: 16, ratioY: 9),

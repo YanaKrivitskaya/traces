@@ -1,5 +1,4 @@
-import 'dart:async';
-import 'dart:io';
+//import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
@@ -14,86 +13,86 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   NoteBloc():
     _notesRepository = new ApiNotesRepository(), 
-    super(NoteState.empty());
+    super(NoteState.empty()){
+      on<GetAllNotes>(_onGetAllNotes);
+      on<UpdateNotesList>(_onUpdateNotesList);
+      on<UpdateSortFilter>(_onUpdateSortFilter);
+      on<SearchBarToggle>(_onSearchBarToggle);
+      on<SearchTextChanged>(_onSearchTextChanged);
+      on<SelectedTagsUpdated>(_onSelectedTagsUpdated);
+    }  
 
-  @override
-  Stream<NoteState> mapEventToState(
-    NoteEvent event,
-  ) async* {
-    if (event is GetAllNotes) {
-      yield* _mapGetAllNotesToState();
-    } /*else if (event is DeleteNote) {
-      yield* _mapDeleteNoteToState(event);
-    }*/else if (event is UpdateNotesList) {
-      yield* _mapUpdateNotesListToState(event);
-    }else if(event is UpdateSortFilter){
-      yield* _mapNotesUpdateSortFilterToState(event);
-    } else if(event is SelectedTagsUpdated){
-      yield* _mapSelectedTagsUpdatedToState(event);
-    } else if(event is SearchTextChanged){
-      yield* _mapSearchTextChangedToState(event);
-    } else if(event is SearchBarToggle){
-      yield* _mapSearchBarToggleToState(event);
-    }
-  }
-
-  Stream<NoteState> _mapUpdateNotesListToState(UpdateNotesList event) async* {
+  void _onUpdateNotesList(UpdateNotesList event, Emitter<NoteState> emit) async{
     List<Note> filteredNotes = <Note>[];
     filteredNotes.addAll(event.allNotes!);
-    yield NoteState.success(allNotes: event.allNotes, filteredNotes: filteredNotes,
-        sortField: event.sortField, sortDirection: event.sortDirection, searchEnabled: false, noteDeleted: false);
+    return emit(NoteState.success(
+      allNotes: event.allNotes, 
+      filteredNotes: filteredNotes,
+      sortField: event.sortField, 
+      sortDirection: event.sortDirection, 
+      searchEnabled: false, 
+      noteDeleted: false));
   }
 
-  Stream<NoteState> _mapGetAllNotesToState() async* {   
+  void _onGetAllNotes(GetAllNotes event, Emitter<NoteState> emit) async{
     var currentState = state;
-    yield NoteState.loading();
+    emit(NoteState.loading());
 
     try{
       var notes = await _notesRepository.getNotes();     
-      yield NoteState.success(allNotes: notes, filteredNotes: notes,
-        sortField: SortFields.DATEMODIFIED, sortDirection: SortDirections.ASC, searchEnabled: false, noteDeleted: false);      
+      return emit(NoteState.success(
+        allNotes: notes, 
+        filteredNotes: notes,
+        sortField: SortFields.DATEMODIFIED, 
+        sortDirection: SortDirections.ASC, 
+        searchEnabled: false, 
+        noteDeleted: false));      
     }on CustomException catch(e){
-      if(currentState.allNotes != null) yield NoteState.success(allNotes: currentState.allNotes, filteredNotes: currentState.allNotes,
-        sortField: currentState.sortField, sortDirection: currentState.sortDirection, searchEnabled: currentState.searchEnabled, noteDeleted: false, exception: e);
-      else yield NoteState.failure(error: e);      
+      if(currentState.allNotes != null) 
+        return emit(NoteState.success(
+          allNotes: currentState.allNotes, 
+          filteredNotes: currentState.allNotes,
+          sortField: currentState.sortField, 
+          sortDirection: currentState.sortDirection, 
+          searchEnabled: currentState.searchEnabled, 
+          noteDeleted: false, 
+          exception: e));
+      else return emit(NoteState.failure(error: e));
     }
   }
 
-  Stream<NoteState> _mapNotesUpdateSortFilterToState(UpdateSortFilter event) async*{
-    yield NoteState.loading();
-    yield state.update(sortField: event.sortField, sortDirection: event.sortDirection);
+  void _onUpdateSortFilter(UpdateSortFilter event, Emitter<NoteState> emit) async{
+    //emit(NoteState.loading());
+    return emit(state.update(
+      sortField: event.sortField, 
+      sortDirection: event.sortDirection));
   }
 
-  Stream<NoteState> _mapSearchBarToggleToState(SearchBarToggle event) async*{
-    yield state.update(stateStatus: StateStatus.Loading);
+  void _onSearchBarToggle(SearchBarToggle event, Emitter<NoteState> emit) async{
+    emit(state.update(stateStatus: StateStatus.Loading));
 
     List<Note> filteredNotes = <Note>[];
 
     !state.searchEnabled! ? filteredNotes.addAll(state.allNotes!) :  filteredNotes.addAll(state.filteredNotes!);
 
-    yield state.update(stateStatus: StateStatus.Success, searchEnabled: !state.searchEnabled!, filteredNotes: filteredNotes);
+    return emit(state.update(
+      stateStatus: StateStatus.Success, 
+      searchEnabled: !state.searchEnabled!, 
+      filteredNotes: filteredNotes));
   }
 
-  /*Stream<NoteState> _mapDeleteNoteToState(DeleteNote event) async* {
+  void _onSelectedTagsUpdated(SelectedTagsUpdated event, Emitter<NoteState> emit) async{
+    emit(state.update(stateStatus: StateStatus.Loading));
 
-    try{
-      await _notesRepository.deleteNote(event.note!.id);        
-    }on CustomException catch(e){
-      if(state.allNotes != null){
-        yield state.update(allNotes: state.allNotes, filteredNotes: state.filteredNotes, noteDeleted: false, errorMessage: e);
-      }else
-      yield NoteState.failure(error: e, noteDeleted: false);
-    }   
-  }*/
-
-  Stream<NoteState> _mapSelectedTagsUpdatedToState(SelectedTagsUpdated event) async* {
-    yield state.update(stateStatus: StateStatus.Loading);
-
-    yield state.update(stateStatus: StateStatus.Success, selectedTags: event.selectedTags, allTagsSelected: event.allTagsSelected, noTagsSelected: event.noTagsSelected);
+    return emit(state.update(
+      stateStatus: StateStatus.Success, 
+      selectedTags: event.selectedTags, 
+      allTagsSelected: event.allTagsSelected, 
+      noTagsSelected: event.noTagsSelected));
   }
 
-  Stream<NoteState> _mapSearchTextChangedToState(SearchTextChanged event) async*{
-    yield state.update(stateStatus: StateStatus.Loading);
+  void _onSearchTextChanged(SearchTextChanged event, Emitter<NoteState> emit) async{
+    emit(state.update(stateStatus: StateStatus.Loading));
 
     List<Note> filteredNotes = <Note>[];
 
@@ -101,6 +100,8 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
         ? filteredNotes = state.allNotes!.where((n) => n.title!.toLowerCase().contains(event.noteName.toLowerCase())).toList()
         : filteredNotes.addAll(state.allNotes!);
 
-    yield state.update(filteredNotes: filteredNotes, stateStatus: StateStatus.Success);
+    return emit(state.update(
+      filteredNotes: filteredNotes, 
+      stateStatus: StateStatus.Success));
   }
 }

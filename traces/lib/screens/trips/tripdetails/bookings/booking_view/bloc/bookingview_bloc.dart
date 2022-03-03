@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/trips/model/booking.model.dart';
@@ -14,28 +12,17 @@ class BookingViewBloc extends Bloc<BookingViewEvent, BookingViewState> {
 
   BookingViewBloc() : 
   _bookingsRepository = new ApiBookingsRepository(),
-  super(BookingViewInitial(null));
-
-
-  @override
-  Stream<BookingViewState> mapEventToState(
-    BookingViewEvent event,
-  ) async* {
-    if (event is GetBookingDetails) {
-      yield* _mapGetBookingDetailsToState(event);
-    }
-  }
-
-  Stream<BookingViewState> _mapGetBookingDetailsToState(GetBookingDetails event) async* {
-    yield BookingViewLoading(state.booking);
-    try{
-      Booking? activity = await _bookingsRepository.getBookingById(event.bookingId);
-            
-      yield BookingViewSuccess(activity);
-            
-    }on CustomException catch(e){
-      yield BookingViewError(state.booking, e.toString());
-    }
-      
+  super(BookingViewInitial(null)){
+    on<GetBookingDetails>((event, emit) async{
+      emit(BookingViewLoading(state.booking));
+      try{
+        Booking? activity = await _bookingsRepository.getBookingById(event.bookingId);
+              
+        emit(BookingViewSuccess(activity));
+              
+      }on CustomException catch(e){
+        emit(BookingViewError(state.booking, e.toString()));
+      }
+    });
   }
 }

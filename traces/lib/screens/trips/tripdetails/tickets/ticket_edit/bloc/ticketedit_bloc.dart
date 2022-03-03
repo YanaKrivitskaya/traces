@@ -15,64 +15,44 @@ class TicketEditBloc extends Bloc<TicketEditEvent, TicketEditState> {
   
   TicketEditBloc() : 
   _ticketsRepository = new ApiTicketsRepository(),
-  super(TicketCreateInitial(null));
+  super(TicketCreateInitial(null)){
+    on<NewTicketMode>((event, emit) => emit(
+      TicketCreateEdit(
+        new Ticket(departureDatetime: event.date), 
+        false)));
+    on<EditTicketMode>((event, emit) => emit(TicketCreateEdit(event.ticket, false)));  
+    on<ArrivalDateUpdated>(_onArrivalDateUpdated);
+    on<DepartureDateUpdated>(_onDepartureDateUpdated);  
+    on<TicketSubmitted>(_onTicketSubmitted);  
+    on<ExpenseUpdated>(_onExpenseUpdated);  
+  } 
 
-  @override
-  Stream<TicketEditState> mapEventToState(
-    TicketEditEvent event,
-  ) async* {
-    if (event is NewTicketMode) {
-      yield* _mapNewTicketModeToState(event);
-    } else if (event is ArrivalDateUpdated) {
-      yield* _mapArrivalDateUpdatedToState(event);
-    } else if (event is DepartureDateUpdated) {
-      yield* _mapDepartureDateUpdatedToState(event);
-    }  else if (event is TicketSubmitted) {
-      yield* _mapTicketSubmittedToState(event);
-    } else if (event is ExpenseUpdated) {
-      yield* _mapExpenseUpdatedToState(event);
-    } else if (event is EditTicketMode) {
-      yield* _mapEditTicketModeToState(event);
-    }
-  }
-
-  Stream<TicketEditState> _mapNewTicketModeToState(NewTicketMode event) async* {
-    yield TicketCreateEdit(new Ticket(departureDatetime: event.date), false);
-  }
-
-  Stream<TicketEditState> _mapEditTicketModeToState(EditTicketMode event) async* {
-    yield TicketCreateEdit(event.ticket, false);
-  }
-
-  Stream<TicketEditState> _mapArrivalDateUpdatedToState(ArrivalDateUpdated event) async* {
-    
+  void _onArrivalDateUpdated(ArrivalDateUpdated event, Emitter<TicketEditState> emit) async{
     Ticket ticket = state.ticket ?? new Ticket();
 
     Ticket updTicket = ticket.copyWith(arrivalDatetime: event.arrivalDate);
 
-    yield TicketCreateEdit(updTicket, false);
-  }
+    emit(TicketCreateEdit(updTicket, false));
+  } 
 
-  Stream<TicketEditState> _mapDepartureDateUpdatedToState(DepartureDateUpdated event) async* {
-    
+  void _onDepartureDateUpdated(DepartureDateUpdated event, Emitter<TicketEditState> emit) async{
     Ticket ticket = state.ticket ?? new Ticket();
 
     Ticket updTicket = ticket.copyWith(departureDatetime: event.departureDate);
 
-    yield TicketCreateEdit(updTicket, false);
-  }
+    emit(TicketCreateEdit(updTicket, false));
+  } 
 
-  Stream<TicketEditState> _mapExpenseUpdatedToState(ExpenseUpdated event) async* {
-    
+  void _onExpenseUpdated(ExpenseUpdated event, Emitter<TicketEditState> emit) async{
     Ticket ticket = state.ticket ?? new Ticket();
 
     Ticket updTicket = ticket.copyWith(expense: event.expense);
 
-    yield TicketCreateEdit(updTicket, false);
-  }
+    emit(TicketCreateEdit(updTicket, false));
+  } 
 
-  Stream<TicketEditState> _mapTicketSubmittedToState(TicketSubmitted event) async* {
-    yield TicketCreateEdit(event.ticket, true);    
+  void _onTicketSubmitted(TicketSubmitted event, Emitter<TicketEditState> emit) async{
+    emit(TicketCreateEdit(event.ticket, true));    
 
     try{
       Ticket ticket;
@@ -82,9 +62,9 @@ class TicketEditBloc extends Bloc<TicketEditEvent, TicketEditState> {
         ticket = await _ticketsRepository.createTicket(event.ticket!, event.expense, event.userId, event.tripId);
       }
       
-      yield TicketCreateSuccess(ticket);
+      emit(TicketCreateSuccess(ticket));
     }on CustomException catch(e){
-        yield TicketCreateError(event.ticket, e.toString());
-    }   
-  }
+        emit(TicketCreateError(event.ticket, e.toString()));
+    }  
+  } 
 }

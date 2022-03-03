@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:traces/utils/api/customException.dart';
 
@@ -16,48 +14,33 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     ProfileBloc()
         : profileRepository = new ApiProfileRepository(),
-          super(ProfileState.empty());
-  @override
-  Stream<ProfileState> mapEventToState(
-    ProfileEvent event,
-  ) async* {
-    if (event is GetProfile) {
-      yield* _mapGetProfileToState(event);
-    } else if (event is UsernameChanged) {
-      yield* _mapUsernameChangedToState(event.username);
-    }
-    else if (event is UsernameUpdated) {
-      yield* _mapUsernameUpdatedToState(event);
-    }
-    else if (event is FamilyUpdated) {
-      yield* _mapGroupMemberUpdatedToState(event);
-    }
-    else if (event is ShowFamilyDialog) {
-      yield* _mapShowFamilyDialogToState();
-    }else if (event is UserRemovedFromGroup) {
-      yield* _mapUserRemovedFromGroupToState(event);
-    }
-  }
+          super(ProfileState.empty()){
+            on<GetProfile>(_onGetProfile);
+            on<UsernameChanged>(_onUsernameChanged);
+            on<UsernameUpdated>(_onUsernameUpdated);
+            on<FamilyUpdated>(_onFamilyUpdated);
+            on<ShowFamilyDialog>(_onShowFamilyDialog);
+            on<UserRemovedFromGroup>(_onUserRemovedFromGroup);
+          }
 
-  Stream<ProfileState> _mapUsernameChangedToState(String username) async*{
-    yield state.update(
-        isUsernameValid: Validator.isValidUsername(username),
+  void _onUsernameChanged(UsernameChanged event, Emitter<ProfileState> emit) async{
+    return emit(state.update(
+        isUsernameValid: Validator.isValidUsername(event.username),
         exception: null,
         mode: StateMode.Edit
-    );
-  }
+    ));
+  } 
 
-  Stream<ProfileState> _mapShowFamilyDialogToState() async*{
-    yield state.update(
+  void _onShowFamilyDialog(ShowFamilyDialog event, Emitter<ProfileState> emit) async{
+    return emit(state.update(
       exception: null,
       mode: StateMode.View
-    );
+    ));
   }
 
-  Stream<ProfileState> _mapUsernameUpdatedToState(UsernameUpdated event) async*{
-
+  void _onUsernameUpdated(UsernameUpdated event, Emitter<ProfileState> emit) async{
     ProfileState currentState = state;
-    yield ProfileState.loading();
+    emit(ProfileState.loading());
 
     GroupUser user = GroupUser(name: event.username, userId: event.userId);
 
@@ -66,16 +49,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       Profile profile = currentState.profile!.copyWith(name: user.name);
 
-      yield ProfileState.success(profile: profile);
+      return emit(ProfileState.success(profile: profile));
     }on CustomException catch(e){      
-      yield ProfileState.failure(profile: currentState.profile, exception: e);
+      return emit(ProfileState.failure(profile: currentState.profile, exception: e));
     }
-    
   }
 
-  Stream<ProfileState> _mapGroupMemberUpdatedToState(FamilyUpdated event) async*{
+  void _onFamilyUpdated(FamilyUpdated event, Emitter<ProfileState> emit) async{
     ProfileState currentState = state;
-    yield ProfileState.loading();
+    emit(ProfileState.loading());
 
     GroupUser user = GroupUser(name: event.name, userId: event.userId);
 
@@ -89,28 +71,28 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       currentState.profile!.groups![groupIndex] = group;     
 
-      yield ProfileState.success(profile: currentState.profile);
+      return emit(ProfileState.success(profile: currentState.profile));
     } on CustomException catch(e){      
-      yield ProfileState.failure(profile: currentState.profile, exception: e);
+      return emit(ProfileState.failure(profile: currentState.profile, exception: e));
     }
   }  
 
-  Stream<ProfileState> _mapGetProfileToState(GetProfile event) async*{
+  void _onGetProfile(GetProfile event, Emitter<ProfileState> emit) async{
     ProfileState currentState = state;
-   yield ProfileState.loading();
+    emit(ProfileState.loading());
 
    try{
       Profile profile = await profileRepository.getProfileWithGroups();    
 
-      yield ProfileState.success(profile: profile);
+      return emit(ProfileState.success(profile: profile));
    }on CustomException catch(e){      
-      yield ProfileState.failure(profile: currentState.profile, exception: e);
-    }   
+      return emit(ProfileState.failure(profile: currentState.profile, exception: e));
+    }    
   }
 
-  Stream<ProfileState> _mapUserRemovedFromGroupToState(UserRemovedFromGroup event) async*{
+  void _onUserRemovedFromGroup(UserRemovedFromGroup event, Emitter<ProfileState> emit) async{
     ProfileState currentState = state;
-    yield ProfileState.loading();
+    emit(ProfileState.loading());
 
     try{
       var group = await profileRepository.removeUserFromGroup(event.user.userId!, event.group.id!);
@@ -118,9 +100,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       currentState.profile!.groups![groupIndex] = group;
 
-      yield ProfileState.success(profile: currentState.profile);
+      return emit(ProfileState.success(profile: currentState.profile));
     }on CustomException catch(e){      
-      yield ProfileState.failure(profile: currentState.profile, exception: e);
+      return emit(ProfileState.failure(profile: currentState.profile, exception: e));
     }    
   }
 }
