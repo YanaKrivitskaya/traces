@@ -27,12 +27,12 @@ class ProfileView extends StatefulWidget{
 }
 
 class _ProfileViewState extends State<ProfileView>{
-  SlidableController? slidableController; 
+  //SlidableController? slidableController; 
   Profile? _profile;
   Group? _familyGroup;
 
   void initState() { 
-    slidableController = SlidableController();
+    //slidableController = SlidableController();
     super.initState(); 
   }
 
@@ -156,35 +156,40 @@ class _ProfileViewState extends State<ProfileView>{
                   itemBuilder: (context, position){
                     final member = group.users[position];
                     return Slidable(key: Key(member.userId!.toString()),
-                      controller: slidableController,
-                      direction: Axis.horizontal,                      
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
-                      child: VerticalUserListItem(group, member),
-                      actions: member.accountId == null || member.accountId == accountId ? [
-                        IconSlideAction(
-                          color: ColorsPalette.meditSea, 
-                          icon: FontAwesomeIcons.edit, 
-                          onTap: () => showDialog(barrierDismissible: false, context: context,builder: (_) =>
-                            BlocProvider.value(
-                              value: context.read<ProfileBloc>()..add(ShowFamilyDialog()),
-                              child: FamilyDialog(member, group.id!),
-                            )
-                        )
-                        ), 
-                      ] : [],
-                      secondaryActions: <Widget>[
-                        IconSlideAction(
-                          color: ColorsPalette.carminePink, 
-                          icon: FontAwesomeIcons.trashAlt, 
-                          onTap: () => showDialog(barrierDismissible: false, context: context,builder: (_) =>
-                            BlocProvider.value(
-                              value: context.read<ProfileBloc>()..add(ShowFamilyDialog()),
-                              child: UserDeleteAlert(user: member, group: group),
-                            )
-                        ), 
-                        ), 
-                      ], 
+                      startActionPane: ActionPane(
+                        motion: const DrawerMotion(),
+                        extentRatio: 0.25,
+                        children: member.accountId == null || member.accountId == accountId ? [
+                          SlidableAction(
+                            backgroundColor: ColorsPalette.meditSea, 
+                            icon: FontAwesomeIcons.edit, 
+                            onPressed: (context) => showDialog(barrierDismissible: false, context: context,builder: (_) =>
+                              BlocProvider.value(
+                                value: context.read<ProfileBloc>()..add(ShowFamilyDialog()),
+                                child: FamilyDialog(member, group.id!),
+                              )
+                          )
+                          ), 
+                        ] : [],
+                        
+                      ),
+                      endActionPane: ActionPane(
+                        motion: const DrawerMotion(),
+                        extentRatio: 0.25,
+                        children: [
+                          SlidableAction(
+                            backgroundColor: ColorsPalette.carminePink, 
+                            icon: FontAwesomeIcons.trashAlt, 
+                            onPressed: (context) => showDialog(barrierDismissible: false, context: context,builder: (_) =>
+                              BlocProvider.value(
+                                value: context.read<ProfileBloc>()..add(ShowFamilyDialog()),
+                                child: UserDeleteAlert(user: member, group: group),
+                              )
+                            ), 
+                          )
+                        ],
+                      ),                      
+                      child: VerticalUserListItem(group, member)                      
                     );
                     /*return ListTile(
                       title: Text(member.name),

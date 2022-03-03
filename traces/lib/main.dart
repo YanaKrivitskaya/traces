@@ -20,7 +20,10 @@ Future<void> main() async {
   //await Firebase.initializeApp();
   await ApiService.init();
   await SharedPreferencesService.init();
-  Bloc.observer = SimpleBlocDelegate();
+   BlocOverrides.runZoned(
+    () {},
+    blocObserver: SimpleBlocDelegate()
+  );  
   
   runApp(
     BlocProvider(
