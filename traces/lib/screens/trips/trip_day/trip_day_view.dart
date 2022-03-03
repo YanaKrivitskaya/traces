@@ -70,7 +70,7 @@ class _TripDayState extends State<TripDayView>{
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,
                 leading: IconButton(
-                  icon: Icon(Icons.close_rounded),
+                  icon: Icon(Icons.arrow_back, color: ColorsPalette.black),
                   onPressed: ()=> Navigator.pop(context)
                 )
             ),

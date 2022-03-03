@@ -52,7 +52,7 @@ class StartPlanningBloc extends Bloc<StartPlanningEvent, StartPlanningState> {
 
         emit(StartPlanningCreatedState(trip));
       } on CustomException catch(e){
-        
+        emit(StartPlanningErrorState(event.trip, e.toString()));
       }
       
     } 
