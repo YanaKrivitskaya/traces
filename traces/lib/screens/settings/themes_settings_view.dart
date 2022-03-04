@@ -51,10 +51,10 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
           ),
           body: state is SuccessSettingsState ?  Container(
             padding: EdgeInsets.only(top: 20.0),
-            child: Column(children: [
+            child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               CarouselSlider(
                   options: CarouselOptions(
-                    height: MediaQuery.of(context).size.height*0.7,
+                    height: MediaQuery.of(context).size.height*0.75,
                     initialPage: _currentIndex,
                     enlargeCenterPage: true,
                     enableInfiniteScroll: false,
@@ -66,11 +66,14 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                   items: AppThemes.map((item) => Container(   
                     padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),                                     
                     child: Center(
-                      child: item == _userTheme ? Badge(
-                        badgeContent: Icon(Icons.check, color: ColorsPalette.lynxWhite),
-                        badgeColor: ColorsPalette.pureApple,
-                        child: Image.asset(item.path, fit: BoxFit.cover)
-                      ) : Image.asset(item.path, fit: BoxFit.cover)
+                      child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [                        
+                        item == _userTheme ? Badge(
+                          badgeContent: Icon(Icons.check, color: ColorsPalette.lynxWhite),
+                          badgeColor: ColorsPalette.pureApple,
+                          child: Image.asset(item.path, fit: BoxFit.cover)
+                        ) : Image.asset(item.path, fit: BoxFit.cover),
+                        (item.author != null && _currentIndex == AppThemes.indexOf(item)) ? Text("designed by ${item.author} from Flaticon") : Container()
+                      ],)
                     ),
                   )).toList()),
               Row(
@@ -80,7 +83,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                   return Container(
                     width: 8.0,
                     height: 8.0,
-                    margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                    margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _currentIndex == index
