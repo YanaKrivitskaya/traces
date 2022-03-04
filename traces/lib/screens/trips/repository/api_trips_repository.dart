@@ -87,7 +87,7 @@ class ApiTripsRepository{
   Future<String?> deleteTrip(int tripId)async{
     print("deleteTrip");   
 
-    final response = await apiProvider.deleteSecure("$tripsUrl$tripId}");     
+    final response = await apiProvider.deleteSecure("$tripsUrl$tripId");     
     
     return response["response"];
   } 
