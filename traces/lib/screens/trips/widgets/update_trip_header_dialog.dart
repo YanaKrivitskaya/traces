@@ -125,19 +125,20 @@ class _UpdateTripHeaderDialogState extends State<UpdateTripHeaderDialog>{
         width:  MediaQuery.of(context).size.width * 0.7,
         child:
           InkWell(      
-            child: Row(
-              mainAxisAlignment:MainAxisAlignment.spaceBetween,
-              children: [
+            child: Column(children: [
+              Row(children: [
                 Icon(Icons.date_range),
                   state.trip?.startDate != null 
                   ?  Text('${DateFormat.yMMMd().format(state.trip!.startDate!)}', style: quicksandStyle(fontSize: 18.0))
-                  : Text("Start Date", style:  quicksandStyle(fontSize: 18.0)),
+                  : Text("Start Date", style:  quicksandStyle(fontSize: 18.0))
+              ],),
+              Row(children: [
                 Icon(Icons.date_range),
                   state.trip?.endDate != null 
                   ?  Text('${DateFormat.yMMMd().format(state.trip!.endDate!)}', style: quicksandStyle(fontSize: 18.0))
-                  : Text("End Date", style:  quicksandStyle(fontSize: 18.0)),
-              ],
-            ),
+                  : Text("End Date", style:  quicksandStyle(fontSize: 18.0))
+              ],)
+            ],),
             onTap: () => _selectDates(context, state),
           )
       )

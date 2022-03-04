@@ -27,7 +27,7 @@ Widget headerCoverWidget(Trip trip, List<GroupUser> familyMembers, BuildContext 
   children: [
     _coverImage(trip.coverImage),
     //back button
-    Positioned(top: 35, left: 10,
+    Positioned(top: 50, left: 10,
       child: InkWell(
         onTap: (){
           sharedPrefsService.remove(key: key);
@@ -36,7 +36,7 @@ Widget headerCoverWidget(Trip trip, List<GroupUser> familyMembers, BuildContext 
         child:Icon(Icons.arrow_back, color: ColorsPalette.white)
       ),
     ),
-    Positioned(top: 20, right: 10,
+    Positioned(top: 35, right: 10,
       child: _popupMenu(trip, context)
     ),
     Positioned(bottom: 0,
