@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
-import 'package:traces/screens/trips/model/trip.model.dart';
-import 'package:traces/screens/trips/model/trip_day.model.dart';
 import 'package:traces/screens/trips/model/trip_object.model.dart';
 import 'package:traces/widgets/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

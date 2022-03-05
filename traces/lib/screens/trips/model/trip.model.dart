@@ -9,7 +9,6 @@ import 'package:traces/screens/trips/model/ticket.model.dart';
 import '../../profile/model/group_user_model.dart';
 import 'activity.model.dart';
 
-
 class Trip {
   final int? id;  
   final int? createdBy;
