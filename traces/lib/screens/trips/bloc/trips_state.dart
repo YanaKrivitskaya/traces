@@ -1,7 +1,7 @@
 part of 'trips_bloc.dart';
 
 @immutable
-abstract class TripsState extends Equatable{
+abstract class TripsState{
 
   const TripsState();
 

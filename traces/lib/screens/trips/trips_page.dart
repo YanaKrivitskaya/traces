@@ -27,7 +27,7 @@ class TripsPage extends StatelessWidget{
           appBar: AppBar(
             centerTitle: true,
             title: Text('Trips', style: GoogleFonts.quicksand(textStyle: 
-              TextStyle(fontSize: 30.0))),
+              TextStyle(fontSize: 30.0, color: ColorsPalette.black))),
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: ColorsPalette.black),
               onPressed: (){
@@ -43,7 +43,10 @@ class TripsPage extends StatelessWidget{
                     create: (context) => TripViewOptionsBloc()..add(ViewOptionUpdated(viewOption ?? 1)),
                       child:  UpdateTripViewDialog(),
                     )
-                  ).then((value) => viewOption = sharedPrefsService.readInt(key: viewOptionKey));
+                  ).then((value) {
+                    viewOption = sharedPrefsService.readInt(key: viewOptionKey);
+                    context.read<TripsBloc>().add(UpdateTripsList((state as TripsSuccessState).allTrips ?? []));
+                  });
                 },
               )
             ],
