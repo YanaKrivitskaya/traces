@@ -19,5 +19,17 @@ class UpdateTripsList extends TripsEvent{
   List<Object> get props => [trips];
 }
 
+class TabUpdated extends TripsEvent{
+  final int tab;
+
+  const TabUpdated(this.tab);
+
+  @override
+  List<Object> get props => [tab];
+
+  @override
+  String toString() => 'UpdateTab { tab: $tab }';
+}
+
 
 
