@@ -52,7 +52,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-              backgroundColor: ColorsPalette.juicyGreen,
+              backgroundColor: ColorsPalette.juicyYellow,
               content: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [SizedBox(
                       child: CircularProgressIndicator(
@@ -70,7 +70,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
             ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
-              backgroundColor: ColorsPalette.juicyGreen,
+              backgroundColor: ColorsPalette.juicyYellow,
               content: Row(mainAxisAlignment: MainAxisAlignment.center,
                 children: [ 
                     Icon(Icons.check, color: ColorsPalette.lynxWhite,)
@@ -105,7 +105,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
         child: BlocBuilder<StartPlanningBloc, StartPlanningState>(
           builder: (context, state){
             if (state is StartPlanningInitial){
-              return loadingWidget(ColorsPalette.juicyGreen);
+              return loadingWidget(ColorsPalette.juicyYellow);
             }
             newTrip = state.trip;            
             return _createForm(state, newTrip);
