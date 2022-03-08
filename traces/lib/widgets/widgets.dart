@@ -41,16 +41,19 @@ Widget loadingWidget(Color color) => new Center(
   ),
 );
 
-Widget avatar(String username, double? radius, Color fontColor, double fontSize) => new CircleAvatar(
-      backgroundColor: ColorsPalette.lynxWhite,
-      child: Text(
-        getAvatarName(username),
-        style: TextStyle(
-            color: fontColor,
-            fontSize: fontSize,
-            fontWeight: FontWeight.w300),
-      ),
-      radius: radius);
+Widget avatar(String username, double radius, Color fontColor, double fontSize, Color? backColor) => new CircleAvatar(
+      backgroundColor: fontColor,
+      child: CircleAvatar(
+        backgroundColor: backColor ?? ColorsPalette.lynxWhite,
+        child: Text(
+          getAvatarName(username),
+          style: TextStyle(
+              color: fontColor,
+              fontSize: fontSize,            
+              fontWeight: FontWeight.w300),
+        ),
+        radius: radius),
+      radius: radius + radius*0.05 );
 
 String getAvatarName(String profileName){
   if(profileName.length <= 3) return profileName.toUpperCase();

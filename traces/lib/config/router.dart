@@ -101,7 +101,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => BlocProvider<ProfileBloc>(
             create: (context) =>
-                ProfileBloc(),
+                ProfileBloc()..add(GetProfile()),
             child: ProfilePage(),
           ),
         );
