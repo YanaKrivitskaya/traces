@@ -58,7 +58,7 @@ class _TripsStateView extends State<TripsView> with TickerProviderStateMixin{
     return BlocListener<TripsBloc, TripsState>(
       listener: (context, state){
         if(state is TripsSuccessState && state.allTrips !=null && state.allTrips!.length > 0){
-          trips = _sortTrips(state.allTrips!, state.activeTab ?? 0);
+          trips = _sortTrips(state.allTrips!, state.activeTab);
           viewOption = sharedPrefsService.readInt(key: viewOptionKey);
         }
       },

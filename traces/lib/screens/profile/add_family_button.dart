@@ -13,7 +13,7 @@ class AddFamilyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      child: Text("Add", style: TextStyle(color: ColorsPalette.fusionRed),),
+      child: Text("Add", style: TextStyle(color: ColorsPalette.white),),
       onPressed: (){
         showDialog(barrierDismissible: false, context: context,builder: (_) =>
             BlocProvider.value(
@@ -22,6 +22,7 @@ class AddFamilyButton extends StatelessWidget {
             )
         );
       },
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyYellow)),
     );
   }
 }

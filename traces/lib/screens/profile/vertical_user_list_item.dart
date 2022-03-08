@@ -20,7 +20,7 @@ class VerticalUserListItem extends StatelessWidget {
           : Slidable.of(context)?.close(),*/
       child: InkWell(
         child: ListTile(
-          leading: avatar(user.name, 20.0, ColorsPalette.meditSea, 15.0),
+          leading: avatar(user.name, 20.0, ColorsPalette.juicyBlue, 15.0, null),
           title: Text(user.name),
           //trailing: EditFamilyButton(user, group.id!),
         ),

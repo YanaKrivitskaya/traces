@@ -61,7 +61,7 @@ class _TicketViewState extends State<TicketView>{
               backgroundColor: ColorsPalette.white,
               elevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.close_rounded),
+                icon: Icon(Icons.close_rounded, color: ColorsPalette.black),
                 onPressed: ()=> Navigator.pop(context)
               ),
               actions: ticket != null ? [
@@ -70,8 +70,8 @@ class _TicketViewState extends State<TicketView>{
                   Navigator.pushNamed(context, ticketEditRoute, arguments: args).then((value){
                     value != null ? context.read<TicketViewBloc>().add(GetTicketDetails(ticket!.id!)) : '';
                   });
-                }, icon: Icon(Icons.edit_outlined)),
-                IconButton(onPressed: (){}, icon: Icon(Icons.delete_outline))
+                }, icon: Icon(Icons.edit_outlined, color: ColorsPalette.black)),
+                IconButton(onPressed: (){}, icon: Icon(Icons.delete_outline, color: ColorsPalette.black))
               ] : null,
             ),
             

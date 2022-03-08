@@ -17,7 +17,7 @@ class NameEditButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        icon: FaIcon(FontAwesomeIcons.edit, size: 20.0, color: ColorsPalette.meditSea),
+        icon: Icon(Icons.edit, size: 20.0, color: ColorsPalette.black),
         onPressed: (){
           showDialog(barrierDismissible: false, context: context,builder: (_) =>
               BlocProvider.value(
