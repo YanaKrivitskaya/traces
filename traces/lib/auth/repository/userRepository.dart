@@ -17,4 +17,6 @@ abstract class UserRepository{
   Future<Account> getUser(int userId);
 
   Future<Account> isSignedIn();
+
+  Future<Account> updateEmail(String email);
 }
