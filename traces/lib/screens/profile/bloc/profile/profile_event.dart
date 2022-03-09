@@ -36,6 +36,15 @@ class UsernameChanged extends ProfileEvent{
   List<Object> get props => [username];
 }
 
+class EmailChanged extends ProfileEvent{
+  final String email;
+
+  const EmailChanged({required this.email});
+
+  @override
+  List<Object> get props => [email];
+}
+
 class FamilyUpdated extends ProfileEvent{
   final int? userId;
   final String name;
@@ -47,14 +56,15 @@ class FamilyUpdated extends ProfileEvent{
   List<Object?> get props => [userId, name, groupId];
 }
 
-class UsernameUpdated extends ProfileEvent{
-  final int userId;
+class UserUpdated extends ProfileEvent{
+  final int userId;  
   final String username;
+  final String email;
 
-  const UsernameUpdated({required this.username, required this.userId});
+  const UserUpdated({required this.username, required this.userId, required this.email});
 
   @override
-  List<Object> get props => [username, userId];
+  List<Object> get props => [username, userId, email];
 }
 
 class UserRemovedFromGroup extends ProfileEvent{

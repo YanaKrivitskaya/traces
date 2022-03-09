@@ -2,6 +2,7 @@ import '../../utils/services/api_service.dart';
 import '../model/login.model.dart';
 import '../model/account.model.dart';
 import 'userRepository.dart';
+import 'dart:convert';
 
 
 class ApiUserRepository extends UserRepository{
@@ -44,6 +45,17 @@ class ApiUserRepository extends UserRepository{
     var userIdParam = userId.toString();
     final response = await apiProvider.getSecure(authUrl + '/users/$userIdParam');
     return Account.fromMap(response);
+  }
+
+  @override
+  Future<Account> updateEmail(String email) async{
+    print("updateEmail");
+    var body = {
+      "email": email      
+    };
+    final response = await apiProvider.putSecure(authUrl + 'email', json.encode(body));
+   
+    return Account.fromMap(response["account"]);
   }
   
 
