@@ -22,7 +22,7 @@ class AddFamilyButton extends StatelessWidget {
             )
         );
       },
-      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyYellow)),
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyOrange)),
     );
   }
 }

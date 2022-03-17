@@ -85,19 +85,13 @@ class _ProfileViewState extends State<ProfileView>{
             child: state.profile != null ? Container(
               child: Column(
                 children: <Widget>[
-                  avatar(getAvatarName(_profile!.name), 50.0, ColorsPalette.juicyBlue, 40.0, null)
-                  /*CircleAvatar(
-                    backgroundColor: ColorsPalette.juicyYellow,
-                    child: Text(getAvatarName(_profile!.name), style: TextStyle(color: ColorsPalette.white, fontSize: 40.0, fontWeight: FontWeight.w300),),
-                    radius: 50.0
-                  )*/,
+                  avatar(getAvatarName(_profile!.name), 50.0, ColorsPalette.juicyBlue, 40.0, null),                  
                   Container(
                     margin: EdgeInsets.only(top: 10.0),
                     child: Expanded(child: Align(child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(_profile!.name, style: TextStyle(fontSize: 20.0)),
-                          //NameEditButton(userId: _profile!.userId)
+                          Text(_profile!.name, style: TextStyle(fontSize: 20.0))                          
                         ],
                       ), alignment: Alignment.center,)),
                   ),                 
@@ -113,14 +107,17 @@ class _ProfileViewState extends State<ProfileView>{
                     ],)
                     ],),
                   ),
-                  /*Align(
-                      alignment: Alignment.centerLeft,
-                      child: FlatButton(
-                        color: ColorsPalette.fusionRed,
-                        child: Text("Verify email", style: TextStyle(color: ColorsPalette.lynxWhite),),
-                        onPressed: (){},
+                  Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyOrange)),
+                        //color: ColorsPalette.fusionRed,
+                        child: Text("Verify email", style: TextStyle(color: ColorsPalette.white),),
+                        onPressed: (){
+                          context.read<ProfileBloc>()..add(VerifyEmail());
+                        },
                       ),
-                    ),*/
+                    ),
                   Divider(color: ColorsPalette.juicyBlue),
                   _familyGroup != null ? 
                   _familyGroupWidget(_familyGroup!, _profile!.accountId, _profile!.userId): Container(),                  
@@ -144,7 +141,7 @@ class _ProfileViewState extends State<ProfileView>{
         ),
         Container(
           padding: EdgeInsets.only(right: 10.0),
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.3,
           child: SingleChildScrollView(
             child: Column(children: [
               group.users.length > 0 ? Container(
@@ -217,10 +214,10 @@ class _ProfileViewState extends State<ProfileView>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Divider(color: ColorsPalette.juicyYellow),
+                Divider(color: ColorsPalette.juicyBlue),
                 OutlinedButton(
                   child: ListTile(
-                      leading: Icon(Icons.logout, color: ColorsPalette.juicyYellow),
+                      leading: Icon(Icons.logout, color: ColorsPalette.juicyOrange),
                       title: Text('Sign out')),
                   onPressed: (){
                     BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
