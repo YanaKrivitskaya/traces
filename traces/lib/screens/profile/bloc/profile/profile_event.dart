@@ -16,6 +16,7 @@ class GetProfile extends ProfileEvent {}
 
 class ShowFamilyDialog extends ProfileEvent {}
 
+class VerifyEmail extends ProfileEvent {}
 class UpdateProfileState extends ProfileEvent {
   final List<GroupUser> familyMembers;
 
