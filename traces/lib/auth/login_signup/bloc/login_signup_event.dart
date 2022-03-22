@@ -36,15 +36,15 @@ class PasswordChanged extends LoginSignupEvent{
 
 class SubmittedLogin extends LoginSignupEvent{
   final String email;
-  final String password;
+  //final String password;
 
   const SubmittedLogin({
     required this.email,
-    required this.password
+    //required this.password
   });
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [email/*, password*/];
 }
 
 class SubmittedSignup extends LoginSignupEvent{

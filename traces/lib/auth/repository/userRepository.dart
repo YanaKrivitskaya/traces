@@ -4,9 +4,7 @@ import '../model/login.model.dart';
 import '../model/account.model.dart';
 
 abstract class UserRepository{
-  Future<Account> signInWithEmailAndPassword(LoginModel loginModel);
-
-  Future<void> signUp(Account user);
+  Future<Account> signInWithEmailAndPassword(LoginModel loginModel); 
 
   Future<Account> getAccessToken();
 
