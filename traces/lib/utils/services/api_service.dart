@@ -60,6 +60,46 @@ class ApiService {
     }
     return responseJson;
   }
+
+  Future<dynamic> sendOtpToEmail(String url, String body) async{
+    var responseJson;
+    Uri uri = Uri.parse(_baseUrl + url);
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json"      
+    };
+
+    try{
+      responseJson = await  sendPost(uri, headers, body);
+      var verificationKey = responseJson["verificationKey"];
+      await _storage!.write(key: "verificationKey", value: verificationKey);
+
+    }on SocketException catch(e) {
+      throw ConnectionException('No Internet connection');
+    }
+    
+    return responseJson;
+  }
+
+  Future<dynamic> verifyOtp(String url, String body) async{
+    var responseJson;
+    Uri uri = Uri.parse(_baseUrl + url);
+
+    var verificationKey = await _storage!.read(key: "verificationKey");
+    if(verificationKey == null) throw "Verification key not found";
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      "verification-key": verificationKey,
+      "device-info": _deviceId ?? ''
+    };
+
+    try{
+      responseJson = await sendPost(uri, headers, body);
+    }on SocketException catch(e) {
+      throw ConnectionException('No Internet connection');
+    }
+    
+    return responseJson;
+  }
   
   Future<dynamic> signOut() async{
     print("signOut");

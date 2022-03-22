@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/auth/login_signup/otp/otp_verification_view.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_view/activity_view.dart';
@@ -14,6 +15,7 @@ import 'package:traces/screens/trips/tripdetails/tickets/ticket_edit/ticket_edit
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_view/bloc/ticketview_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_view/ticket_view.dart';
 
+import '../auth/login_signup/otp/bloc/otp_bloc.dart';
 import '../constants/route_constants.dart';
 import '../screens/expenses.dart';
 import '../screens/home.dart';
@@ -63,41 +65,54 @@ class RouteGenerator {
             child: HomePage(),
           ),
       );
+      case otpVerificationRoute:
+        {
+          if (args is String) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<OtpBloc>(
+                create: (context) => OtpBloc()
+                  /*..add(OtpSent(args))*/,
+                child: OtpVerificationView(args),
+              ),
+            );
+          }
+          return _errorRoute();
+        }  
       case notesRoute:
-      return MaterialPageRoute(
+        return MaterialPageRoute(
         builder: (_) => MultiBlocProvider(
-                      providers: [                       
-                        BlocProvider<TagFilterBloc>(
-                          create: (context) => TagFilterBloc(),
-                        ),
-                         BlocProvider<NoteBloc>(
-                          create: (context) => NoteBloc()..add(GetAllNotes())
-                        ),
-                      ],
-                      child: NotesPage(),
-                    )
+          providers: [                       
+            BlocProvider<TagFilterBloc>(
+              create: (context) => TagFilterBloc(),
+            ),
+            BlocProvider<NoteBloc>(
+              create: (context) => NoteBloc()..add(GetAllNotes())
+            ),
+          ],
+          child: NotesPage(),
+        )
       );
       case noteDetailsRoute:
         {
           if (args is int) {
             return MaterialPageRoute(
-                builder: (_) => MultiBlocProvider(
-                      providers: [
-                        BlocProvider<NoteDetailsBloc>(
-                          create: (context) => NoteDetailsBloc()..add(args != 0
-                              ? GetNoteDetails(args)
-                              : NewNoteMode()),
-                        ),
-                        BlocProvider<TagFilterBloc>(
-                          create: (context) => TagFilterBloc()..add(GetTags()),
-                        ),
-                      ],
-                      child: NoteDetailsView(),
-                    ));
+              builder: (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider<NoteDetailsBloc>(
+                    create: (context) => NoteDetailsBloc()..add(args != 0
+                      ? GetNoteDetails(args)
+                      : NewNoteMode()),
+                    ),
+                  BlocProvider<TagFilterBloc>(
+                    create: (context) => TagFilterBloc()..add(GetTags()),
+                  ),
+                ],
+                child: NoteDetailsView(),
+            ));
           }
           return _errorRoute();
         }
-    case profileRoute:
+      case profileRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<ProfileBloc>(
             create: (context) =>

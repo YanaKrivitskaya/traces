@@ -2,30 +2,63 @@ import 'package:meta/meta.dart';
 
 import '../../../utils/misc/state_types.dart';
 import '../../model/account.model.dart';
-import '../form_types.dart';
 
-@immutable
+@immutable 
+abstract class LoginState{
+  final String? email;
+
+  const LoginState(this.email);
+
+   @override
+  List<Object?> get props => [email];
+}
+
+class LoginStateInitial extends LoginState{
+   LoginStateInitial(String? email) : super(email);
+}
+
+class LoginStateEdit extends LoginState{
+  final String email;
+  final bool isEmailValid;
+
+  LoginStateEdit(this.email, this.isEmailValid) : super(email);
+
+  @override
+  List<Object?> get props => [email, isEmailValid];
+}
+
+class LoginStateSuccess extends LoginState{
+  final String email;
+
+  LoginStateSuccess(this.email) : super(email);
+
+  @override
+  List<Object?> get props => [email];
+}
+
+class LoginStateError extends LoginState{  
+  final String error;
+
+  LoginStateError(String? email, this.error) : super(email);
+
+  @override
+  List<Object?> get props => [email, error];
+}
+
+class LoginStateLoading extends LoginState{
+   LoginStateLoading(String? email) : super(email);
+}
+
+/*@immutable
 class LoginSignupState {
   final bool isEmailValid;
-  final bool isUsernameValid;
-  final bool isPasswordValid;
   final StateStatus status;
-  final FormMode? form;
-  final bool? isPasswordReseted;
   final Account? user;
   final String? errorMessage;
 
-  bool get isSignupFormValid => isEmailValid & isPasswordValid & isUsernameValid;
-
-  bool get isLoginFormValid => isEmailValid & isPasswordValid;
-
   LoginSignupState({
     required this.isEmailValid,
-    required this.isUsernameValid,
-    required this.isPasswordValid,
     required this.status,
-    required this.form,
-    required this.isPasswordReseted,
     this.user,
     this.errorMessage
   });
@@ -33,66 +66,42 @@ class LoginSignupState {
   factory LoginSignupState.empty(){
     return LoginSignupState(
       isEmailValid: true,
-      isPasswordValid: true,
-      isUsernameValid: true,
       status: StateStatus.Empty,
-      form: FormMode.Login,
-      isPasswordReseted: false,
       errorMessage: ""
     );
   }
 
-  factory LoginSignupState.loading({FormMode? formMode, bool? isReseted}){
+  factory LoginSignupState.loading({bool? isReseted}){
     return LoginSignupState(
       isEmailValid: true,
-      isPasswordValid: true,
-      isUsernameValid: true,
       status: StateStatus.Loading,
-      form: formMode,
-      isPasswordReseted: isReseted
     );
   }
 
-  factory LoginSignupState.success({FormMode? formMode, bool? isReseted, Account? user}){
+  factory LoginSignupState.success({bool? isReseted, Account? user}){
     return LoginSignupState(
       isEmailValid: true,
-      isPasswordValid: true,
-      isUsernameValid: true,
       status: StateStatus.Success,
-      form: formMode,
-      isPasswordReseted: isReseted,
       user: user
     );
   }
 
-  factory LoginSignupState.failure({FormMode? formMode, bool? isReseted, String? error}){
+  factory LoginSignupState.failure({bool? isReseted, String? error}){
     return LoginSignupState(
       isEmailValid: true,
-      isPasswordValid: true,
-      isUsernameValid: true,
       status: StateStatus.Error,
-      form: formMode,
-      isPasswordReseted: isReseted,
       errorMessage: error
     );
   }
 
   LoginSignupState copyWith({
     bool? isEmailValid,
-    bool? isPasswordValid,
-    bool? isUsernameValid,
     StateStatus? status,
-    FormMode? formMode,
-    bool? isPasswordReseted,
     String? errorMessage
   }){
     return LoginSignupState(
-        isEmailValid: isEmailValid ?? this.isEmailValid,
-        isPasswordValid: isPasswordValid ?? this.isPasswordValid,
-        isUsernameValid: isUsernameValid ?? this.isUsernameValid,
-        status: status ?? this.status,
-        form: formMode ?? this.form,
-        isPasswordReseted: isPasswordReseted ?? this.isPasswordReseted,
+        isEmailValid: isEmailValid ?? this.isEmailValid,        
+        status: status ?? this.status,       
         errorMessage: errorMessage ?? this.errorMessage
     );
   }
@@ -101,17 +110,12 @@ class LoginSignupState {
     bool? isEmailValid,
     bool? isPasswordValid,
     bool? isUsernameValid,
-    FormMode? formMode,
     bool? isPasswordReseted,
     String? errorMessage
   }){
     return copyWith(
         isEmailValid: isEmailValid,
-        isPasswordValid: isPasswordValid,
-        isUsernameValid: isUsernameValid,
         status: StateStatus.Empty,
-        formMode: formMode,
-        isPasswordReseted: isPasswordReseted,
         errorMessage: errorMessage
     );
   }
@@ -121,15 +125,11 @@ class LoginSignupState {
   String toString(){
     return '''LoginSignupState{
       isEmailValid: $isEmailValid,
-      isPasswordValid: $isPasswordValid,
-      isUsernameValid: $isUsernameValid,
       status: $status,
-      form: $form,
-      isPasswordReseted: $isPasswordReseted,
       errorMessage: $errorMessage,
     }''';
   }
 
 }
 
-mixin InitialLoginSignupState implements LoginSignupState {}
+mixin InitialLoginSignupState implements LoginSignupState {}*/
