@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -100,24 +99,10 @@ class _ProfileViewState extends State<ProfileView>{
                     alignment: Alignment.centerLeft,
                     child: Wrap(children: [                     
                       Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[
-                      Text(_profile!.email, style: TextStyle(fontSize: 18.0)),
-                      _profile!.emailVerified
-                          ? IconButton(icon: Icon(Icons.check, color: ColorsPalette.meditSea), tooltip: 'Verified', onPressed: () {})
-                          : IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.redPigment), tooltip: 'Not verified', onPressed: () {}),
+                      Text(_profile!.email, style: TextStyle(fontSize: 18.0))
                     ],)
                     ],),
                   ),
-                  Align(
-                      alignment: Alignment.center,
-                      child: TextButton(
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyOrange)),
-                        //color: ColorsPalette.fusionRed,
-                        child: Text("Verify email", style: TextStyle(color: ColorsPalette.white),),
-                        onPressed: (){
-                          context.read<ProfileBloc>()..add(VerifyEmail());
-                        },
-                      ),
-                    ),
                   Divider(color: ColorsPalette.juicyBlue),
                   _familyGroup != null ? 
                   _familyGroupWidget(_familyGroup!, _profile!.accountId, _profile!.userId): Container(),                  
@@ -188,14 +173,10 @@ class _ProfileViewState extends State<ProfileView>{
                         ],
                       ),                      
                       child: VerticalUserListItem(group, member)                      
-                    );
-                    /*return ListTile(
-                      title: Text(member.name),
-                      trailing: EditFamilyButton(member, group.id!),
-                    );*/
+                    );                   
                   }),
               )
-              : Container(child: Align(child: Text("No one added yet"), alignment: Alignment.centerLeft)),
+              : Container(child: Align(child: Text("Group is empty"), alignment: Alignment.centerLeft)),
                 Align(
                   alignment: Alignment.centerLeft,child: AddFamilyButton(group.id!)
                 ),

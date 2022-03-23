@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:traces/auth/model/account.model.dart';
 import 'package:traces/utils/api/customException.dart';
-import 'package:email_auth/email_auth.dart';
 
 import '../../../../auth/repository/api_user_repository.dart';
 import '../../../../utils/helpers/validation_helper.dart';
@@ -26,8 +25,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             on<UserUpdated>(_onUserUpdated);
             on<FamilyUpdated>(_onFamilyUpdated);
             on<ShowFamilyDialog>(_onShowFamilyDialog);
-            on<UserRemovedFromGroup>(_onUserRemovedFromGroup);
-            on<VerifyEmail>(_onVerifyEmail);
+            on<UserRemovedFromGroup>(_onUserRemovedFromGroup);            
           }
 
   void _onUsernameChanged(UsernameChanged event, Emitter<ProfileState> emit) async{
@@ -51,20 +49,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       exception: null,
       mode: StateMode.View
     ));
-  }
-
-  void _onVerifyEmail(VerifyEmail event, Emitter<ProfileState> emit) async{
-    try{
-      EmailAuth emailAuth = new EmailAuth(
-        sessionName: "Traces",
-      );    
-      bool result =
-        await emailAuth.sendOtp(recipientMail: state.profile!.email);
-      if(result) return emit(ProfileState.success(profile: state.profile));
-    }on CustomException catch(e){      
-      return emit(ProfileState.failure(profile: state.profile, exception: e));
-    }   
-  }
+  }  
 
   void _onUserUpdated(UserUpdated event, Emitter<ProfileState> emit) async{
     ProfileState currentState = state;
