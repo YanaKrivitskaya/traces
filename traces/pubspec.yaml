@@ -55,7 +55,6 @@ dev_dependencies:
   image_picker: ^0.8.3+3
   image_cropper: ^1.4.1
   collection: ^1.15.0
-  email_auth: ^1.0.0
   pinput: ^2.1.4
   otp_timer_button: ^1.1.0
   flutter_test:
