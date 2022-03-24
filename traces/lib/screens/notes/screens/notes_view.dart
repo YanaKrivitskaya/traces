@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/utils/api/customException.dart';
+import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/error_widgets.dart';
 
 import '../../../constants/color_constants.dart';
@@ -113,12 +113,12 @@ class _NotesViewState extends State<NotesView> {
                                       children: <Widget>[
                                         ListTile(
                                           leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
-                                          title: Text('${note.title}'),
+                                          title: Text('${note.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
                                           subtitle: (note.createdDate!.day.compareTo(note.updatedDate!.day) == 0) ?
                                           Text('${DateFormat.yMMMd().format(note.updatedDate!)}',
-                                              style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
+                                              style: quicksandStyle(color: ColorsPalette.blueHorizon, fontSize: 15.0)) :
                                           Text('${DateFormat.yMMMd().format(note.updatedDate!)} / ${DateFormat.yMMMd().format(note.createdDate!)}',
-                                              style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
+                                              style: quicksandStyle(color: ColorsPalette.blueHorizon, fontSize: 15.0)),
                                           //trailing: _popupMenu(note, position),
                                           onTap: (){
                                             Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
