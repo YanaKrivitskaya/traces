@@ -1,10 +1,11 @@
+import 'package:traces/screens/notes/repositories/tags_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 
 import '../../../utils/services/api_service.dart';
 import '../models/create_tag.model.dart';
 import '../models/tag.model.dart';
 
-class ApiTagsRepository{
+class ApiTagsRepository extends TagsRepository{
   ApiService apiProvider = ApiService();
   String tagsUrl = 'tags/';
 

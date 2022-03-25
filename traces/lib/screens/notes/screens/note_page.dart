@@ -52,15 +52,16 @@ class NotesPage extends StatelessWidget{
             NoteFilterButton()
           ],
         ),
-        body:  NotesView(),
-        floatingActionButton: FloatingActionButton(
+        body:  NotesView(),        
+        floatingActionButton:  FloatingActionButton.extended(
           onPressed: (){
             Navigator.pushNamed(context, noteDetailsRoute, arguments: 0).then((value) 
               => context.read<NoteBloc>().add(GetAllNotes()));
           },
           tooltip: 'Add New Note',
-          backgroundColor: ColorsPalette.nycTaxi,
-          child: Icon(Icons.add, color: ColorsPalette.white),
+          backgroundColor: ColorsPalette.juicyYellow,
+          label: Text("Create", style: quicksandStyle(color: ColorsPalette.white),),
+          icon: Icon(Icons.add, color: ColorsPalette.white),
         ),
       ),
     );

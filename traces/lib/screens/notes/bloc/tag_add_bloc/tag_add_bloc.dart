@@ -1,6 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:traces/screens/notes/repositories/mock_notes_repository.dart';
+import 'package:traces/screens/notes/repositories/mock_tags_repository.dart';
+import 'package:traces/screens/notes/repositories/notes_repository.dart';
+import 'package:traces/screens/notes/repositories/tags_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 
 import '../../../../utils/misc/state_types.dart';
@@ -10,12 +14,12 @@ import '../../repositories/api_tags_repository.dart';
 import 'bloc.dart';
 
 class TagAddBloc extends Bloc<TagAddEvent, TagAddState> {
-  final ApiNotesRepository _notesRepository;
-  final ApiTagsRepository _tagsRepository;
+  final NotesRepository _notesRepository;
+  final TagsRepository _tagsRepository;
 
   TagAddBloc()
-      : _notesRepository = new ApiNotesRepository(), 
-        _tagsRepository = new ApiTagsRepository(), 
+      : _notesRepository = const String.fromEnvironment("mode") == "test" ? new MockNotesRepository() : new ApiNotesRepository(), 
+        _tagsRepository = const String.fromEnvironment("mode") == "test" ? new MockTagsRepository() : new ApiTagsRepository(), 
         super(TagAddState.empty()){
           on<GetTags>(_onGetTags);
           on<AddTag>(_onAddTag);

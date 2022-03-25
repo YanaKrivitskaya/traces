@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:traces/auth/repository/mock_user_repository.dart';
+import 'package:traces/auth/repository/userRepository.dart';
 
 import '../../../utils/api/customException.dart';
 import '../../../utils/helpers/validation_helper.dart';
@@ -9,7 +11,7 @@ import '../../repository/api_user_repository.dart';
 import 'bloc.dart';
 
 class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginState> { 
-  ApiUserRepository _apiUserRepository;
+  UserRepository _apiUserRepository;
 
   /// Define a custom `EventTransformer`
   EventTransformer<LoginSignupEvent> debounce<LoginSignupEvent>(Duration duration) {
@@ -17,7 +19,7 @@ class LoginSignupBloc extends Bloc<LoginSignupEvent, LoginState> {
   }
 
   LoginSignupBloc():      
-      _apiUserRepository = new ApiUserRepository(),
+      _apiUserRepository = const String.fromEnvironment("mode") == "test" ? new MockUserRepository() : new ApiUserRepository(),
       super(LoginStateInitial(null)){
         /// Apply the custom `EventTransformer` to the `EventHandler`
         on<EmailChanged>(_onEmailChanged, transformer: debounce(Duration(milliseconds: 500)));       

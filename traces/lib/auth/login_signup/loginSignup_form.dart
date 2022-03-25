@@ -59,7 +59,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                         maxLines: 5,
                       ),
                     ),
-                    Icon(Icons.error)],
+                    Icon(Icons.error, color: ColorsPalette.white)],
                 ),
                 backgroundColor: ColorsPalette.redPigment,
               ),
@@ -70,6 +70,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
+                duration: Duration(days: 1),
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
