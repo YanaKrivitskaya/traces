@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
 
 import 'tag.model.dart';
 
@@ -15,6 +16,7 @@ class Note {
   final bool? deleted;
   final DateTime? deletedDate;
   List<Tag>? tags;
+  final Trip? trip;
 
   Note({
     this.id,
@@ -25,7 +27,8 @@ class Note {
     this.updatedDate,
     this.deleted,
     this.deletedDate,
-    this.tags
+    this.tags,
+    this.trip
   });
 
   /*Note copyWith({
@@ -73,7 +76,8 @@ class Note {
       deleted: map['deleted'],
       deletedDate: map['deletedDate'] != null ? DateTime.parse(map['deletedDate']) : null,
       tags: map["tags"]!= null ? 
-        map['tags'].map<Tag>((map) => Tag.fromMap(map)).toList() : null
+      map['tags'].map<Tag>((map) => Tag.fromMap(map)).toList() : null,
+      trip: map['trip'] != null ? Trip.fromMap(map["trip"]) : null
     );
   }
 

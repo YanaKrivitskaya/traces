@@ -112,16 +112,16 @@ class _NotesViewState extends State<NotesView> {
                                     child: Column(
                                       //crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Container(
+                                        note.trip != null ? Container(
                                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
                                           alignment: Alignment.centerLeft,
                                           child: Chip(
                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                                             padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
                                             backgroundColor: /*ColorsPalette.natureGreenLight*/ColorsPalette.amMint,
-                                            label: Text("Summer Vacation", style: TextStyle(color: /*ColorsPalette.juicyGreen*/ColorsPalette.white)),
+                                            label: Text(note.trip!.name!, style: TextStyle(color: /*ColorsPalette.juicyGreen*/ColorsPalette.white)),
                                           ),
-                                        ),                                        
+                                        ) : Container(),                                        
                                         ListTile(
                                           leading: ElevatedButton(
                                             child: Icon(Icons.notes_outlined, size: 40.0, color: ColorsPalette.white,),

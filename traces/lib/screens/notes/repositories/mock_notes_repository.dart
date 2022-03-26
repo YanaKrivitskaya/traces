@@ -5,6 +5,7 @@ import 'package:traces/screens/notes/models/note.model.dart';
 import 'package:traces/screens/notes/models/create_note.model.dart';
 import 'package:traces/screens/notes/models/tag.model.dart';
 import 'package:traces/screens/notes/repositories/notes_repository.dart';
+import 'package:traces/screens/trips/model/trip.model.dart';
 
 class MockNotesRepository extends NotesRepository{
   @override
@@ -53,12 +54,19 @@ class MockNotesRepository extends NotesRepository{
   }
 
   @override
-  Future<Note?> updateNote(Note note) {
-    // TODO: implement updateNote
-    throw UnimplementedError();
+  Future<Note?> updateNote(Note note) async{
+    print("MockNotesRepository.updateNote");
+    return _getNote(1);
   }
 
   Note _getNote(int id){
+    var rng = Random();
+
+    int hasTrip = rng.nextInt(3);
+
+    List<String> tripsList = ["Summer trip", "Portugal", "Winter vacation"];
+
+    var tripIndex = rng.nextInt(2);
     return new Note(
       id: id,
       title: "Test Note",
@@ -70,7 +78,11 @@ class MockNotesRepository extends NotesRepository{
           id: 1,
           name: "testTag"
         )
-      ]
+      ],
+      trip: hasTrip >1 ? new Trip(
+        id: 1,
+        name: tripsList[tripIndex]
+      ) : null
     );
   }
 

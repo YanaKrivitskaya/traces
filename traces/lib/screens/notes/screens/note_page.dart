@@ -36,7 +36,7 @@ class NotesPage extends StatelessWidget{
             },
           ),
           centerTitle: true,
-            title: Text('Notes', style: quicksandStyle(fontSize: 30.0, color: ColorsPalette.black)),
+          title: Text('Notes', style: quicksandStyle(fontSize: 30.0, color: ColorsPalette.black)),
           elevation: 0,
           backgroundColor: ColorsPalette.white,
           actions: [
