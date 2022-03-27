@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/widgets/error_widgets.dart';
 
 import '../../auth/auth_bloc/bloc.dart';
 import '../../constants/color_constants.dart';
 import '../../utils/misc/state_types.dart';
 import '../../utils/style/styles.dart';
+import '../../widgets/error_widgets.dart';
 import '../../widgets/widgets.dart';
 import 'add_family_button.dart';
 import 'bloc/profile/bloc.dart';
 import 'family_dialog.dart';
 import 'model/group_model.dart';
 import 'model/profile_model.dart';
-import 'name_edit_button.dart';
 import 'user_delete_alert.dart';
 import 'vertical_user_list_item.dart';
 
@@ -25,13 +24,11 @@ class ProfileView extends StatefulWidget{
   State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView>{
-  //SlidableController? slidableController; 
+class _ProfileViewState extends State<ProfileView>{ 
   Profile? _profile;
   Group? _familyGroup;
 
-  void initState() { 
-    //slidableController = SlidableController();
+  void initState() {   
     super.initState(); 
   }
 
@@ -203,8 +200,7 @@ class _ProfileViewState extends State<ProfileView>{
                   onPressed: (){
                     BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
                     Navigator.of(context).pushNamedAndRemoveUntil(Navigator.defaultRouteName, (Route<dynamic> route) => false);
-                  },
-                  
+                  },                  
                 ),],
             ))
       ));

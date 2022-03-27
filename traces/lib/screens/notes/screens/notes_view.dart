@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/utils/api/customException.dart';
+import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/error_widgets.dart';
 
 import '../../../constants/color_constants.dart';
@@ -92,8 +92,8 @@ class _NotesViewState extends State<NotesView> {
 
                 if(!state.searchEnabled!) _searchController!.clear();
 
-                return Container(
-                  padding: EdgeInsets.only(bottom: 65.0, top: 10.0),
+                return Container(                  
+                  padding: EdgeInsets.only(bottom: 65.0, top: 10.0, left: 10.0, right: 10.0),
                   child: Container(
                     child: SingleChildScrollView(
                       child: Column(
@@ -110,15 +110,35 @@ class _NotesViewState extends State<NotesView> {
                                   final note = filteredNotes[position];
                                   return Card(
                                     child: Column(
+                                      //crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
+                                        note.trip != null ? Container(
+                                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                          alignment: Alignment.centerLeft,
+                                          child: Chip(
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                                            backgroundColor: /*ColorsPalette.natureGreenLight*/ColorsPalette.amMint,
+                                            label: Text(note.trip!.name!, style: TextStyle(color: /*ColorsPalette.juicyGreen*/ColorsPalette.white)),
+                                          ),
+                                        ) : Container(),                                        
                                         ListTile(
-                                          leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
-                                          title: Text('${note.title}'),
+                                          leading: ElevatedButton(
+                                            child: Icon(Icons.notes_outlined, size: 40.0, color: ColorsPalette.white,),
+                                            onPressed: (){},
+                                            style: ElevatedButton.styleFrom(
+                                                shape: const CircleBorder(), 
+                                                padding: const EdgeInsets.all(10),
+                                                primary: ColorsPalette.frLightBlue
+                                            ),
+                                          ),
+                                          title: Text('${note.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
                                           subtitle: (note.createdDate!.day.compareTo(note.updatedDate!.day) == 0) ?
                                           Text('${DateFormat.yMMMd().format(note.updatedDate!)}',
-                                              style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
+                                              style: quicksandStyle(color: ColorsPalette.black, fontSize: 15.0)) :
                                           Text('${DateFormat.yMMMd().format(note.updatedDate!)} / ${DateFormat.yMMMd().format(note.createdDate!)}',
-                                              style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
+                                              style: quicksandStyle(color: ColorsPalette.black, fontSize: 15.0)),                                         
+
                                           //trailing: _popupMenu(note, position),
                                           onTap: (){
                                             Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
@@ -131,7 +151,16 @@ class _NotesViewState extends State<NotesView> {
                                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
                                           alignment: Alignment.centerLeft,
                                           child: note.tags!.isNotEmpty ? getChips(note, _allTagsSelected, _selectedTags): Container(),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                          child: Divider(color: ColorsPalette.amMint),
+                                        ),                                        
+                                        note.content != null ? InkWell(child: Container(
+                                          padding: EdgeInsets.all(10.0),
+                                          child: Text(note.content!.substring(0, note.content!.length > 100 ? 100 : note.content!.length), style: quicksandStyle(fontSize: 15.0)),
                                         )
+                                        ) : Container()
                                       ],
                                     ),
                                   );
@@ -188,7 +217,7 @@ class _NotesViewState extends State<NotesView> {
               .map((tag) => Padding(
               padding: EdgeInsets.all(3.0),
               child: Text("#"+tag.name!, style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: ColorsPalette.greenGrass),
+                  textStyle: TextStyle(color: ColorsPalette.juicyBlue),
                   fontSize: 15.0,
                   fontWeight: _isTagSelected(tag, allTagsSelected, selectedTags) ? FontWeight.bold : FontWeight.normal))
           ))

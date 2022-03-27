@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:traces/screens/notes/repositories/mock_notes_repository.dart';
+import 'package:traces/screens/notes/repositories/notes_repository.dart';
 
 import '../../../../utils/api/customException.dart';
 import '../../models/create_note.model.dart';
@@ -9,10 +11,10 @@ import '../../repositories/api_notes_repository.dart';
 import 'bloc.dart';
 
 class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
-  final ApiNotesRepository _notesRepository;
+  final NotesRepository _notesRepository;
 
   NoteDetailsBloc():
-    _notesRepository = new ApiNotesRepository(), 
+    _notesRepository = const String.fromEnvironment("mode") == "test" ? new MockNotesRepository() : new ApiNotesRepository(), 
     super(InitialNoteDetailsState(null)){
       on<GetNoteDetails>(_onGetNoteDetails);
       on<EditModeClicked>(_onEditModeClicked);

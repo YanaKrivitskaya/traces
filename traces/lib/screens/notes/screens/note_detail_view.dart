@@ -89,20 +89,29 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         return new Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              icon: FaIcon(FontAwesomeIcons.chevronLeft, color: ColorsPalette.lynxWhite),
-              onPressed: () {                
-                Navigator.of(context).pop();
+              icon: Icon(Icons.arrow_back, color: ColorsPalette.black),
+              onPressed: (){
+                Navigator.pop(context);
               },
             ),
-            title: _isEditMode ? Text("Edit note", style: TextStyle(color: ColorsPalette.lynxWhite)) 
-              : Text("View note", style: TextStyle(color: ColorsPalette.lynxWhite)),
+            centerTitle: true,
+            /*title: _isEditMode ? Text("Edit note", style: quicksandStyle(fontSize: 30.0)) 
+              : Text("View note", style: quicksandStyle(fontSize: 30.0)),*/
             actions: <Widget>[
-              !_isEditMode ? _tagsAction(_note!.id): Container(),
-              _isEditMode ? _saveAction(_note) : _editAction(state),
-              _note!.id != null ? _deleteAction(_note, context) : Container(),
+               _isEditMode ? _saveAction(_note) : _editAction(state),
+              !_isEditMode ? _tagsAction(_note!.id): Container(),             
+              _note!.id != null && !_isEditMode ? _deleteAction(_note, context) : Container(),
             ],
-            backgroundColor: ColorsPalette.greenGrass,
+            backgroundColor: ColorsPalette.white,
+            elevation: 0,
           ),
+
+          floatingActionButton: _isEditMode ? FloatingActionButton.extended(
+            onPressed: (){},
+            backgroundColor: ColorsPalette.juicyYellow,
+            label: Text("Image", style: quicksandStyle(color: ColorsPalette.white),),
+            icon: Icon(Icons.image_outlined, color: ColorsPalette.white),
+          ) : Container(),
           body: Container(
               child: state is LoadingDetailsState || state is InitialNoteDetailsState
                   ? Center(child: CircularProgressIndicator())
@@ -121,13 +130,15 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         child: Row(
           children: tags.map((tag) => Padding(
               padding: EdgeInsets.all(3.0),
-              child: Text("#"+tag.name!, style: TextStyle(color: ColorsPalette.greenGrass, fontSize: 14.0),)
+              child: Text("#"+tag.name!, style: TextStyle(color: ColorsPalette.juicyBlue, fontSize: 14.0),)
           )).toList(),
         ));
   }
 
   Widget _tagsAction(int? noteId) => new IconButton(
-    icon: FaIcon(FontAwesomeIcons.hashtag, color: ColorsPalette.lynxWhite),
+    padding: EdgeInsets.only(right: 10.0),
+    constraints: BoxConstraints(),    
+    icon: Icon(Icons.tag, color: ColorsPalette.black),
     onPressed: () {
       showDialog(
           barrierDismissible: false, context: context, builder: (_) =>
@@ -149,7 +160,9 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   );
 
   Widget _editAction(NoteDetailsState state) => new IconButton(
-    icon: FaIcon(FontAwesomeIcons.edit, color: ColorsPalette.lynxWhite),
+    padding: EdgeInsets.only(right: 10.0),
+    constraints: BoxConstraints(),   
+    icon: Icon(Icons.edit, color: ColorsPalette.black),
     onPressed: () {
       if(state is ViewDetailsState){
         context.read<NoteDetailsBloc>().add(EditModeClicked(state.note));
@@ -158,7 +171,9 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   );
 
   Widget _saveAction(Note? note) => new IconButton(
-    icon: FaIcon(FontAwesomeIcons.solidSave, color: ColorsPalette.lynxWhite),
+    padding: EdgeInsets.only(right: 10.0),
+    constraints: BoxConstraints(),   
+    icon: Icon(Icons.check, color: ColorsPalette.black),
     onPressed: () {
       Note noteToSave = new Note(
         content: _textController!.text, 
@@ -189,32 +204,53 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   Widget _noteCardView(List<Tag> tags) => new Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
-      Text('${_note!.title}', style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      _note!.trip != null ? Container(        
+        alignment: Alignment.centerLeft,
+        child: Chip(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+          backgroundColor: ColorsPalette.amMint,
+          label: Text(_note!.trip!.name!, style: TextStyle(color: ColorsPalette.white)),
+        ),
+      ) : Container(), 
+      Text('${_note!.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
       Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate!)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate!)}',
-          style: new TextStyle(fontSize: 12.0
+          style: quicksandStyle(fontSize: 14.0
           )),
-      _note!.tags!.length > 0 ? Divider(color: ColorsPalette.nycTaxi) : Container(),
+      _note!.tags!.length > 0 ? Divider(color: ColorsPalette.juicyYellow) : Container(),
       _getTags(tags),
-      Divider(color: ColorsPalette.nycTaxi),
-      Text('${_note!.content ?? ''}', style: new TextStyle(fontSize: 16),),
+      Divider(color: ColorsPalette.juicyYellow),
+      Text('${_note!.content ?? ''}', style:quicksandStyle(fontSize: 16)),
     ],
   );
 
   Widget _noteCardEdit(List<Tag>? tags) => new Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
+      Container(        
+        alignment: Alignment.centerLeft,
+        child: Chip(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+          backgroundColor: ColorsPalette.amMint,
+          avatar: Icon(Icons.signpost, color: ColorsPalette.white,),
+          label: Text("Add Trip reference", style: TextStyle(color: ColorsPalette.white)),
+        ),
+      ), 
       TextFormField(
+        cursorColor: ColorsPalette.black,
         decoration: const InputDecoration(
             labelText: 'Title',
-            border: InputBorder.none
+            border: InputBorder.none,
+            labelStyle: TextStyle(color: ColorsPalette.black)
         ),
-        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold),
         controller: _titleController,
         keyboardType: TextInputType.text,
         autofocus: true,
       ),
       _note!.tags != null && _note!.tags!.length > 0 ? _getTags(tags!) : Container(),
-      Divider(color: ColorsPalette.nycTaxi),
+      Divider(color: ColorsPalette.juicyYellow),
       TextFormField(
         decoration: const InputDecoration(
             labelText: 'Note text comes here',
@@ -228,7 +264,9 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   );
 
   Widget _deleteAction(Note? note, BuildContext context) => new IconButton(
-    icon: FaIcon(FontAwesomeIcons.trashAlt, color: ColorsPalette.lynxWhite),
+    padding: EdgeInsets.only(right: 10.0),
+    constraints: BoxConstraints(),   
+    icon: Icon(Icons.delete, color: ColorsPalette.black),
     onPressed: () {
       showDialog<String>(
         context: context,

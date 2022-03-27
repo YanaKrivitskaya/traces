@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:traces/utils/api/customException.dart';
+import 'package:traces/screens/notes/repositories/notes_repository.dart';
 
 import '../../../utils/services/api_service.dart';
 import '../models/create_note.model.dart';
 import '../models/note.model.dart';
 
-class ApiNotesRepository{
+class ApiNotesRepository extends NotesRepository{
   ApiService apiProvider = ApiService();
   String notesUrl = 'notes/';
 

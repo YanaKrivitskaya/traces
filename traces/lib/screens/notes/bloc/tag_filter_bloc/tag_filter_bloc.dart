@@ -1,5 +1,7 @@
 
 import 'package:bloc/bloc.dart';
+import 'package:traces/screens/notes/repositories/mock_tags_repository.dart';
+import 'package:traces/screens/notes/repositories/tags_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 
 import '../../../../utils/misc/state_types.dart';
@@ -8,10 +10,10 @@ import '../../repositories/api_tags_repository.dart';
 import 'bloc.dart';
 
 class TagFilterBloc extends Bloc<TagFilterEvent, TagFilterState> {
-  final ApiTagsRepository _tagsRepository;
+  final TagsRepository _tagsRepository;
 
   TagFilterBloc(): 
-    _tagsRepository = new ApiTagsRepository(), 
+    _tagsRepository = const String.fromEnvironment("mode") == "test" ? new MockTagsRepository() : new ApiTagsRepository(), 
     super(TagFilterState.empty()){
       on<GetTags>(_onGetTags);
       on<AllTagsChecked>(_onAllTagsChecked);
