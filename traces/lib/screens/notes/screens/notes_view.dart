@@ -123,7 +123,7 @@ class _NotesViewState extends State<NotesView> {
                                           ),
                                         ) : Container(),                                        
                                         ListTile(
-                                          leading: ElevatedButton(
+                                          /*leading: ElevatedButton(
                                             child: Icon(Icons.notes_outlined, size: 40.0, color: ColorsPalette.white,),
                                             onPressed: (){},
                                             style: ElevatedButton.styleFrom(
@@ -131,7 +131,7 @@ class _NotesViewState extends State<NotesView> {
                                                 padding: const EdgeInsets.all(10),
                                                 primary: ColorsPalette.frLightBlue
                                             ),
-                                          ),
+                                          ),*/
                                           title: Text('${note.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
                                           subtitle: (note.createdDate!.day.compareTo(note.updatedDate!.day) == 0) ?
                                           Text('${DateFormat.yMMMd().format(note.updatedDate!)}',
@@ -218,7 +218,7 @@ class _NotesViewState extends State<NotesView> {
               padding: EdgeInsets.all(3.0),
               child: Text("#"+tag.name!, style: GoogleFonts.quicksand(
                   textStyle: TextStyle(color: ColorsPalette.juicyBlue),
-                  fontSize: 15.0,
+                  fontSize: 13.0,
                   fontWeight: _isTagSelected(tag, allTagsSelected, selectedTags) ? FontWeight.bold : FontWeight.normal))
           ))
               .toList(),

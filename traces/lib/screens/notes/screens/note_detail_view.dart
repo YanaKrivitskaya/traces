@@ -1,13 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/notes/bloc/trip_list_bloc/trip_list_bloc.dart';
+import 'package:traces/screens/notes/widgets/trip_list_dialog.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/error_widgets.dart';
 
 import '../../../constants/color_constants.dart';
-import '../bloc/note_bloc/bloc.dart';
 import '../bloc/note_details_bloc/bloc.dart';
 import '../bloc/tag_add_bloc/bloc.dart';
 import '../models/note.model.dart';
@@ -93,10 +93,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               onPressed: (){
                 Navigator.pop(context);
               },
-            ),
-            centerTitle: true,
-            /*title: _isEditMode ? Text("Edit note", style: quicksandStyle(fontSize: 30.0)) 
-              : Text("View note", style: quicksandStyle(fontSize: 30.0)),*/
+            ),                     
             actions: <Widget>[
                _isEditMode ? _saveAction(_note) : _editAction(state),
               !_isEditMode ? _tagsAction(_note!.id): Container(),             
@@ -105,7 +102,6 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
             backgroundColor: ColorsPalette.white,
             elevation: 0,
           ),
-
           floatingActionButton: _isEditMode ? FloatingActionButton.extended(
             onPressed: (){},
             backgroundColor: ColorsPalette.juicyYellow,
@@ -204,15 +200,29 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
   Widget _noteCardView(List<Tag> tags) => new Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
-      _note!.trip != null ? Container(        
+      Container(        
         alignment: Alignment.centerLeft,
-        child: Chip(
+        child: ActionChip(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
           padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
           backgroundColor: ColorsPalette.amMint,
-          label: Text(_note!.trip!.name!, style: TextStyle(color: ColorsPalette.white)),
+          avatar: Icon(Icons.signpost, color: ColorsPalette.white,),
+          label: Text(_note!.trip != null ? _note!.trip!.name! : "Add Trip reference", style: TextStyle(color: ColorsPalette.white)),
+          onPressed: (){              
+              showDialog(
+                barrierDismissible: false, context: context, builder: (_) =>
+                BlocProvider<TripListBloc>(
+                  create: (context) => TripListBloc()..add(GetTripsList(_note!)),
+                  child: TripsListDialog(noteId: _note!.id!, callback: (val) async {
+              if(val == 'Ok'){
+                context.read<NoteDetailsBloc>().add(GetNoteDetails(_note!.id!));                
+              }
+            }),
+                ),
+            );
+            },
         ),
-      ) : Container(), 
+      ),
       Text('${_note!.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
       Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate!)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate!)}',
           style: quicksandStyle(fontSize: 14.0
@@ -226,17 +236,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
 
   Widget _noteCardEdit(List<Tag>? tags) => new Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: <Widget>[
-      Container(        
-        alignment: Alignment.centerLeft,
-        child: Chip(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
-          backgroundColor: ColorsPalette.amMint,
-          avatar: Icon(Icons.signpost, color: ColorsPalette.white,),
-          label: Text("Add Trip reference", style: TextStyle(color: ColorsPalette.white)),
-        ),
-      ), 
+    children: <Widget>[      
       TextFormField(
         cursorColor: ColorsPalette.black,
         decoration: const InputDecoration(
