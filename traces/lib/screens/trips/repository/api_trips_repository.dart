@@ -20,6 +20,15 @@ class ApiTripsRepository{
     return tripResponse;
   }
 
+  Future<List<Trip>?> getTripsList() async{    
+    print("getTrips");
+    final response = await apiProvider.getSecure(tripsUrl + '/list');
+      
+    var tripResponse = response["trips"] != null ? 
+      response['trips'].map<Trip>((map) => Trip.fromMap(map)).toList() : null;
+    return tripResponse;
+  }
+
   Future<Trip?> getTripById(int tripId) async{
     print("getTripById");
     final response = await apiProvider.getSecure("$tripsUrl$tripId");

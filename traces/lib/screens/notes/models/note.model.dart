@@ -8,7 +8,7 @@ import 'tag.model.dart';
 @immutable
 class Note {
   final int? id;
-  final int? userId;
+  final int? userId;  
   final String? title;
   final String? content;  
   final DateTime? createdDate;

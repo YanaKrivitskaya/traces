@@ -93,7 +93,7 @@ class Trip {
       name: map['name'],
       description: map['description'],
       coverImage: map['coverImage'] != null ? Uint8List.fromList(map['coverImage']['data'].cast<int>()) : null,
-      startDate: DateTime.parse(map['startDate']),
+      startDate: map['startDate'] != null ? DateTime.parse(map['startDate']) : null,
       endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
       users: map['users'] != null ? List<GroupUser>.from(map['users']?.map((x) => GroupUser.fromMap(x))) : null,
       activities: map['activities'] != null ? List<Activity>.from(map['activities']?.map((x) => Activity.fromMap(x))) : null,

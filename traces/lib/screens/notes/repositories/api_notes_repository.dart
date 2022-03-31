@@ -40,6 +40,22 @@ class ApiNotesRepository extends NotesRepository{
     return note;
   }
 
+  Future<Note?> addNoteTrip(int? noteId, int? tripId) async {     
+    final response = await apiProvider.postSecure(notesUrl + '$noteId/trips/$tripId', null);
+    
+    var note = response["note"] != null ?
+      Note.fromMap(response["note"]) : null;
+    return note;
+  }
+
+    Future<Note?> deleteNoteTrip(int? noteId, int? tripId) async {
+    final response = await apiProvider.deleteSecure(notesUrl + '$noteId/trips/$tripId');
+    
+    var note = response["note"] != null ?
+      Note.fromMap(response["note"]) : null;
+    return note;
+  }
+
   Future<Note?> deleteNoteTag(int? noteId, int? tagId) async {
     final response = await apiProvider.deleteSecure(notesUrl + '$noteId/tags/$tagId');
     
