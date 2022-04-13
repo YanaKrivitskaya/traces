@@ -1,11 +1,15 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/notes/bloc/trip_list_bloc/trip_list_bloc.dart';
 import 'package:traces/screens/notes/widgets/trip_list_dialog.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/error_widgets.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../constants/color_constants.dart';
 import '../bloc/note_details_bloc/bloc.dart';
@@ -31,6 +35,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
 
   Note? _note = Note();
   bool _isEditMode = false;
+  var _date = DateTime.now();
 
   @override
   void initState() {
@@ -87,6 +92,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           _textController!.text = state.note!.content ?? '';
         }
         return new Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: ColorsPalette.black),
@@ -102,8 +108,10 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
             backgroundColor: ColorsPalette.white,
             elevation: 0,
           ),
-          floatingActionButton: _isEditMode ? FloatingActionButton.extended(
-            onPressed: (){},
+          floatingActionButton: _isEditMode && _note != null && _note!.image == null ? FloatingActionButton.extended(
+            onPressed: (){
+              _showSelectionDialog(context, _note!.id!);
+            },
             backgroundColor: ColorsPalette.juicyYellow,
             label: Text("Image", style: quicksandStyle(color: ColorsPalette.white),),
             icon: Icon(Icons.image_outlined, color: ColorsPalette.white),
@@ -112,7 +120,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               child: state is LoadingDetailsState || state is InitialNoteDetailsState
                   ? Center(child: CircularProgressIndicator())
                   : state is ErrorDetailsState && state.note == null ? errorWidget(context, error: state.errorMessage)
-                  : _noteView(_note!.tags)
+                  :  _noteView(_note!.tags, state)
           ),
           backgroundColor: Colors.white,
         );
@@ -182,85 +190,138 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     },
   );
 
-  Widget _noteView(List<Tag>? tags){
+  Widget _noteView(List<Tag>? tags, NoteDetailsState state){
     return Container(
         padding: EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 15),
         margin: EdgeInsets.all(5),
         color: Colors.white,
         child: Container(
-            child: SingleChildScrollView(
-                child: _isEditMode
+            child: _isEditMode
                     ? _noteCardEdit(tags)
-                    : _noteCardView(tags!)
-            )
+                    : _noteCardView(tags!, state)
         )
     );
   }
 
-  Widget _noteCardView(List<Tag> tags) => new Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: <Widget>[
-      Container(        
-        alignment: Alignment.centerLeft,
-        child: ActionChip(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
-          backgroundColor: ColorsPalette.amMint,
-          avatar: Icon(Icons.signpost, color: ColorsPalette.white,),
-          label: Text(_note!.trip != null ? _note!.trip!.name! : "Add Trip reference", style: TextStyle(color: ColorsPalette.white)),
-          onPressed: (){              
-              showDialog(
-                barrierDismissible: false, context: context, builder: (_) =>
-                BlocProvider<TripListBloc>(
-                  create: (context) => TripListBloc()..add(GetTripsList(_note!)),
-                  child: TripsListDialog(noteId: _note!.id!, callback: (val) async {
-              if(val == 'Ok'){
-                context.read<NoteDetailsBloc>().add(GetNoteDetails(_note!.id!));                
-              }
-            }),
-                ),
-            );
-            },
+  Widget _noteCardView(List<Tag> tags, NoteDetailsState state) => new InkWell(
+    onTap: (){
+      if(state is ViewDetailsState){
+        context.read<NoteDetailsBloc>().add(EditModeClicked(state.note));
+      }
+    },
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Container(        
+          alignment: Alignment.centerLeft,
+          child: ActionChip(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+            backgroundColor: ColorsPalette.amMint,
+            avatar: Icon(Icons.signpost, color: ColorsPalette.white,),
+            label: Text(_note!.trip != null ? _note!.trip!.name! : "Add Trip reference", style: TextStyle(color: ColorsPalette.white)),
+            onPressed: (){              
+                showDialog(
+                  barrierDismissible: false, context: context, builder: (_) =>
+                  BlocProvider<TripListBloc>(
+                    create: (context) => TripListBloc()..add(GetTripsList(_note!)),
+                    child: TripsListDialog(noteId: _note!.id!, callback: (val) async {
+                if(val == 'Ok'){
+                  context.read<NoteDetailsBloc>().add(GetNoteDetails(_note!.id!));                
+                }
+              }),
+                  ),
+              );
+              },
+          ),
         ),
-      ),
-      Text('${_note!.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
-      Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate!)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate!)}',
-          style: quicksandStyle(fontSize: 14.0
-          )),
-      _note!.tags!.length > 0 ? Divider(color: ColorsPalette.juicyYellow) : Container(),
-      _getTags(tags),
-      Divider(color: ColorsPalette.juicyYellow),
-      Text('${_note!.content ?? ''}', style:quicksandStyle(fontSize: 16)),
-    ],
-  );
+        Text('${_note!.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
+        Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate!)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate!)}',
+            style: quicksandStyle(fontSize: 14.0
+            )),
+        _note!.tags!.length > 0 ? Divider(color: ColorsPalette.juicyYellow) : Container(),
+        _getTags(tags),
+        Divider(color: ColorsPalette.juicyYellow),
+        /*Container(
+            height: MediaQuery.of(context).size.height * 0.35,
+            child: SingleChildScrollView(child: Text('${_note!.content ?? ''}', style:quicksandStyle(fontSize: 16))))
+        ,
+          Expanded(child: Align(alignment: FractionalOffset.bottomCenter, child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ClipRRect(
+                //padding: EdgeInsets.only(bottom: 20.0),
+                borderRadius: BorderRadius.circular(8.0),
+                child: Container(                
+                  child: _note!.image != null ? Image.memory(            
+                    _note!.image!)
+                  : Container() )                         
+                )
+            ],
+          )))    */
+        Container(
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: SingleChildScrollView(child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Align(alignment: Alignment.topLeft, child:  Text('${_note!.content ?? ''}', style:quicksandStyle(fontSize: 16))),
+            SizedBox(height: 10.0),
+            ClipRRect(
+              //padding: EdgeInsets.only(bottom: 20.0),
+              borderRadius: BorderRadius.circular(8.0),
+              child: _note!.image != null ? Image.memory(            
+                  _note!.image!)
+                : Container()                    
+              )
+          ]))) 
+      ],
+    ));
 
-  Widget _noteCardEdit(List<Tag>? tags) => new Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: <Widget>[      
-      TextFormField(
-        cursorColor: ColorsPalette.black,
-        decoration: const InputDecoration(
-            labelText: 'Title',
-            border: InputBorder.none,
-            labelStyle: TextStyle(color: ColorsPalette.black)
+    Widget _noteCardEdit(List<Tag>? tags) => new Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[      
+        TextFormField(
+          cursorColor: ColorsPalette.black,
+          decoration: const InputDecoration(
+              labelText: 'Title',
+              border: InputBorder.none,
+              labelStyle: TextStyle(color: ColorsPalette.black)
+          ),
+          style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold),
+          controller: _titleController,
+          keyboardType: TextInputType.text,
+          //autofocus: true,
         ),
-        style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold),
-        controller: _titleController,
-        keyboardType: TextInputType.text,
-        autofocus: true,
-      ),
-      _note!.tags != null && _note!.tags!.length > 0 ? _getTags(tags!) : Container(),
-      Divider(color: ColorsPalette.juicyYellow),
-      TextFormField(
-        decoration: const InputDecoration(
-            labelText: 'Note text comes here',
-            border: InputBorder.none
-        ),
-        controller: _textController,
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-      )
-    ],
+        Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate ?? _date)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate ?? _date)}',
+            style: quicksandStyle(fontSize: 14.0
+            )),
+        _note!.tags != null && _note!.tags!.length > 0 ? _getTags(tags!) : Container(),
+        Divider(color: ColorsPalette.juicyYellow),
+        Container(
+          padding: EdgeInsets.only(bottom: 20.0),
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: SingleChildScrollView(
+            // physics: ClampingScrollPhysics(),
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextFormField(
+              decoration: const InputDecoration(
+                  labelText: 'Note text comes here',
+                  border: InputBorder.none
+              ),
+              controller: _textController,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              autofocus: true,
+            ),
+            ClipRRect(
+              //padding: EdgeInsets.only(bottom: 20.0),
+              borderRadius: BorderRadius.circular(8.0),
+              child: _note!.image != null ? Image.memory(_note!.image!) : Container()                          
+              )
+          ])))
+      ],
   );
 
   Widget _deleteAction(Note? note, BuildContext context) => new IconButton(
@@ -329,5 +390,43 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
       );
     },
   );
+
+  Future _showSelectionDialog(BuildContext context, int noteId) async {
+    await showDialog(
+      context: context,
+      builder: (_) => new SimpleDialog(
+        title: Text('Select photo'),
+        children: <Widget>[
+          SimpleDialogOption(
+            child: Text('From gallery'),
+            onPressed: () {
+              selectOrTakePhoto(ImageSource.gallery, context, noteId);
+              Navigator.pop(context);
+            },
+          ),
+          SimpleDialogOption(
+            child: Text('Take a photo'),
+            onPressed: () {
+              selectOrTakePhoto(ImageSource.camera, context, noteId);
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future selectOrTakePhoto(ImageSource imageSource, BuildContext context, int noteId) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: imageSource);
+
+    if(pickedFile != null){
+      Navigator.pushNamed(context, imageCropRoute, arguments: File(pickedFile.path)).then((imageFile) {
+        if(imageFile != null){
+          context.read<NoteDetailsBloc>().add(GetImage(imageFile as File));          
+        }
+      });
+    }
+  }
 }
 

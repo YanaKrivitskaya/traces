@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 
 import 'tag.model.dart';
+import 'dart:typed_data';
 
 @immutable
 class Note {
@@ -11,6 +12,7 @@ class Note {
   final int? userId;  
   final String? title;
   final String? content;  
+  final Uint8List? image;  
   final DateTime? createdDate;
   final DateTime? updatedDate;
   final bool? deleted;
@@ -23,6 +25,7 @@ class Note {
     this.userId,
     this.title,
     this.content,
+    this.image,
     this.createdDate,
     this.updatedDate,
     this.deleted,
@@ -65,12 +68,17 @@ class Note {
   }
 
   factory Note.fromMap(Map<String, dynamic> map) {  
+    if(map['image'] != null){
+      var image = map['image']['data'];
+      var imageArray = map['image']['data'].cast<int>();
+    }
 
     return Note(
       id: map['id'],
       userId: map['userId'],
       title: map['title'],
       content: map['content'],
+      image: map['image'] != null ? Uint8List.fromList(map['image']['data'].cast<int>()) : null,
       createdDate: DateTime.parse(map['createdDate']),
       updatedDate: DateTime.parse(map['updatedDate']),
       deleted: map['deleted'],
@@ -99,6 +107,7 @@ class Note {
       other.userId == userId &&
       other.title == title &&
       other.content == content &&
+      other.image == image &&
       other.createdDate == createdDate &&
       other.updatedDate == updatedDate &&
       other.deletedDate == deletedDate &&
@@ -111,6 +120,7 @@ class Note {
       userId.hashCode ^
       title.hashCode ^
       content.hashCode ^
+      image.hashCode ^
       createdDate.hashCode ^
       updatedDate.hashCode ^
       deletedDate.hashCode ^

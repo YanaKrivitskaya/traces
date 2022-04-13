@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:traces/screens/notes/models/create_note.model.dart';
 import 'package:traces/screens/notes/models/note.model.dart';
 
@@ -16,4 +18,6 @@ abstract class NotesRepository{
   Future<Note?> updateNote(Note note);
 
   Future<Note?> addNewNote(CreateNoteModel note);
+
+  Future<Note> updateNoteImage(File image, int noteId);
 }

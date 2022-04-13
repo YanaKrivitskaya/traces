@@ -26,12 +26,8 @@ class _ImageCropViewState extends State<ImageCropView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<TripDetailsBloc, TripDetailsState>(
-      builder: (context, state){        
-        return Container();
-      }
-    );
+  Widget build(BuildContext context) {    
+    return Container();
   }
 
 Future<Null> _cropImage() async {
@@ -41,12 +37,12 @@ Future<Null> _cropImage() async {
         aspectRatio: CropAspectRatio(ratioX: 16, ratioY: 9),
         androidUiSettings: AndroidUiSettings(            
             toolbarTitle: 'Crop Image',
-            toolbarColor: ColorsPalette.juicyGreen,
+            toolbarColor: ColorsPalette.juicyYellow,
             hideBottomControls: false,
             toolbarWidgetColor: ColorsPalette.white,
             backgroundColor: ColorsPalette.white,
             initAspectRatio: CropAspectRatioPreset.ratio16x9,            
-            lockAspectRatio: false),
+            lockAspectRatio: true),
         iosUiSettings: IOSUiSettings(
           title: 'Cropper',
         ));

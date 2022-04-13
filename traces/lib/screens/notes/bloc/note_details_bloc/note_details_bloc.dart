@@ -21,6 +21,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
       on<SaveNoteClicked>(_onSaveNoteClicked);
       on<DeleteNote>(_onDeleteNote);
       on<NewNoteMode>(_onNewNoteMode);
+      on<GetImage>(_onGetImage);
     }  
 
   void _onGetNoteDetails(GetNoteDetails event, Emitter<NoteDetailsState> emit) async{
@@ -73,4 +74,23 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
   void _onEditModeClicked(EditModeClicked event, Emitter<NoteDetailsState> emit) async{
     return emit(EditDetailsState(event.note));
   }  
+
+  void _onGetImage(GetImage event, Emitter<NoteDetailsState> emit) async {
+    var currentState = state;
+    try{
+      var image = state.note?.image;
+      Note updNote = state.note!;
+
+      if(event.image != null){
+        image = event.image!.readAsBytesSync();
+        updNote = await _notesRepository.updateNoteImage(event.image!, updNote.id!);
+      }      
+
+      emit(EditDetailsState(     
+        updNote
+      ));
+    }on CustomException catch(e){
+      return emit(ErrorDetailsState(currentState.note, e));
+    }  
+  }
 }

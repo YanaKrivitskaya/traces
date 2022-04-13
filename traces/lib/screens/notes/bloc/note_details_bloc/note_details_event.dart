@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 import '../../models/note.model.dart';
@@ -46,4 +48,13 @@ class DeleteNote extends NoteDetailsEvent {
 
   @override
   List<Object?> get props => [note];
+}
+
+class GetImage extends NoteDetailsEvent{
+  final File? image;
+
+  const GetImage(this.image);
+
+  @override
+  List<Object?> get props => [image];
 }

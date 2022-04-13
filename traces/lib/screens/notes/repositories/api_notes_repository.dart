@@ -79,4 +79,12 @@ class ApiNotesRepository extends NotesRepository{
       Note.fromMap(response["note"]) : null;
     return newNote;
   }
+
+  Future<Note> updateNoteImage(File image, int noteId)async{    
+
+    final response = await apiProvider.postSecureMultipart("$notesUrl$noteId/image", null, image);
+      
+    var note = Note.fromMap(response['response']);
+    return note;
+  }
 }

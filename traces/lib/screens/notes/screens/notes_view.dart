@@ -157,6 +157,7 @@ class _NotesViewState extends State<NotesView> {
                                           child: Divider(color: ColorsPalette.amMint),
                                         ),                                        
                                         note.content != null ? InkWell(child: Container(
+                                          alignment: Alignment.centerLeft,
                                           padding: EdgeInsets.all(10.0),
                                           child: Text(note.content!.substring(0, note.content!.length > 100 ? 100 : note.content!.length), style: quicksandStyle(fontSize: 15.0)),
                                         )
