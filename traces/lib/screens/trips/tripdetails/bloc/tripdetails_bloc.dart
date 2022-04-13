@@ -215,9 +215,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       emit(TripDetailsErrorState(e.toString(), state.activeTab));
     } on Exception catch (e){
       emit(TripDetailsErrorState(e.toString(), state.activeTab));
-    }
-    
-    
+    }    
   }
 
 }

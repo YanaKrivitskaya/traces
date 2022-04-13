@@ -42,7 +42,7 @@ import '../screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import '../screens/trips/tripdetails/bookings/booking_edit/booking_create.view.dart';
 import '../screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
 import '../screens/trips/tripdetails/expenses/expense_create_view.dart';
-import '../screens/trips/tripdetails/image_crop_view.dart';
+import '../widgets/image_crop_view.dart';
 import '../screens/trips/tripdetails/tripdetails_view.dart';
 import '../screens/trips/trips_page.dart';
 import '../screens/visas/bloc/visa/visa_bloc.dart';
@@ -330,10 +330,9 @@ class RouteGenerator {
         {
           if (args is File) {
             return MaterialPageRoute(
-              builder: (_) => BlocProvider<TripDetailsBloc>(
-                create: (context) => TripDetailsBloc(),
-                child: ImageCropView(args),
-              ),
+              builder: (_) {
+                return ImageCropView(args);
+              }
             );
           }
         return _errorRoute();          

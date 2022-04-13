@@ -1,4 +1,5 @@
 
+import 'dart:io';
 import 'dart:math';
 
 import 'package:traces/screens/notes/models/note.model.dart';
@@ -84,6 +85,12 @@ class MockNotesRepository extends NotesRepository{
         name: tripsList[tripIndex]
       ) : null
     );
+  }
+
+  @override
+  Future<Note> updateNoteImage(File image, int noteId) {
+    // TODO: implement updateNoteImage
+    throw UnimplementedError();
   }
 
 
