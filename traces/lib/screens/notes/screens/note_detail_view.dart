@@ -266,13 +266,19 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           children: [
             Align(alignment: Alignment.topLeft, child:  Text('${_note!.content ?? ''}', style:quicksandStyle(fontSize: 16))),
             SizedBox(height: 10.0),
-            ClipRRect(
-              //padding: EdgeInsets.only(bottom: 20.0),
-              borderRadius: BorderRadius.circular(8.0),
-              child: _note!.image != null ? Image.memory(            
-                  _note!.image!)
-                : Container()                    
-              )
+            InkWell(
+              onTap: (){
+                Navigator.of(context).pushNamed(noteImageView, arguments: _note!.image!);
+              },
+              child: ClipRRect(
+                //padding: EdgeInsets.only(bottom: 20.0),
+                borderRadius: BorderRadius.circular(8.0),
+                child: _note!.image != null ? Image.memory(            
+                    _note!.image!)
+                  : Container()                    
+                )
+            )
+            
           ]))) 
       ],
     ));

@@ -30,3 +30,4 @@ const String tripDayRoute = '/tripDay';
 const String ticketViewRoute = '/ticketView';
 const String bookingViewRoute = '/bookingView';
 const String bookingEditRoute = '/bookingEdit';
+const String noteImageView = '/noteImageView';
