@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/auth/login_signup/otp/otp_verification_view.dart';
+import 'package:traces/screens/notes/screens/note_image_view.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_view/activity_view.dart';
@@ -92,6 +94,14 @@ class RouteGenerator {
           child: NotesPage(),
         )
       );
+      case noteImageView:
+      {
+        if (args is Uint8List) {
+            return MaterialPageRoute(
+              builder: (_) => NotesImageView(args));
+          }
+          return _errorRoute();
+      }      
       case noteDetailsRoute:
         {
           if (args is int) {
