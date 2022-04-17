@@ -130,7 +130,7 @@ class _NotesViewState extends State<NotesView> {
     );    
   }
 
-  Widget _noteCard(Note note, ) => new Card(
+  Widget _noteCard(Note note, ) => new Card(    
     child: Column(
       //crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -153,15 +153,15 @@ class _NotesViewState extends State<NotesView> {
             },
           child: Column(children: [
             ListTile(
-          /*leading: ElevatedButton(
-            child: Icon(Icons.notes_outlined, size: 40.0, color: ColorsPalette.white,),
-            onPressed: (){},
-            style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(), 
-                padding: const EdgeInsets.all(10),
-                primary: ColorsPalette.frLightBlue
-            ),
-          ),*/
+              leading: ElevatedButton(
+                child: note.image != null ? Icon(Icons.image, size: 30.0, color: ColorsPalette.white,) : Icon(Icons.notes_outlined, size: 30.0, color: ColorsPalette.white,),
+                onPressed: (){},
+                style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder(), 
+                    padding: const EdgeInsets.all(10),
+                    primary: note.image != null ? ColorsPalette.frMelon :ColorsPalette.frLightBlue
+                ),
+              ),
           title: Text('${note.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
           subtitle: (note.createdDate!.day.compareTo(note.updatedDate!.day) == 0) ?
           Text('${DateFormat.yMMMd().format(note.updatedDate!)}',
