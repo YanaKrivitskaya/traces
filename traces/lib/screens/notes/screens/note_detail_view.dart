@@ -101,21 +101,14 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               },
             ),                     
             actions: <Widget>[
+              _note != null && _note!.image == null ? _imageAction(_note, context) : Container(),
                _isEditMode ? _saveAction(_note) : _editAction(state),
               !_isEditMode ? _tagsAction(_note!.id): Container(),             
-              _note!.id != null && !_isEditMode ? _deleteAction(_note, context) : Container(),
+              _note!.id != null && !_isEditMode ? _deleteAction(_note, context) : Container()              
             ],
             backgroundColor: ColorsPalette.white,
             elevation: 0,
-          ),
-          floatingActionButton: _isEditMode && _note != null && _note!.image == null ? FloatingActionButton.extended(
-            onPressed: (){
-              _showSelectionDialog(context, _note!.id!);
-            },
-            backgroundColor: ColorsPalette.juicyYellow,
-            label: Text("Image", style: quicksandStyle(color: ColorsPalette.white),),
-            icon: Icon(Icons.image_outlined, color: ColorsPalette.white),
-          ) : Container(),
+          ),          
           body: Container(
               child: state is LoadingDetailsState || state is InitialNoteDetailsState
                   ? Center(child: CircularProgressIndicator())
@@ -361,6 +354,13 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
             )
           ])))
       ],
+  );
+
+  Widget _imageAction(Note? note, BuildContext context) => new IconButton(
+    onPressed: (){
+      _showSelectionDialog(context, _note!.id!);
+    },
+    icon: Icon(Icons.image_outlined, color: ColorsPalette.black),
   );
 
   Widget _deleteAction(Note? note, BuildContext context) => new IconButton(
