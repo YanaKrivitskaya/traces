@@ -241,24 +241,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
             )),
         _note!.tags!.length > 0 ? Divider(color: ColorsPalette.juicyYellow) : Container(),
         _getTags(tags),
-        Divider(color: ColorsPalette.juicyYellow),
-        /*Container(
-            height: MediaQuery.of(context).size.height * 0.35,
-            child: SingleChildScrollView(child: Text('${_note!.content ?? ''}', style:quicksandStyle(fontSize: 16))))
-        ,
-          Expanded(child: Align(alignment: FractionalOffset.bottomCenter, child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ClipRRect(
-                //padding: EdgeInsets.only(bottom: 20.0),
-                borderRadius: BorderRadius.circular(8.0),
-                child: Container(                
-                  child: _note!.image != null ? Image.memory(            
-                    _note!.image!)
-                  : Container() )                         
-                )
-            ],
-          )))    */
+        Divider(color: ColorsPalette.juicyYellow),        
         Container(
           height: MediaQuery.of(context).size.height * 0.6,
           child: SingleChildScrollView(child: Column(
@@ -270,13 +253,35 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               onTap: (){
                 Navigator.of(context).pushNamed(noteImageView, arguments: _note!.image!);
               },
-              child: ClipRRect(
-                //padding: EdgeInsets.only(bottom: 20.0),
-                borderRadius: BorderRadius.circular(8.0),
-                child: _note!.image != null ? Image.memory(            
-                    _note!.image!)
-                  : Container()                    
-                )
+              child: _note!.image != null ? Stack(
+                alignment: AlignmentDirectional.topEnd,
+                children: [ 
+                  Container(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: ClipRRect(                  
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.memory(            
+                          _note!.image!)
+                                      
+                      ),
+                  ),                  
+                  Positioned(
+                    top: 6.0,
+                    child:InkWell(
+                        onTap: (){
+                          context.read<NoteDetailsBloc>().add(GetImage(null));
+                        },                        
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: ColorsPalette.juicyDarkBlue,
+                          ),
+                          child: Icon(Icons.close, size: 19.0, color: ColorsPalette.white,),
+                        ),
+                      ))
+                ],
+              ): Container()      
             )
             
           ]))) 
@@ -312,8 +317,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextFormField(
-              decoration: const InputDecoration(
-                  labelText: 'Note text comes here',
+              decoration: const InputDecoration(                  
                   border: InputBorder.none
               ),
               controller: _textController,
@@ -321,11 +325,40 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               maxLines: null,
               autofocus: true,
             ),
-            ClipRRect(
-              //padding: EdgeInsets.only(bottom: 20.0),
-              borderRadius: BorderRadius.circular(8.0),
-              child: _note!.image != null ? Image.memory(_note!.image!) : Container()                          
-              )
+            InkWell(
+              onTap: (){
+                Navigator.of(context).pushNamed(noteImageView, arguments: _note!.image!);
+              },
+              child: _note!.image != null ? Stack(
+                alignment: AlignmentDirectional.topEnd,
+                children: [ 
+                  Container(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: ClipRRect(                  
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.memory(            
+                          _note!.image!)
+                                      
+                      ),
+                  ),                  
+                  Positioned(
+                    top: 6.0,
+                    child:InkWell(
+                        onTap: (){
+                          context.read<NoteDetailsBloc>().add(GetImage(null));
+                        },                        
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: ColorsPalette.juicyDarkBlue,
+                          ),
+                          child: Icon(Icons.close, size: 19.0, color: ColorsPalette.white,),
+                        ),
+                      ))
+                ],
+              ): Container()      
+            )
           ])))
       ],
   );

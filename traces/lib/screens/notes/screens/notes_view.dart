@@ -176,7 +176,7 @@ class _NotesViewState extends State<NotesView> {
           ),
           Container(
             padding: EdgeInsets.only(left: 10.0, right: 10.0),
-            child: Divider(color: ColorsPalette.amMint),
+            child: Divider(color: ColorsPalette.juicyBlue),
           ),                                        
           note.content != null ? InkWell(child: Container(
             alignment: Alignment.centerLeft,
@@ -195,13 +195,13 @@ class _NotesViewState extends State<NotesView> {
       padding: EdgeInsets.all(10.0),
       child: TextFormField(
         decoration: const InputDecoration(
-          prefixIcon: Icon(Icons.search, color: ColorsPalette.greenGrass),
+          prefixIcon: Icon(Icons.search, color: ColorsPalette.juicyBlue),
           hintText: 'Search...',
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorsPalette.greenGrass,),
+            borderSide: BorderSide(color: ColorsPalette.juicyBlue),
           ),
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorsPalette.greenGrass),
+            borderSide: BorderSide(color: ColorsPalette.juicyBlue),
           ),
         ),
         controller: _searchController,

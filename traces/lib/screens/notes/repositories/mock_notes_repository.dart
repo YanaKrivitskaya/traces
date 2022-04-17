@@ -88,7 +88,7 @@ class MockNotesRepository extends NotesRepository{
   }
 
   @override
-  Future<Note> updateNoteImage(File image, int noteId) {
+  Future<Note> updateNoteImage(File? image, int noteId) {
     // TODO: implement updateNoteImage
     throw UnimplementedError();
   }
