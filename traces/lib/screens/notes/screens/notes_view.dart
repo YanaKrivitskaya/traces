@@ -102,76 +102,20 @@ class _NotesViewState extends State<NotesView> {
                           filteredNotes.length > 0 ?
                           Container(
                             child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: filteredNotes.length,
-                                reverse: state.sortDirection == SortDirections.ASC ? true : false,
-                                itemBuilder: (context, position){
-                                  final note = filteredNotes[position];
-                                  return Card(
-                                    child: Column(
-                                      //crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        note.trip != null ? Container(
-                                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                          alignment: Alignment.centerLeft,
-                                          child: Chip(
-                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
-                                            backgroundColor: /*ColorsPalette.natureGreenLight*/ColorsPalette.amMint,
-                                            label: Text(note.trip!.name!, style: TextStyle(color: /*ColorsPalette.juicyGreen*/ColorsPalette.white)),
-                                          ),
-                                        ) : Container(),                                        
-                                        ListTile(
-                                          /*leading: ElevatedButton(
-                                            child: Icon(Icons.notes_outlined, size: 40.0, color: ColorsPalette.white,),
-                                            onPressed: (){},
-                                            style: ElevatedButton.styleFrom(
-                                                shape: const CircleBorder(), 
-                                                padding: const EdgeInsets.all(10),
-                                                primary: ColorsPalette.frLightBlue
-                                            ),
-                                          ),*/
-                                          title: Text('${note.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
-                                          subtitle: (note.createdDate!.day.compareTo(note.updatedDate!.day) == 0) ?
-                                          Text('${DateFormat.yMMMd().format(note.updatedDate!)}',
-                                              style: quicksandStyle(color: ColorsPalette.black, fontSize: 15.0)) :
-                                          Text('${DateFormat.yMMMd().format(note.updatedDate!)} / ${DateFormat.yMMMd().format(note.createdDate!)}',
-                                              style: quicksandStyle(color: ColorsPalette.black, fontSize: 15.0)),                                         
-
-                                          //trailing: _popupMenu(note, position),
-                                          onTap: (){
-                                            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
-                                            {
-                                              context.read<NoteBloc>().add(GetAllNotes());
-                                            });
-                                          },
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                          alignment: Alignment.centerLeft,
-                                          child: note.tags!.isNotEmpty ? getChips(note, _allTagsSelected, _selectedTags): Container(),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                          child: Divider(color: ColorsPalette.amMint),
-                                        ),                                        
-                                        note.content != null ? InkWell(child: Container(
-                                          alignment: Alignment.centerLeft,
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Text(note.content!.substring(0, note.content!.length > 100 ? 100 : note.content!.length), style: quicksandStyle(fontSize: 15.0)),
-                                        )
-                                        ) : Container()
-                                      ],
-                                    ),
-                                  );
-                                }
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: filteredNotes.length,
+                              reverse: state.sortDirection == SortDirections.ASC ? true : false,
+                              itemBuilder: (context, position){
+                                final note = filteredNotes[position];
+                                return _noteCard(note);
+                              }
                             ),
                           ) : Container(
-                                padding: new EdgeInsets.all(25.0),
-                                child: Center(
-                                  child: Text("No notes here", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.greenGrass), fontSize: 18.0)),
-                                )
+                            padding: new EdgeInsets.all(25.0),
+                            child: Center(
+                              child: Text("No notes here", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.greenGrass), fontSize: 18.0)),
+                            )
                           )
                         ],
                       ),
@@ -185,6 +129,66 @@ class _NotesViewState extends State<NotesView> {
         ))       
     );    
   }
+
+  Widget _noteCard(Note note, ) => new Card(
+    child: Column(
+      //crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        note.trip != null ? Container(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+          alignment: Alignment.centerLeft,
+          child: Chip(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+            backgroundColor: /*ColorsPalette.natureGreenLight*/ColorsPalette.amMint,
+            label: Text(note.trip!.name!, style: TextStyle(color: /*ColorsPalette.juicyGreen*/ColorsPalette.white)),
+          ),
+        ) : Container(),    
+        InkWell(
+            onTap: (){
+            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
+              {
+                context.read<NoteBloc>().add(GetAllNotes());
+              });
+            },
+          child: Column(children: [
+            ListTile(
+          /*leading: ElevatedButton(
+            child: Icon(Icons.notes_outlined, size: 40.0, color: ColorsPalette.white,),
+            onPressed: (){},
+            style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(), 
+                padding: const EdgeInsets.all(10),
+                primary: ColorsPalette.frLightBlue
+            ),
+          ),*/
+          title: Text('${note.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
+          subtitle: (note.createdDate!.day.compareTo(note.updatedDate!.day) == 0) ?
+          Text('${DateFormat.yMMMd().format(note.updatedDate!)}',
+              style: quicksandStyle(color: ColorsPalette.black, fontSize: 15.0)) :
+          Text('${DateFormat.yMMMd().format(note.updatedDate!)} / ${DateFormat.yMMMd().format(note.createdDate!)}',
+              style: quicksandStyle(color: ColorsPalette.black, fontSize: 15.0))                                          
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+            alignment: Alignment.centerLeft,
+            child: note.tags!.isNotEmpty ? getChips(note, _allTagsSelected, _selectedTags): Container(),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+            child: Divider(color: ColorsPalette.amMint),
+          ),                                        
+          note.content != null ? InkWell(child: Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.all(10.0),
+            child: Text(note.content!.substring(0, note.content!.length > 100 ? 100 : note.content!.length), style: quicksandStyle(fontSize: 15.0)),
+          )
+          ) : Container()
+          ]),
+        )                                        
+      ],
+    ),
+  );
 
   Widget _searchBar(){
     return Container(
