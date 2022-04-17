@@ -80,7 +80,7 @@ class ApiNotesRepository extends NotesRepository{
     return newNote;
   }
 
-  Future<Note> updateNoteImage(File image, int noteId)async{    
+  Future<Note> updateNoteImage(File? image, int noteId)async{    
 
     final response = await apiProvider.postSecureMultipart("$notesUrl$noteId/image", null, image);
       

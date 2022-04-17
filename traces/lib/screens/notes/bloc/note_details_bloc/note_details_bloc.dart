@@ -84,7 +84,9 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
       if(event.image != null){
         image = event.image!.readAsBytesSync();
         updNote = await _notesRepository.updateNoteImage(event.image!, updNote.id!);
-      }      
+      }else{
+        updNote = await _notesRepository.updateNoteImage(null, updNote.id!);
+      }
 
       emit(EditDetailsState(     
         updNote
