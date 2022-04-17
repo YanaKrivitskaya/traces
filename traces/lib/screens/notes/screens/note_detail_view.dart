@@ -101,10 +101,10 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               },
             ),                     
             actions: <Widget>[
-              _note != null && _note!.image == null ? _imageAction(_note, context) : Container(),
+               _note!.id != null && _note!.image == null ? _imageAction(_note, context) : Container(),
                _isEditMode ? _saveAction(_note) : _editAction(state),
-              !_isEditMode ? _tagsAction(_note!.id): Container(),             
-              _note!.id != null && !_isEditMode ? _deleteAction(_note, context) : Container()              
+              _note!.id != null ? _tagsAction(_note!.id): Container(),             
+              _note!.id != null ? _deleteAction(_note, context) : Container()              
             ],
             backgroundColor: ColorsPalette.white,
             elevation: 0,
@@ -119,69 +119,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         );
       }),
     );
-  }
-
-  Widget _getTags(List<Tag> tags) {
-    return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: tags.map((tag) => Padding(
-              padding: EdgeInsets.all(3.0),
-              child: Text("#"+tag.name!, style: TextStyle(color: ColorsPalette.juicyBlue, fontSize: 14.0),)
-          )).toList(),
-        ));
-  }
-
-  Widget _tagsAction(int? noteId) => new IconButton(
-    padding: EdgeInsets.only(right: 10.0),
-    constraints: BoxConstraints(),    
-    icon: Icon(Icons.tag, color: ColorsPalette.black),
-    onPressed: () {
-      showDialog(
-          barrierDismissible: false, context: context, builder: (_) =>
-          MultiBlocProvider(
-            providers: [
-              BlocProvider.value(
-                value: context.read<NoteDetailsBloc>(),
-              ),
-              BlocProvider<TagAddBloc>(
-                  create: (context) => TagAddBloc()..add(GetTags()),
-              ),
-            ],
-            child:  TagsAddDialog(callback: (val) async {
-              if(val == 'Ok'){
-                context.read<NoteDetailsBloc>().add(GetNoteDetails(noteId));                
-              }
-            }),
-          ));},
-  );
-
-  Widget _editAction(NoteDetailsState state) => new IconButton(
-    padding: EdgeInsets.only(right: 10.0),
-    constraints: BoxConstraints(),   
-    icon: Icon(Icons.edit, color: ColorsPalette.black),
-    onPressed: () {
-      if(state is ViewDetailsState){
-        context.read<NoteDetailsBloc>().add(EditModeClicked(state.note));
-      }
-    },
-  );
-
-  Widget _saveAction(Note? note) => new IconButton(
-    padding: EdgeInsets.only(right: 10.0),
-    constraints: BoxConstraints(),   
-    icon: Icon(Icons.check, color: ColorsPalette.black),
-    onPressed: () {
-      Note noteToSave = new Note(
-        content: _textController!.text, 
-        title: _titleController!.text, 
-        id: note!.id, 
-        userId: note.userId,
-        deleted: note.deleted,
-        createdDate: note.createdDate, tags: note.tags);
-      context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
-    },
-  );
+  }   
 
   Widget _noteView(List<Tag>? tags, NoteDetailsState state){
     return Container(
@@ -205,29 +143,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Container(        
-          alignment: Alignment.centerLeft,
-          child: ActionChip(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
-            backgroundColor: ColorsPalette.amMint,
-            avatar: Icon(Icons.signpost, color: ColorsPalette.white,),
-            label: Text(_note!.trip != null ? _note!.trip!.name! : "Add Trip reference", style: TextStyle(color: ColorsPalette.white)),
-            onPressed: (){              
-                showDialog(
-                  barrierDismissible: false, context: context, builder: (_) =>
-                  BlocProvider<TripListBloc>(
-                    create: (context) => TripListBloc()..add(GetTripsList(_note!)),
-                    child: TripsListDialog(noteId: _note!.id!, callback: (val) async {
-                if(val == 'Ok'){
-                  context.read<NoteDetailsBloc>().add(GetNoteDetails(_note!.id!));                
-                }
-              }),
-                  ),
-              );
-              },
-          ),
-        ),
+        _note!.id != null ? _tripAction() : Container(),
         Text('${_note!.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
         Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate!)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate!)}',
             style: quicksandStyle(fontSize: 14.0
@@ -283,7 +199,8 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
 
     Widget _noteCardEdit(List<Tag>? tags) => new Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[      
+      children: <Widget>[
+        _note!.id != null ? _tripAction() : Container(),
         TextFormField(
           cursorColor: ColorsPalette.black,
           decoration: const InputDecoration(
@@ -293,8 +210,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           ),
           style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold),
           controller: _titleController,
-          keyboardType: TextInputType.text,
-          //autofocus: true,
+          keyboardType: TextInputType.text          
         ),
         Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate ?? _date)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate ?? _date)}',
             style: quicksandStyle(fontSize: 14.0
@@ -304,8 +220,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         Container(
           padding: EdgeInsets.only(bottom: 20.0),
           height: MediaQuery.of(context).size.height * 0.6,
-          child: SingleChildScrollView(
-            // physics: ClampingScrollPhysics(),
+          child: SingleChildScrollView(           
             child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -333,7 +248,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
                           _note!.image!)
                                       
                       ),
-                  ),                  
+                  ),
                   Positioned(
                     top: 6.0,
                     child:InkWell(
@@ -355,6 +270,92 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           ])))
       ],
   );
+
+  Widget _tripAction() => new Container(        
+    alignment: Alignment.centerLeft,
+    child: ActionChip(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+      backgroundColor: ColorsPalette.amMint,
+      avatar: Icon(Icons.signpost, color: ColorsPalette.white,),
+      label: Text(_note!.trip != null ? _note!.trip!.name! : "Add Trip reference", style: TextStyle(color: ColorsPalette.white)),
+      onPressed: (){              
+          showDialog(
+            barrierDismissible: false, context: context, builder: (_) =>
+            BlocProvider<TripListBloc>(
+              create: (context) => TripListBloc()..add(GetTripsList(_note!)),
+              child: TripsListDialog(noteId: _note!.id!, callback: (val) async {
+          if(val == 'Ok'){
+            context.read<NoteDetailsBloc>().add(GetNoteDetails(_note!.id!));                
+          }
+        }),
+            ),
+        );
+        },
+    ),
+  );
+
+  Widget _getTags(List<Tag> tags) {
+    return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: tags.map((tag) => Padding(
+              padding: EdgeInsets.all(3.0),
+              child: Text("#"+tag.name!, style: TextStyle(color: ColorsPalette.juicyBlue, fontSize: 14.0),)
+          )).toList(),
+        ));
+  } 
+
+  Widget _tagsAction(int? noteId) => new IconButton(
+    padding: EdgeInsets.only(right: 10.0),
+    constraints: BoxConstraints(),    
+    icon: Icon(Icons.tag, color: ColorsPalette.black),
+    onPressed: () {
+      showDialog(
+          barrierDismissible: false, context: context, builder: (_) =>
+          MultiBlocProvider(
+            providers: [
+              BlocProvider.value(
+                value: context.read<NoteDetailsBloc>(),
+              ),
+              BlocProvider<TagAddBloc>(
+                  create: (context) => TagAddBloc()..add(GetTags()),
+              ),
+            ],
+            child:  TagsAddDialog(callback: (val) async {
+              if(val == 'Ok'){
+                context.read<NoteDetailsBloc>().add(GetNoteDetails(noteId));                
+              }
+            }),
+          ));},
+  );
+
+  Widget _editAction(NoteDetailsState state) => new IconButton(
+    padding: EdgeInsets.only(right: 10.0),
+    constraints: BoxConstraints(),   
+    icon: Icon(Icons.edit, color: ColorsPalette.black),
+    onPressed: () {
+      if(state is ViewDetailsState){
+        context.read<NoteDetailsBloc>().add(EditModeClicked(state.note));
+      }
+    },
+  );
+
+  Widget _saveAction(Note? note) => new IconButton(
+    padding: EdgeInsets.only(right: 10.0),
+    constraints: BoxConstraints(),   
+    icon: Icon(Icons.check, color: ColorsPalette.black),
+    onPressed: () {
+      Note noteToSave = new Note(
+        content: _textController!.text, 
+        title: _titleController!.text, 
+        id: note!.id, 
+        userId: note.userId,
+        deleted: note.deleted,
+        createdDate: note.createdDate, tags: note.tags);
+      context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
+    },
+  );  
 
   Widget _imageAction(Note? note, BuildContext context) => new IconButton(
     onPressed: (){
