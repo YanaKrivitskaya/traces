@@ -47,6 +47,9 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
         content: event.note.content
       );
       note = await _notesRepository.addNewNote(newNote);
+      if(event.tripId != null && event.tripId! > 0){
+        note = await _notesRepository.addNoteTrip(note!.id, event.tripId);
+      }
     }
     
       return emit(ViewDetailsState(note, null));
@@ -68,11 +71,11 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
   }
 
   void _onNewNoteMode(NewNoteMode event, Emitter<NoteDetailsState> emit) async{
-    return emit(EditDetailsState(new Note()));
+    return emit(EditDetailsState(new Note(), event.tripId));
   }
 
   void _onEditModeClicked(EditModeClicked event, Emitter<NoteDetailsState> emit) async{
-    return emit(EditDetailsState(event.note));
+    return emit(EditDetailsState(event.note, null));
   }  
 
   void _onGetImage(GetImage event, Emitter<NoteDetailsState> emit) async {
@@ -89,7 +92,8 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
       }
 
       emit(EditDetailsState(     
-        updNote
+        updNote,
+        null
       ));
     }on CustomException catch(e){
       return emit(ErrorDetailsState(currentState.note, e));

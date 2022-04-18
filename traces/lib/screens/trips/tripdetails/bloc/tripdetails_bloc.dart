@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/screens/notes/repositories/api_notes_repository.dart';
 import 'package:traces/screens/profile/model/group_model.dart';
 import 'package:traces/screens/profile/model/group_user_model.dart';
 import 'package:traces/screens/profile/repository/api_profile_repository.dart';
@@ -24,6 +25,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   final ApiBookingsRepository _bookingsRepository;
   final ApiTicketsRepository _ticketsRepository;
   final ApiActivitiesRepository _activitiesRepository;
+  final ApiNotesRepository _notesRepository;
    SharedPreferencesService sharedPrefsService = SharedPreferencesService();
   
   TripDetailsBloc() : 
@@ -33,6 +35,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   _bookingsRepository = new ApiBookingsRepository(),
   _ticketsRepository = new ApiTicketsRepository(),
   _activitiesRepository = new ApiActivitiesRepository(),
+  _notesRepository = new ApiNotesRepository(),
   super(TripDetailsInitial(0)){
     on<GetTripDetails>(_onGetTripDetails);
     on<UpdateTripDetailsSuccess>(_onUpdateTripDetailsSuccess);
@@ -42,6 +45,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     on<UpdateBookings>(_onUpdateBookings);
     on<UpdateActivities>(_onUpdateActivities);
     on<UpdateTickets>(_onUpdateTickets);
+    on<UpdateNotes>(_onUpdateNotes);
     on<GetImage>(_onGetImage);
     on<UpdateTripClicked>(_onUpdateTripClicked);
     on<DateRangeUpdated>(_onDateRangeUpdated);
@@ -183,6 +187,25 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
 
       Trip trip = state.trip!.copyWith(expenses: expenses, tickets: tickets);
+
+      emit(TripDetailsSuccessState(     
+        trip,
+        state.familyMembers!,
+        state.activeTab
+      ));
+    } on CustomException catch(e){
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+    } on Exception catch (e){
+      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+    }
+  }
+
+  void _onUpdateNotes(UpdateNotes event, Emitter<TripDetailsState> emit) async {    
+    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
+    try{
+      var notes = await _notesRepository.getTripNotes(event.tripId);
+      
+      Trip trip = state.trip!.copyWith(notes: notes);
 
       emit(TripDetailsSuccessState(     
         trip,

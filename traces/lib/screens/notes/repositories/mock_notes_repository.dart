@@ -92,6 +92,12 @@ class MockNotesRepository extends NotesRepository{
     // TODO: implement updateNoteImage
     throw UnimplementedError();
   }
+  
+  @override
+  Future<Note?> addNoteTrip(int? noteId, int? tripId){
+    // TODO: implement updateNoteImage
+    throw UnimplementedError();
+  }
 
 
 }

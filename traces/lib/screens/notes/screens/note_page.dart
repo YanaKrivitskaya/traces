@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/screens/notes/models/note_details_args.dart';
 import 'package:traces/utils/style/styles.dart';
 
 import '../../../constants/color_constants.dart';
@@ -55,7 +56,8 @@ class NotesPage extends StatelessWidget{
         body:  NotesView(),        
         floatingActionButton:  FloatingActionButton.extended(
           onPressed: (){
-            Navigator.pushNamed(context, noteDetailsRoute, arguments: 0).then((value) 
+            NoteDetailsArgs args = new NoteDetailsArgs(noteId: 0, tripId: null);
+            Navigator.pushNamed(context, noteDetailsRoute, arguments: args).then((value) 
               => context.read<NoteBloc>().add(GetAllNotes()));
           },
           tooltip: 'Add New Note',

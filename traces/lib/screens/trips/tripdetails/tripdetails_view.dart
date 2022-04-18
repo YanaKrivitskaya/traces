@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/constants/route_constants.dart';
+import 'package:traces/screens/notes/models/note_details_args.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 
 import 'package:traces/screens/trips/tripdetails/route_view.dart';
+import 'package:traces/screens/trips/tripdetails/tripnotes_view.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../../constants/color_constants.dart';
@@ -117,9 +119,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                           BlocProvider.value(
                             value: context.read<TripDetailsBloc>(),
                             child: RouteView(trip: state.trip!),
-                          ),                                                  
-                          //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),                          
-                          Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
+                          ),                                                
+                          TripNotesView(state.trip!.notes, state.trip!.id!),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           /*BlocProvider(
@@ -158,7 +159,13 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
           backgroundColor: ColorsPalette.juicyYellow,
           foregroundColor: ColorsPalette.lynxWhite,
           label: 'Note',
-          onTap: () {},
+          onTap: () {
+            NoteDetailsArgs args = new NoteDetailsArgs(noteId: 0, tripId: trip.id!);
+            Navigator.pushNamed(context, noteDetailsRoute, arguments: args).then((value) 
+              {
+                context.read<TripDetailsBloc>().add(UpdateNotes(trip.id!));
+              });
+          },
         ),
         SpeedDialChild(
           child: Icon(Icons.train),
