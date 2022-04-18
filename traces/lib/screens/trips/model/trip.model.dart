@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:traces/screens/notes/models/note.model.dart';
 import 'package:traces/screens/trips/model/booking.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
@@ -22,6 +23,7 @@ class Trip {
   List<Expense>? expenses;  
   List<Ticket>? tickets;  
   List<Booking>? bookings;  
+  List<Note>? notes;
 
   Trip({
     this.id,
@@ -36,6 +38,7 @@ class Trip {
     this.expenses,
     this.tickets,
     this.bookings,
+    this.notes
   });
 
   Trip copyWith({
@@ -50,7 +53,8 @@ class Trip {
     List<Activity>? activities,
     List<Expense>? expenses,
     List<Ticket>? tickets,  
-    List<Booking>? bookings 
+    List<Booking>? bookings ,
+    List<Note>? notes
   }) {
     return Trip(
       id: id ?? this.id,
@@ -64,7 +68,8 @@ class Trip {
       activities: activities ?? this.activities,
       expenses: expenses ?? this.expenses,
       tickets: tickets ?? this.tickets,
-      bookings: bookings ?? this.bookings
+      bookings: bookings ?? this.bookings,
+      notes: notes ?? this.notes
     );
   }
 
@@ -100,6 +105,7 @@ class Trip {
       expenses: map['expenses'] != null ? List<Expense>.from(map['expenses']?.map((x) => Expense.fromMap(x))) : null,
       tickets: map['tickets'] != null ? List<Ticket>.from(map['tickets']?.map((x) => Ticket.fromMap(x))) : null,
       bookings: map['bookings'] != null ? List<Booking>.from(map['bookings']?.map((x) => Booking.fromMap(x))) : null,
+      notes: map['notes'] != null ? List<Note>.from(map['notes']?.map((x) => Note.fromMap(x))) : null,
       
     );
   }

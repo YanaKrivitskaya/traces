@@ -5,6 +5,7 @@ import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 
 import 'package:traces/screens/trips/tripdetails/route_view.dart';
+import 'package:traces/screens/trips/tripdetails/tripnotes_view.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
 
 import '../../../constants/color_constants.dart';
@@ -119,7 +120,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                             child: RouteView(trip: state.trip!),
                           ),                                                  
                           //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),                          
-                          Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
+                          TripNotesView(state.trip!.notes, state.trip!.id!),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           /*BlocProvider(
