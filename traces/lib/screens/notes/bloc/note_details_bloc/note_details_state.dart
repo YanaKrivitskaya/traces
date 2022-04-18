@@ -29,11 +29,12 @@ class ViewDetailsState extends NoteDetailsState {
 
 class EditDetailsState extends NoteDetailsState {
   final Note? note;
+  final int? tripId;
 
-  const EditDetailsState(this.note) : super(note);
+  const EditDetailsState(this.note, this.tripId) : super(note);
 
   @override
-  List<Object?> get props => [note];
+  List<Object?> get props => [note, tripId];
 }
 
 class InitialNoteDetailsState extends NoteDetailsState {

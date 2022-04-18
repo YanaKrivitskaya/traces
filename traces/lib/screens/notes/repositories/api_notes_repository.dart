@@ -19,6 +19,19 @@ class ApiNotesRepository extends NotesRepository{
     return notes;
   }
 
+  Future<List<Note>?> getTripNotes(int tripId) async{    
+    print("getTripNotes");
+    
+    final queryParameters = {
+      'tripId': tripId.toString()
+    };
+    final response = await apiProvider.getSecure(notesUrl + '/trip', queryParams: queryParameters);
+      
+    var notes = response["notes"] != null ? 
+      response['notes'].map<Note>((map) => Note.fromMap(map)).toList() : null;
+    return notes;
+  }
+
   Future<Note?> getNoteById(int? noteId) async {
     final response = await apiProvider.getSecure(notesUrl + '/$noteId');
     

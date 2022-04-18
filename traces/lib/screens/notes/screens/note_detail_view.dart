@@ -35,6 +35,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
 
   Note? _note = Note();
   bool _isEditMode = false;
+  int? _tripId = 0;
   var _date = DateTime.now();
 
   @override
@@ -88,6 +89,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         if(state is EditDetailsState){
           _note = state.note;
           _isEditMode = true;
+          _tripId = state.tripId;
           _titleController!.text = state.note!.title ?? '';
           _textController!.text = state.note!.content ?? '';
         }
@@ -102,7 +104,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
             ),                     
             actions: <Widget>[
                _note!.id != null && _note!.image == null ? _imageAction(_note, context) : Container(),
-               _isEditMode ? _saveAction(_note) : _editAction(state),
+               _isEditMode ? _saveAction(_note, _tripId) : _editAction(state),
               _note!.id != null ? _tagsAction(_note!.id): Container(),             
               _note!.id != null ? _deleteAction(_note, context) : Container()              
             ],
@@ -341,7 +343,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     },
   );
 
-  Widget _saveAction(Note? note) => new IconButton(
+  Widget _saveAction(Note? note, int? tripId) => new IconButton(
     padding: EdgeInsets.only(right: 10.0),
     constraints: BoxConstraints(),   
     icon: Icon(Icons.check, color: ColorsPalette.black),
@@ -353,7 +355,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         userId: note.userId,
         deleted: note.deleted,
         createdDate: note.createdDate, tags: note.tags);
-      context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave));
+      context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave, tripId));
     },
   );  
 

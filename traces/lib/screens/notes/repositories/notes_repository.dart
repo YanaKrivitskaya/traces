@@ -20,4 +20,6 @@ abstract class NotesRepository{
   Future<Note?> addNewNote(CreateNoteModel note);
 
   Future<Note> updateNoteImage(File? image, int noteId);
+
+  Future<Note?> addNoteTrip(int? noteId, int? tripId);
 }

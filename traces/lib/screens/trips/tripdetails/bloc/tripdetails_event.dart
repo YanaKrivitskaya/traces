@@ -92,6 +92,15 @@ class UpdateTickets extends TripDetailsEvent{
   List<Object?> get props => [tripId];
 }
 
+class UpdateNotes extends TripDetailsEvent{
+  final int tripId;
+
+  const UpdateNotes(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
+
 class UpdateActivities extends TripDetailsEvent{
   final int tripId;
 

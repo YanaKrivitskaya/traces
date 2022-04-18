@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/auth/login_signup/otp/otp_verification_view.dart';
+import 'package:traces/screens/notes/models/note_details_args.dart';
 import 'package:traces/screens/notes/screens/note_image_view.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
@@ -104,14 +105,14 @@ class RouteGenerator {
       }      
       case noteDetailsRoute:
         {
-          if (args is int) {
+          if (args is NoteDetailsArgs) {
             return MaterialPageRoute(
               builder: (_) => MultiBlocProvider(
                 providers: [
                   BlocProvider<NoteDetailsBloc>(
-                    create: (context) => NoteDetailsBloc()..add(args != 0
-                      ? GetNoteDetails(args)
-                      : NewNoteMode()),
+                    create: (context) => NoteDetailsBloc()..add(args.noteId != 0
+                      ? GetNoteDetails(args.noteId)
+                      : NewNoteMode(args.tripId)),
                     ),
                   BlocProvider<TagFilterBloc>(
                     create: (context) => TagFilterBloc()..add(GetTags()),

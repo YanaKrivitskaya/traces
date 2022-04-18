@@ -21,7 +21,14 @@ class GetNoteDetails extends NoteDetailsEvent{
   List<Object?> get props => [noteId];
 }
 
-class NewNoteMode extends NoteDetailsEvent{}
+class NewNoteMode extends NoteDetailsEvent{
+  final int? tripId;
+
+  NewNoteMode(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
 
 class EditModeClicked extends NoteDetailsEvent{
   final Note? note;
@@ -34,11 +41,12 @@ class EditModeClicked extends NoteDetailsEvent{
 
 class SaveNoteClicked extends NoteDetailsEvent{
   final Note note;
+  final int? tripId;
 
-  SaveNoteClicked(this.note);
+  SaveNoteClicked(this.note, this.tripId);
 
   @override
-  List<Object> get props => [note];
+  List<Object?> get props => [note, tripId];
 }
 
 class DeleteNote extends NoteDetailsEvent {
