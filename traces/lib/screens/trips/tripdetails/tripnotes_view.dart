@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/notes/models/note.model.dart';
+import 'package:traces/screens/notes/models/note_details_args.dart';
 import 'package:traces/screens/notes/widgets/note_tile.dart';
 import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import 'package:traces/utils/style/styles.dart';
@@ -45,12 +46,13 @@ class TripNotesView extends StatelessWidget{
     child: Column(      
       children: <Widget>[          
         InkWell(
-            onTap: (){             
-            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
-              {
-                BlocProvider.of<TripDetailsBloc>(context)..add(GetTripDetails(tripId));
-              });
-            },
+            onTap: (){   
+              NoteDetailsArgs args = new NoteDetailsArgs(noteId: note.id, tripId: null);
+              Navigator.pushNamed(context, noteDetailsRoute, arguments: args).then((value)
+                {
+                  BlocProvider.of<TripDetailsBloc>(context)..add(GetTripDetails(tripId));
+                });
+              },
           child: NoteTileView(note, false, null),
         )
       ],

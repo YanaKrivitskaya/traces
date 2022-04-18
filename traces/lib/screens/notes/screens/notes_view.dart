@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/notes/models/note_details_args.dart';
 import 'package:traces/screens/notes/widgets/note_tile.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/error_widgets.dart';
@@ -131,7 +132,7 @@ class _NotesViewState extends State<NotesView> {
     );    
   }
 
-  Widget _noteCard(Note note, ) => new Card(    
+  Widget _noteCard(Note note) => new Card(    
     child: Column(
       //crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -147,11 +148,12 @@ class _NotesViewState extends State<NotesView> {
         ) : Container(),    
         InkWell(
             onTap: (){
-            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
-              {
-                context.read<NoteBloc>().add(GetAllNotes());
-              });
-            },
+              NoteDetailsArgs args = new NoteDetailsArgs(noteId: note.id, tripId: null);
+              Navigator.pushNamed(context, noteDetailsRoute, arguments: args).then((value)
+                {
+                  context.read<NoteBloc>().add(GetAllNotes());
+                });
+              },
           child: NoteTileView(note, _allTagsSelected, _selectedTags),
         )
       ],
