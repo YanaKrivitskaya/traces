@@ -48,7 +48,7 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
       );
       note = await _notesRepository.addNewNote(newNote);
       if(event.tripId != null && event.tripId! > 0){
-        await _notesRepository.addNoteTrip(note!.id, event.tripId);
+        note = await _notesRepository.addNoteTrip(note!.id, event.tripId);
       }
     }
     

@@ -119,8 +119,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                           BlocProvider.value(
                             value: context.read<TripDetailsBloc>(),
                             child: RouteView(trip: state.trip!),
-                          ),                                                  
-                          //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),                          
+                          ),                                                
                           TripNotesView(state.trip!.notes, state.trip!.id!),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
@@ -164,7 +163,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
             NoteDetailsArgs args = new NoteDetailsArgs(noteId: 0, tripId: trip.id!);
             Navigator.pushNamed(context, noteDetailsRoute, arguments: args).then((value) 
               {
-                value != null ? context.read<TripDetailsBloc>().add(UpdateNotes(trip.id!)) : '';
+                context.read<TripDetailsBloc>().add(UpdateNotes(trip.id!));
               });
           },
         ),

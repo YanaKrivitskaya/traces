@@ -24,8 +24,7 @@ class TripNotesView extends StatelessWidget{
             child: ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: notes!.length,
-              //everse: state.sortDirection == SortDirections.ASC ? true : false,
+              itemCount: notes!.length,              
               itemBuilder: (context, position){
                 final note = notes![position];
                 return _noteCard(note, context);
@@ -34,7 +33,7 @@ class TripNotesView extends StatelessWidget{
           ) : Container(
             padding: new EdgeInsets.all(25.0),
             child: Center(
-              child: Text("No notes here", style: quicksandStyle(color: ColorsPalette.juicyBlue, fontSize: 18.0)),
+              child: Container(child: Center(child: Text("No notes here", style: quicksandStyle(fontSize: 18.0)))),
             )
           )
         ],
@@ -43,19 +42,8 @@ class TripNotesView extends StatelessWidget{
   }
 
   Widget _noteCard(Note note, BuildContext context) => new Card(    
-    child: Column(
-      //crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        note.trip != null ? Container(
-          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          alignment: Alignment.centerLeft,
-          child: Chip(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
-            backgroundColor: /*ColorsPalette.natureGreenLight*/ColorsPalette.amMint,
-            label: Text(note.trip!.name!, style: TextStyle(color: /*ColorsPalette.juicyGreen*/ColorsPalette.white)),
-          ),
-        ) : Container(),    
+    child: Column(      
+      children: <Widget>[          
         InkWell(
             onTap: (){             
             Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
@@ -67,8 +55,5 @@ class TripNotesView extends StatelessWidget{
         )
       ],
     ),
-  );
-
-  /*@override
-  _TripNotesViewState createState() => _TripNotesViewState();*/
+  ); 
 }
