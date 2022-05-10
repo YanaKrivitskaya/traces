@@ -3,14 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:traces/screens/trips/model/expense_category.model.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
 
-import '../../../../constants/color_constants.dart';
-import '../../../../utils/style/styles.dart';
-import '../../../../widgets/widgets.dart';
-import '../../model/expense.model.dart';
-import '../../model/trip.model.dart';
-import '../../model/trip_settings.model.dart';
-import 'bloc/expensecreate_bloc.dart';
+import '../../../../../constants/color_constants.dart';
+import '../../../../../utils/style/styles.dart';
+import '../../../../../widgets/widgets.dart';
+import '../../../model/expense.model.dart';
+import '../../../model/trip.model.dart';
+import '../../../model/trip_settings.model.dart';
 
 class ExpenseCreateView extends StatefulWidget{
   final Trip trip;  
@@ -104,18 +104,23 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
                 ),
               ));
           }
+          if(state is ExpenseCreateEdit && !state.loading && state.expense != null){
+            _amountController!.text == '' ? _amountController!.text = state.expense!.amount.toString() : null;
+            _descriptionController!.text == '' ? _descriptionController!.text = state.expense!.description ?? '' : null;
+            _categoryController!.text == '' ? _categoryController!.text = state.expense!.category!.name! : null;            
+          }
       },
       child: BlocBuilder<ExpenseCreateBloc, ExpenseCreateState>(
         builder: (context, state){
           return Scaffold(
             appBar: AppBar(
                 centerTitle: true,
-                title: Text('Add expense',
-                  style: quicksandStyle(fontSize: 30.0)),
+                title: Text(state.expense != null && state.expense!.id! > 0 ? 'Update expense' : 'Add expense',
+                  style: quicksandStyle(fontSize: 25.0)),
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,
                 leading: IconButton(
-                  icon: Icon(Icons.close_rounded),
+                  icon: Icon(Icons.close_rounded, color: ColorsPalette.black,),
                   onPressed: (){
                     FocusScope.of(context).unfocus();
                     Navigator.pop(context);

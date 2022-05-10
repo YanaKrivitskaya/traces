@@ -1,11 +1,10 @@
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/expense_category.model.dart';
-
-import '../../../../../utils/api/customException.dart';
-import '../../../model/expense.model.dart';
-import '../../../repository/api_expenses_repository.dart';
+import 'package:traces/screens/trips/repository/api_expenses_repository.dart';
+import 'package:traces/utils/api/customException.dart';
 
 part 'expensecreate_event.dart';
 part 'expensecreate_state.dart';
@@ -17,6 +16,7 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
   _expensesRepository = new ApiExpensesRepository(),
   super(ExpenseCreateInitial(null, null)){
     on<NewExpenseMode>(_onNewExpenseMode);
+    on<EditExpenseMode>(_onEditExpenseMode);
     on<DateUpdated>(_onDateUpdated);
     on<ExpenseSubmitted>(_onExpenseSubmitted);
     on<PaidUpdated>(_onPaidUpdated);
@@ -27,6 +27,12 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
     List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
 
     emit(ExpenseCreateEdit(new Expense(date: event.date), categories, false));
+  } 
+
+  void _onEditExpenseMode(EditExpenseMode event, Emitter<ExpenseCreateState> emit) async{
+    List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
+
+    emit(ExpenseCreateEdit(event.expense, categories, false));
   } 
 
 

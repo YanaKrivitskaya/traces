@@ -1,5 +1,6 @@
 import 'package:traces/screens/trips/model/activity.model.dart';
 import 'package:traces/screens/trips/model/booking.model.dart';
+import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_day.model.dart';
@@ -38,6 +39,18 @@ class BookingEditArguments {
   BookingEditArguments({ required this.booking, required this.trip });
   final Booking booking;
   final Trip trip;      
+}
+
+class ExpenseViewArguments {
+  ExpenseViewArguments({ required this.expenseId, required this.trip });
+  final int expenseId;  
+  final Trip trip;      
+}
+
+class ExpenseEditArguments {
+  ExpenseEditArguments({ required this.expense, required this.trip });
+  final Expense expense;  
+  final Trip trip; 
 }
 
 class TicketEditArguments {

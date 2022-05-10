@@ -4,6 +4,7 @@ import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/notes/models/note_details_args.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_arguments.model.dart';
+import 'package:traces/screens/trips/tripdetails/expenses_view.dart';
 
 import 'package:traces/screens/trips/tripdetails/route_view.dart';
 import 'package:traces/screens/trips/tripdetails/tripnotes_view.dart';
@@ -121,7 +122,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                             child: RouteView(trip: state.trip!),
                           ),                                                
                           TripNotesView(state.trip!.notes, state.trip!.id!),
-                          Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
+                          ExpensesView(state.trip!.expenses, state.trip!),
+                          //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           /*BlocProvider(
                             builder: (context) => BlocB(),
