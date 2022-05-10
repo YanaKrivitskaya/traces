@@ -9,8 +9,6 @@ import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/booking_view/bloc/bookingview_bloc.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
-import 'package:timeline_tile/timeline_tile.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BookingView extends StatefulWidget{
   final Trip trip;

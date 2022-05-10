@@ -13,6 +13,14 @@ class NewExpenseMode extends ExpenseCreateEvent {
   List<Object?> get props => [date];
 }
 
+class EditExpenseMode extends ExpenseCreateEvent {
+  final Expense expense;
+ 
+  EditExpenseMode(this.expense);
+
+  List<Object?> get props => [expense];
+}
+
 class AddExpenseMode extends ExpenseCreateEvent {
   final String? category;
   late final Expense? expense;

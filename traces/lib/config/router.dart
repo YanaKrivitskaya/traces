@@ -13,6 +13,9 @@ import 'package:traces/screens/trips/tripdetails/activities/activity_view/bloc/a
 import 'package:traces/screens/trips/tripdetails/bookings/booking_edit/bloc/bookingcreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/booking_view/bloc/bookingview_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/booking_view/booking_view.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expenses_view/bloc/expenseview_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expenses_view/expense_view.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_edit/bloc/ticketedit_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_edit/ticket_edit_view.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_view/bloc/ticketview_bloc.dart';
@@ -43,8 +46,7 @@ import '../screens/trips/trip_day/trip_day_view.dart';
 import '../screens/trips/tripdetails/activities/activity_edit/activity_create_view.dart';
 import '../screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import '../screens/trips/tripdetails/bookings/booking_edit/booking_create.view.dart';
-import '../screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
-import '../screens/trips/tripdetails/expenses/expense_create_view.dart';
+import '../screens/trips/tripdetails/expenses/expense_edit/expense_create_view.dart';
 import '../widgets/image_crop_view.dart';
 import '../screens/trips/tripdetails/tripdetails_view.dart';
 import '../screens/trips/trips_page.dart';
@@ -296,6 +298,30 @@ class RouteGenerator {
               builder: (_) => BlocProvider<ExpenseCreateBloc>(
                 create: (context) => ExpenseCreateBloc()..add(NewExpenseMode(args.date)),
                 child: ExpenseCreateView(trip: args.trip),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }
+        case expenseEditRoute:
+        {
+          if (args is ExpenseEditArguments) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<ExpenseCreateBloc>(
+                create: (context) => ExpenseCreateBloc()..add(EditExpenseMode(args.expense)),
+                child: ExpenseCreateView(trip: args.trip),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }
+        case expenseViewRoute:
+        {
+          if (args is ExpenseViewArguments) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<ExpenseViewBloc>(
+                create: (context) => ExpenseViewBloc()..add(GetExpenseDetails(args.expenseId)),
+                child: ExpenseView(trip: args.trip),
               ),
             );
           }
