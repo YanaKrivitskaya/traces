@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 
 @immutable
-class ExpenseCategory {
+class Category {
   final int? id;
   final String? name;
   final DateTime? createdDate;
   final DateTime? updatedDate;
-  ExpenseCategory({
+  Category({
     this.id,
     this.name,
     this.createdDate,
@@ -16,13 +16,13 @@ class ExpenseCategory {
   });
 
 
-  ExpenseCategory copyWith({
+  Category copyWith({
     int? id,
     String? name,
     DateTime? createdDate,
     DateTime? updatedDate,
   }) {
-    return ExpenseCategory(
+    return Category(
       id: id ?? this.id,
       name: name ?? this.name,
       createdDate: createdDate ?? this.createdDate,
@@ -37,8 +37,8 @@ class ExpenseCategory {
     };
   }
 
-  factory ExpenseCategory.fromMap(Map<String, dynamic> map) {
-    return ExpenseCategory(
+  factory Category.fromMap(Map<String, dynamic> map) {
+    return Category(
       id: map['id'],
       name: map['name'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
@@ -48,18 +48,18 @@ class ExpenseCategory {
 
   String toJson() => json.encode(toMap());
 
-  factory ExpenseCategory.fromJson(String source) => ExpenseCategory.fromMap(json.decode(source));
+  factory Category.fromJson(String source) => Category.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'ExpenseCategory(id: $id, name: $name, createdDate: $createdDate, updatedDate: $updatedDate)';
+    return 'Category(id: $id, name: $name, createdDate: $createdDate, updatedDate: $updatedDate)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
   
-    return other is ExpenseCategory &&
+    return other is Category &&
       other.id == id &&
       other.name == name &&
       other.createdDate == createdDate &&

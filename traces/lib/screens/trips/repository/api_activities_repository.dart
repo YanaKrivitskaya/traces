@@ -1,11 +1,11 @@
 
 
 import 'package:traces/screens/trips/model/activity.model.dart';
-import 'package:traces/screens/trips/model/activity_category.model.dart';
 import 'package:traces/screens/trips/model/api_models/api_activity.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 
 import '../../../utils/services/api_service.dart';
+import '../model/category.model.dart';
 
 class ApiActivitiesRepository{
   ApiService apiProvider = ApiService();
@@ -25,23 +25,23 @@ class ApiActivitiesRepository{
     return activityResponse;
   }
 
-  Future<List<ActivityCategory>?> getActivityCategories() async{    
+  Future<List<Category>?> getActivityCategories() async{    
     print("getActivityCategories");    
    
     final response = await apiProvider.getSecure(activityCategoryUrl);
       
     var activityResponse = response["categories"] != null ? 
-      response['categories'].map<ActivityCategory>((map) => ActivityCategory.fromMap(map)).toList() : null;
+      response['categories'].map<Category>((map) => Category.fromMap(map)).toList() : null;
     return activityResponse;
   }
 
-  Future<ActivityCategory?> createActivityCategory(ActivityCategory category)async{
+  Future<Category?> createActivityCategory(Category category)async{
     print("createActivityCategory");    
 
     final response = await apiProvider.postSecure(activityCategoryUrl, category.toJson());
       
     var activityResponse = response["category"] != null ? 
-      ActivityCategory.fromMap(response['category']) : null;
+      Category.fromMap(response['category']) : null;
     return activityResponse;
   }
 

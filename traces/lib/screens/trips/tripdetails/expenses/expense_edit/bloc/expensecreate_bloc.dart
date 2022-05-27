@@ -2,7 +2,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
-import 'package:traces/screens/trips/model/expense_category.model.dart';
+import 'package:traces/screens/trips/model/category.model.dart';
 import 'package:traces/screens/trips/repository/api_expenses_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 
@@ -24,25 +24,25 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
   }  
 
   void _onNewExpenseMode(NewExpenseMode event, Emitter<ExpenseCreateState> emit) async{
-    List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
+    List<Category>? categories = await _expensesRepository.getExpenseCategories();
 
     emit(ExpenseCreateEdit(new Expense(date: event.date), categories, false));
   } 
 
   void _onEditExpenseMode(EditExpenseMode event, Emitter<ExpenseCreateState> emit) async{
-    List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
+    List<Category>? categories = await _expensesRepository.getExpenseCategories();
 
     emit(ExpenseCreateEdit(event.expense, categories, false));
   } 
 
 
   void _onAddExpenseMode(AddExpenseMode event, Emitter<ExpenseCreateState> emit) async{
-    List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
+    List<Category>? categories = await _expensesRepository.getExpenseCategories();
 
     Expense newExpense;
 
     if(event.category != null){
-      ExpenseCategory? category = categories!.firstWhere((c) => c.name == event.category, orElse: () => new ExpenseCategory(name: event.category));
+      Category? category = categories!.firstWhere((c) => c.name == event.category, orElse: () => new Category(name: event.category));
       newExpense = event.expense!.copyWith(category: category);
     }else{
       newExpense = event.expense!;

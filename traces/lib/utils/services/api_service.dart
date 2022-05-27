@@ -10,7 +10,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 class ApiService {
   static ApiService? _instance;
   static String _baseUrl = "http://10.0.2.2:8080/"; //emulator
-  //static String _baseUrl = "http://192.168.7.106:8080/"; // local IP
+  //static String _baseUrl = "http://192.168.7.109:8080/"; // local IP
   //static String _baseUrl = "http://192.168.7.200:3002/"; // Local NAS
   //static String _baseUrl = "http://178.124.197.224:3002/"; // External NAS
   static SecureStorage? _storage;
@@ -351,7 +351,7 @@ class ApiService {
         throw ForbiddenException(errorMessage);      
       default:
         throw CustomException(Error.Default, 
-            'Server Error. StatusCode: ${response.statusCode}. Error: ${errorMessage}');
+            'Server Error. StatusCode: ${response.statusCode}. Error: $errorMessage');
     }
   }  
 

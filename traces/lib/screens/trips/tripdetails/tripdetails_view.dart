@@ -154,7 +154,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
       overlayOpacity: 0.4,         
       tooltip: 'Add event',          
       elevation: 8.0,          
-      animationSpeed: 200,          
+      animationDuration : new Duration(milliseconds: 200),          
       children: [
         SpeedDialChild(
           child: Icon(Icons.description),

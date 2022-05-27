@@ -34,9 +34,9 @@ import '../screens/notes/screens/note_detail_view.dart';
 import '../screens/notes/screens/note_page.dart';
 import '../screens/profile/bloc/profile/bloc.dart';
 import '../screens/profile/profile_page.dart';
-import '../screens/settings/bloc/settings_bloc.dart';
 import '../screens/settings/settings_page.dart';
-import '../screens/settings/themes_settings_view.dart';
+import '../screens/settings/themes/bloc/settings_bloc.dart';
+import '../screens/settings/themes/themes_settings_view.dart';
 import '../screens/trips/bloc/trips_bloc.dart';
 import '../screens/trips/model/trip_arguments.model.dart';
 import '../screens/trips/start_planning/bloc/startplanning_bloc.dart';
@@ -64,9 +64,9 @@ class RouteGenerator {
     switch (settings.name) {
       case homeRoute:       
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<SettingsBloc>(
+          builder: (_) => BlocProvider<ThemeSettingsBloc>(
             create: (context) =>
-                SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/),
+                ThemeSettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/),
             child: HomePage(),
           ),
       );
@@ -135,17 +135,17 @@ class RouteGenerator {
         );
       case settingsRoute:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<SettingsBloc>(
+          builder: (_) => BlocProvider<ThemeSettingsBloc>(
             create: (context) =>
-                SettingsBloc(),
+                ThemeSettingsBloc(),
             child: SettingsPage(),
           ),
       );
       case themeSettingsRoute:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<SettingsBloc>(
+          builder: (_) => BlocProvider<ThemeSettingsBloc>(
             create: (context) =>
-                SettingsBloc()
+                ThemeSettingsBloc()
                   ..add(GetAppSettings()),
             child: ThemeSettingsView(),
           ),

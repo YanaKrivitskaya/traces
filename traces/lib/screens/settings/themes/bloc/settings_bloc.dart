@@ -6,17 +6,17 @@ import 'package:traces/utils/services/shared_preferencies_service.dart';
 part 'settings_event.dart';
 part 'settings_state.dart';
 
-class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
+class ThemeSettingsBloc extends Bloc<ThemeSettingsEvent, ThemeSettingsState>{
   SharedPreferencesService sharedPrefsService = SharedPreferencesService();
 
-  SettingsBloc():
+  ThemeSettingsBloc():
       super(InitialSettingsState()){
         on<GetAppSettings>(_onGetAppSettings);
         on<ThemeSelected>(_onThemeSelected);
         on<SubmitTheme>(_onSubmitTheme);
       }
 
-  void _onGetAppSettings(GetAppSettings event, Emitter<SettingsState> emit) async{
+  void _onGetAppSettings(GetAppSettings event, Emitter<ThemeSettingsState> emit) async{
     try{
       var theme = sharedPrefsService.readString(key: "appTheme");
       if(theme != null){
@@ -31,11 +31,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState>{
     }
   }
   
-  void _onThemeSelected(ThemeSelected event, Emitter<SettingsState> emit) async{
+  void _onThemeSelected(ThemeSelected event, Emitter<ThemeSettingsState> emit) async{
      return emit(SuccessSettingsState(event.theme, state.userTheme));
   }  
 
-  void _onSubmitTheme(SubmitTheme event, Emitter<SettingsState> emit) async{
+  void _onSubmitTheme(SubmitTheme event, Emitter<ThemeSettingsState> emit) async{
     await sharedPrefsService.writeString(key: "appTheme", value: event.theme.name);
      return emit(SuccessSettingsState(event.theme, event.theme));
   }

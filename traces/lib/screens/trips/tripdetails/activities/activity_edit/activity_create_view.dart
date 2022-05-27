@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:traces/screens/trips/model/activity_category.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
@@ -12,6 +11,7 @@ import '../../../../../constants/color_constants.dart';
 import '../../../../../utils/style/styles.dart';
 import '../../../../../widgets/widgets.dart';
 import '../../../model/activity.model.dart';
+import '../../../model/category.model.dart';
 import '../../../model/trip.model.dart';
 
 class ActivityCreateView extends StatefulWidget{
@@ -135,7 +135,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
                       FocusScope.of(context).unfocus();
                       var isFormValid = _formKey.currentState!.validate(); 
 
-                      var category = new ActivityCategory(name: _categoryController!.text.trim());
+                      var category = new Category(name: _categoryController!.text.trim());
                       if(state.categories != null){
                         category = state.categories!.firstWhere((c) => c.name! == _categoryController!.text.trim(), orElse: () => category);
                       }                

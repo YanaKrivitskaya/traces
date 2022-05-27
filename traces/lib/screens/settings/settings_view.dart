@@ -18,7 +18,17 @@ class SettingsView extends StatelessWidget{
                 Navigator.pushNamed(context, themeSettingsRoute);
               },
               child: ListTile(                    
-                title: Text('Themes', style: TextStyle(fontSize: 18.0, color: ColorsPalette.picoVoid),)
+                title: Text('Themes', style: TextStyle(fontSize: 18.0, color: ColorsPalette.black),)
+              ),
+            ),
+          ),
+          Card(
+            child: InkWell(
+              onTap: (){
+                //Navigator.pushNamed(context, themeSettingsRoute);
+              },
+              child: ListTile(                    
+                title: Text('Categories', style: TextStyle(fontSize: 18.0, color: ColorsPalette.black),)
               ),
             ),
           )

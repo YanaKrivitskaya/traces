@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/profile/repository/api_profile_repository.dart';
-import 'package:traces/screens/trips/model/activity_category.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/activity.model.dart';
 import 'package:traces/screens/trips/repository/api_activities_repository.dart';
 import 'package:traces/utils/api/customException.dart';
+
+import '../../../../model/category.model.dart';
 
 part 'activitycreate_event.dart';
 part 'activitycreate_state.dart';
@@ -28,12 +29,12 @@ class ActivityCreateBloc extends Bloc<ActivityCreateEvent, ActivityCreateState> 
   } 
 
    void _onNewActivityMode(NewActivityMode event, Emitter<ActivityCreateState> emit) async {
-    List<ActivityCategory>? categories = await _activitiesRepository.getActivityCategories();
+    List<Category>? categories = await _activitiesRepository.getActivityCategories();
     emit(ActivityCreateEdit(new Activity(date: event.date), categories, false));
   }
 
    void _onEditActivityMode(EditActivityMode event, Emitter<ActivityCreateState> emit) async {
-    List<ActivityCategory>? categories = await _activitiesRepository.getActivityCategories();
+    List<Category>? categories = await _activitiesRepository.getActivityCategories();
     emit(ActivityCreateEdit(event.activity, categories, false));
   }
 
