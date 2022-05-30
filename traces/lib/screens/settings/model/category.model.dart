@@ -8,7 +8,7 @@ class Category {
   final int? id;
   final String? name;
   final IconData? icon;
-  final int? color;
+  final Color? color;
   final DateTime? createdDate;
   final DateTime? updatedDate;
   Category({
@@ -25,7 +25,7 @@ class Category {
     int? id,
     String? name,
     IconData? icon,
-    int? color,
+    Color? color,
     DateTime? createdDate,
     DateTime? updatedDate,
   }) {
@@ -44,7 +44,7 @@ class Category {
       'id': id,
       'name': name,
       'icon': icon?.codePoint,
-      'color': color
+      'color': color?.value
     };
   }
 
@@ -53,7 +53,7 @@ class Category {
       id: map['id'],
       name: map['name'],
       icon: map['icon'] != null ? IconData(map['icon'], fontFamily: 'MaterialIcons') : null,
-      color: map['color'],
+      color: map['color'] != null ? Color(map['color']) : null,
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
     );

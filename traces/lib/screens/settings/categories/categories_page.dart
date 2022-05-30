@@ -38,7 +38,7 @@ class CategoriesPage extends StatelessWidget{
                   BlocProvider.value(
                       value: context.read<CategoriesBloc>()..add(NewCategoryMode()),
                       child: CategoryEditDialog(callback: (val) async {
-                        if(val != null){
+                        if(val == 'Ok'){
                           context.read<CategoriesBloc>()..add(GetCategories());            
                         }
                       }),
@@ -60,9 +60,24 @@ class CategoriesPage extends StatelessWidget{
                       itemCount: state.categories!.length,
                       itemBuilder: (context, position){
                         final Category category = state.categories![position];
-                        return ListTile(
-                          leading: category.icon != null ? Icon(category.icon!, color: category.color != null ? Color(category.color!) : ColorsPalette.juicyYellow) : Icon(Icons.category, color: category.color != null ? Color(category.color!) : ColorsPalette.juicyYellow),
+                        return InkWell(
+                          onTap: (){
+                            showDialog(                
+                              barrierDismissible: false, context: context,builder: (_) =>
+                              BlocProvider.value(
+                                  value: context.read<CategoriesBloc>()..add(UpdateCategoryMode(category)),
+                                  child: CategoryEditDialog(callback: (val) async {
+                                    if(val == 'Ok'){
+                                      context.read<CategoriesBloc>()..add(GetCategories());            
+                                    }
+                                  }),
+                                )
+                              );                            
+                          },
+                          child: ListTile(
+                          leading: category.icon != null ? Icon(category.icon!, color: category.color != null ? category.color! : ColorsPalette.juicyYellow) : Icon(Icons.category, color: category.color != null ? category.color! : ColorsPalette.juicyYellow),
                           title: Text(category.name!),
+                          )
                         );
                       },
                     )

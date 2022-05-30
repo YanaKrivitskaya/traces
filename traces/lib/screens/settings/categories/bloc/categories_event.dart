@@ -9,12 +9,36 @@ class GetCategories extends CategoriesEvent {}
 
 class NewCategoryMode extends CategoriesEvent {}
 
-class CreateCategory extends CategoriesEvent {
+class UpdateCategoryMode extends CategoriesEvent {
   final Category category;
  
-  CreateCategory(this.category);
+  UpdateCategoryMode(this.category);
 
   List<Object?> get props => [category];
+}
+
+class CategoryUpdated extends CategoriesEvent {
+  final Category category;
+ 
+  CategoryUpdated(this.category);
+
+  List<Object?> get props => [category];
+}
+
+class IconUpdated extends CategoriesEvent {
+  final IconData icon;
+ 
+  IconUpdated(this.icon);
+
+  List<Object?> get props => [icon];
+}
+
+class ColorUpdated extends CategoriesEvent {
+  final Color color;
+ 
+  ColorUpdated(this.color);
+
+  List<Object?> get props => [color];
 }
 
 class GetCategoryDetails extends CategoriesEvent {
