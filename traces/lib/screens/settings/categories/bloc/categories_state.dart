@@ -17,6 +17,15 @@ class CategoriesSuccess extends CategoriesState {
   CategoriesSuccess(List<Category>? categories) : super(categories);
 }
 
+class CategoriesEdit extends CategoriesState {
+  final Category? category;
+  
+  CategoriesEdit(List<Category>? categories, this.category) : super(categories);
+
+  @override
+  List<Object?> get props => [categories, category];
+}
+
 class CategoriesError extends CategoriesState {
   final String error;
 

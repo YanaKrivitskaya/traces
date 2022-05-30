@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/settings/categories/bloc/categories_bloc.dart';
+import 'package:traces/screens/settings/categories/category_edit_dialog.dart';
 import 'package:traces/screens/settings/model/category.model.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
@@ -31,17 +32,25 @@ class CategoriesPage extends StatelessWidget{
                 )
             ),
             floatingActionButton: FloatingActionButton.extended(
-          onPressed: (){
-            //NoteDetailsArgs args = new NoteDetailsArgs(noteId: 0, tripId: null);
-           /* Navigator.pushNamed(context, noteDetailsRoute, arguments: args).then((value) 
-              => context.read<NoteBloc>().add(GetAllNotes()));*/
-          },
+              onPressed: (){
+               showDialog(                
+                  barrierDismissible: false, context: context,builder: (_) =>
+                  BlocProvider.value(
+                      value: context.read<CategoriesBloc>()..add(NewCategoryMode()),
+                      child: CategoryEditDialog(callback: (val) async {
+                        if(val != null){
+                          context.read<CategoriesBloc>()..add(GetCategories());            
+                        }
+                      }),
+                    )
+                  );
+              },
           tooltip: 'Add New Category',
           backgroundColor: ColorsPalette.amMint,
           label: Text("New", style: quicksandStyle(color: ColorsPalette.white),),
           icon: Icon(Icons.add, color: ColorsPalette.white),
         ),
-            body: Container(child:
+            body: Container(padding: EdgeInsets.only(bottom: 50.0), child:
               state.categories != null ? Container(
                 child: state.categories!.length > 0 ? Container(
                   child: SingleChildScrollView(child: Container(

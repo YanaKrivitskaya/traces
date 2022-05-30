@@ -13,10 +13,15 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
   _categoriesRepository = new ApiCategoriesRepository(),
   super(CategoriesInitial()) {
     on<GetCategories>(_onGetCategories);
+    on<NewCategoryMode>(_onNewCategoryMode);
   }
 
     void _onGetCategories(GetCategories event, Emitter<CategoriesState> emit) async {
-    List<Category>? categories = await _categoriesRepository.getCategories();
-    emit(CategoriesSuccess(categories));
+      List<Category>? categories = await _categoriesRepository.getCategories();
+      emit(CategoriesSuccess(categories));    
+    }
+
+  void _onNewCategoryMode(NewCategoryMode event, Emitter<CategoriesState> emit) async {   
+    emit(CategoriesEdit(state.categories, null));
   }
 }
