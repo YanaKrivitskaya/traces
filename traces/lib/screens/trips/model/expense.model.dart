@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
-import 'package:traces/screens/trips/model/category.model.dart';
+import 'package:traces/screens/settings/model/category.model.dart';
 
 @immutable
 class Expense {

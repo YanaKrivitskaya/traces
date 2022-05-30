@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 
-import 'category.model.dart';
+import '../../settings/model/category.model.dart';
 
 @immutable
 class Activity {

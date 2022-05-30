@@ -11,7 +11,7 @@ import '../../../../../constants/color_constants.dart';
 import '../../../../../utils/style/styles.dart';
 import '../../../../../widgets/widgets.dart';
 import '../../../model/activity.model.dart';
-import '../../../model/category.model.dart';
+import '../../../../settings/model/category.model.dart';
 import '../../../model/trip.model.dart';
 
 class ActivityCreateView extends StatefulWidget{

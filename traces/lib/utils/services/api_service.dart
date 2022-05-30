@@ -122,7 +122,10 @@ class ApiService {
     };
 
     try{
+      //await _storage!.delete(key: "refresh_token"); 
       responseJson = await sendPost(uri, headers, json.encode(body));      
+
+      var res = responseJson;
 
     }on SocketException catch(e) {
       throw ConnectionException('No Internet connection');
@@ -330,7 +333,8 @@ class ApiService {
   dynamic _response(http.Response response) async{
     if(response.headers["set-cookie"] != null){      
       var refreshToken = response.headers["set-cookie"].toString().split(';')[0].substring(13);
-      await _storage!.write(key: "refresh_token", value: refreshToken);      
+      await _storage!.write(key: "refresh_token", value: refreshToken);
+      _accessToken = refreshToken;
     }
     var errorMessage;
 

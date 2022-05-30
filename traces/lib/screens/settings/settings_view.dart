@@ -25,7 +25,7 @@ class SettingsView extends StatelessWidget{
           Card(
             child: InkWell(
               onTap: (){
-                //Navigator.pushNamed(context, themeSettingsRoute);
+                Navigator.pushNamed(context, categoriesRoute);
               },
               child: ListTile(                    
                 title: Text('Categories', style: TextStyle(fontSize: 18.0, color: ColorsPalette.black),)

@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/auth/login_signup/otp/otp_verification_view.dart';
 import 'package:traces/screens/notes/models/note_details_args.dart';
 import 'package:traces/screens/notes/screens/note_image_view.dart';
+import 'package:traces/screens/settings/categories/bloc/categories_bloc.dart';
+import 'package:traces/screens/settings/categories/categories_page.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_view/activity_view.dart';
@@ -148,6 +150,15 @@ class RouteGenerator {
                 ThemeSettingsBloc()
                   ..add(GetAppSettings()),
             child: ThemeSettingsView(),
+          ),
+      );
+      case categoriesRoute:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<CategoriesBloc>(
+            create: (context) =>
+                CategoriesBloc()
+                  ..add(GetCategories()),
+            child: CategoriesPage(),
           ),
       );
       case visasRoute:

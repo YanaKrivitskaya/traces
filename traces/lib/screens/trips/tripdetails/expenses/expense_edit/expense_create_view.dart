@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/trips/model/category.model.dart';
+import 'package:traces/screens/settings/model/category.model.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:traces/screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
 

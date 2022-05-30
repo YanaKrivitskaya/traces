@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
-import 'package:traces/screens/trips/model/category.model.dart';
+import 'package:traces/screens/settings/model/category.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_settings.model.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
