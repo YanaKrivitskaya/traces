@@ -17,12 +17,29 @@ class UpdateCategoryMode extends CategoriesEvent {
   List<Object?> get props => [category];
 }
 
+class GetCategoryUsage extends CategoriesEvent {
+  final Category category;
+ 
+  GetCategoryUsage(this.category);
+
+  List<Object?> get props => [category];
+}
+
 class CategoryUpdated extends CategoriesEvent {
   final Category category;
  
   CategoryUpdated(this.category);
 
   List<Object?> get props => [category];
+}
+
+class DeleteCategory extends CategoriesEvent {
+  final Category category;
+  final Category? newCategory;
+ 
+  DeleteCategory(this.category, this.newCategory);
+
+  List<Object?> get props => [category, newCategory];
 }
 
 class IconUpdated extends CategoriesEvent {

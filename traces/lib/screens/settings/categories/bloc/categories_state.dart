@@ -33,6 +33,15 @@ class CategoriesEdit extends CategoriesState {
   List<Object?> get props => [categories, category, selectedIcon, selectedColor];
 }
 
+class CategoryToDelete extends CategoriesState {
+    final CategoryUsage? categoryUsage; 
+
+  CategoryToDelete(List<Category>? categories, this.categoryUsage) : super(categories, null);
+
+  @override
+  List<Object?> get props => [categories, categoryUsage];
+}
+
 class CategoryUpdatedState extends CategoriesState {
   CategoryUpdatedState(List<Category>? categories,  Category? category) : super(categories, category);
 }

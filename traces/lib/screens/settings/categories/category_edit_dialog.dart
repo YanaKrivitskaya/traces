@@ -73,8 +73,8 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
       listener: (context, state) {
         if(state is CategoriesEdit){
           showError = false;
-          selectedIcon = state.category?.icon ?? state.selectedIcon;
-          selectedColor = state.category?.color ?? state.selectedColor;         
+          selectedIcon = state.selectedIcon ?? state.category?.icon;
+          selectedColor = state.selectedColor ?? state.category?.color;         
 
           if(_nameController!.text.length == 0 && state.category?.name != null) _nameController!.text = state.category!.name!;
 
@@ -110,7 +110,7 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
             ),
             actions: <Widget>[
               TextButton(
-                child: Text('Done', style: TextStyle(color: ColorsPalette.meditSea)),
+                child: Text('Done', style: TextStyle(color: ColorsPalette.juicyDarkBlue)),
                 onPressed: () {
                   var isFormValid = _formKey.currentState!.validate();
 
@@ -132,7 +132,7 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
                 },
               ),
               TextButton(
-                child: Text('Cancel', style: TextStyle(color: ColorsPalette.meditSea),),
+                child: Text('Cancel', style: TextStyle(color: ColorsPalette.juicyDarkBlue),),
                 onPressed: () {
                   //widget.callback!(null);
                   Navigator.pop(context);
