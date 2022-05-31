@@ -5,12 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/auth/auth_bloc/bloc.dart';
 import 'package:traces/screens/settings/model/app_theme.dart';
+import 'package:traces/screens/settings/themes/bloc/settings_bloc.dart';
 
 import '../auth/auth_bloc/authentication_bloc.dart';
 import '../constants/color_constants.dart';
 import '../constants/route_constants.dart';
 import '../widgets/widgets.dart';
-import 'settings/bloc/settings_bloc.dart';
 
 class HomePage extends StatefulWidget {
   
@@ -25,11 +25,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<SettingsBloc>(
+    return BlocProvider<ThemeSettingsBloc>(
       create: (context) => 
-        SettingsBloc()
+        ThemeSettingsBloc()
           ..add(GetAppSettings()),
-      child: BlocBuilder<SettingsBloc, SettingsState>(        
+      child: BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(        
         builder: (context, state){
           if(state is SuccessSettingsState){         
             _theme = state.userTheme;

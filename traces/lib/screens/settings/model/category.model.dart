@@ -1,30 +1,39 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-class ExpenseCategory {
+class Category {
   final int? id;
   final String? name;
+  final IconData? icon;
+  final Color? color;
   final DateTime? createdDate;
   final DateTime? updatedDate;
-  ExpenseCategory({
+  Category({
     this.id,
     this.name,
+    this.icon,
+    this.color,
     this.createdDate,
     this.updatedDate,
   });
 
 
-  ExpenseCategory copyWith({
+  Category copyWith({
     int? id,
     String? name,
+    IconData? icon,
+    Color? color,
     DateTime? createdDate,
     DateTime? updatedDate,
   }) {
-    return ExpenseCategory(
+    return Category(
       id: id ?? this.id,
       name: name ?? this.name,
+      icon: icon ?? this.icon,
+      color: color ?? this.color,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
     );
@@ -33,14 +42,18 @@ class ExpenseCategory {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': name
+      'name': name,
+      'icon': icon?.codePoint,
+      'color': color?.value
     };
   }
 
-  factory ExpenseCategory.fromMap(Map<String, dynamic> map) {
-    return ExpenseCategory(
+  factory Category.fromMap(Map<String, dynamic> map) {
+    return Category(
       id: map['id'],
       name: map['name'],
+      icon: map['icon'] != null ? IconData(map['icon'], fontFamily: 'MaterialIcons') : null,
+      color: map['color'] != null ? Color(map['color']) : null,
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
     );
@@ -48,20 +61,22 @@ class ExpenseCategory {
 
   String toJson() => json.encode(toMap());
 
-  factory ExpenseCategory.fromJson(String source) => ExpenseCategory.fromMap(json.decode(source));
+  factory Category.fromJson(String source) => Category.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'ExpenseCategory(id: $id, name: $name, createdDate: $createdDate, updatedDate: $updatedDate)';
+    return 'Category(id: $id, name: $name, createdDate: $createdDate, updatedDate: $updatedDate)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
   
-    return other is ExpenseCategory &&
+    return other is Category &&
       other.id == id &&
       other.name == name &&
+      other.icon == icon &&
+      other.color == color &&
       other.createdDate == createdDate &&
       other.updatedDate == updatedDate;
   }
@@ -70,6 +85,8 @@ class ExpenseCategory {
   int get hashCode {
     return id.hashCode ^
       name.hashCode ^
+      icon.hashCode ^
+      color.hashCode ^
       createdDate.hashCode ^
       updatedDate.hashCode;
   }

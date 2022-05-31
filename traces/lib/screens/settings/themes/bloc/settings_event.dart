@@ -1,13 +1,13 @@
 part of 'settings_bloc.dart';
 
-abstract class SettingsEvent extends Equatable{
-  const SettingsEvent();
+abstract class ThemeSettingsEvent extends Equatable{
+  const ThemeSettingsEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class UpdateThemesList extends SettingsEvent{
+class UpdateThemesList extends ThemeSettingsEvent{
   final List<AppTheme> themes;
 
   UpdateThemesList(this.themes);
@@ -16,14 +16,14 @@ class UpdateThemesList extends SettingsEvent{
   List<Object> get props => [themes];
 }
 
-class GetAppSettings extends SettingsEvent{
+class GetAppSettings extends ThemeSettingsEvent{
   GetAppSettings();
 
   @override
   List<Object> get props => [];
 }
 
-class GetThemes extends SettingsEvent{
+class GetThemes extends ThemeSettingsEvent{
   final List<AppTheme> themes;
 
   GetThemes(this.themes);
@@ -32,7 +32,7 @@ class GetThemes extends SettingsEvent{
   List<Object> get props => [themes];
 }
 
-class ThemeSelected extends SettingsEvent{
+class ThemeSelected extends ThemeSettingsEvent{
   final AppTheme? theme;
 
   ThemeSelected(this.theme);
@@ -41,7 +41,7 @@ class ThemeSelected extends SettingsEvent{
   List<Object?> get props => [theme];
 }
 
-class SubmitTheme extends SettingsEvent{
+class SubmitTheme extends ThemeSettingsEvent{
   final AppTheme theme;
 
   SubmitTheme(this.theme);

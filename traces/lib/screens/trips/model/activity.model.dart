@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
-import 'package:traces/screens/trips/model/activity_category.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
+
+import '../../settings/model/category.model.dart';
 
 @immutable
 class Activity {
@@ -15,7 +16,7 @@ class Activity {
   final String? image;
   final bool? isPlanned;
   final bool? isCompleted;
-  final ActivityCategory? category;
+  final Category? category;
   final Expense? expense;
   Activity({
     this.id,
@@ -41,7 +42,7 @@ class Activity {
     String? image,
     bool? isPlanned,
     bool? isCompleted,
-    ActivityCategory? category,
+    Category? category,
     Expense? expense
   }) {
     return Activity(
@@ -83,7 +84,7 @@ class Activity {
       image: map['image'],
       isPlanned: map['isPlanned'],
       isCompleted: map['isCompleted'],
-      category: map['category'] != null ? ActivityCategory.fromMap(map['category']) : null, 
+      category: map['category'] != null ? Category.fromMap(map['activityCategory']) : null, 
       expense: map['expense'] != null ? Expense.fromMap(map['expense']) : null
     );
   }

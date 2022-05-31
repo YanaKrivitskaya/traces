@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/screens/settings/model/app_theme.dart';
+import 'package:traces/screens/settings/themes/bloc/settings_bloc.dart';
 import 'package:traces/widgets/widgets.dart';
 
-import '../../constants/color_constants.dart';
-import 'bloc/settings_bloc.dart';
+import '../../../constants/color_constants.dart';
 
 class ThemeSettingsView extends StatefulWidget{
 
@@ -24,7 +24,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SettingsBloc, SettingsState>(
+    return BlocListener<ThemeSettingsBloc, ThemeSettingsState>(
       listener: (context, state) {
         if(state is SuccessSettingsState){         
           _userTheme = state.userTheme;         
@@ -36,7 +36,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
           _currentIndex = AppThemes.indexOf(state.selectedTheme ?? _userTheme!);          
         }
       },
-      child: BlocBuilder<SettingsBloc, SettingsState>(
+      child: BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(
       bloc: BlocProvider.of(context),
       builder: (context, state){
         
@@ -60,7 +60,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                     enableInfiniteScroll: false,
                     onPageChanged: (index, reason) {
                       var theme = AppThemes[index];
-                      context.read<SettingsBloc>().add(ThemeSelected(theme)); 
+                      context.read<ThemeSettingsBloc>().add(ThemeSelected(theme)); 
                     },
                   ),
                   items: AppThemes.map((item) => Container(   
@@ -101,7 +101,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
               ),
               onPressed: () {
                 var theme = AppThemes[_currentIndex];
-                context.read<SettingsBloc>().add(SubmitTheme(theme));                
+                context.read<ThemeSettingsBloc>().add(SubmitTheme(theme));                
               },
               child: Text('Select theme'),
             )

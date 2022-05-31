@@ -1,19 +1,19 @@
 part of 'settings_bloc.dart';
 
-abstract class SettingsState{ 
+abstract class ThemeSettingsState{ 
   final AppTheme? userTheme;
 
-  const SettingsState({this.userTheme});
+  const ThemeSettingsState({this.userTheme});
 
   @override
   List<Object?> get props => [];
 }
 
-class LoadingSettingsState extends SettingsState{}
+class LoadingSettingsState extends ThemeSettingsState{}
 
-class InitialSettingsState extends SettingsState{}
+class InitialSettingsState extends ThemeSettingsState{}
 
-class SuccessSettingsState extends SettingsState{  
+class SuccessSettingsState extends ThemeSettingsState{  
   final AppTheme? selectedTheme;
   final AppTheme? userTheme;
   

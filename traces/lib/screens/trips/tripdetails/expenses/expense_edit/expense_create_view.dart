@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/trips/model/expense_category.model.dart';
+import 'package:traces/screens/settings/model/category.model.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:traces/screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
 
@@ -132,7 +132,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
                       FocusScope.of(context).unfocus();
                       var isFormValid = _formKey.currentState!.validate();
 
-                      var category = new ExpenseCategory(name: _categoryController!.text.trim());
+                      var category = new Category(name: _categoryController!.text.trim());
                       if(state.categories != null){
                         category = state.categories!.firstWhere((c) => c.name! == _categoryController!.text.trim(), orElse: () => category);
                       }

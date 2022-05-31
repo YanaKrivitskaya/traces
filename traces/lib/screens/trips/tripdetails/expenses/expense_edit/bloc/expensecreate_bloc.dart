@@ -1,8 +1,9 @@
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/screens/settings/categories/repository/api_categories_repository.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
-import 'package:traces/screens/trips/model/expense_category.model.dart';
+import 'package:traces/screens/settings/model/category.model.dart';
 import 'package:traces/screens/trips/repository/api_expenses_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 
@@ -11,9 +12,11 @@ part 'expensecreate_state.dart';
 
 class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
   final ApiExpensesRepository _expensesRepository;
+  final ApiCategoriesRepository _categoriesRepository;
 
   ExpenseCreateBloc() : 
   _expensesRepository = new ApiExpensesRepository(),
+  _categoriesRepository = new ApiCategoriesRepository(),
   super(ExpenseCreateInitial(null, null)){
     on<NewExpenseMode>(_onNewExpenseMode);
     on<EditExpenseMode>(_onEditExpenseMode);
@@ -24,25 +27,25 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
   }  
 
   void _onNewExpenseMode(NewExpenseMode event, Emitter<ExpenseCreateState> emit) async{
-    List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
+    List<Category>? categories = await _categoriesRepository.getCategories();
 
     emit(ExpenseCreateEdit(new Expense(date: event.date), categories, false));
   } 
 
   void _onEditExpenseMode(EditExpenseMode event, Emitter<ExpenseCreateState> emit) async{
-    List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
+    List<Category>? categories = await _categoriesRepository.getCategories();
 
     emit(ExpenseCreateEdit(event.expense, categories, false));
   } 
 
 
   void _onAddExpenseMode(AddExpenseMode event, Emitter<ExpenseCreateState> emit) async{
-    List<ExpenseCategory>? categories = await _expensesRepository.getExpenseCategories();
+    List<Category>? categories = await _categoriesRepository.getCategories();
 
     Expense newExpense;
 
     if(event.category != null){
-      ExpenseCategory? category = categories!.firstWhere((c) => c.name == event.category, orElse: () => new ExpenseCategory(name: event.category));
+      Category? category = categories!.firstWhere((c) => c.name == event.category, orElse: () => new Category(name: event.category));
       newExpense = event.expense!.copyWith(category: category);
     }else{
       newExpense = event.expense!;
@@ -75,7 +78,7 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
 
     try{
       if(category.id == null){
-        category = (await _expensesRepository.createExpenseCategory(event.expense!.category!))!;
+        category = (await _categoriesRepository.createCategory(event.expense!.category!))!;
       }
       Expense expense = await _expensesRepository.createExpense(event.expense!, event.tripId, category.id!);
       emit(ExpenseCreateSuccess(expense, state.categories));

@@ -10,7 +10,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 class ApiService {
   static ApiService? _instance;
   static String _baseUrl = "http://10.0.2.2:8080/"; //emulator
-  //static String _baseUrl = "http://192.168.7.106:8080/"; // local IP
+  //static String _baseUrl = "http://192.168.7.109:8080/"; // local IP
   //static String _baseUrl = "http://192.168.7.200:3002/"; // Local NAS
   //static String _baseUrl = "http://178.124.197.224:3002/"; // External NAS
   static SecureStorage? _storage;
@@ -122,7 +122,10 @@ class ApiService {
     };
 
     try{
+      //await _storage!.delete(key: "refresh_token"); 
       responseJson = await sendPost(uri, headers, json.encode(body));      
+
+      var res = responseJson;
 
     }on SocketException catch(e) {
       throw ConnectionException('No Internet connection');
@@ -330,7 +333,8 @@ class ApiService {
   dynamic _response(http.Response response) async{
     if(response.headers["set-cookie"] != null){      
       var refreshToken = response.headers["set-cookie"].toString().split(';')[0].substring(13);
-      await _storage!.write(key: "refresh_token", value: refreshToken);      
+      await _storage!.write(key: "refresh_token", value: refreshToken);
+      _accessToken = refreshToken;
     }
     var errorMessage;
 
@@ -351,7 +355,7 @@ class ApiService {
         throw ForbiddenException(errorMessage);      
       default:
         throw CustomException(Error.Default, 
-            'Server Error. StatusCode: ${response.statusCode}. Error: ${errorMessage}');
+            'Server Error. StatusCode: ${response.statusCode}. Error: $errorMessage');
     }
   }  
 

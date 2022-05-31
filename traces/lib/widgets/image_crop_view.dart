@@ -31,11 +31,12 @@ class _ImageCropViewState extends State<ImageCropView> {
   }
 
 Future<Null> _cropImage() async {
-    File? croppedFile = await ImageCropper().cropImage(
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
         sourcePath: imageFile!.path,
         compressQuality: 50,
         aspectRatio: CropAspectRatio(ratioX: 16, ratioY: 9),
-        androidUiSettings: AndroidUiSettings(            
+        uiSettings: [
+          AndroidUiSettings(            
             toolbarTitle: 'Crop Image',
             toolbarColor: ColorsPalette.juicyYellow,
             hideBottomControls: false,
@@ -43,9 +44,9 @@ Future<Null> _cropImage() async {
             backgroundColor: ColorsPalette.white,
             initAspectRatio: CropAspectRatioPreset.ratio16x9,            
             lockAspectRatio: true),
-        iosUiSettings: IOSUiSettings(
-          title: 'Cropper',
-        ));
+          IOSUiSettings(
+            title: 'Cropper',
+          )]);
 
     if (croppedFile != null) {      
       Navigator.pop(context, croppedFile);

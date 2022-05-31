@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
-import 'package:traces/screens/trips/model/expense_category.model.dart';
+import 'package:traces/screens/settings/model/category.model.dart';
 
 @immutable
 class Expense {
@@ -13,7 +13,7 @@ class Expense {
   final bool? isPaid;
   final DateTime? createdDate;
   final DateTime? updatedDate;
-  final ExpenseCategory? category;
+  final Category? category;
   Expense({
     this.id,
     this.date,    
@@ -35,7 +35,7 @@ class Expense {
     bool? isPaid,
     DateTime? createdDate,
     DateTime? updatedDate,
-    ExpenseCategory? category
+    Category? category
   }) {
     return Expense(
       id: id ?? this.id,
@@ -72,7 +72,7 @@ class Expense {
       isPaid: map['isPaid'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
-      category: map['category'] != null ? ExpenseCategory.fromMap(map['category']) : null
+      category: map['category'] != null ? Category.fromMap(map['expenseCategory']) : null
     );
   }
 
