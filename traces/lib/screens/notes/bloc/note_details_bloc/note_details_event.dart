@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 
 import '../../models/note.model.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 
 abstract class NoteDetailsEvent extends Equatable {
@@ -59,7 +60,7 @@ class DeleteNote extends NoteDetailsEvent {
 }
 
 class GetImage extends NoteDetailsEvent{
-  final File? image;
+  final CroppedFile? image;
 
   const GetImage(this.image);
 

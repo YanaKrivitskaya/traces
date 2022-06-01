@@ -111,7 +111,7 @@ class UpdateActivities extends TripDetailsEvent{
 }
 
 class GetImage extends TripDetailsEvent{
-  final File? image;
+  final CroppedFile? image;
 
   const GetImage(this.image);
 

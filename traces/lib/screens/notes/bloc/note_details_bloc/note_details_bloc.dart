@@ -9,6 +9,7 @@ import '../../models/create_note.model.dart';
 import '../../models/note.model.dart';
 import '../../repositories/api_notes_repository.dart';
 import 'bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
   final NotesRepository _notesRepository;
@@ -84,9 +85,8 @@ class NoteDetailsBloc extends Bloc<NoteDetailsEvent, NoteDetailsState> {
       var image = state.note?.image;
       Note updNote = state.note!;
 
-      if(event.image != null){
-        image = event.image!.readAsBytesSync();
-        updNote = await _notesRepository.updateNoteImage(event.image!, updNote.id!);
+      if(event.image != null){        
+        updNote = await _notesRepository.updateNoteImage(event.image, updNote.id!);
       }else{
         updNote = await _notesRepository.updateNoteImage(null, updNote.id!);
       }

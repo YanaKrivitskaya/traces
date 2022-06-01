@@ -14,6 +14,7 @@ import 'package:traces/screens/trips/repository/api_tickets_repository.dart';
 import 'package:traces/screens/trips/repository/api_trips_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 part 'tripdetails_event.dart';
 part 'tripdetails_state.dart';
@@ -225,8 +226,9 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       Trip updTrip = state.trip!;
 
       if(event.image != null){
-        image = event.image!.readAsBytesSync();
-        updTrip = await _tripsRepository.updateTripImage(event.image!, updTrip.id!);
+        var imageBytes = await event.image!.readAsBytes();       
+        var imageName = event.image!.path; 
+        updTrip = await _tripsRepository.updateTripImage(imageBytes, updTrip.id!, imageName);
       }      
 
       emit(TripDetailsSuccessState(     

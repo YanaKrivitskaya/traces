@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/trips/widgets/update_trip_header_dialog.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:traces/widgets/image_crop_view.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/style/styles.dart';
@@ -180,9 +182,13 @@ Widget _tripMembers(List<GroupUser>? tripMembers, List<GroupUser> familyMembers)
     final pickedFile = await picker.pickImage(source: imageSource);
 
     if(pickedFile != null){
-      Navigator.pushNamed(context, imageCropRoute, arguments: File(pickedFile.path)).then((imageFile) {
-        if(imageFile != null){
-          context.read<TripDetailsBloc>().add(GetImage(imageFile as File));
+      var fileSize = await pickedFile.length();
+      var compressPercent = (1048576 / fileSize * 100).toInt();
+
+      var args = new ImageCropArguments(compress: compressPercent, file: File(pickedFile.path));
+      Navigator.pushNamed(context, imageCropRoute, arguments: args).then((imageFile) {
+        if(imageFile != null){          
+          context.read<TripDetailsBloc>().add(GetImage(imageFile as CroppedFile));
         }
       });
     }

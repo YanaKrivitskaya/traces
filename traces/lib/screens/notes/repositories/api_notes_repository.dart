@@ -5,6 +5,7 @@ import 'package:traces/screens/notes/repositories/notes_repository.dart';
 import '../../../utils/services/api_service.dart';
 import '../models/create_note.model.dart';
 import '../models/note.model.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class ApiNotesRepository extends NotesRepository{
   ApiService apiProvider = ApiService();
@@ -93,11 +94,10 @@ class ApiNotesRepository extends NotesRepository{
     return newNote;
   }
 
-  Future<Note> updateNoteImage(File? image, int noteId)async{    
-
-    final response = await apiProvider.postSecureMultipart("$notesUrl$noteId/image", null, image);
-      
+  Future<Note> updateNoteImage(CroppedFile? image, int noteId)async{
+    var imageBytes = await image?.readAsBytes();
+    final response = await apiProvider.postSecureMultipart("$notesUrl$noteId/image", null, imageBytes, image?.path ?? '');
     var note = Note.fromMap(response['response']);
-    return note;
+    return note;   
   }
 }

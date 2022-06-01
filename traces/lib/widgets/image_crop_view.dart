@@ -1,15 +1,27 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
+
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
+
+class ImageCropArguments {
+  final File file;
+  final int compress;
+  ImageCropArguments({
+    required this.file,
+    required this.compress,
+  });
+}
 
 class ImageCropView extends StatefulWidget {
   final File image;
+  final int compress;
 
-  const ImageCropView(this.image);
+  const ImageCropView(this.image, this.compress);
 
   @override
   _ImageCropViewState createState() => _ImageCropViewState();
@@ -22,7 +34,7 @@ class _ImageCropViewState extends State<ImageCropView> {
   void initState() {
     super.initState();
     imageFile = widget.image;
-    if (imageFile != null) _cropImage();
+    if (imageFile != null) _cropImage(widget.compress);
   }
 
   @override
@@ -30,11 +42,14 @@ class _ImageCropViewState extends State<ImageCropView> {
     return Container();
   }
 
-Future<Null> _cropImage() async {
+Future<Null> _cropImage(int compress) async {
+
+    File compressedFile = await FlutterNativeImage.compressImage(imageFile!.path,
+    quality: compress < 100 ? compress : 100);
+  
     CroppedFile? croppedFile = await ImageCropper().cropImage(
-        sourcePath: imageFile!.path,
-        compressQuality: 50,
-        aspectRatio: CropAspectRatio(ratioX: 16, ratioY: 9),
+        sourcePath: compressedFile.path,       
+        aspectRatio: CropAspectRatio(ratioX: 16, ratioY: 9),        
         uiSettings: [
           AndroidUiSettings(            
             toolbarTitle: 'Crop Image',
@@ -48,7 +63,7 @@ Future<Null> _cropImage() async {
             title: 'Cropper',
           )]);
 
-    if (croppedFile != null) {      
+    if (croppedFile != null) {     
       Navigator.pop(context, croppedFile);
     }else{
       Navigator.pop(context, null);
