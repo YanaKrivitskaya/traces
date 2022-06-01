@@ -115,12 +115,25 @@ class ExpensesView extends StatelessWidget{
                     BlocProvider.of<TripDetailsBloc>(context)..add(UpdateExpenses(trip.id!))
                   });
                 },
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('${DateFormat.Hm().format(expense.date!)}', style: quicksandStyle(fontSize: 15.0, weight: FontWeight.bold)),
-                SizedBox(width: 10.0),
-                Expanded(child: Text('${expense.description}', style: quicksandStyle(fontSize: 15.0))),              
-                Text('${expense.amount} ${expense.currency}', style: quicksandStyle(fontSize: 15.0)),
-              ],)
+                child: Column(children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text('${DateFormat.Hm().format(expense.date!)}', style: quicksandStyle(fontSize: 15.0, weight: FontWeight.bold)),
+                    SizedBox(width: 10.0),                         
+                    Text('${expense.amount} ${expense.currency}', style: quicksandStyle(fontSize: 15.0)),
+                  ],),
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Column(children: [
+                      Row(children: [
+                        Icon(expense.category?.icon ?? Icons.category, color: expense.category?.color ?? ColorsPalette.black),
+                        SizedBox(width: 4.0)                        
+                      ],)                                            
+                    ],),                    
+                    Expanded(child: Text(
+                      '${expense.category?.name} ${(expense.description != null && expense.description!.length > 0) ? ' - ' : ''} ${expense.description}', 
+                      style: quicksandStyle(fontSize: 15.0)))                   
+                  ],),
+                  SizedBox(height: 10.0)
+                ],) 
               )              
             ],
           );          

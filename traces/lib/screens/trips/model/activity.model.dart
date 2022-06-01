@@ -84,7 +84,7 @@ class Activity {
       image: map['image'],
       isPlanned: map['isPlanned'],
       isCompleted: map['isCompleted'],
-      category: map['category'] != null ? Category.fromMap(map['activityCategory']) : null, 
+      category: map['activityCategory'] != null ? Category.fromMap(map['activityCategory']) : null, 
       expense: map['expense'] != null ? Expense.fromMap(map['expense']) : null
     );
   }

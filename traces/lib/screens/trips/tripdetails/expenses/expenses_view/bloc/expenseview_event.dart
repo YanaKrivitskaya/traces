@@ -10,3 +10,11 @@ class GetExpenseDetails extends ExpenseViewEvent {
 
   List<Object> get props => [expenseId];
 }
+
+class DeleteExpense extends ExpenseViewEvent {
+  final Expense expense;
+
+  DeleteExpense(this.expense);
+
+  List<Object> get props => [expense];
+}

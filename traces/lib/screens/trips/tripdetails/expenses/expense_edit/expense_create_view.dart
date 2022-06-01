@@ -105,9 +105,9 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
               ));
           }
           if(state is ExpenseCreateEdit && !state.loading && state.expense != null){
-            _amountController!.text == '' ? _amountController!.text = state.expense!.amount.toString() : null;
+            _amountController!.text == '' ? _amountController!.text = state.expense!.amount?.toString() ?? '' : null;
             _descriptionController!.text == '' ? _descriptionController!.text = state.expense!.description ?? '' : null;
-            _categoryController!.text == '' ? _categoryController!.text = state.expense!.category!.name! : null;            
+            _categoryController!.text == '' ? _categoryController!.text = state.expense!.category?.name ?? '' : null;            
           }
       },
       child: BlocBuilder<ExpenseCreateBloc, ExpenseCreateState>(
@@ -115,7 +115,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
           return Scaffold(
             appBar: AppBar(
                 centerTitle: true,
-                title: Text(state.expense != null && state.expense!.id! > 0 ? 'Update expense' : 'Add expense',
+                title: Text('Expense',
                   style: quicksandStyle(fontSize: 25.0)),
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,

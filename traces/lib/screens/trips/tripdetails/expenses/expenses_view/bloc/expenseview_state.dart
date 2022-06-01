@@ -17,6 +17,10 @@ class ExpenseViewLoading extends ExpenseViewState {
   ExpenseViewLoading(Expense? expense) : super(expense);
 }
 
+class ExpenseViewDeleted extends ExpenseViewState {
+  ExpenseViewDeleted(Expense? expense) : super(expense);
+}
+
 class ExpenseViewSuccess extends ExpenseViewState {
 
   ExpenseViewSuccess(Expense? expense) : super(expense);

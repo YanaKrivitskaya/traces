@@ -7,6 +7,7 @@ import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 import 'package:traces/screens/trips/tripdetails/expenses/expenses_view/bloc/expenseview_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expenses_view/expense_delete_dialog.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
 
@@ -24,6 +25,8 @@ class _ExpenseViewState extends State<ExpenseView>{
   
   @override
   Widget build(BuildContext context) {
+    GlobalKey _scaffold = GlobalKey();
+
     return BlocListener<ExpenseViewBloc, ExpenseViewState>(
       listener: (context, state){
         if(state.expense != null) expense = state.expense!;
@@ -52,6 +55,7 @@ class _ExpenseViewState extends State<ExpenseView>{
       child: BlocBuilder<ExpenseViewBloc, ExpenseViewState>(
         builder: (context, state){
           return Scaffold(
+            key: _scaffold,
             appBar: AppBar(
               centerTitle: true,
               title: Text('Expense details',
@@ -69,7 +73,19 @@ class _ExpenseViewState extends State<ExpenseView>{
                     value != null ? context.read<ExpenseViewBloc>().add(GetExpenseDetails(expense!.id!)) : '';
                   });
                 }, icon: Icon(Icons.edit_outlined, color: ColorsPalette.black)),
-                IconButton(onPressed: (){}, icon: Icon(Icons.delete_outline, color: ColorsPalette.black))
+                IconButton(
+                  onPressed: (){
+                    showDialog(barrierDismissible: false, context: context,builder: (_) =>
+                      BlocProvider.value(
+                          value: context.read<ExpenseViewBloc>(),
+                          child: ExpenseDeleteDialog(expense: expense!, callback: (val) async {
+                            if(val == 'Ok'){
+                              Navigator.pop(context); 
+                            }
+                          }),
+                        ));
+                  }, 
+                  icon: Icon(Icons.delete_outline, color: ColorsPalette.black,))
               ] : [],
             ),
             
@@ -85,53 +101,38 @@ class _ExpenseViewState extends State<ExpenseView>{
 
   Widget _expenseDetails(Expense expense){
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [     
-      /*Container(
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('Check In', style: quicksandStyle(fontSize: 20.0)),
-          Text('${DateFormat.yMMMd().format(expense.entryDate!)}', 
-            style: quicksandStyle(fontSize: 20.0))
-        ],)  
-      ),
-      Container(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [        
-        Text('${expense.location ?? ''}', style: quicksandStyle(fontSize: 18.0)),
-        Text(expense.name ?? '', style: quicksandStyle(fontSize: 18.0)),
-        expense.reservationNumber != '' ? Text('Reservation #: ${expense.reservationNumber}', style: quicksandStyle(fontSize: 18.0)) : Container(),
-        expense.reservationUrl != '' ? SelectableText('Reservation Url: ${expense.reservationUrl}', style: quicksandStyle(fontSize: 18.0)) : Container(),
-        Text(expense.details ?? '', style: quicksandStyle(fontSize: 18.0))        
-      ],)),
-      Container(
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('Check Out', style: quicksandStyle(fontSize: 20.0)),
-          Text('${DateFormat.yMMMd().format(expense.exitDate!)}', 
-            style: quicksandStyle(fontSize: 20.0))
-        ],)  
-      ),
-      Divider(color: ColorsPalette.juicyBlue),*/
       
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(expense.isPaid! ? 'Paid' : 'Planned', style: quicksandStyle(color: expense.isPaid! ? ColorsPalette.juicyGreen : ColorsPalette.juicyOrangeDark, fontSize: 20.0)),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(expense.isPaid! ? 'Paid' : 'Planned', style: quicksandStyle(color: expense.isPaid! ? ColorsPalette.juicyGreen : ColorsPalette.juicyOrangeDark, fontSize: 20.0)),
+          Text('${DateFormat.yMMMd().format(expense.date!)}', 
+            style: quicksandStyle(fontSize: 20.0))       
+        ],),        
         SizedBox(height: 5.0),
         Divider(color: ColorsPalette.juicyGreen),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('Date', style: quicksandStyle(fontSize: 20.0)),
-          Text('${DateFormat.yMMMd().format(expense.date!)}', 
-            style: quicksandStyle(fontSize: 20.0))
-        ],),
-        SizedBox(height: 5.0),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text('Category', style: quicksandStyle(fontSize: 20.0)),
-          Text('${expense.category?.name}', 
-            style: quicksandStyle(fontSize: 20.0))
-        ],),
-        SizedBox(height: 5.0),
+          Row(children: [
+            Icon(expense.category?.icon ?? Icons.category, color: expense.category?.color ?? ColorsPalette.black),
+            SizedBox(width: 4.0), 
+            Text('${expense.category?.name}', 
+              style: quicksandStyle(fontSize: 20.0))
+          ],)          
+        ],),        
+        SizedBox(height: 5.0),        
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text('Amount', style: quicksandStyle(fontSize: 20.0)),
             Text('${expense.amount} ${expense.currency}', style: quicksandStyle(fontSize: 18.0)),            
-          ])        
+        ]),
+        SizedBox(height: 5.0),  
+        Divider(color: ColorsPalette.juicyGreen),
+        Row(children: [
+          Expanded(child: Text('${expense.description}', 
+              style: quicksandStyle(fontSize: 20.0)))
+        ],)
       ],)
     ],
 
-    );  
-    return Container();  
+    );
   }
 }

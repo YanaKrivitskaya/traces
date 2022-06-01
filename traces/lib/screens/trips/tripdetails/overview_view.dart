@@ -62,9 +62,9 @@ tripDetailsOverview(Trip trip, BuildContext context) {
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Text('Trip starts in ', style: quicksandStyle(fontSize: 25.0)),
-              Text('$daysLeft', style: quicksandStyle(fontSize: 30.0, color: ColorsPalette.juicyOrange)),
-              Text(' days', style: quicksandStyle(fontSize: 25.0))
+                Text('Trip starts in ', style: quicksandStyle(fontSize: 25.0)),
+                Text('$daysLeft', style: quicksandStyle(fontSize: 30.0, color: ColorsPalette.juicyOrange)),
+                Text(' days', style: quicksandStyle(fontSize: 25.0))
             ],)
             ],)            
           ],),

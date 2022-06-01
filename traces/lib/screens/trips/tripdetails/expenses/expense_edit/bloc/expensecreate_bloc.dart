@@ -80,7 +80,14 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
       if(category.id == null){
         category = (await _categoriesRepository.createCategory(event.expense!.category!))!;
       }
-      Expense expense = await _expensesRepository.createExpense(event.expense!, event.tripId, category.id!);
+      Expense expense;
+
+      if(event.expense!.id != null){
+        expense = await _expensesRepository.updateExpense(event.expense!, event.tripId, category.id!);
+      }else{
+        expense = await _expensesRepository.createExpense(event.expense!, event.tripId, category.id!);
+      }
+      
       emit(ExpenseCreateSuccess(expense, state.categories));
     }on CustomException catch(e){
       emit(ExpenseCreateError(event.expense, state.categories, e.toString()));
