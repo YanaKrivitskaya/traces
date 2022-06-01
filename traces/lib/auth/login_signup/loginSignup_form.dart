@@ -32,7 +32,8 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
 
   @override
   void dispose(){  
-    _emailController.dispose();   
+    _emailController.dispose(); 
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();  
     super.dispose();
   }
 
@@ -70,7 +71,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
-                duration: Duration(days: 1),
+                duration: Duration(seconds: 2),
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -84,8 +85,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             );
         }
         if(state is LoginStateSuccess){
-          Navigator.pushNamed(context, otpVerificationRoute, arguments: state.email);
-          //BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn(state.user));
+          Navigator.pushNamed(context, otpVerificationRoute, arguments: state.email);          
         }        
       },
       child: BlocBuilder<LoginSignupBloc, LoginState>(
@@ -146,7 +146,9 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
       child: OutlinedButton(
         child: Text("Sign In", style: TextStyle(color: ColorsPalette.white),),
         onPressed: (){
-          _validateAndSubmit(state);
+          if(state is! LoginStateLoading) {
+            _validateAndSubmit(state);
+          }          
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyOrange)        
