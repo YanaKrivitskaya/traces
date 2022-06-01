@@ -87,8 +87,8 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
 
     try{
       if(event.category.id != null){
-        if(newCategory!= null && newCategory!.id == null){
-          newCategory = await _categoriesRepository.createCategory(newCategory!);
+        if(newCategory!= null && newCategory.id == null){
+          newCategory = await _categoriesRepository.createCategory(newCategory);
         }
         await _categoriesRepository.deleteCategory(event.category.id!, newCategory?.id);
       }else{

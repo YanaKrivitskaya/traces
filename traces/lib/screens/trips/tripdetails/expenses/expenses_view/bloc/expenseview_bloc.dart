@@ -16,13 +16,24 @@ class ExpenseViewBloc extends Bloc<ExpenseViewEvent, ExpenseViewState> {
     on<GetExpenseDetails>((event, emit) async{
       emit(ExpenseViewLoading(state.expense));
       try{
-        Expense? activity = await _expensesRepository.getExpenseById(event.expenseId);
+        Expense? expense = await _expensesRepository.getExpenseById(event.expenseId);
               
-        emit(ExpenseViewSuccess(activity));
+        emit(ExpenseViewSuccess(expense));
               
       }on CustomException catch(e){
         emit(ExpenseViewError(state.expense, e.toString()));
       }
     });
+    on<DeleteExpense>((event, emit) async {
+      emit(ExpenseViewLoading(state.expense));
+      try{
+        await _expensesRepository.deleteExpense(event.expense.id!);
+              
+        emit(ExpenseViewDeleted(state.expense));
+              
+      }on CustomException catch(e){
+        emit(ExpenseViewError(state.expense, e.toString()));
+      }
+    },);
   }
 }

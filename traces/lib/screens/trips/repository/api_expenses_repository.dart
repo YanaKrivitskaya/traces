@@ -42,10 +42,12 @@ class ApiExpensesRepository{
     return expenseResponse;
   }
 
-  Future<Expense> updateExpense(Expense expense)async{
+  Future<Expense> updateExpense(Expense expense, int tripId, int categoryId)async{
     print("updateExpense");
 
-    final response = await apiProvider.putSecure("$expensesUrl${expense.id}", expense.toJson());
+    ApiExpenseModel apiModel = ApiExpenseModel(expense: expense, tripId: tripId, categoryId: categoryId);
+
+    final response = await apiProvider.putSecure("$expensesUrl${expense.id}", apiModel.toJson());
       
     var expenseResponse = Expense.fromMap(response['expenses']);
     return expenseResponse;
@@ -54,7 +56,7 @@ class ApiExpensesRepository{
   Future<String?> deleteExpense(int expenseId)async{
     print("deleteExpense");   
 
-    final response = await apiProvider.deleteSecure("$expensesUrl$expenseId}");     
+    final response = await apiProvider.deleteSecure("$expensesUrl$expenseId");     
     
     return response["response"];
   } 

@@ -72,7 +72,7 @@ class Expense {
       isPaid: map['isPaid'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
-      category: map['category'] != null ? Category.fromMap(map['expenseCategory']) : null
+      category: map['expenseCategory'] != null ? Category.fromMap(map['expenseCategory']) : null
     );
   }
 
