@@ -33,6 +33,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
   void dispose(){
     pinController.dispose();    
     focusNode.dispose();
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
     super.dispose();
   }
 
@@ -102,7 +103,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
                     ),
                   ],
                 ),
-                backgroundColor: ColorsPalette.juicyBlue,
+                backgroundColor: ColorsPalette.juicyYellow,
                 duration: Duration(seconds: 2),
               ),
             );
