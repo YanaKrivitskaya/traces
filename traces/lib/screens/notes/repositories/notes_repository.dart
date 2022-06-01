@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:traces/screens/notes/models/create_note.model.dart';
 import 'package:traces/screens/notes/models/note.model.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 abstract class NotesRepository{
   Future<List<Note>?> getNotes();
@@ -19,7 +20,7 @@ abstract class NotesRepository{
 
   Future<Note?> addNewNote(CreateNoteModel note);
 
-  Future<Note> updateNoteImage(File? image, int noteId);
+  Future<Note> updateNoteImage(CroppedFile? image, int noteId);
 
   Future<Note?> addNoteTrip(int? noteId, int? tripId);
 }

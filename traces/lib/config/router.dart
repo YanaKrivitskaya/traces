@@ -376,10 +376,10 @@ class RouteGenerator {
       }
       case imageCropRoute:
         {
-          if (args is File) {
+          if (args is ImageCropArguments) {
             return MaterialPageRoute(
               builder: (_) {
-                return ImageCropView(args);
+                return ImageCropView(args.file, args.compress);
               }
             );
           }

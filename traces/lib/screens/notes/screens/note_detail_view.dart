@@ -10,6 +10,8 @@ import 'package:traces/screens/notes/widgets/trip_list_dialog.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/error_widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:traces/widgets/image_crop_view.dart';
 
 import '../../../constants/color_constants.dart';
 import '../bloc/note_details_bloc/bloc.dart';
@@ -463,9 +465,13 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     final pickedFile = await picker.pickImage(source: imageSource);
 
     if(pickedFile != null){
-      Navigator.pushNamed(context, imageCropRoute, arguments: File(pickedFile.path)).then((imageFile) {
+      var fileSize = await pickedFile.length();
+      var compressPercent = 100 - (1048576 / fileSize * 100).toInt();
+
+      var args = new ImageCropArguments(compress: compressPercent, file: File(pickedFile.path));
+      Navigator.pushNamed(context, imageCropRoute, arguments: args).then((imageFile) {
         if(imageFile != null){
-          context.read<NoteDetailsBloc>().add(GetImage(imageFile as File));          
+          context.read<NoteDetailsBloc>().add(GetImage(imageFile as CroppedFile));          
         }
       });
     }

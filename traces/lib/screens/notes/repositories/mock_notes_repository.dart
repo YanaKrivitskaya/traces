@@ -7,6 +7,7 @@ import 'package:traces/screens/notes/models/create_note.model.dart';
 import 'package:traces/screens/notes/models/tag.model.dart';
 import 'package:traces/screens/notes/repositories/notes_repository.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class MockNotesRepository extends NotesRepository{
   @override
@@ -88,7 +89,7 @@ class MockNotesRepository extends NotesRepository{
   }
 
   @override
-  Future<Note> updateNoteImage(File? image, int noteId) {
+  Future<Note> updateNoteImage(CroppedFile? image, int noteId) {
     // TODO: implement updateNoteImage
     throw UnimplementedError();
   }

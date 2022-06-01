@@ -6,11 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:traces/utils/api/customException.dart';
 import 'package:traces/utils/services/secure_storage_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class ApiService {
   static ApiService? _instance;
-  static String _baseUrl = "http://10.0.2.2:8080/"; //emulator
-  //static String _baseUrl = "http://192.168.7.109:8080/"; // local IP
+  //static String _baseUrl = "http://10.0.2.2:8080/"; //emulator
+  static String _baseUrl = "http://192.168.7.109:8080/"; // local IP
   //static String _baseUrl = "http://192.168.7.200:3002/"; // Local NAS
   //static String _baseUrl = "http://178.124.197.224:3002/"; // External NAS
   static SecureStorage? _storage;
@@ -229,7 +230,7 @@ class ApiService {
     return responseJson;  
   }
 
-  Future<dynamic> postSecureMultipart(String url, String? body, File? file) async{
+  Future<dynamic> postSecureMultipart(String url, String? body, List<int>? fileBytes, String filePath) async{
     print("postSecure");
     var responseJson;    
     
@@ -237,10 +238,10 @@ class ApiService {
 
     request.headers["Content-Type"] = "multipart/form-data";
     request.headers["Authorization"] = "Bearer $_accessToken";
-    request.headers["device-info"] = _deviceId ?? '';
+    request.headers["device-info"] = _deviceId ?? '';    
 
-    if(file != null){
-      request.files.add(http.MultipartFile.fromBytes("file", file.readAsBytesSync(), filename: file.path));
+    if(fileBytes != null){     
+      request.files.add(http.MultipartFile.fromBytes("file", fileBytes, filename: filePath));
     }
     
     try{
