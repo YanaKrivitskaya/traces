@@ -70,7 +70,7 @@ class _ExpenseViewState extends State<ExpenseView>{
                 IconButton(onPressed: (){
                   ExpenseEditArguments args = new ExpenseEditArguments(trip: widget.trip, expense: expense!);
                   Navigator.pushNamed(context, expenseEditRoute, arguments: args).then((value){
-                    value != null ? context.read<ExpenseViewBloc>().add(GetExpenseDetails(expense!.id!)) : '';
+                    value != null ? _scaffold.currentContext!.read<ExpenseViewBloc>().add(GetExpenseDetails(expense!.id!)) : '';
                   });
                 }, icon: Icon(Icons.edit_outlined, color: ColorsPalette.black)),
                 IconButton(

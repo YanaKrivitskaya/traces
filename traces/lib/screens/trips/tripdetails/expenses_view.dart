@@ -130,7 +130,7 @@ class ExpensesView extends StatelessWidget{
                     ],),                    
                     Expanded(child: Text(
                       '${expense.category?.name} ${(expense.description != null && expense.description!.length > 0) ? ' - ' : ''} ${expense.description}', 
-                      style: quicksandStyle(fontSize: 15.0)))                   
+                      style: quicksandStyle(fontSize: 15.0)))
                   ],),
                   SizedBox(height: 10.0)
                 ],) 

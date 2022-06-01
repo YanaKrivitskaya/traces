@@ -50,7 +50,7 @@ class Expense {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {    
     return {
       'id': id,
       'date': date?.toIso8601String(),     
