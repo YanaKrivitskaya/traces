@@ -10,8 +10,8 @@ import 'package:image_cropper/image_cropper.dart';
 
 class ApiService {
   static ApiService? _instance;
-  //static String _baseUrl = "http://10.0.2.2:8080/"; //emulator
-  static String _baseUrl = "http://192.168.7.109:8080/"; // local IP
+  static String _baseUrl = "http://10.0.2.2:8080/"; //emulator
+  //static String _baseUrl = "http://192.168.7.109:8080/"; // local IP
   //static String _baseUrl = "http://192.168.7.200:3002/"; // Local NAS
   //static String _baseUrl = "http://178.124.197.224:3002/"; // External NAS
   static SecureStorage? _storage;
@@ -44,7 +44,7 @@ class ApiService {
       "token": refreshToken,
       "device": _deviceId
     };
-
+ 
     try{
       final response = await http.post(
         Uri.parse(_baseUrl + 'auth/refresh-token'), 
@@ -55,7 +55,7 @@ class ApiService {
         body: body
       );
       responseJson = await _response(response);
-      _accessToken = responseJson["accessToken"];     
+      _accessToken = responseJson["accessToken"];      
 
     }on SocketException catch(e) {
       throw ConnectionException('No Internet connection');
@@ -169,7 +169,7 @@ class ApiService {
     Map<String, String> headers = {      
       HttpHeaders.authorizationHeader: "Bearer $_accessToken",
       "device-info": _deviceId ?? ''
-    };
+    };    
 
     try{      
       responseJson = await sendGet(uri, headers);
@@ -178,7 +178,7 @@ class ApiService {
     }on UnauthorizedException {
       await refreshToken();
 
-      headers["authorization"] = "Bearer $_accessToken";
+      headers["authorization"] = "Bearer $_accessToken";      
       
       responseJson = await sendGet(uri, headers);      
     }
@@ -335,7 +335,7 @@ class ApiService {
     if(response.headers["set-cookie"] != null){      
       var refreshToken = response.headers["set-cookie"].toString().split(';')[0].substring(13);
       await _storage!.write(key: "refresh_token", value: refreshToken);
-      _accessToken = refreshToken;
+      //_accessToken = refreshToken;
     }
     var errorMessage;
 

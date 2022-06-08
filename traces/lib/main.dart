@@ -33,6 +33,8 @@ Future<void> main() async {
   );
 }
 
+final globalScaffoldMessenger = GlobalKey<ScaffoldMessengerState>();
+
 class TracesApp extends StatelessWidget{
  
   TracesApp({Key? key}):super(key: key);
@@ -47,6 +49,7 @@ class TracesApp extends StatelessWidget{
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MaterialApp(
+          scaffoldMessengerKey: globalScaffoldMessenger,
           debugShowCheckedModeBanner: false,
           title: 'Traces',
           theme: ThemeData(

@@ -20,6 +20,8 @@ class _StartPlanningViewState extends State<StartPlanningView>{
   TextEditingController? _tripNameController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Trip? newTrip;
+  // declare as global
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Trip info',
@@ -67,7 +70,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
               ));
           }
           if(state is StartPlanningCreatedState){
-            ScaffoldMessenger.of(context)
+            ScaffoldMessenger.of(_scaffoldKey.currentContext!)
             ..hideCurrentSnackBar()
             ..showSnackBar(SnackBar(
               backgroundColor: ColorsPalette.juicyYellow,

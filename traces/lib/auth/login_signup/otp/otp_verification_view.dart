@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/auth/login_signup/otp/bloc/otp_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
+import 'package:traces/main.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/style/styles.dart';
@@ -23,6 +24,9 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
 
   OtpTimerButtonController otpController = OtpTimerButtonController();
 
+  // declare as global
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();   
@@ -33,7 +37,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
   void dispose(){
     pinController.dispose();    
     focusNode.dispose();
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    //globalScaffoldMessenger.currentState!.removeCurrentSnackBar();
     super.dispose();
   }
 
@@ -64,10 +68,11 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
     );
 
     return Scaffold(
+      key: _scaffoldKey,
       body: BlocListener<OtpBloc, OtpState>(
         listener: (context, state){
           if(state is OtpFailureState){
-          ScaffoldMessenger.of(context)
+          globalScaffoldMessenger.currentState!
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -91,7 +96,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
             );
         }
         if(state is OtpLoadingState){
-          ScaffoldMessenger.of(context)
+          globalScaffoldMessenger.currentState!
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -109,6 +114,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
             );
         }
         if(state is OtpSuccessState){         
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn(state.user));
           Navigator.pop(context);
         } 
