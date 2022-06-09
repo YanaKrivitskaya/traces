@@ -34,8 +34,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
 
   @override
   void dispose(){  
-    _emailController.dispose(); 
-    //globalScaffoldMessenger.currentState!.removeCurrentSnackBar();  
+    _emailController.dispose();    
     super.dispose();
   }
 
@@ -53,8 +52,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      
+                    Container(                      
                       width: 250,
                       child: Text(
                         state.error, style:quicksandStyle(color: ColorsPalette.lynxWhite),
@@ -99,23 +97,23 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                 margin: const EdgeInsets.all(20.0),
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      //height: MediaQuery.of(context).size.height * 0.2,
+                    Container(                      
                       child: Align(
                         alignment: Alignment.center,
                         child: _header(),
                       ),
-                    ),                    
+                    ),
                     Container(
-                      margin: const EdgeInsets.only(top: 80, left: 20, right: 20, bottom: 20),
-                      height: MediaQuery.of(context).size.height * 0.6,
+                      padding: EdgeInsets.only(top: formTopPadding, left: viewPadding, right: viewPadding),
+                      //margin: const EdgeInsets.only(top: 80, left: 20, right: 20, bottom: 20),
+                      height: loginFormHeight,
                       child: Builder(
                         builder: (context) => Form(
                           key: _formKey,
                           child: Column(
                             children: <Widget>[
                               Column(children: [
-                                Text("Email", style: quicksandStyle(color: ColorsPalette.juicyBlue, fontSize: 30.0)),
+                                Text("Email", style: quicksandStyle(color: ColorsPalette.juicyBlue, fontSize: headerFontSize)),
                                 _emailTextField(_emailController, state),
                                 _showErrorMessage(),
                                 _progressIndicator(),
@@ -144,7 +142,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   );
 
   Widget _submitButton(LoginState state) => new Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: formBottomPadding),
       child: Align(
       child: OutlinedButton(
         child: Text("Sign In", style: TextStyle(color: ColorsPalette.white),),

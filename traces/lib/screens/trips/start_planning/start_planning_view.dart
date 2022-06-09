@@ -24,16 +24,6 @@ class _StartPlanningViewState extends State<StartPlanningView>{
   // declare as global
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  //final double fontSize = 14.sp;
-  //final double boldFontSize = 16.sp;
-  final double buttonPadding = 7.w;
-  final double sizerHeight = 1.h;
-  final double formWidth = 70.w;
-  //final double headerFontSize = 25.sp;
-  final double formTopPadding = 20.h;
-  final double viewPadding = 4.w;
-  final double formBottomPadding = 4.h;
-
   @override
   void initState() {
     super.initState();
@@ -145,7 +135,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                 Text('Trip name', style: quicksandStyle(fontSize: accentFontSize, weight: FontWeight.bold/*color: ColorsPalette.meditSea*/),),
-                SizedBox(height: sizerHeight),
+                SizedBox(height: sizerHeightsm),
                 SizedBox(width: formWidth,
                   child: TextFormField(
                     decoration: InputDecoration(
@@ -160,12 +150,12 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                     },
                   ),
                 ),
-                SizedBox(height: sizerHeight),
+                SizedBox(height: sizerHeightsm),
                 Row(children: [
                   Text('Dates', style: quicksandStyle(fontSize: accentFontSize, weight: FontWeight.bold)),
                   /*Text('(optional)', style: quicksandStyle(fontSize: 13.0)),*/
                 ],),
-                SizedBox(height: sizerHeight),
+                SizedBox(height: sizerHeightsm),
                 SizedBox(
                   width: formWidth,
                   child:

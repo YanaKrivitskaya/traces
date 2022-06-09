@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:traces/auth/auth_bloc/bloc.dart';
 import 'package:traces/screens/settings/model/app_theme.dart';
 import 'package:traces/screens/settings/themes/bloc/settings_bloc.dart';
+import 'package:traces/utils/style/styles.dart';
 
 import '../auth/auth_bloc/authentication_bloc.dart';
 import '../constants/color_constants.dart';
@@ -45,24 +46,25 @@ class _HomePageState extends State<HomePage> {
 Widget _homeMenu(AppTheme? _theme, BuildContext context) => new Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text('Traces', style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.lynxWhite, fontSize: 40.0))),
-        backgroundColor: ColorsPalette.mainColor,
+        centerTitle: true,
+        title: Text('Traces', style:quicksandStyle(color: ColorsPalette.lynxWhite, fontSize: headerFontSize)),
+        backgroundColor: ColorsPalette.juicyGreen,
         actions: <Widget>[
-          IconButton(
+          /*IconButton(
             icon: Icon(Icons.exit_to_app, color: ColorsPalette.lynxWhite),
             onPressed: (){
               BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
             },
-          )
+          )*/
         ]
       ),
       body: Center(
           child: Container(
             decoration: BoxDecoration(
-                border: Border.all(width: 10, color: ColorsPalette.mainColor),
+                border: Border.all(width: 10, color: ColorsPalette.juicyGreen),
                 color: ColorsPalette.backColor
             ),
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(viewPadding),
             child: Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -74,7 +76,7 @@ Widget _homeMenu(AppTheme? _theme, BuildContext context) => new Scaffold(
                 ),
                 Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _menuTile(FontAwesomeIcons.globeEurope, _theme, '2-map.png', 'Map', context, mapRoute),
+                    _menuTile(FontAwesomeIcons.earthEurope, _theme, '2-map.png', 'Map', context, mapRoute),
                     _menuTile(FontAwesomeIcons.dollarSign, _theme, '5-expenses.png', 'Expenses', context, expensesRoute),
                     _menuTile(FontAwesomeIcons.user, _theme, '8-profile.png', 'Profile', context, profileRoute),
                   ],
@@ -83,7 +85,7 @@ Widget _homeMenu(AppTheme? _theme, BuildContext context) => new Scaffold(
                   children: [
                     _menuTile(FontAwesomeIcons.clipboard, _theme, '3-notes.png', 'Notes', context, notesRoute),
                     _menuTile(FontAwesomeIcons.hotel, _theme, '6-hotels.png', 'Bookings', context, hotelsRoute),
-                    _menuTile(FontAwesomeIcons.cog, _theme, '9-settings.png', 'Settings', context, settingsRoute)
+                    _menuTile(FontAwesomeIcons.gear, _theme, '9-settings.png', 'Settings', context, settingsRoute)
                   ],
                 )
               ],
@@ -98,16 +100,16 @@ Column _menuTile(IconData icon, AppTheme? theme, String iconName, String title, 
       onPressed: () {
         Navigator.pushNamed(context, routeName); 
       },
-      style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(10.0))),
+      style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(viewPadding))),
       child: Column(        
         children: theme?.iconsPath != null ?  
           <Widget>[
-            Image(image: AssetImage('${theme!.iconsPath}$iconName'), height: 65.0, width: 65.0,),
-            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))            
+            Image(image: AssetImage('${theme!.iconsPath}$iconName'), height: homeBigIconSize, width: homeBigIconSize,),
+            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: fontSize))            
           ]
         : <Widget>[ 
-            FaIcon(icon, color: ColorsPalette.iconColor, size: 50.0),            
-            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: 20.0))
+            FaIcon(icon, color: ColorsPalette.iconColor, size: homeIconSize),            
+            Text(title, style: TextStyle(color: ColorsPalette.iconTitle, fontSize: fontSize))
         ],
       ),
     ),

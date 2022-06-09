@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/screens/trips/bloc/trips_bloc.dart';
 import 'package:traces/screens/trips/widgets/update_trip_view_dialog.dart';
+import 'package:traces/utils/style/styles.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
@@ -27,7 +28,7 @@ class TripsPage extends StatelessWidget{
           appBar: AppBar(
             centerTitle: true,
             title: Text('Trips', style: GoogleFonts.quicksand(textStyle: 
-              TextStyle(fontSize: 30.0, color: ColorsPalette.black))),
+              TextStyle(fontSize: headerFontSize, color: ColorsPalette.black))),
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: ColorsPalette.black),
               onPressed: (){
@@ -51,8 +52,7 @@ class TripsPage extends StatelessWidget{
               )
             ],
             elevation: 0,
-            backgroundColor: ColorsPalette.white,
-            //backgroundColor: ColorsPalette.freshBlue,
+            backgroundColor: ColorsPalette.white            
           ),
           body: TripsView(),
           floatingActionButton: FloatingActionButton(
