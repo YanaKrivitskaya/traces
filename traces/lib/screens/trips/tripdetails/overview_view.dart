@@ -76,9 +76,9 @@ tripDetailsOverview(Trip trip, BuildContext context) {
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               Row(children: [
-                Text('Today is the ', style: quicksandStyle(fontSize: 25.0)),
-                Text('$dayNumber ', style: quicksandStyle(fontSize: 30.0, color: ColorsPalette.juicyOrange)),
-                Text('day of the trip', style: quicksandStyle(fontSize: 25.0))
+                Text('Today is the ', style: quicksandStyle(fontSize: fontSize)),
+                Text('$dayNumber ', style: quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.juicyOrange)),
+                Text('day of the trip', style: quicksandStyle(fontSize: fontSize))
               ],)              
             ],)
           ],),

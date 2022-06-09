@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/auth/login_signup/otp/bloc/otp_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
+import 'package:traces/main.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/style/styles.dart';
@@ -23,6 +24,9 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
 
   OtpTimerButtonController otpController = OtpTimerButtonController();
 
+  // declare as global
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();   
@@ -32,8 +36,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
   @override
   void dispose(){
     pinController.dispose();    
-    focusNode.dispose();
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    focusNode.dispose();    
     super.dispose();
   }
 
@@ -55,7 +58,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
       child: Container(
         width: 21,
         height: 1,
-        margin: EdgeInsets.only(bottom: 12),
+        margin: EdgeInsets.only(bottom: sizerHeightsm),
         decoration: BoxDecoration(
           color: Color.fromRGBO(137, 146, 160, 1),
           borderRadius: BorderRadius.circular(8),
@@ -64,10 +67,11 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
     );
 
     return Scaffold(
+      key: _scaffoldKey,
       body: BlocListener<OtpBloc, OtpState>(
         listener: (context, state){
           if(state is OtpFailureState){
-          ScaffoldMessenger.of(context)
+          globalScaffoldMessenger.currentState!
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -75,8 +79,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      
+                    Container(                      
                       width: 250,
                       child: Text(
                         state.error, style:quicksandStyle(color: ColorsPalette.lynxWhite),
@@ -91,7 +94,7 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
             );
         }
         if(state is OtpLoadingState){
-          ScaffoldMessenger.of(context)
+          globalScaffoldMessenger.currentState!
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -108,7 +111,11 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
               ),
             );
         }
+        if(state is OtpEditState){
+          pinController.text = '';
+        }
         if(state is OtpSuccessState){         
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn(state.user));
           Navigator.pop(context);
         } 
@@ -118,12 +125,12 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
             return Center(
             child: SingleChildScrollView(
               child: Container(
-                margin: const EdgeInsets.all(20.0),
+                margin: EdgeInsets.all(viewPadding),
                 child: Column(
                   children: <Widget>[                                    
                     Container(
-                      margin: const EdgeInsets.only(top: 80, left: 20, right: 20, bottom: 20),
-                      height: MediaQuery.of(context).size.height * 0.6,
+                      margin: EdgeInsets.only(top: formTopPadding, left: viewPadding, right: viewPadding, bottom: viewPadding),
+                      height: loginFormHeight,
                       child: _pinForm(pinController, defaultPinTheme, cursor, widget.email, otpController),
                     )
                   ],
@@ -152,30 +159,30 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
           children: [
             Text(
               'Verification',
-              style: quicksandStyle(fontSize: 24, weight: FontWeight.w700, color: ColorsPalette.juicyBlue ),
+              style: quicksandStyle(fontSize: smallHeaderFontSize, weight: FontWeight.w700, color: ColorsPalette.juicyBlue ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: sizerHeightlg),
             Text(
               'Enter the code sent to the email',
-              style: quicksandStyle(fontSize: 16, color: ColorsPalette.black),
+              style: quicksandStyle(fontSize: fontSizesm, color: ColorsPalette.black),
             ),
-            const SizedBox(height: 16),
             Text(
               '$email',
-              style: quicksandStyle(fontSize: 16, color: ColorsPalette.juicyBlue),
+              style: quicksandStyle(fontSize: fontSizesm, color: ColorsPalette.juicyBlue),
             ),
+            SizedBox(height: sizerHeightlg),
             InkWell(
               child: Text("Wrong email?", style: quicksandStyle(
-              fontSize: 16,
+              fontSize: fontSize,
               color: ColorsPalette.black,
               decoration: TextDecoration.underline
             )),
               onTap: () => Navigator.pop(context),
             ),
-            const SizedBox(height: 64)
+            SizedBox(height: formBottomPadding)
           ],
         ),
-        SizedBox(height: 20.0),
+        SizedBox(height: sizerHeightsm),
         Pinput(
           length: 4,
           controller: pinController,
@@ -198,11 +205,11 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
           showCursor: true,
           cursor: cursor,
         ),
-        const SizedBox(height: 44),
+        SizedBox(height: formBottomPadding),
           Text(
             'Didn’t receive a code?',
             style: quicksandStyle(
-              fontSize: 16,
+              fontSize: fontSizesm,
               color: ColorsPalette.juicyBlue,
             ),
           ),

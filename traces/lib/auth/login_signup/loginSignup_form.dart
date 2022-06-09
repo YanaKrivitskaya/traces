@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/constants/route_constants.dart';
+import 'package:traces/main.dart';
 import 'package:traces/utils/style/styles.dart';
 
 
 import '../../constants/color_constants.dart';
 import 'bloc/bloc.dart';
 class LoginSignupForm extends StatefulWidget{
+  final GlobalKey<ScaffoldState> _scaffoldKey;
   
-  LoginSignupForm();    
+  LoginSignupForm(this._scaffoldKey);    
 
   State<LoginSignupForm> createState() => _LoginSignupFormState();
 }
@@ -32,8 +34,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
 
   @override
   void dispose(){  
-    _emailController.dispose(); 
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();  
+    _emailController.dispose();    
     super.dispose();
   }
 
@@ -43,7 +44,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
     return BlocListener<LoginSignupBloc, LoginState>(
       listener: (context, state){
         if(state is LoginStateError){
-          ScaffoldMessenger.of(context)
+          globalScaffoldMessenger.currentState!
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -51,8 +52,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      
+                    Container(                      
                       width: 250,
                       child: Text(
                         state.error, style:quicksandStyle(color: ColorsPalette.lynxWhite),
@@ -67,7 +67,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             );
         }
         if(state is LoginStateLoading){
-          ScaffoldMessenger.of(context)
+          globalScaffoldMessenger.currentState!
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
@@ -85,6 +85,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
             );
         }
         if(state is LoginStateSuccess){
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
           Navigator.pushNamed(context, otpVerificationRoute, arguments: state.email);          
         }        
       },
@@ -96,23 +97,23 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
                 margin: const EdgeInsets.all(20.0),
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      //height: MediaQuery.of(context).size.height * 0.2,
+                    Container(                      
                       child: Align(
                         alignment: Alignment.center,
                         child: _header(),
                       ),
-                    ),                    
+                    ),
                     Container(
-                      margin: const EdgeInsets.only(top: 80, left: 20, right: 20, bottom: 20),
-                      height: MediaQuery.of(context).size.height * 0.6,
+                      padding: EdgeInsets.only(top: formTopPadding, left: viewPadding, right: viewPadding),
+                      //margin: const EdgeInsets.only(top: 80, left: 20, right: 20, bottom: 20),
+                      height: loginFormHeight,
                       child: Builder(
                         builder: (context) => Form(
                           key: _formKey,
                           child: Column(
                             children: <Widget>[
                               Column(children: [
-                                Text("Email", style: quicksandStyle(color: ColorsPalette.juicyBlue, fontSize: 30.0)),
+                                Text("Email", style: quicksandStyle(color: ColorsPalette.juicyBlue, fontSize: headerFontSize)),
                                 _emailTextField(_emailController, state),
                                 _showErrorMessage(),
                                 _progressIndicator(),
@@ -141,7 +142,7 @@ class _LoginSignupFormState extends State<LoginSignupForm>{
   );
 
   Widget _submitButton(LoginState state) => new Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: formBottomPadding),
       child: Align(
       child: OutlinedButton(
         child: Text("Sign In", style: TextStyle(color: ColorsPalette.white),),

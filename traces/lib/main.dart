@@ -1,5 +1,4 @@
 // Import the firebase_core plugin
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,10 +13,10 @@ import 'constants/color_constants.dart';
 import 'screens/home.dart';
 import 'screens/welcome.dart';
 import 'utils/services/api_service.dart';
+import 'package:sizer/sizer.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.
-  //await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized(); //is required in Flutter v1.9.4+ before using any plugins if the code is executed before runApp.  
   await ApiService.init();
   await SharedPreferencesService.init();
    BlocOverrides.runZoned(
@@ -29,51 +28,52 @@ Future<void> main() async {
     BlocProvider(
       create: (context) => AuthenticationBloc()
         ..add(AppStarted()),
-      child: TracesApp(/*userRepository: userRepository*/)
+      child: TracesApp()
     )
   );
 }
 
+final globalScaffoldMessenger = GlobalKey<ScaffoldMessengerState>();
+
 class TracesApp extends StatelessWidget{
  
-  TracesApp({Key? key}/*, @required FirebaseUserRepository userRepository}*/)
-    /*:assert(userRepository != null),
-    _userRepository = userRepository,*/
-    :super(key: key);
+  TracesApp({Key? key}):super(key: key);
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
-    ]);
+    ]);    
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Traces',
-      theme: ThemeData(
-          primaryColor: ColorsPalette.mainColor,
-          accentColor: ColorsPalette.iconColor,
-          scaffoldBackgroundColor: ColorsPalette.white,
-          //textTheme: GoogleFonts.patrickHandTextTheme(Theme.of(context).textTheme)
-          textTheme: GoogleFonts.quicksandTextTheme(Theme.of(context).textTheme),
-          //buttonTheme: ButtonThemeData(colorScheme: ColorScheme(primary: ColorsPalette.meditSea))
-      ),
-      home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: (context, state){
-          if(state is Uninitialized){
-            return WelcomePage();
-          }
-          if (state is Unauthenticated) {
-            return LoginSignupPage(/*userRepository: _userRepository*/);
-          }
-          if(state is Authenticated){
-            return HomePage();
-          }
-          return Container();
-        },
-      ),
-      onGenerateRoute: RouteGenerator.generateRoute,
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp(
+          scaffoldMessengerKey: globalScaffoldMessenger,
+          debugShowCheckedModeBanner: false,
+          title: 'Traces',
+          theme: ThemeData(
+              primaryColor: ColorsPalette.mainColor,              
+              scaffoldBackgroundColor: ColorsPalette.white,              
+              textTheme: GoogleFonts.quicksandTextTheme(Theme.of(context).textTheme),              
+          ),
+          home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state){
+              if(state is Uninitialized){
+                return WelcomePage();
+              }
+              if (state is Unauthenticated) {
+                return LoginSignupPage();
+              }
+              if(state is Authenticated){
+                return HomePage();
+              }
+              return Container();
+            },
+          ),
+          onGenerateRoute: RouteGenerator.generateRoute,
+        );
+      }
     );
   }
 }
