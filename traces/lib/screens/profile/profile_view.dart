@@ -84,12 +84,12 @@ class _ProfileViewState extends State<ProfileView>{
                   avatar(getAvatarName(_profile!.name), 50.0, ColorsPalette.juicyBlue, 40.0, null),                  
                   Container(
                     margin: EdgeInsets.only(top: 10.0),
-                    child: Expanded(child: Align(child: Row(
+                    child: Align(child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(_profile!.name, style: TextStyle(fontSize: 20.0))                          
                         ],
-                      ), alignment: Alignment.center,)),
+                      ), alignment: Alignment.center,),
                   ),                 
                   Container(
                     padding: EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
