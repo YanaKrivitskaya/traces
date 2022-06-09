@@ -15,7 +15,11 @@ class _MapPageState extends State<MapPage>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    throw UnimplementedError();
+    //throw UnimplementedError();
+
+    return Scaffold(
+      body: Center(child: Text("Coming soon"))
+    );
   }
 
  /* final CameraPosition _kInitialPosition;
