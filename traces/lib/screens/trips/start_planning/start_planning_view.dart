@@ -8,6 +8,7 @@ import '../../../utils/style/styles.dart';
 import '../../../widgets/widgets.dart';
 import '../model/trip.model.dart';
 import 'bloc/startplanning_bloc.dart';
+import 'package:sizer/sizer.dart';
 
 class StartPlanningView extends StatefulWidget{  
   StartPlanningView();
@@ -23,6 +24,16 @@ class _StartPlanningViewState extends State<StartPlanningView>{
   // declare as global
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  //final double fontSize = 14.sp;
+  //final double boldFontSize = 16.sp;
+  final double buttonPadding = 7.w;
+  final double sizerHeight = 1.h;
+  final double formWidth = 70.w;
+  //final double headerFontSize = 25.sp;
+  final double formTopPadding = 20.h;
+  final double viewPadding = 4.w;
+  final double formBottomPadding = 4.h;
+
   @override
   void initState() {
     super.initState();
@@ -37,16 +48,18 @@ class _StartPlanningViewState extends State<StartPlanningView>{
 
   @override
   Widget build(BuildContext context) {
+    print("Width: ${MediaQuery.of(context).size.width}");
+    print("Height: ${MediaQuery.of(context).size.height}");
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Trip info',
-          style: quicksandStyle(fontSize: 30.0)),
+          style: quicksandStyle(fontSize: headerFontSize)),
         backgroundColor: ColorsPalette.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.close_rounded),
+          icon: Icon(Icons.close_rounded, color: ColorsPalette.black,),
           onPressed: ()=> Navigator.pop(context)
       )),
       body: BlocListener<StartPlanningBloc, StartPlanningState>(
@@ -120,26 +133,26 @@ class _StartPlanningViewState extends State<StartPlanningView>{
   }
 
   Widget _createForm(StartPlanningState state, Trip? trip) => new Container(
-    padding: EdgeInsets.all(15.0),
+    padding: EdgeInsets.all(viewPadding),
     child: SingleChildScrollView(
       child: Form(
         key: _formKey,
         child: Column(children: [
           Container(    
-            padding: EdgeInsets.only(top: 50.0),
+            padding: EdgeInsets.only(top: formTopPadding),
             child: Column(children: [Row(mainAxisAlignment: MainAxisAlignment.center,children:[
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                Text('Trip name', style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold/*color: ColorsPalette.meditSea*/),),
-                SizedBox(height: 10.0),
-                SizedBox(width:  MediaQuery.of(context).size.width * 0.7,
+                Text('Trip name', style: quicksandStyle(fontSize: accentFontSize, weight: FontWeight.bold/*color: ColorsPalette.meditSea*/),),
+                SizedBox(height: sizerHeight),
+                SizedBox(width: formWidth,
                   child: TextFormField(
                     decoration: InputDecoration(
                       isDense: true,                      
                       hintText: "e.g., Hawaii, Summer trip"                      
                     ),
-                    style:  quicksandStyle(fontSize: 18.0),
+                    style:  quicksandStyle(fontSize: fontSize),
                     controller: _tripNameController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {                        
@@ -147,14 +160,14 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                     },
                   ),
                 ),
-                SizedBox(height: 15.0),
+                SizedBox(height: sizerHeight),
                 Row(children: [
-                  Text('Dates', style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)),
+                  Text('Dates', style: quicksandStyle(fontSize: accentFontSize, weight: FontWeight.bold)),
                   /*Text('(optional)', style: quicksandStyle(fontSize: 13.0)),*/
                 ],),
-                SizedBox(height: 10.0),
+                SizedBox(height: sizerHeight),
                 SizedBox(
-                  width:  MediaQuery.of(context).size.width * 0.7,
+                  width: formWidth,
                   child:
                     InkWell(      
                       child: Row(
@@ -163,13 +176,13 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                           Icon(Icons.date_range),
                           trip?.startDate != null 
                           ?  Text('${DateFormat.yMMMd().format(trip!.startDate!)}',
-                              style: quicksandStyle(fontSize: 18.0))
-                          : Text("Start Date", style:  quicksandStyle(fontSize: 18.0)),
+                              style: quicksandStyle(fontSize: fontSize))
+                          : Text("Start Date", style:  quicksandStyle(fontSize: fontSize)),
                           Icon(Icons.date_range),
                           trip?.endDate != null 
                           ?  Text('${DateFormat.yMMMd().format(trip!.endDate!)}',
-                              style: quicksandStyle(fontSize: 18.0))
-                          : Text("End Date", style:  quicksandStyle(fontSize: 18.0)),
+                              style: quicksandStyle(fontSize: fontSize))
+                          : Text("End Date", style:  quicksandStyle(fontSize: fontSize)),
                         ],
                       ),
                       onTap: () => _selectDates(context, state),
@@ -178,12 +191,12 @@ class _StartPlanningViewState extends State<StartPlanningView>{
               ],)
             ]),                    
             
-            SizedBox(height: 30.0),                      
+            SizedBox(height: formBottomPadding),                      
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               ElevatedButton(
-                child: Text("Let's go!"), 
+                child: Text("Let's go!", style: quicksandStyle(fontSize: fontSize, color: ColorsPalette.white)), 
                   style: ButtonStyle(
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.symmetric(horizontal: buttonPadding)),
                     backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyYellow),
                     foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
                   ),
