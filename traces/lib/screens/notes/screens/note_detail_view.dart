@@ -92,8 +92,8 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
           _note = state.note;
           _isEditMode = true;
           _tripId = state.tripId;
-          _titleController!.text = state.note!.title ?? '';
-          _textController!.text = state.note!.content ?? '';
+          _titleController!.text = _titleController!.text.length > 0 ? _titleController!.text : state.note!.title ?? '';
+          _textController!.text = _textController!.text.length > 0 ? _textController!.text : state.note!.content ?? '';
         }
         return new Scaffold(
           resizeToAvoidBottomInset: false,

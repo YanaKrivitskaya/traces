@@ -294,7 +294,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
       },
       context: context,   
       initialDate: state.expense!.date ?? trip.startDate ?? DateTime.now(),      
-      firstDate: trip.startDate ?? DateTime(2015),
+      firstDate: DateTime(2015),
       lastDate: trip.endDate ?? DateTime(2101),        
     );
     if (picked != null) {
