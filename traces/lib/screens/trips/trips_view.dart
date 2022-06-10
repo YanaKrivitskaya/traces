@@ -76,6 +76,7 @@ class _TripsStateView extends State<TripsView> with TickerProviderStateMixin{
                   TabBar(
                     isScrollable: true,              
                     controller: tabController,
+                    indicatorColor: Theme.of(context).colorScheme.secondary,
                     tabs: viewTabs
                   ),                  
                   ListView.builder(

@@ -105,7 +105,8 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                   headerAppbarWidget(state.trip!.name!, context, sharedPrefsService, tripTabKey),                
                   Column(children: [
                     Container(child: TabBar(                   
-                      unselectedLabelStyle: quicksandStyle(fontSize: 0.0),                      
+                      unselectedLabelStyle: quicksandStyle(fontSize: 0.0),     
+                      indicatorColor: Theme.of(context).colorScheme.secondary,                 
                       isScrollable: true,              
                       controller: tabController,
                       tabs: detailsTabs,
@@ -143,6 +144,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
   Widget _floatingButton(Trip trip) {
     EventArguments args = new EventArguments(trip: trip);
     return SpeedDial(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       foregroundColor: ColorsPalette.lynxWhite,
       icon: Icons.add,
       activeIcon: Icons.close,
@@ -206,7 +208,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
         ),
         SpeedDialChild(
           child: Icon(Icons.assignment_turned_in),
-          backgroundColor: ColorsPalette.juicyBlue,
+          backgroundColor: ColorsPalette.juicyOrangeLight,
           foregroundColor: Colors.white,
           label: 'Activity',
           visible: true,

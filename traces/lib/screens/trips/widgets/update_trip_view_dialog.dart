@@ -46,7 +46,7 @@ class _UpdateTripViewDialogState extends State<UpdateTripViewDialog>{
                 },
                 style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),            
-                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.greenGrass)
+                    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.juicyBlue)
                 ),
               ),
             ],
@@ -69,6 +69,7 @@ class _UpdateTripViewDialogState extends State<UpdateTripViewDialog>{
       groupValue: state.activeOption,
       title: Text(option._value),
       value: option._key,
+      activeColor: Theme.of(context).colorScheme.secondary,
       onChanged: (dynamic val) {
         context.read<TripViewOptionsBloc>().add(ViewOptionUpdated(val));
       },
