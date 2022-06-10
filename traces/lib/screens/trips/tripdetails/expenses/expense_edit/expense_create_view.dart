@@ -209,6 +209,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
                 hintText: "e.g., 10.25"
               ),
               style:  quicksandStyle(fontSize: 18.0),
+              keyboardType: TextInputType.number,
               controller: _amountController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {                        
