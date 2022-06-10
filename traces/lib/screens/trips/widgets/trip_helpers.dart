@@ -9,9 +9,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 Widget getObjectIcon(TripEventType type, dynamic event) {    
     switch (type){
       case TripEventType.Activity:
-        return FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.juicyOrange);        
+        return Icon(Icons.calendar_month, color: ColorsPalette.juicyOrange);        
       case TripEventType.Booking:
-        return FaIcon(FontAwesomeIcons.home, color: ColorsPalette.juicyGreen);       
+        return Icon(Icons.home, color: ColorsPalette.juicyGreen);       
       case TripEventType.Ticket:
         return transportIcon((event as Ticket).type, ColorsPalette.juicyBlue);       
       default:
@@ -21,8 +21,10 @@ Widget getObjectIcon(TripEventType type, dynamic event) {
 
 List<TripEvent> sortObjects(List<TripEvent> objects) {
     objects.sort((a, b) {
-      return a.startDate!.millisecondsSinceEpoch
-          .compareTo(b.startDate!.millisecondsSinceEpoch);
+      var aDate = a.startDate?.millisecondsSinceEpoch ?? a.endDate?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch;
+      var bDate = b.startDate?.millisecondsSinceEpoch ?? b.endDate?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch;
+      return aDate
+          .compareTo(bDate);
     });
     return objects;
   }
