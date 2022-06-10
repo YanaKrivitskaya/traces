@@ -54,7 +54,7 @@ class _BookingViewState extends State<BookingView>{
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-              title: Text('Booking details',
+              title: Text('Booking',
                 style: quicksandStyle(fontSize: 25.0)),
               backgroundColor: ColorsPalette.white,
               elevation: 0,
