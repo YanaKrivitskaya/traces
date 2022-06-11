@@ -62,7 +62,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
 
   void handleTabSelection() {
     if(tabController.index != tabController.previousIndex){
-      context.read<TripDetailsBloc>().add(TabUpdated(tabController.index));
+      context.read<TripDetailsBloc>().add(TripTabUpdated(tabController.index, tripTabKey));
     }    
   }
 
@@ -100,7 +100,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               body: (state is TripDetailsSuccessState) ? 
               SingleChildScrollView(
                 child: Column(children: [
-                  state.activeTab == 0 ? 
+                  state.activeTripTab == 0 ? 
                   headerCoverWidget(state.trip!, state.familyMembers!, context, sharedPrefsService, tripTabKey) 
                   :
                   headerAppbarWidget(state.trip!.name!, context, sharedPrefsService, tripTabKey),                
@@ -113,7 +113,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                       tabs: detailsTabs,
                     )),
                     Container(
-                      height: state.activeTab == 0 ? MediaQuery.of(context).size.height * 0.5 : MediaQuery.of(context).size.height * 0.8,
+                      height: state.activeTripTab == 0 ? MediaQuery.of(context).size.height * 0.5 : MediaQuery.of(context).size.height * 0.8,
                       child: TabBarView(
                         physics: AlwaysScrollableScrollPhysics(),
                         controller: tabController,
