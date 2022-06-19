@@ -166,7 +166,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
 
       Trip trip = state.trip!.copyWith(expenses: expenses, activities: activities);
 
-      emit(TripDetailsSuccessState(     
+      return emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
         state.activeTripTab,

@@ -9,6 +9,7 @@ import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
 import 'package:traces/utils/style/styles.dart';
+import 'package:traces/widgets/widgets.dart';
 
 class ActivitiesView extends StatefulWidget{
   final List<Activity> activities;
@@ -52,6 +53,7 @@ class _ActivitiesStateView extends State<ActivitiesView> with TickerProviderStat
   @override
   void dispose() {
     tabController.dispose();
+    sharedPrefsService.remove(key: viewOptionKey);
     super.dispose();
   }  
 
@@ -66,10 +68,13 @@ class _ActivitiesStateView extends State<ActivitiesView> with TickerProviderStat
 
     return BlocListener<TripDetailsBloc, TripDetailsState>(
       listener: (context, state){
-        int? tabValue = sharedPrefsService.readInt(key: viewOptionKey);
-        tabController.index = tabValue ?? 0;
-        activities = tabValue == 1 ? widget.activities.where((a) => a.isPlanned??false).toList() 
-          : tabValue == 2 ? widget.activities.where((a) => a.isCompleted??false).toList() : widget.activities;
+        if(state is TripDetailsSuccessState){
+          int? tabValue = sharedPrefsService.readInt(key: viewOptionKey);
+          tabController.index = tabValue ?? 0;
+          activities = tabValue == 1 ? widget.activities.where((a) => a.isPlanned??false).toList() 
+            : tabValue == 2 ? widget.activities.where((a) => a.isCompleted??false).toList() : widget.activities;
+            print(activities.length);
+        }        
       },
       child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
         builder: (context, state){
@@ -81,7 +86,7 @@ class _ActivitiesStateView extends State<ActivitiesView> with TickerProviderStat
                 indicatorColor: Theme.of(context).colorScheme.outline,
                 tabs: viewTabs
               ), 
-              activities.length > 0 ? Container(
+              activities.length > 0 && state is TripDetailsSuccessState ? Container(
                 padding: new EdgeInsets.all(borderPadding),
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -92,13 +97,13 @@ class _ActivitiesStateView extends State<ActivitiesView> with TickerProviderStat
                     return _activityCard(activity, context);                  
                   }
                 )
-              ) 
-              : Container(
+              ) :
+              activities.length == 0 && state is TripDetailsSuccessState ? Container(
                 padding: new EdgeInsets.all(viewPadding),
                 child: Center(
                   child: Container(child: Center(child: Text("No activities", style: quicksandStyle(fontSize: fontSize)))),
                 )
-              )
+              ) : loadingWidget(ColorsPalette.amMint)
             ])
           );
         }
@@ -124,8 +129,8 @@ class _ActivitiesStateView extends State<ActivitiesView> with TickerProviderStat
         onTap: (){
           ActivityViewArguments args = new ActivityViewArguments(activityId: activity.id!, trip: widget.trip);
 
-          Navigator.of(context).pushNamed(activityViewRoute, arguments: args).then((value) => {
-            BlocProvider.of<TripDetailsBloc>(context)..add(UpdateActivities(widget.trip.id!))
+          Navigator.of(context).pushNamed(activityViewRoute, arguments: args).then((value) {               
+            context.read<TripDetailsBloc>().add(ActivityTabUpdated(tabController.index, viewOptionKey));    
           });
         },
       ),      

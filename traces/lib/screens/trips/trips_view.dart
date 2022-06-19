@@ -159,7 +159,7 @@ class _TripsStateView extends State<TripsView> with TickerProviderStateMixin{
         width: tripItemWidth,
         child: trip.coverImage != null ? Image.memory(trip.coverImage!) : Image.asset("assets/sunset.jpg")                            
       ),
-      Container(
+      Expanded(child: Container(
         margin: EdgeInsets.symmetric(horizontal: borderPadding),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [                                
           Text(trip.name!, style: quicksandStyle(fontSize: fontSize, weight: FontWeight.bold)),
@@ -168,7 +168,7 @@ class _TripsStateView extends State<TripsView> with TickerProviderStateMixin{
             : '${DateFormat.yMMMd().format(trip.startDate!)}',  
              style: quicksandStyle(fontSize: fontSizesm)),
         ],),
-      ),
+      )),
       
       
     ]),

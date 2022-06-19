@@ -60,7 +60,7 @@ class _ActivityViewState extends State<ActivityView>{
               elevation: 0,
               leading: IconButton(
                 icon: Icon(Icons.close_rounded, color:ColorsPalette.black),
-                onPressed: ()=> Navigator.pop(context)
+                onPressed: ()=> Navigator.pop(context, 1)
               ),
               actions: activity != null ? [
                 IconButton(onPressed: (){
