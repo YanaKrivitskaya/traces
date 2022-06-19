@@ -37,11 +37,12 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   _ticketsRepository = new ApiTicketsRepository(),
   _activitiesRepository = new ApiActivitiesRepository(),
   _notesRepository = new ApiNotesRepository(),
-  super(TripDetailsInitial(0)){
+  super(TripDetailsInitial(0, 0)){
     on<GetTripDetails>(_onGetTripDetails);
     on<UpdateTripDetailsSuccess>(_onUpdateTripDetailsSuccess);
     on<DeleteTripClicked>(_onDeleteTripClicked);
-    on<TabUpdated>(_onTabUpdated);
+    on<TripTabUpdated>(_onTripTabUpdated);
+    on<ActivityTabUpdated>(_onActivityTabUpdated);
     on<UpdateExpenses>(_onUpdateExpenses);
     on<UpdateBookings>(_onUpdateBookings);
     on<UpdateActivities>(_onUpdateActivities);
@@ -57,7 +58,8 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     emit(TripDetailsSuccessState(     
       event.trip,
       event.members,
-      state.activeTab
+      state.activeTripTab,
+      state.activeActivityTab
     ));
   }
 
@@ -73,11 +75,12 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
         emit(TripDetailsSuccessState(     
           trip,
           family.users,
-          state.activeTab
+          state.activeTripTab,
+          state.activeActivityTab
         ));
       }      
     }on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     }
       
   }
@@ -85,18 +88,18 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   void _onDeleteTripClicked(DeleteTripClicked event, Emitter<TripDetailsState> emit) async {
     try{
       await _tripsRepository.deleteTrip(event.tripId);
-      emit(TripDetailsDeleted(state.activeTab));
+      emit(TripDetailsDeleted(state.activeTripTab, state.activeActivityTab));
     }on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     }    
   }
 
   void _onUpdateTripClicked(UpdateTripClicked event, Emitter<TripDetailsState> emit) async {
     try{
       Trip trip = await _tripsRepository.updateTrip(event.updTrip, 0);
-      emit(TripDetailsUpdated(state.activeTab, trip));
+      emit(TripDetailsUpdated(state.activeTripTab, state.activeActivityTab, trip: trip));
     }on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     }    
   }
 
@@ -109,21 +112,34 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
     emit(TripDetailsSuccessState(     
           updTrip,
           state.familyMembers!,
-          state.activeTab
+          state.activeTripTab,
+          state.activeActivityTab
         ));
   }
 
-  void _onTabUpdated(TabUpdated event, Emitter<TripDetailsState> emit) async {
-    await sharedPrefsService.writeInt(key: "tripTab", value: event.tab);
+  void _onTripTabUpdated(TripTabUpdated event, Emitter<TripDetailsState> emit) async {
+    await sharedPrefsService.writeInt(key: event.tabKey, value: event.tab);
     emit(TripDetailsSuccessState(     
       state.trip!,
       state.familyMembers!,
+      event.tab,
+      state.activeActivityTab
+    ));
+  }
+
+  void _onActivityTabUpdated(ActivityTabUpdated event, Emitter<TripDetailsState> emit) async {
+    await sharedPrefsService.writeInt(key: event.tabKey, value: event.tab);
+    emit(TripDetailsSuccessState(     
+      state.trip!,
+      state.familyMembers!,
+      state.activeTripTab,
       event.tab
     ));
   }
 
+
   void _onUpdateExpenses(UpdateExpenses event, Emitter<TripDetailsState> emit) async {    
-    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
+    emit(TripDetailsLoading(state.activeTripTab, state.activeActivityTab, trip: state.trip, familyMembers: state.familyMembers));
     try{
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
 
@@ -132,17 +148,18 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
-        state.activeTab
+        state.activeTripTab,
+        state.activeActivityTab
       ));
     } on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     } on Exception catch (e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     }
   }
 
   void _onUpdateActivities(UpdateActivities event, Emitter<TripDetailsState> emit) async {    
-    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
+    emit(TripDetailsLoading(state.activeTripTab, state.activeActivityTab, trip: state.trip, familyMembers: state.familyMembers));
     try{
       var activities = await _activitiesRepository.getTripActivities(event.tripId);
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
@@ -152,17 +169,18 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
-        state.activeTab
+        state.activeTripTab,
+        state.activeActivityTab
       ));
     } on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     } on Exception catch (e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     }
   }
 
   void _onUpdateBookings(UpdateBookings event, Emitter<TripDetailsState> emit) async {    
-    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
+    emit(TripDetailsLoading(state.activeTripTab, state.activeActivityTab, trip: state.trip, familyMembers: state.familyMembers));
     try{
       var bookings = await _bookingsRepository.getTripBookings(event.tripId);
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
@@ -172,17 +190,18 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
-        state.activeTab
+        state.activeTripTab,
+        state.activeActivityTab
       ));
     } on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     } on Exception catch (e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     }
   }
 
   void _onUpdateTickets(UpdateTickets event, Emitter<TripDetailsState> emit) async {    
-    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
+    emit(TripDetailsLoading(state.activeTripTab, state.activeActivityTab, trip: state.trip, familyMembers: state.familyMembers));
     try{
       var tickets = await _ticketsRepository.getTripTickets(event.tripId);
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
@@ -192,17 +211,18 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
-        state.activeTab
+        state.activeTripTab,
+        state.activeActivityTab
       ));
     } on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     } on Exception catch (e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     }
   }
 
   void _onUpdateNotes(UpdateNotes event, Emitter<TripDetailsState> emit) async {    
-    emit(TripDetailsLoading(state.activeTab, trip: state.trip, familyMembers: state.familyMembers));
+    emit(TripDetailsLoading(state.activeTripTab, state.activeActivityTab, trip: state.trip, familyMembers: state.familyMembers));
     try{
       var notes = await _notesRepository.getTripNotes(event.tripId);
       
@@ -211,12 +231,13 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
-        state.activeTab
+        state.activeTripTab,
+        state.activeActivityTab
       ));
     } on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     } on Exception catch (e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     }
   }
 
@@ -234,12 +255,13 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       emit(TripDetailsSuccessState(     
         updTrip,
         state.familyMembers!,
-        state.activeTab
+        state.activeTripTab,
+        state.activeActivityTab
       ));
     }on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     } on Exception catch (e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
     }    
   }
 

@@ -6,7 +6,7 @@ import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/trips/model/activity.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_arguments.model.dart';
-import 'package:traces/screens/trips/tripdetails/activities/activity_view/bloc/activityview_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/activities/activity_details_view/bloc/activityview_bloc.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
 

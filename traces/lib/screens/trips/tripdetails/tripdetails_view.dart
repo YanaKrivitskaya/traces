@@ -4,6 +4,7 @@ import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/notes/models/note_details_args.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_arguments.model.dart';
+import 'package:traces/screens/trips/tripdetails/activities_view.dart';
 import 'package:traces/screens/trips/tripdetails/expenses_view.dart';
 
 import 'package:traces/screens/trips/tripdetails/route_view.dart';
@@ -61,7 +62,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
 
   void handleTabSelection() {
     if(tabController.index != tabController.previousIndex){
-      context.read<TripDetailsBloc>().add(TabUpdated(tabController.index));
+      context.read<TripDetailsBloc>().add(TripTabUpdated(tabController.index, tripTabKey));
     }    
   }
 
@@ -99,7 +100,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
               body: (state is TripDetailsSuccessState) ? 
               SingleChildScrollView(
                 child: Column(children: [
-                  state.activeTab == 0 ? 
+                  state.activeTripTab == 0 ? 
                   headerCoverWidget(state.trip!, state.familyMembers!, context, sharedPrefsService, tripTabKey) 
                   :
                   headerAppbarWidget(state.trip!.name!, context, sharedPrefsService, tripTabKey),                
@@ -112,7 +113,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                       tabs: detailsTabs,
                     )),
                     Container(
-                      height: state.activeTab == 0 ? MediaQuery.of(context).size.height * 0.5 : MediaQuery.of(context).size.height * 0.8,
+                      height: state.activeTripTab == 0 ? MediaQuery.of(context).size.height * 0.5 : MediaQuery.of(context).size.height * 0.8,
                       child: TabBarView(
                         physics: AlwaysScrollableScrollPhysics(),
                         controller: tabController,
@@ -124,8 +125,9 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
                           ),                                                
                           TripNotesView(state.trip!.notes, state.trip!.id!),
                           ExpensesView(state.trip!.expenses, state.trip!),
+                          ActivitiesView(trip: state.trip!, activities: state.trip!.activities!)
                           //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
-                          Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
+                          //Container(child: Center(child: Text("Coming soon!", style: quicksandStyle(fontSize: 18.0)))),
                           /*BlocProvider(
                             builder: (context) => BlocB(),
                             child: TabB(),

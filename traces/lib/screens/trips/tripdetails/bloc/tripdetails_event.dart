@@ -53,16 +53,30 @@ class DateRangeUpdated extends TripDetailsEvent {
   List<Object> get props => [startDate, endDate];
 }
 
-class TabUpdated extends TripDetailsEvent{
+class TripTabUpdated extends TripDetailsEvent{
   final int tab;
+  final String tabKey;
 
-  const TabUpdated(this.tab);
-
-  @override
-  List<Object> get props => [tab];
+  const TripTabUpdated(this.tab, this.tabKey);
 
   @override
-  String toString() => 'UpdateTab { tab: $tab }';
+  List<Object> get props => [tab, tabKey];
+
+  @override
+  String toString() => 'TripTabUpdated { tab: $tab, tabKey: $tabKey }';
+}
+
+class ActivityTabUpdated extends TripDetailsEvent{
+  final int tab;
+  final String tabKey;
+
+  const ActivityTabUpdated(this.tab, this.tabKey);
+
+  @override
+  List<Object> get props => [tab, tabKey];
+
+  @override
+  String toString() => 'ActivityTabUpdated { tab: $tab, tabKey: $tabKey }';
 }
 
 class UpdateExpenses extends TripDetailsEvent{

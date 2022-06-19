@@ -16,6 +16,8 @@ class Activity {
   final String? image;
   final bool? isPlanned;
   final bool? isCompleted;
+  final DateTime? createdDate;
+  final DateTime? updatedDate;
   final Category? category;
   final Expense? expense;
   Activity({
@@ -28,6 +30,8 @@ class Activity {
     this.image,
     this.isPlanned,
     this.isCompleted,
+    this.createdDate,
+    this.updatedDate,
     this.category,
     this.expense
   });
@@ -42,6 +46,8 @@ class Activity {
     String? image,
     bool? isPlanned,
     bool? isCompleted,
+    DateTime? createdDate,
+    DateTime? updatedDate,
     Category? category,
     Expense? expense
   }) {
@@ -55,6 +61,8 @@ class Activity {
       image: image ?? this.image,
       isPlanned: isPlanned ?? this.isPlanned,
       isCompleted: isCompleted ?? this.isCompleted,
+      createdDate: createdDate ?? this.createdDate,
+      updatedDate: updatedDate ?? this.updatedDate,
       category: category ?? this.category,
       expense: expense ?? this.expense
     );
@@ -84,6 +92,8 @@ class Activity {
       image: map['image'],
       isPlanned: map['isPlanned'],
       isCompleted: map['isCompleted'],
+      createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
+      updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
       category: map['activityCategory'] != null ? Category.fromMap(map['activityCategory']) : null, 
       expense: map['expense'] != null ? Expense.fromMap(map['expense']) : null
     );
@@ -109,6 +119,8 @@ class Activity {
       other.location == location &&
       other.description == description &&
       other.date == date &&
+      other.createdDate == createdDate &&
+      other.updatedDate == updatedDate &&
       other.image == image &&
       other.isPlanned == isPlanned &&
       other.isCompleted == isCompleted;
@@ -122,6 +134,8 @@ class Activity {
       location.hashCode ^
       description.hashCode ^
       date.hashCode ^
+      createdDate.hashCode ^
+      updatedDate.hashCode ^
       image.hashCode ^
       isPlanned.hashCode ^
       isCompleted.hashCode;
