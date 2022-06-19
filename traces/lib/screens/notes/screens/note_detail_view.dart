@@ -355,7 +355,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         title: _titleController!.text, 
         id: note!.id, 
         userId: note.userId,
-        deleted: note.deleted,
+        deleted: false,
         createdDate: note.createdDate, tags: note.tags);
       context.read<NoteDetailsBloc>().add(SaveNoteClicked(noteToSave, tripId));
     },

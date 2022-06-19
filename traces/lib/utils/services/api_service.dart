@@ -126,7 +126,9 @@ class ApiService {
 
     try{
       //await _storage!.delete(key: "refresh_token"); 
-      responseJson = await sendPost(uri, headers, json.encode(body));      
+      responseJson = await sendPost(uri, headers, json.encode(body));
+      await _storage!.delete(key: "refresh_token"); 
+      _accessToken = null;
 
       var res = responseJson;
 
@@ -143,7 +145,9 @@ class ApiService {
         "token": token
       };
       
-      responseJson = await sendPost(uri, headers, json.encode(body));      
+      responseJson = await sendPost(uri, headers, json.encode(body));   
+      await _storage!.delete(key: "refresh_token");   
+      _accessToken = null; 
     }
     return responseJson;
   }
