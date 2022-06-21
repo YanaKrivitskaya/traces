@@ -136,7 +136,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                 children: [
                 Text('Trip name', style: quicksandStyle(fontSize: accentFontSize, weight: FontWeight.bold/*color: ColorsPalette.meditSea*/),),
                 SizedBox(height: sizerHeightsm),
-                SizedBox(width: formWidth,
+                SizedBox(width: formWidth70,
                   child: TextFormField(
                     decoration: InputDecoration(
                       isDense: true,                      
@@ -157,7 +157,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                 ],),
                 SizedBox(height: sizerHeightsm),
                 SizedBox(
-                  width: formWidth,
+                  width: formWidth70,
                   child:
                     InkWell(      
                       child: Row(

@@ -92,11 +92,13 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
       },
       child: BlocBuilder<CategoriesBloc, CategoriesState>(
         builder: (context, state) {
+          print(fullWidth);
+          print(fullheight);
           return AlertDialog(
-            insetPadding: EdgeInsets.all(30.0),
+            insetPadding: EdgeInsets.all(viewPadding),
             title: Text("Category"),
             content: SizedBox(
-              width: MediaQuery.of(context).size.width,
+              width: fullWidth,
               child: SingleChildScrollView(            
                 child: Column( crossAxisAlignment: CrossAxisAlignment.start,
                   children: [  
@@ -149,25 +151,25 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Icon', style: quicksandStyle(fontSize: smallHeaderFontSize, weight: FontWeight.bold)),
+        Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start , children: [
+          Text('Icon', style: quicksandStyle(fontSize: fontSize, weight: FontWeight.bold)),
           SizedBox(height: sizerHeightsm),
-          SizedBox(width:  MediaQuery.of(context).size.width * 0.10, child: InkWell(
+          SizedBox(width:  iconSize, child: InkWell(
             child: selectedIcon != null ? Icon(selectedIcon!, color: selectedColor ?? Colors.black, size: elementSize) 
               : Icon(Icons.category, color: selectedColor ?? Colors.black, size: elementSize),
             onTap: _pickIcon,
           ))          
         ],),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, 
+        Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, 
           children: [
-            Text('Name', style: quicksandStyle(fontSize: smallHeaderFontSize, weight: FontWeight.bold)), 
-            SizedBox(width:  MediaQuery.of(context).size.width * 0.60, child: 
+            Text('Name', style: quicksandStyle(fontSize: fontSize, weight: FontWeight.bold)),
+            SizedBox(width:  formWidth60, child: 
             TextFormField(
               decoration: InputDecoration(
                 isDense: true,                      
                 hintText: "e.g., Tickets"                      
               ),
-              style:  quicksandStyle(fontSize: smallHeaderFontSize),
+              style:  quicksandStyle(fontSize: fontSize),
               controller: _nameController,
               keyboardType: TextInputType.text,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -178,14 +180,14 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
           ],
         )
       ],),
-      SizedBox(height: 20.0,),
+      SizedBox(height: sizerHeightlg),
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children:
             colors.map((c) => _colorOption(c, selectedColor)).toList(),           
         )),
-        SizedBox(height: 20.0,),
+        SizedBox(height: sizerHeightlg),
         showError ? Text(errorText, style: quicksandStyle(color: ColorsPalette.redPigment)) : Container(),
         state is CategoriesLoading ? loadingWidget(ColorsPalette.amMint) : Container()
     ],
