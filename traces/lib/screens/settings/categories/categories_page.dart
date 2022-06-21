@@ -18,7 +18,25 @@ class CategoriesPage extends StatelessWidget{
 
     return BlocListener<CategoriesBloc, CategoriesState>(
       listener: (context, state) {
-        
+        if(state is CategoriesError){
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(
+              backgroundColor: ColorsPalette.redPigment,
+              content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Container(width: 250,
+                  child: Text(
+                    state.error,
+                    style: quicksandStyle(color: ColorsPalette.lynxWhite),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 5,
+                  ),
+                ),
+                Icon(Icons.error, color: ColorsPalette.lynxWhite)
+                ],
+                ),
+              ));
+        }
       },
       child: BlocBuilder<CategoriesBloc, CategoriesState>(
         builder: (context, state) {
@@ -27,7 +45,7 @@ class CategoriesPage extends StatelessWidget{
             appBar: AppBar(
               centerTitle: true,
                 title: Text('Categories',
-                  style: quicksandStyle(fontSize: 30.0)),
+                  style: quicksandStyle(fontSize: headerFontSize)),
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,
                 leading: IconButton(
@@ -54,7 +72,7 @@ class CategoriesPage extends StatelessWidget{
           label: Text("New", style: quicksandStyle(color: ColorsPalette.white),),
           icon: Icon(Icons.add, color: ColorsPalette.white),
         ),
-            body: Container(padding: EdgeInsets.only(bottom: 50.0), child:
+            body: Container(padding: EdgeInsets.only(bottom: formBottomPadding), child:
               state.categories != null ? Container(
                 child: state.categories!.length > 0 ? Container(
                   child: SingleChildScrollView(child: Container(
@@ -117,7 +135,8 @@ class CategoriesPage extends StatelessWidget{
         );                            
       },
       child: ListTile(
-        leading: category.icon != null ? Icon(category.icon!, color: category.color != null ? category.color! : ColorsPalette.juicyYellow) : Icon(Icons.category, color: category.color != null ? category.color! : ColorsPalette.juicyYellow),
+        leading: category.icon != null ? Icon(category.icon!, color: category.color != null ? category.color! : ColorsPalette.black) 
+        : Icon(Icons.category, color: category.color != null ? category.color! : ColorsPalette.black),
         title: Text(category.name!),
       )
     )

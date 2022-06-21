@@ -163,7 +163,7 @@ class _TicketEditViewState extends State<TicketEditView>{
               ],
             ),
             body: state.ticket != null ? Container(
-              padding: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0, bottom: 40.0),
+              padding: EdgeInsets.only(top: borderPadding, left: borderPadding, right: borderPadding, bottom: formBottomPadding),
               child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,

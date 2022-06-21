@@ -150,8 +150,8 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
     children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Icon', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
-          SizedBox(height: 10.0),
+          Text('Icon', style: quicksandStyle(fontSize: smallHeaderFontSize, weight: FontWeight.bold)),
+          SizedBox(height: sizerHeightsm),
           SizedBox(width:  MediaQuery.of(context).size.width * 0.10, child: InkWell(
             child: selectedIcon != null ? Icon(selectedIcon!, color: selectedColor ?? Colors.black, size: elementSize) 
               : Icon(Icons.category, color: selectedColor ?? Colors.black, size: elementSize),
@@ -160,14 +160,14 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
         ],),
         Column(crossAxisAlignment: CrossAxisAlignment.start, 
           children: [
-            Text('Name', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
+            Text('Name', style: quicksandStyle(fontSize: smallHeaderFontSize, weight: FontWeight.bold)), 
             SizedBox(width:  MediaQuery.of(context).size.width * 0.60, child: 
             TextFormField(
               decoration: InputDecoration(
                 isDense: true,                      
                 hintText: "e.g., Tickets"                      
               ),
-              style:  quicksandStyle(fontSize: 18.0),
+              style:  quicksandStyle(fontSize: smallHeaderFontSize),
               controller: _nameController,
               keyboardType: TextInputType.text,
               autovalidateMode: AutovalidateMode.onUserInteraction,
