@@ -10,6 +10,7 @@ import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
+import 'package:d_chart/d_chart.dart';
 
 class ExpensesView extends StatelessWidget{
  
@@ -57,18 +58,8 @@ class ExpensesView extends StatelessWidget{
       child: SingleChildScrollView(
         child: Column(children: [
           expenseDays.length > 0 ? 
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: expenseDays.length,              
-                itemBuilder: (context, position){
-                  final expenseDay = expenseDays[position];
-                  return _expenseDay(expenseDay, context);                  
-                }
-              ),
-            ) 
+            //_expensesTable(expenseDays, context) 
+            _expenseChart(expenseDays, context)
             : Container(
               padding: new EdgeInsets.all(25.0),
               child: Center(
@@ -81,6 +72,52 @@ class ExpensesView extends StatelessWidget{
     )
     );      
   }
+
+  _expensesTable(List<ExpenseDay> expenseDays, BuildContext context) => new Container(
+    padding: EdgeInsets.all(10.0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: expenseDays.length,              
+        itemBuilder: (context, position){
+          final expenseDay = expenseDays[position];
+          return _expenseDay(expenseDay, context);                  
+        }
+      ),
+  );
+
+  _expenseChart(List<ExpenseDay> expenseDays, BuildContext context) =>new Container(
+    child: Padding(
+              padding: EdgeInsets.all(16),
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: DChartPie(
+                  data: [
+                    {'domain': 'Flutter', 'measure': 28},
+                    {'domain': 'React Native', 'measure': 27},
+                    {'domain': 'Ionic', 'measure': 20},
+                    {'domain': 'Cordova', 'measure': 15},
+                  ],
+                  fillColor: (pieData, index) {
+                    switch (pieData['domain']) {
+                      case 'Flutter':
+                        return Colors.blue;
+                      case 'React Native':
+                        return Colors.blueAccent;
+                      case 'Ionic':
+                        return Colors.lightBlue;
+                      default:
+                        return Colors.orange;
+                    }
+                  },
+                  pieLabel: (pieData, index) {
+                    return "${pieData['domain']}:\n${pieData['measure']}%";
+                  },
+                  labelPosition: PieLabelPosition.outside,
+                ),
+              ),
+            ),
+  );
 
   _expenseDay(ExpenseDay expenseDay, BuildContext context) => new Container(
     child: Card(
