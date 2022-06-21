@@ -2,6 +2,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+final double fullWidth = 100.w;
+final double fullheight = 100.h;
+
 //ANCHOR Font Size
 final double headerFontSize = 25.sp; // View headers
 final double smallHeaderFontSize = 20.sp; // View headers
@@ -18,9 +21,10 @@ final double formTopPadding = 20.h;
 final double imageCoverPadding = 2.5.h;
 
 //ANCHOR Width
-final double formWidth = 70.w;
-final double viewWidth = 80.w;
-final double tripItemWidth = 35.w;
+final double formWidth60 = 60.w;
+final double formWidth70 = 70.w;
+final double viewWidth80 = 80.w;
+final double tripItemWidth35 = 35.w;
 
 // ANCHOR Height 
 final double loginFormHeight = 60.h; 
@@ -35,6 +39,7 @@ final double sizerHeightlg = 2.h;
 final double homeIconSize = 12.5.w;
 final double homeBigIconSize = 16.w;
 final double noTripsIconSize = 50.w;
+final double iconSize = 10.w;
 
 
 

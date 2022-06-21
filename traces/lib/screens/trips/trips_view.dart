@@ -87,7 +87,7 @@ class _TripsStateView extends State<TripsView> with TickerProviderStateMixin{
                     final trip = trips[position];                    
                     return  Container(
                       margin: EdgeInsets.all(borderPadding),
-                      width: viewWidth,
+                      width: viewWidth80,
                       //height: MediaQuery.of(context).size.height * 0.3,
                       child: InkWell(
                         child: viewOption == 2 ? _compactTripsViewItem(trip) : _comfyTripsListItem(trip),
@@ -156,7 +156,7 @@ class _TripsStateView extends State<TripsView> with TickerProviderStateMixin{
     height: tripItemHeight,
     child: Row(children: [
       Container(
-        width: tripItemWidth,
+        width: tripItemWidth35,
         child: trip.coverImage != null ? Image.memory(trip.coverImage!) : Image.asset("assets/sunset.jpg")                            
       ),
       Expanded(child: Container(
