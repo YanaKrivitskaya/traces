@@ -36,8 +36,8 @@ tripDetailsOverview(Trip trip, BuildContext context) {
           sumPlanned += expense.amount!;
         }        
       });
-      sum > 0 ? expenseList.add(sum.toString() + ' ' + key) : null;
-      sumPlanned > 0 ? plannedExpenseList.add(sumPlanned.toString() + ' ' + key) : null;
+      sum > 0 ? expenseList.add(sum.toStringAsFixed(2) + ' ' + key) : null;
+      sumPlanned > 0 ? plannedExpenseList.add(sumPlanned.toStringAsFixed(2) + ' ' + key) : null;
     });      
   }
   
@@ -119,10 +119,10 @@ tripDetailsOverview(Trip trip, BuildContext context) {
             margin: EdgeInsets.all(10.0),            
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Planned expenses:', style: quicksandStyle(fontSize: 20.0, color: ColorsPalette.juicyOrange))                
+                Text('Planned expenses:', style: quicksandStyle(fontSize: 20.0, color: ColorsPalette.juicyOrange, decoration: tripFinished ? TextDecoration.lineThrough : null))                
               ],),
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                for(var expense in plannedExpenseList) Text(expense, style: quicksandStyle(fontSize: 18.0))
+                for(var expense in plannedExpenseList) Text(expense, style: quicksandStyle(fontSize: 18.0, decoration: tripFinished ? TextDecoration.lineThrough : null))
               ],)
             ],)
           ),

@@ -48,7 +48,7 @@ class PaidUpdated extends ExpenseCreateEvent {
 }
 
 class ExpenseSubmitted extends ExpenseCreateEvent {
-  final Expense? expense;
+  Expense? expense;
   final int tripId;  
   
   ExpenseSubmitted(this.expense, this.tripId);

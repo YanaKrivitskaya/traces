@@ -5,6 +5,7 @@ import 'package:traces/screens/settings/categories/repository/api_categories_rep
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/settings/model/category.model.dart';
 import 'package:traces/screens/trips/repository/api_expenses_repository.dart';
+import 'package:traces/screens/trips/repository/currency_repository.dart';
 import 'package:traces/utils/api/customException.dart';
 
 part 'expensecreate_event.dart';
@@ -12,10 +13,12 @@ part 'expensecreate_state.dart';
 
 class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
   final ApiExpensesRepository _expensesRepository;
+  final CurrencyRepository _currencyRepository;
   final ApiCategoriesRepository _categoriesRepository;
 
   ExpenseCreateBloc() : 
   _expensesRepository = new ApiExpensesRepository(),
+  _currencyRepository = new CurrencyRepository(),
   _categoriesRepository = new ApiCategoriesRepository(),
   super(ExpenseCreateInitial(null, null)){
     on<NewExpenseMode>(_onNewExpenseMode);
@@ -81,6 +84,11 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
         category = (await _categoriesRepository.createCategory(event.expense!.category!))!;
       }
       Expense expense;
+
+      if(event.expense!.amount != null && event.expense!.currency != "USD"){
+        var currencyRate = await _currencyRepository.convertToUSD(event.expense!.currency!, event.expense!.amount!);
+        event.expense = event.expense!.copyWith(amountUSD: currencyRate.rateAmount);
+      }
 
       if(event.expense!.id != null){
         expense = await _expensesRepository.updateExpense(event.expense!, event.tripId, category.id!);
