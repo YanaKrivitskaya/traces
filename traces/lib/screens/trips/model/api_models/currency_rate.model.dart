@@ -5,41 +5,38 @@ import 'dart:convert';
 class CurrencyRateModel {
   final String currencyFrom;
   final String currencyTo;
-  final double rate;
+  final double rateAmount;
   final DateTime date;
   
   CurrencyRateModel({
     required this.currencyFrom,
     required this.currencyTo,
-    required this.rate,
+    required this.rateAmount,
     required this.date,
   });
   
   CurrencyRateModel copyWith({
     String? currencyFrom,
     String? currencyTo,
-    double? rate,
+    double? rateAmount,
     DateTime? date,
   }) {
     return CurrencyRateModel(
       currencyFrom: currencyFrom ?? this.currencyFrom,
       currencyTo: currencyTo ?? this.currencyTo,
-      rate: rate ?? this.rate,
+      rateAmount: rateAmount ?? this.rateAmount,
       date: date ?? this.date,
     );
   } 
 
   factory CurrencyRateModel.fromMap(Map<String, dynamic> map) {
-    Map m = map['rates'][0];
-    var keys = m.keys;
-    var mKey = m.keys.first();
-
-    print('123');
+    Map m = map['rates'];
+    
     return CurrencyRateModel(
       currencyFrom: map['base_currency_code'] as String,
-      currencyTo: (map['rates'][0] as Map).keys.first() as String,
-      rate: map['rates'][0]["rate"] as double,
-      date: DateTime.fromMillisecondsSinceEpoch(map['Date'] as int),
+      currencyTo: m.keys.first as String,
+      rateAmount: double.parse(m[m.keys.first]["rate_for_amount"]),
+      date: DateTime.parse(map['updated_date']),
     );
   }
   
@@ -48,7 +45,7 @@ class CurrencyRateModel {
 
   @override
   String toString() {
-    return 'CurrencyRateModel(CurrencyFrom: $currencyFrom, CurrencyTo: $currencyTo, Rate: $rate, Date: $date)';
+    return 'CurrencyRateModel(CurrencyFrom: $currencyFrom, CurrencyTo: $currencyTo, rateAmount: $rateAmount, Date: $date)';
   }
 
   @override
@@ -58,7 +55,7 @@ class CurrencyRateModel {
     return other is CurrencyRateModel &&
       other.currencyFrom == currencyFrom &&
       other.currencyTo == currencyTo &&
-      other.rate == rate &&
+      other.rateAmount == rateAmount &&
       other.date == date;
   }
 
@@ -66,7 +63,7 @@ class CurrencyRateModel {
   int get hashCode {
     return currencyFrom.hashCode ^
       currencyTo.hashCode ^
-      rate.hashCode ^
+      rateAmount.hashCode ^
       date.hashCode;
   }
 }

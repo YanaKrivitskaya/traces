@@ -9,7 +9,7 @@ import '../../../utils/services/api_service.dart';
 
 class ApiExpensesRepository{
   ApiService apiProvider = ApiService();
-  CurrencyService currencyService = CurrencyService();
+  
   String expensesUrl = 'expenses/';
 
   Future<List<Expense>?> getTripExpenses(int tripId) async{    
@@ -18,10 +18,7 @@ class ApiExpensesRepository{
     final queryParameters = {
       'tripId': tripId.toString()
     };
-    final response = await apiProvider.getSecure(expensesUrl, queryParams: queryParameters);
-
-    final currencyResp = await currencyService.convert('BYN', "USD", 10.0);
-    var curr = CurrencyRateModel.fromMap(currencyResp);
+    final response = await apiProvider.getSecure(expensesUrl, queryParams: queryParameters);    
       
     var expenseResponse = response["expenses"] != null ? 
       response['expenses'].map<Expense>((map) => Expense.fromMap(map)).toList() : null;
@@ -40,7 +37,7 @@ class ApiExpensesRepository{
   Future<Expense> createExpense(Expense expense, int tripId, int categoryId)async{
     print("createExpense");
 
-    ApiExpenseModel apiModel = ApiExpenseModel(expense: expense, tripId: tripId, categoryId: categoryId);
+    ApiExpenseModel apiModel = ApiExpenseModel(expense: expense, tripId: tripId, categoryId: categoryId);    
 
     final response = await apiProvider.postSecure(expensesUrl, apiModel.toJson());
       
