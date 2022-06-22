@@ -1,12 +1,15 @@
 import 'package:traces/screens/trips/model/api_models/api_expense.model.dart';
+import 'package:traces/screens/trips/model/api_models/currency_rate.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/settings/model/category.model.dart';
+import 'package:traces/utils/services/currency_service.dart';
 
 import '../../../utils/services/api_service.dart';
 
 class ApiExpensesRepository{
   ApiService apiProvider = ApiService();
+  CurrencyService currencyService = CurrencyService();
   String expensesUrl = 'expenses/';
 
   Future<List<Expense>?> getTripExpenses(int tripId) async{    
@@ -16,6 +19,9 @@ class ApiExpensesRepository{
       'tripId': tripId.toString()
     };
     final response = await apiProvider.getSecure(expensesUrl, queryParams: queryParameters);
+
+    final currencyResp = await currencyService.convert('BYN', "USD", 10.0);
+    var curr = CurrencyRateModel.fromMap(currencyResp);
       
     var expenseResponse = response["expenses"] != null ? 
       response['expenses'].map<Expense>((map) => Expense.fromMap(map)).toList() : null;
