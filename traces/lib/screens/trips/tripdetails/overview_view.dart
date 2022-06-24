@@ -14,6 +14,7 @@ tripDetailsOverview(Trip trip, BuildContext context) {
   bool tripFinished = false;
   if((trip.startDate!.isBefore(today) || trip.startDate!.isSameDate(today)) && (trip.endDate!.isAfter(today) || trip.endDate!.isSameDate(today))){
     dayNumber = daysBetween(trip.startDate!, today);
+    if(trip.startDate!.isSameDate(today)) dayNumber = 1;
   } else if (trip.startDate!.isAfter(today) && trip.endDate!.isAfter(today)){
     daysLeft = daysBetween(today, trip.startDate!);
   }

@@ -12,10 +12,10 @@ class ApiService {
   static ApiService? _instance;
 
   // ANCHOR API URLs
-  static String _baseUrl = "http://10.0.2.2:8080/"; //emulator
+  //static String _baseUrl = "http://10.0.2.2:8080/"; //emulator
   //static String _baseUrl = "http://192.168.7.109:8080/"; // local IP
   //static String _baseUrl = "http://192.168.7.200:3002/"; // Local NAS
-  //static String _baseUrl = "http://178.124.197.224:3002/"; // External NAS
+  static String _baseUrl = "http://178.124.197.224:8002/"; // External NAS
   static SecureStorage? _storage;
   static String? _accessToken;
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();

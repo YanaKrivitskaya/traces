@@ -61,8 +61,7 @@ dev_dependencies:
   flutter_native_image: ^0.0.6+1
   flutter_dotenv: ^5.0.2
   d_chart: ^0.0.4
-  sizer: ^2.0.15
-  d_chart: ^0.0.4
+  sizer: ^2.0.15  
   flutter_test:
     sdk: flutter
 

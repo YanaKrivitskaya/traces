@@ -3,28 +3,98 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/model/expense_chart.model.dart';
 import 'package:traces/screens/trips/model/expense_day_model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
+import 'package:traces/utils/services/shared_preferencies_service.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:d_chart/d_chart.dart';
+import 'package:traces/widgets/widgets.dart';
 
-class ExpensesView extends StatelessWidget{
+class ExpensesView extends StatefulWidget{
  
   final List<Expense>? expenses;
   final Trip trip;
-  ExpensesView(this.expenses, this.trip);   
+  ExpensesView(this.expenses, this.trip);
+
+  State<ExpensesView> createState() => _ExpensesStateView();
+
+}
+  
+  class _ExpensesStateView extends State<ExpensesView> with TickerProviderStateMixin{
+    late TabController tabController;
+
+    final List<Tab> viewTabs = <Tab>[
+      Tab(text: 'LIST'),
+      Tab(text: 'CHART')   
+    ];
+
+    final SharedPreferencesService sharedPrefsService = SharedPreferencesService();
+    final String viewOptionKey = "expensesViewOption";
+    var viewOption; 
+
+    @override
+    void initState() {
+      super.initState();
+      tabController = TabController(length: viewTabs.length, vsync: this);
+      tabController.addListener(handleTabSelection);
+    }
+
+    void handleTabSelection() {
+      if (tabController.indexIsChanging && tabController.index != tabController.previousIndex) {
+         context.read<TripDetailsBloc>().add(ExpenseTabUpdated(tabController.index, viewOptionKey));         
+      }       
+    }
+
+    @override
+    void dispose() {
+      tabController.dispose();
+      sharedPrefsService.remove(key: viewOptionKey);
+      super.dispose();
+    }   
 
   @override
   Widget build(BuildContext context) {
 
     List<ExpenseDay> expenseDays = [];
+    List<ExpenseChartData> expenseChartParts = [];
+    double total = 0.0;
+    List<Map<String, dynamic>> chartData = [];
 
-    if(expenses != null && expenses!.length > 0){
-      Map<DateTime, List<Expense>> expensesList = expenses!.groupListsBy((element) => DateUtils.dateOnly(element.date!));
+    if(widget.expenses != null && widget.expenses!.length > 0){
+
+      total = widget.expenses!.where((element) => 
+        element.isPaid != null && element.isPaid!
+      ).fold(0, (sum, element) => sum + (element.currency == "USD" ? element.amount! : element.amountUSD!));
+    }
+
+    Map<String, List<Expense>> expensesListByCategory = widget.expenses!.groupListsBy((element) => element.category?.name ?? 'Other');     
+
+      expensesListByCategory.forEach((key, group) {
+        double sum = 0.0;
+        group.forEach((expense) {
+            if(expense.isPaid != null && expense.isPaid!){
+              sum += expense.currency == "USD" ? expense.amount! : expense.amountUSD!;             
+            }        
+          });
+        
+        sum > 0 ? expenseChartParts.add(new ExpenseChartData(
+          categoryName: key, 
+          amount: sum, 
+          currency: "USD", 
+          color: group.first.category?.color,
+          amountPercent: (sum / total) * 100)) : null;
+      });
+
+        expenseChartParts.forEach((part) {
+        chartData.add({'domain': part.categoryName, 'measure': double.parse(part.amountPercent.toStringAsFixed(2))});
+      });
+
+      Map<DateTime, List<Expense>> expensesList = widget.expenses!.groupListsBy((element) => DateUtils.dateOnly(element.date!));
 
       expensesList.forEach((key, expenseGroup) {
         List<String> expenseListTotal = [];
@@ -46,31 +116,44 @@ class ExpensesView extends StatelessWidget{
           expenseGroup,
           expenseListTotal
         ));
-      });
-    }
+          expenseDays.sort((a, b) => a.date.compareTo(b.date));
+      }); 
+      
 
-    expenseDays.sort((a, b) => a.date.compareTo(b.date));
-
-    return RefreshIndicator(
-      onRefresh: () async{
-        BlocProvider.of<TripDetailsBloc>(context)..add(UpdateExpenses(trip.id!));
+    return BlocListener<TripDetailsBloc, TripDetailsState>(
+      listener: (context, state){       
+        if(state is TripDetailsSuccessState){
+          int? tabValue = sharedPrefsService.readInt(key: viewOptionKey);
+          tabController.index = tabValue ?? 0;                  
+        }        
       },
-      child: SingleChildScrollView(
-        child: Column(children: [
-          expenseDays.length > 0 ? 
-            //_expensesTable(expenseDays, context) 
-            _expenseChart(expenseDays, context)
-            : Container(
-              padding: new EdgeInsets.all(25.0),
-              child: Center(
-                child: Container(child: Center(child: Text("No expenses", style: quicksandStyle(fontSize: 18.0)))),
-              )
-            )
-
-        ],
-      ),
-    )
-    );      
+      child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
+        builder: (context, state){
+          return RefreshIndicator(
+            onRefresh: () async{
+              BlocProvider.of<TripDetailsBloc>(context)..add(UpdateExpenses(widget.trip.id!));
+            },
+            child: SingleChildScrollView(
+              child: (widget.expenses?.length ?? 0) > 0 && state is TripDetailsSuccessState ?  Column(children: [                
+                  TabBar(
+                    isScrollable: true,              
+                    controller: tabController,
+                    indicatorColor: Theme.of(context).colorScheme.outline,
+                    tabs: viewTabs
+                  ),
+                  tabController.index == 0 ?_expensesTable(expenseDays, context) 
+                  : _expenseChart(expenseDays, context, chartData, expenseChartParts)
+              ],
+            ) : (widget.expenses?.length ?? 0) == 0 ? Container(
+                    padding: new EdgeInsets.all(25.0),
+                    child: Center(
+                      child: Container(child: Center(child: Text("No expenses", style: quicksandStyle(fontSize: 18.0)))),
+                    )
+                  ) : loadingWidget(ColorsPalette.amMint),
+          )
+          ); 
+        }
+    ));         
   }
 
   _expensesTable(List<ExpenseDay> expenseDays, BuildContext context) => new Container(
@@ -86,37 +169,24 @@ class ExpensesView extends StatelessWidget{
       ),
   );
 
-  _expenseChart(List<ExpenseDay> expenseDays, BuildContext context) =>new Container(
+  _expenseChart(List<ExpenseDay> expenseDays, BuildContext context,  List<Map<String, dynamic>> chartData, List<ExpenseChartData> expenseChartParts) =>new Container(  
+    padding: EdgeInsets.only(top: formTopPadding),  
     child: Padding(
-              padding: EdgeInsets.all(16),
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: DChartPie(
-                  data: [
-                    {'domain': 'Flutter', 'measure': 28},
-                    {'domain': 'React Native', 'measure': 27},
-                    {'domain': 'Ionic', 'measure': 20},
-                    {'domain': 'Cordova', 'measure': 15},
-                  ],
-                  fillColor: (pieData, index) {
-                    switch (pieData['domain']) {
-                      case 'Flutter':
-                        return Colors.blue;
-                      case 'React Native':
-                        return Colors.blueAccent;
-                      case 'Ionic':
-                        return Colors.lightBlue;
-                      default:
-                        return Colors.orange;
-                    }
-                  },
-                  pieLabel: (pieData, index) {
-                    return "${pieData['domain']}:\n${pieData['measure']}%";
-                  },
-                  labelPosition: PieLabelPosition.outside,
-                ),
-              ),
-            ),
+      padding: EdgeInsets.all(16),
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: DChartPie(          
+          data: chartData,
+          fillColor: (pieData, index) {
+            return expenseChartParts.firstWhere((element) => element.categoryName == pieData["domain"]).color ?? ColorsPalette.amMint;
+          },
+          pieLabel: (pieData, index) {
+            return "${pieData['domain']}:\n${pieData['measure']}%";
+          },
+          labelPosition: PieLabelPosition.outside,
+        ),
+      ),
+    ),
   );
 
   _expenseDay(ExpenseDay expenseDay, BuildContext context) => new Container(
@@ -146,10 +216,10 @@ class ExpensesView extends StatelessWidget{
             children: [     
               InkWell(
                 onTap: (){
-                  ExpenseViewArguments args = new ExpenseViewArguments(expenseId: expense.id!, trip: trip);
+                  ExpenseViewArguments args = new ExpenseViewArguments(expenseId: expense.id!, trip: widget.trip);
 
                   Navigator.of(context).pushNamed(expenseViewRoute, arguments: args).then((value) => {
-                    BlocProvider.of<TripDetailsBloc>(context)..add(UpdateExpenses(trip.id!))
+                    BlocProvider.of<TripDetailsBloc>(context)..add(UpdateExpenses(widget.trip.id!))
                   });
                 },
                 child: Column(children: [
