@@ -79,6 +79,19 @@ class ActivityTabUpdated extends TripDetailsEvent{
   String toString() => 'ActivityTabUpdated { tab: $tab, tabKey: $tabKey }';
 }
 
+class ExpenseTabUpdated extends TripDetailsEvent{
+  final int tab;
+  final String tabKey;
+
+  const ExpenseTabUpdated(this.tab, this.tabKey);
+
+  @override
+  List<Object> get props => [tab, tabKey];
+
+  @override
+  String toString() => 'ExpenseTabUpdated { tab: $tab, tabKey: $tabKey }';
+}
+
 class UpdateExpenses extends TripDetailsEvent{
   final int tripId;
 

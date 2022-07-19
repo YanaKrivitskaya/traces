@@ -10,6 +10,7 @@ class Expense {
   final String? description;
   final double? amount;
   final String? currency;
+  final double? amountUSD;
   final bool? isPaid;
   final DateTime? createdDate;
   final DateTime? updatedDate;
@@ -20,6 +21,7 @@ class Expense {
     this.description,
     this.amount,
     this.currency,
+    this.amountUSD,
     this.isPaid,
     this.createdDate,
     this.updatedDate,
@@ -32,6 +34,7 @@ class Expense {
     String? description,
     double? amount,
     String? currency,
+    double? amountUSD,
     bool? isPaid,
     DateTime? createdDate,
     DateTime? updatedDate,
@@ -43,6 +46,7 @@ class Expense {
       description: description ?? this.description,
       amount: amount ?? this.amount,
       currency: currency ?? this.currency,
+      amountUSD: amountUSD ?? this.amountUSD,
       isPaid: isPaid ?? this.isPaid,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
@@ -57,6 +61,7 @@ class Expense {
       'description': description,
       'amount': amount,
       'currency': currency,
+      'amountUSD': amountUSD,
       'isPaid': isPaid,
       'category': category?.toMap()
     };
@@ -69,6 +74,7 @@ class Expense {
       description: map['description'],
       amount: double.parse(map['amount']),
       currency: map['currency'],
+      amountUSD: map['amountUSD'] != null ? double.parse(map['amountUSD']) : null,
       isPaid: map['isPaid'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
@@ -82,7 +88,7 @@ class Expense {
 
   @override
   String toString() {
-    return 'Expense(id: $id, date: $date, description: $description, amount: $amount, currency: $currency, isPaid: $isPaid)';
+    return 'Expense(id: $id, date: $date, description: $description, amount: $amount, currency: $currency, amountUSD: $amountUSD, isPaid: $isPaid)';
   }
 
   @override
@@ -95,6 +101,7 @@ class Expense {
       other.description == description &&
       other.amount == amount &&
       other.currency == currency &&
+      other.amountUSD == amountUSD &&
       other.isPaid == isPaid &&
       other.createdDate == createdDate &&
       other.updatedDate == updatedDate;
@@ -107,6 +114,7 @@ class Expense {
       description.hashCode ^
       amount.hashCode ^
       currency.hashCode ^
+      amountUSD.hashCode ^
       isPaid.hashCode ^
       createdDate.hashCode ^
       updatedDate.hashCode;
