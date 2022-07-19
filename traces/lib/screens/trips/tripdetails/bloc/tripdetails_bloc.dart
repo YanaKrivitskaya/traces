@@ -213,9 +213,9 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
         state.activeExpenseTab
       ));
     } on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, event.tab ?? state.activeActivityTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, event.tab ?? state.activeActivityTab, state.activeExpenseTab));
     } on Exception catch (e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, event.tab ?? state.activeActivityTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, event.tab ?? state.activeActivityTab, state.activeExpenseTab));
     }
   }
 
