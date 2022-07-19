@@ -164,18 +164,22 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
       var activities = await _activitiesRepository.getTripActivities(event.tripId);
       var expenses = await _expensesRepository.getTripExpenses(event.tripId);
 
+      if(event.tab != null && event.tabKey != null){
+        await sharedPrefsService.writeInt(key: event.tabKey!, value: event.tab!);
+      }
+
       Trip trip = state.trip!.copyWith(expenses: expenses, activities: activities);
 
-      return emit(TripDetailsSuccessState(     
+      emit(TripDetailsSuccessState(     
         trip,
         state.familyMembers!,
         state.activeTripTab,
-        state.activeActivityTab
+        event.tab ?? state.activeActivityTab
       ));
     } on CustomException catch(e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, event.tab ?? state.activeActivityTab));
     } on Exception catch (e){
-      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, state.activeActivityTab));
+      emit(TripDetailsErrorState(e.toString(), state.activeTripTab, event.tab ?? state.activeActivityTab));
     }
   }
 

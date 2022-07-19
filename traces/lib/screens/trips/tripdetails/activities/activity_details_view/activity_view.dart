@@ -88,13 +88,14 @@ class _ActivityViewState extends State<ActivityView>{
       Divider(color: ColorsPalette.juicyOrange,),
       Container(
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Text('${DateFormat.yMMMd().format(activity.date!)}', 
-            style: quicksandStyle(fontSize: 20.0))
+          activity.date != null ? Text('${DateFormat.yMMMd().format(activity.date!)}', 
+            style: quicksandStyle(fontSize: 20.0)) : Container()
         ],)  
       ),
       Container(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Text('${DateFormat.Hm().format(activity.date!)}', style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)),
+          activity.date!= null ? Text('${DateFormat.Hm().format(activity.date!)}', 
+          style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)) : Container(),
           
         ],),
         Text('${activity.location ?? ''}', style: quicksandStyle(fontSize: 18.0)),

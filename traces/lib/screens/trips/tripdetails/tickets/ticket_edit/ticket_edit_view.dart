@@ -203,14 +203,17 @@ class _TicketEditViewState extends State<TicketEditView>{
             ),
             onPressed: (){
               Expense expense;
-              String category = 'Ticket';
+              String category = 'Tickets';
                             
               if(state.ticket!.expense != null){
                 expense = state.ticket!.expense!;
               }else{                
                 String description = '${state.ticket!.type ?? TripSettings.ticketType.first} ticket ${_depLocationController!.text.trim()} - ${_arrivalLocationController!.text.trim()}';
                 DateTime now = DateTime.now();
-                DateTime date = new DateTime.utc(now.year, now.month, now.day);
+                DateTime tripEnd = widget.trip.endDate ?? now;
+                DateTime date = tripEnd.isAfter(now) 
+                  ? new DateTime.utc(now.year, now.month, now.day) 
+                  : new DateTime.utc(tripEnd.year, tripEnd.month, tripEnd.day);
                 expense = new Expense(date: date, description: description);
               }
               

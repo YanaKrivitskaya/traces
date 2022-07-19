@@ -59,7 +59,7 @@ class _BookingViewState extends State<BookingView>{
               backgroundColor: ColorsPalette.white,
               elevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.close_rounded),
+                icon: Icon(Icons.close_rounded, color: ColorsPalette.black),
                 onPressed: ()=> Navigator.pop(context)
               ),
               actions: booking != null ? [
@@ -68,8 +68,8 @@ class _BookingViewState extends State<BookingView>{
                   Navigator.pushNamed(context, bookingEditRoute, arguments: args).then((value){
                     value != null ? context.read<BookingViewBloc>().add(GetBookingDetails(booking!.id!)) : '';
                   });
-                }, icon: Icon(Icons.edit_outlined)),
-                IconButton(onPressed: (){}, icon: Icon(Icons.delete_outline))
+                }, icon: Icon(Icons.edit_outlined, color: ColorsPalette.black)),
+                IconButton(onPressed: (){}, icon: Icon(Icons.delete_outline, color: ColorsPalette.black))
               ] : [],
             ),
             
