@@ -87,12 +87,15 @@ class ExpensesView extends StatefulWidget{
           amount: sum, 
           currency: "USD", 
           color: group.first.category?.color,
+          icon: group.first.category?.icon,
           amountPercent: (sum / total) * 100)) : null;
       });
 
         expenseChartParts.forEach((part) {
         chartData.add({'domain': part.categoryName, 'measure': double.parse(part.amountPercent.toStringAsFixed(2))});
       });
+
+      expenseChartParts.sort((a, b) => b.amount.compareTo(a.amount));
 
       Map<DateTime, List<Expense>> expensesList = widget.expenses!.groupListsBy((element) => DateUtils.dateOnly(element.date!));
 
@@ -108,7 +111,7 @@ class ExpensesView extends StatefulWidget{
               sum += expense.amount!;
             }        
           });
-          if(sum > 0) expenseListTotal.add(sum.toString() + ' ' + key);     
+          if(sum > 0) expenseListTotal.add(double.parse(sum.toStringAsFixed(2)).toString() + ' ' + key);     
         });
 
         expenseDays.add(new ExpenseDay(
@@ -142,7 +145,7 @@ class ExpensesView extends StatefulWidget{
                     tabs: viewTabs
                   ),
                   tabController.index == 0 ?_expensesTable(expenseDays, context) 
-                  : _expenseChart(expenseDays, context, chartData, expenseChartParts)
+                  : _expenseChart(total, expenseDays, context, chartData, expenseChartParts)
               ],
             ) : (widget.expenses?.length ?? 0) == 0 ? Container(
                     padding: new EdgeInsets.all(25.0),
@@ -169,85 +172,111 @@ class ExpensesView extends StatefulWidget{
       ),
   );
 
-  _expenseChart(List<ExpenseDay> expenseDays, BuildContext context,  List<Map<String, dynamic>> chartData, List<ExpenseChartData> expenseChartParts) =>new Container(  
-    padding: EdgeInsets.only(top: formTopPadding),  
-    child: Padding(
-      padding: EdgeInsets.all(16),
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: DChartPie(          
-          data: chartData,
-          fillColor: (pieData, index) {
-            return expenseChartParts.firstWhere((element) => element.categoryName == pieData["domain"]).color ?? ColorsPalette.amMint;
-          },
-          pieLabel: (pieData, index) {
-            return "${pieData['domain']}:\n${pieData['measure']}%";
-          },
-          labelPosition: PieLabelPosition.outside,
-          labelLinelength: 20.0,
+  _expenseChart(double total, List<ExpenseDay> expenseDays, BuildContext context,  List<Map<String, dynamic>> chartData, List<ExpenseChartData> expenseChartParts) =>new Container(  
+    padding: EdgeInsets.only(top: sizerHeightlg),  
+    child: Column(children: [
+      Padding(
+        padding: EdgeInsets.all(16),
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: DChartPie(          
+            data: chartData,
+            fillColor: (pieData, index) {
+              return expenseChartParts.firstWhere((element) => element.categoryName == pieData["domain"]).color ?? ColorsPalette.amMint;
+            },
+            pieLabel: (pieData, index) {
+              return "";
+            },
+            labelPosition: PieLabelPosition.inside,          
+          ),
         ),
       ),
-    ),
+      Container(width: formWidth70, child: 
+        Text("Total spent: \$${double.parse(total.toStringAsFixed(2))}", style: quicksandStyle(weight: FontWeight.bold))
+      ),      
+      Container(width: formWidth70, child: 
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: expenseChartParts.length,
+          itemBuilder: (context, position){
+            final chartPart = expenseChartParts[position];                    
+            return  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Icon(chartPart.icon ?? Icons.category, color: chartPart.color ?? ColorsPalette.amMint),
+                SizedBox(width: sizerWidthsm),
+                Text(chartPart.categoryName),
+              ],),
+              Row(children: [                
+                Text("\$${double.parse(chartPart.amount.toStringAsFixed(2))} | ${double.parse(chartPart.amountPercent.toStringAsFixed(2))}%")
+              ],),
+              //Text("\$${double.parse(chartPart.amount.toStringAsFixed(2))} | ${double.parse(chartPart.amountPercent.toStringAsFixed(2))}%")
+            ],);})
+    )] )
   );
 
-  _expenseDay(ExpenseDay expenseDay, BuildContext context) => new Container(
-    child: Card(
-      elevation: 0.0,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: ColorsPalette.juicyGreen, width: 1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Container(padding: EdgeInsets.all(10.0),child: Column(children: [
-      Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Column(children: [
-          Text('${DateFormat.yMMMd().format(expenseDay.date)}', style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold))
+  _expenseDay(ExpenseDay expenseDay, BuildContext context) {
+    List<Expense> expenses =  expenseDay.expenses;
+    expenses.sort((a, b) => a.date!.compareTo(b.date!));
+
+    return new Container(
+      child: Card(
+        elevation: 0.0,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: ColorsPalette.juicyGreen, width: 1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(padding: EdgeInsets.all(10.0),child: Column(children: [
+        Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Column(children: [
+            Text('${DateFormat.yMMMd().format(expenseDay.date)}', style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold))
+          ],),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          for(var expenseTotal in expenseDay.expenseTotalList) Text(expenseTotal, style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold))
+          ],)
         ],),
-        Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-         for(var expenseTotal in expenseDay.expenseTotalList) Text(expenseTotal, style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold))
-        ],)
-      ],),
-      Divider(color: ColorsPalette.juicyGreen),
-      ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: expenseDay.expenses.length,   
-        itemBuilder: (context, idx){
-          final expense = expenseDay.expenses[idx];
-          return Column(            
-            children: [     
-              InkWell(
-                onTap: (){
-                  ExpenseViewArguments args = new ExpenseViewArguments(expenseId: expense.id!, trip: widget.trip);
+        Divider(color: ColorsPalette.juicyGreen),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: expenses.length,   
+          itemBuilder: (context, idx){
+            final expense = expenses[idx];
+            return Column(            
+              children: [     
+                InkWell(
+                  onTap: (){
+                    ExpenseViewArguments args = new ExpenseViewArguments(expenseId: expense.id!, trip: widget.trip);
 
-                  Navigator.of(context).pushNamed(expenseViewRoute, arguments: args).then((value) => {
-                    BlocProvider.of<TripDetailsBloc>(context)..add(UpdateExpenses(widget.trip.id!))
-                  });
-                },
-                child: Column(children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('${DateFormat.Hm().format(expense.date!)}', style: quicksandStyle(fontSize: 15.0, weight: FontWeight.bold)),
-                    SizedBox(width: 10.0),                         
-                    Text('${expense.amount} ${expense.currency}', style: quicksandStyle(fontSize: 15.0)),
-                  ],),
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Column(children: [
-                      Row(children: [
-                        Icon(expense.category?.icon ?? Icons.category, color: expense.category?.color ?? ColorsPalette.black),
-                        SizedBox(width: 4.0)                        
-                      ],)                                            
-                    ],),                    
-                    Expanded(child: Text(
-                      '${expense.category?.name} ${(expense.description != null && expense.description!.length > 0) ? ' - ' : ''} ${expense.description}', 
-                      style: quicksandStyle(fontSize: 15.0)))
-                  ],),
-                  SizedBox(height: 10.0)
-                ],) 
-              )
-            ],
-          );
-        }
-      )
-    ])))
-  );
+                    Navigator.of(context).pushNamed(expenseViewRoute, arguments: args).then((value) => {
+                      BlocProvider.of<TripDetailsBloc>(context)..add(UpdateExpenses(widget.trip.id!))
+                    });
+                  },
+                  child: Column(children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text('${DateFormat.Hm().format(expense.date!)}', style: quicksandStyle(fontSize: 15.0, weight: FontWeight.bold)),
+                      SizedBox(width: 10.0),                         
+                      Text('${expense.amount} ${expense.currency}', style: quicksandStyle(fontSize: 15.0)),
+                    ],),
+                    Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Column(children: [
+                        Row(children: [
+                          Icon(expense.category?.icon ?? Icons.category, color: expense.category?.color ?? ColorsPalette.black),
+                          SizedBox(width: 4.0)                        
+                        ],)                                            
+                      ],),                    
+                      Expanded(child: Text(
+                        '${expense.category?.name} ${(expense.description != null && expense.description!.length > 0) ? ' - ' : ''} ${expense.description}', 
+                        style: quicksandStyle(fontSize: 15.0)))
+                    ],),
+                    SizedBox(height: 10.0)
+                  ],) 
+                )
+              ],
+            );
+          }
+        )
+      ])))
+  );}
 
 }

@@ -9,12 +9,14 @@ class ExpenseChartData {
   final String currency;
   final double amountPercent;
   final Color? color;
+  final IconData? icon;
   ExpenseChartData({
     required this.categoryName,
     required this.amount,
     required this.currency,
     required this.amountPercent,
     this.color,
+    this.icon
   });
 
   ExpenseChartData copyWith({
@@ -23,6 +25,7 @@ class ExpenseChartData {
     String? currency,
     double? amountPercent,
     Color? color,
+    IconData? icon
   }) {
     return ExpenseChartData(
       categoryName: categoryName ?? this.categoryName,
@@ -30,6 +33,7 @@ class ExpenseChartData {
       currency: currency ?? this.currency,
       amountPercent: amountPercent ?? this.amountPercent,
       color: color ?? this.color,
+      icon: icon ?? this.icon,
     );
   }  
 

@@ -32,6 +32,7 @@ final double tripItemHeight = 10.h;
 
 //ANCHOR Sizer
 final double sizerHeightsm = 1.h;
+final double sizerWidthsm = 1.w;
 final double sizerHeight = 1.5.h;
 final double sizerHeightlg = 2.h;
 
