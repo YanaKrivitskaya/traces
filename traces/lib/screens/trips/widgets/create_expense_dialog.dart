@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
 import 'package:traces/screens/settings/model/category.model.dart';
@@ -123,13 +122,13 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
     new Column(crossAxisAlignment:  CrossAxisAlignment.start, children: [
       Text('Category', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
       _categorySelector(state),
-      SizedBox(height: 20.0),
+      SizedBox(height: sizerHeight),
        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         Container(
           //width:  MediaQuery.of(context).size.width * 0.45,
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Icon(Icons.date_range),
-            SizedBox(width: 10.0),
+            SizedBox(width: sizerWidthsm),
             InkWell(
               child: state.expense!.date != null 
                 ? Text('${DateFormat.yMMMd().format( state.expense!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
@@ -138,12 +137,11 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
             )
           ],),
         ),       
-        Container(
-          //width:  MediaQuery.of(context).size.width * 0.45,
+        Container(          
           child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            SizedBox(width: 20.0),
+            SizedBox(width: sizerHeight),
             Icon(Icons.schedule),
-            SizedBox(width: 10.0),
+            SizedBox(width: sizerWidthsm),
             InkWell(
               child: state.expense!.date != null 
                 ? Text('${DateFormat.jm().format(state.expense!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
@@ -157,7 +155,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [          
           Text('Amount', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
           SizedBox(height: 9.0),
-          SizedBox(width:  MediaQuery.of(context).size.width * 0.30,
+          SizedBox(width:  MediaQuery.of(context).size.width * 0.35,
             child: TextFormField(
               decoration: InputDecoration(
                 isDense: true,                      
@@ -175,7 +173,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
         ]),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Currency', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
-          SizedBox(width:  MediaQuery.of(context).size.width * 0.30,
+          SizedBox(width:  MediaQuery.of(context).size.width * 0.35,
             child: _currencySelector(state)
           )
         ])
@@ -249,7 +247,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
         );
       },
       context: context,   
-      initialDate: state.expense!.date ?? DateTime.now(),      
+      initialDate: state.expense!.date ?? trip.startDate ?? DateTime.now(),      
       firstDate: DateTime(2015),
       lastDate: trip.endDate ?? DateTime(2101),        
     );

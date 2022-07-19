@@ -66,15 +66,14 @@ class _ActivitiesStateView extends State<ActivitiesView> with TickerProviderStat
       return aDate.compareTo(bDate);
     });
 
+    int? tabValue = sharedPrefsService.readInt(key: viewOptionKey);
+      tabController.index = tabValue ?? 0;
+        activities = tabValue == 1 ? widget.activities.where((a) => a.isPlanned??false).toList() 
+          : tabValue == 2 ? widget.activities.where((a) => a.isCompleted??false).toList() : widget.activities;
+           
     return BlocListener<TripDetailsBloc, TripDetailsState>(
       listener: (context, state){
-        if(state is TripDetailsSuccessState){
-          int? tabValue = sharedPrefsService.readInt(key: viewOptionKey);
-          tabController.index = tabValue ?? 0;
-          activities = tabValue == 1 ? widget.activities.where((a) => a.isPlanned??false).toList() 
-            : tabValue == 2 ? widget.activities.where((a) => a.isCompleted??false).toList() : widget.activities;
-            print(activities.length);
-        }        
+        
       },
       child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
         builder: (context, state){
@@ -129,8 +128,10 @@ class _ActivitiesStateView extends State<ActivitiesView> with TickerProviderStat
         onTap: (){
           ActivityViewArguments args = new ActivityViewArguments(activityId: activity.id!, trip: widget.trip);
 
-          Navigator.of(context).pushNamed(activityViewRoute, arguments: args).then((value) {               
-            context.read<TripDetailsBloc>().add(ActivityTabUpdated(tabController.index, viewOptionKey));    
+          Navigator.of(context).pushNamed(activityViewRoute, arguments: args).then((value) {
+            //context.read<TripDetailsBloc>().add(ActivityTabUpdated(tabController.index, viewOptionKey));
+            context.read<TripDetailsBloc>().add(UpdateActivities(widget.trip.id!, 
+              tab: tabController.index, tabKey: viewOptionKey));
           });
         },
       ),      

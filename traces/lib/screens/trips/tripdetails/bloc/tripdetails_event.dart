@@ -130,11 +130,13 @@ class UpdateNotes extends TripDetailsEvent{
 
 class UpdateActivities extends TripDetailsEvent{
   final int tripId;
+  final int? tab;
+  final String? tabKey;
 
-  const UpdateActivities(this.tripId);
+  const UpdateActivities(this.tripId, {this.tab, this.tabKey});
 
   @override
-  List<Object?> get props => [tripId];
+  List<Object?> get props => [tripId, tab, tabKey];
 }
 
 class GetImage extends TripDetailsEvent{
