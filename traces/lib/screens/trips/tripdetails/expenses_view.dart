@@ -69,7 +69,7 @@ class ExpensesView extends StatefulWidget{
 
       total = widget.expenses!.where((element) => 
         element.isPaid != null && element.isPaid!
-      ).fold(0, (sum, element) => sum + (element.currency == "USD" ? element.amount! : element.amountUSD!));
+      ).fold(0, (sum, element) => sum + (element.currency == "USD" ? element.amount! : element.amountUSD ?? 0));
     }
 
     Map<String, List<Expense>> expensesListByCategory = widget.expenses!.groupListsBy((element) => element.category?.name ?? 'Other');     
@@ -78,7 +78,7 @@ class ExpensesView extends StatefulWidget{
         double sum = 0.0;
         group.forEach((expense) {
             if(expense.isPaid != null && expense.isPaid!){
-              sum += expense.currency == "USD" ? expense.amount! : expense.amountUSD!;             
+              sum += expense.currency == "USD" ? expense.amount! : expense.amountUSD ?? 0;             
             }        
           });
         
@@ -184,6 +184,7 @@ class ExpensesView extends StatefulWidget{
             return "${pieData['domain']}:\n${pieData['measure']}%";
           },
           labelPosition: PieLabelPosition.outside,
+          labelLinelength: 20.0,
         ),
       ),
     ),
@@ -241,9 +242,9 @@ class ExpensesView extends StatefulWidget{
                   ],),
                   SizedBox(height: 10.0)
                 ],) 
-              )              
+              )
             ],
-          );          
+          );
         }
       )
     ])))
