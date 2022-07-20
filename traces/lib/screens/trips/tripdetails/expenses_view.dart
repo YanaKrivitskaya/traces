@@ -144,7 +144,7 @@ class ExpensesView extends StatefulWidget{
                     indicatorColor: Theme.of(context).colorScheme.outline,
                     tabs: viewTabs
                   ),
-                  tabController.index == 0 ?_expensesTable(expenseDays, context) 
+                  tabController.index == 0 ?_expensesTable(total, expenseDays, context) 
                   : _expenseChart(total, expenseDays, context, chartData, expenseChartParts)
               ],
             ) : (widget.expenses?.length ?? 0) == 0 ? Container(
@@ -159,9 +159,16 @@ class ExpensesView extends StatefulWidget{
     ));         
   }
 
-  _expensesTable(List<ExpenseDay> expenseDays, BuildContext context) => new Container(
+  _expensesTable(double total, List<ExpenseDay> expenseDays, BuildContext context) => new Container(
     padding: EdgeInsets.all(10.0),
-      child: ListView.builder(
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Container(padding: EdgeInsets.symmetric(horizontal: borderPadding),child:
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text("Total spent: ", style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold)),
+          Text("${double.parse(total.toStringAsFixed(2))} ${widget.trip.defaultCurrency}", style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold))
+        ],)        
+      ),
+      ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemCount: expenseDays.length,              
@@ -169,7 +176,8 @@ class ExpensesView extends StatefulWidget{
           final expenseDay = expenseDays[position];
           return _expenseDay(expenseDay, context);                  
         }
-      ),
+      )
+      ],),
   );
 
   _expenseChart(double total, List<ExpenseDay> expenseDays, BuildContext context,  List<Map<String, dynamic>> chartData, List<ExpenseChartData> expenseChartParts) =>new Container(  
@@ -191,9 +199,11 @@ class ExpensesView extends StatefulWidget{
           ),
         ),
       ),
-      Container(width: formWidth70, child: 
-        Text("Total spent: ${double.parse(total.toStringAsFixed(2))} ${widget.trip.defaultCurrency}", style: quicksandStyle(weight: FontWeight.bold))
-      ),
+      Container(width: formWidth70, padding: EdgeInsets.symmetric(horizontal: borderPadding),child:
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text("Total spent: ", style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold)),
+          Text("${double.parse(total.toStringAsFixed(2))} ${widget.trip.defaultCurrency}", style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold))
+        ],)) , 
       Container(width: formWidth70, child: 
         ListView.builder(
           shrinkWrap: true,
