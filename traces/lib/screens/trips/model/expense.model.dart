@@ -11,6 +11,7 @@ class Expense {
   final double? amount;
   final String? currency;
   final double? amountUSD;
+  final double? amountDTC;
   final bool? isPaid;
   final DateTime? createdDate;
   final DateTime? updatedDate;
@@ -22,6 +23,7 @@ class Expense {
     this.amount,
     this.currency,
     this.amountUSD,
+    this.amountDTC,
     this.isPaid,
     this.createdDate,
     this.updatedDate,
@@ -35,6 +37,7 @@ class Expense {
     double? amount,
     String? currency,
     double? amountUSD,
+    double? amountDTC,
     bool? isPaid,
     DateTime? createdDate,
     DateTime? updatedDate,
@@ -47,6 +50,7 @@ class Expense {
       amount: amount ?? this.amount,
       currency: currency ?? this.currency,
       amountUSD: amountUSD ?? this.amountUSD,
+      amountDTC: amountDTC ?? this.amountDTC,
       isPaid: isPaid ?? this.isPaid,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
@@ -62,6 +66,7 @@ class Expense {
       'amount': amount,
       'currency': currency,
       'amountUSD': amountUSD,
+      'amountDTC': amountDTC,
       'isPaid': isPaid,
       'category': category?.toMap()
     };
@@ -75,6 +80,7 @@ class Expense {
       amount: double.parse(map['amount']),
       currency: map['currency'],
       amountUSD: map['amountUSD'] != null ? double.parse(map['amountUSD']) : null,
+      amountDTC: map['amountDTC'] != null ? double.parse(map['amountDTC']) : null,
       isPaid: map['isPaid'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
@@ -102,6 +108,7 @@ class Expense {
       other.amount == amount &&
       other.currency == currency &&
       other.amountUSD == amountUSD &&
+      other.amountDTC == amountDTC &&
       other.isPaid == isPaid &&
       other.createdDate == createdDate &&
       other.updatedDate == updatedDate;
@@ -115,6 +122,7 @@ class Expense {
       amount.hashCode ^
       currency.hashCode ^
       amountUSD.hashCode ^
+      amountDTC.hashCode ^
       isPaid.hashCode ^
       createdDate.hashCode ^
       updatedDate.hashCode;
