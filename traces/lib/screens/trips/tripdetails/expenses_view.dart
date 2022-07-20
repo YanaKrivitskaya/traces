@@ -69,7 +69,7 @@ class ExpensesView extends StatefulWidget{
 
       total = widget.expenses!.where((element) => 
         element.isPaid != null && element.isPaid!
-      ).fold(0, (sum, element) => sum + (element.currency == "USD" ? element.amount! : element.amountUSD ?? 0));
+      ).fold(0, (sum, element) => sum + (element.amountDTC ?? 0));
     }
 
     Map<String, List<Expense>> expensesListByCategory = widget.expenses!.groupListsBy((element) => element.category?.name ?? 'Other');     
@@ -78,17 +78,17 @@ class ExpensesView extends StatefulWidget{
         double sum = 0.0;
         group.forEach((expense) {
             if(expense.isPaid != null && expense.isPaid!){
-              sum += expense.currency == "USD" ? expense.amount! : expense.amountUSD ?? 0;             
+              sum += expense.amountDTC ?? 0;             
             }        
           });
         
         sum > 0 ? expenseChartParts.add(new ExpenseChartData(
           categoryName: key, 
           amount: sum, 
-          currency: "USD", 
+          currency: widget.trip.defaultCurrency ?? group.first.currency!, 
           color: group.first.category?.color,
           icon: group.first.category?.icon,
-          amountPercent: (sum / total) * 100)) : null;
+          amountPercent: (sum / total) * 100)) : 0;
       });
 
         expenseChartParts.forEach((part) {
@@ -192,8 +192,8 @@ class ExpensesView extends StatefulWidget{
         ),
       ),
       Container(width: formWidth70, child: 
-        Text("Total spent: \$${double.parse(total.toStringAsFixed(2))}", style: quicksandStyle(weight: FontWeight.bold))
-      ),      
+        Text("Total spent: ${double.parse(total.toStringAsFixed(2))} ${widget.trip.defaultCurrency}", style: quicksandStyle(weight: FontWeight.bold))
+      ),
       Container(width: formWidth70, child: 
         ListView.builder(
           shrinkWrap: true,
@@ -208,7 +208,7 @@ class ExpensesView extends StatefulWidget{
                 Text(chartPart.categoryName),
               ],),
               Row(children: [                
-                Text("\$${double.parse(chartPart.amount.toStringAsFixed(2))} | ${double.parse(chartPart.amountPercent.toStringAsFixed(2))}%")
+                Text("${double.parse(chartPart.amount.toStringAsFixed(2))} ${widget.trip.defaultCurrency} | ${double.parse(chartPart.amountPercent.toStringAsFixed(2))}%")
               ],),
               //Text("\$${double.parse(chartPart.amount.toStringAsFixed(2))} | ${double.parse(chartPart.amountPercent.toStringAsFixed(2))}%")
             ],);})

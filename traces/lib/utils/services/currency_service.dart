@@ -13,12 +13,12 @@ class CurrencyService{
     _apiKey = dotenv.env['GETGEOAPIKEY'];
   }
 
-  Future<dynamic> convertToUSD(String currencyFrom, double amount) async{    
+  Future<dynamic> convert(String currencyFrom, String currencyTo, double amount) async{    
     
     final queryParameters = {
       'api_key': _apiKey,
       'from': currencyFrom,
-      'to': 'USD',
+      'to': currencyTo,
       'amount': amount.toStringAsFixed(2)
     };
 
@@ -35,14 +35,14 @@ class CurrencyService{
     
   }
 
-  Future<dynamic> convertForDate(String currencyFrom, double amount, DateTime date) async{    
+  Future<dynamic> convertForDate(String currencyFrom, String currencyTo, double amount, DateTime date) async{    
 
     var dateParam = DateFormat('yyyy-MM-dd').format(date);
     
     final queryParameters = {
       'api_key': _apiKey,
       'from': currencyFrom,
-      'to': "USD",
+      'to': currencyTo,
       'amount': amount.toStringAsFixed(2)
     };
 

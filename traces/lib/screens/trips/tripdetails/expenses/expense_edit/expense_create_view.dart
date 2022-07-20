@@ -30,6 +30,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
   TextEditingController? _amountController;
   TextEditingController? _categoryController;
   TextEditingController? _descriptionController;
+  List<String> currencies = List.empty(growable: true);
 
   @override
   void initState() {
@@ -107,8 +108,15 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
           if(state is ExpenseCreateEdit && !state.loading && state.expense != null){
             _amountController!.text == '' ? _amountController!.text = state.expense!.amount?.toString() ?? '' : null;
             _descriptionController!.text == '' ? _descriptionController!.text = state.expense!.description ?? '' : null;
-            _categoryController!.text == '' ? _categoryController!.text = state.expense!.category?.name ?? '' : null;            
-          }
+            _categoryController!.text == '' ? _categoryController!.text = state.expense!.category?.name ?? '' : null;
+
+            currencies = List.empty(growable: true);
+            if(state.currencies != null && state.currencies!.length > 0){
+              state.currencies!.forEach((c) { currencies.add(c.code);});
+            }else{
+              currencies = TripSettings.currency;
+            }
+          }            
       },
       child: BlocBuilder<ExpenseCreateBloc, ExpenseCreateState>(
         builder: (context, state){
@@ -145,7 +153,7 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
                           category: category,
                           isPaid: state.expense!.isPaid ?? true
                         );                                    
-                        context.read<ExpenseCreateBloc>().add(ExpenseSubmitted(newExpense, widget.trip.id!));
+                        context.read<ExpenseCreateBloc>().add(ExpenseSubmitted(newExpense, widget.trip.id!, widget.trip.defaultCurrency));
                     }},
                     icon: Icon(Icons.check, color: ColorsPalette.juicyOrange))
                 ],
@@ -261,10 +269,10 @@ class _ExpenseCreateViewViewState extends State<ExpenseCreateView>{
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(bottom: -10)
         ),
-        value: state.expense!.currency ?? TripSettings.currency.first,
+        value: state.expense!.currency ?? currencies.first,
         isExpanded: true,        
         items:
-          TripSettings.currency.map((String value) {
+          currencies.map((String value) {
           return new DropdownMenuItem<String>(
               value: value,
               child: Row(
