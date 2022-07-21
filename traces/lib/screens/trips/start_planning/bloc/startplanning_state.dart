@@ -1,41 +1,41 @@
 part of 'startplanning_bloc.dart';
 
-@immutable
 abstract class StartPlanningState{
-  final Trip? trip;
+  Trip? trip;
+  final List<Currency>? currencies;
 
-  const StartPlanningState(this.trip);
+  StartPlanningState(this.trip, this.currencies);
 
   @override
-  List<Object?> get props => [trip];
+  List<Object?> get props => [trip, this.currencies];
 }
 
 class StartPlanningInitial extends StartPlanningState {
-  StartPlanningInitial(Trip? trip) : super(trip);
+  StartPlanningInitial(Trip? trip, List<Currency>? currencies) : super(trip, currencies);
 }
 
 class StartPlanningSuccessState extends StartPlanningState{
   final bool loading;
 
-  StartPlanningSuccessState(Trip? trip, this.loading) : super(trip);
+  StartPlanningSuccessState(Trip? trip, List<Currency>? currencies, this.loading) : super(trip, currencies);
 
   @override
-  List<Object?> get props => [trip, loading];
+  List<Object?> get props => [trip, currencies, loading];
 }
 
 class StartPlanningErrorState extends StartPlanningState{  
   final String error;
 
-  StartPlanningErrorState(Trip? trip, this.error) : super(trip);
+  StartPlanningErrorState(Trip? trip, List<Currency>? currencies, this.error) : super(trip, currencies);
 
   @override
-  List<Object?> get props => [trip, error];
+  List<Object?> get props => [trip, currencies, error];
 }
 
 class StartPlanningCreatedState extends StartPlanningState{
-  StartPlanningCreatedState(Trip trip) : super(trip);
+  StartPlanningCreatedState(Trip trip, List<Currency>? currencies) : super(trip, currencies);
 
   @override
-  List<Object?> get props => [trip];
+  List<Object?> get props => [trip, currencies];
 
 }

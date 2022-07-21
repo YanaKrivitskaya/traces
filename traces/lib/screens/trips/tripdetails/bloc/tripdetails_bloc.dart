@@ -80,9 +80,14 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
         int idx = -1;
         trip.expenses!.forEach((exp) async {
           idx = trip.expenses!.indexOf(exp);
-          if(exp.amount != null && exp.currency! != "USD" && exp.amountUSD == null){            
-            var currencyRate = await _currencyRepository.getCurrencyRateAmountForDate(exp.currency!, exp.amount!, exp.date ?? DateTime.now());
-            exp =exp.copyWith(amountUSD: currencyRate.rateAmount);
+          if(exp.amount != null && trip.defaultCurrency != null && exp.amountDTC == null){
+            if(exp.currency! != trip.defaultCurrency){
+              var currencyRate = await _currencyRepository.getCurrencyRateAmountForDate(exp.currency!, trip.defaultCurrency!, exp.amount!, exp.date ?? DateTime.now());
+              exp = exp.copyWith(amountDTC: currencyRate.rateAmount);
+            }else{
+              exp = exp.copyWith(amountDTC: exp.amount);
+            }
+            
             exp = await _expensesRepository.updateExpense(exp, trip.id!, exp.category!.id!);
           }
           trip.expenses![idx] = exp;

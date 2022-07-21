@@ -18,6 +18,7 @@ class Trip {
   final Uint8List? coverImage;  
   final DateTime? startDate;
   final DateTime? endDate;
+  final String? defaultCurrency;
   List<GroupUser>? users;
   List<Activity>? activities;  
   List<Expense>? expenses;  
@@ -33,6 +34,7 @@ class Trip {
     this.coverImage,
     this.startDate,
     this.endDate,
+    this.defaultCurrency,
     this.users,
     this.activities,
     this.expenses,
@@ -49,6 +51,7 @@ class Trip {
     Uint8List? coverImage,
     DateTime? startDate,
     DateTime? endDate,
+    String? defaultCurrency,
     List<GroupUser>? users, 
     List<Activity>? activities,
     List<Expense>? expenses,
@@ -64,6 +67,7 @@ class Trip {
       coverImage: coverImage ?? this.coverImage,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      defaultCurrency: defaultCurrency ?? this.defaultCurrency,
       users: users ?? this.users,
       activities: activities ?? this.activities,
       expenses: expenses ?? this.expenses,
@@ -82,6 +86,7 @@ class Trip {
       //'coverImage': coverImage,
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
+      'defaultCurrency': defaultCurrency,
       'users': users?.map((x) => x.toMap()).toList()      
     };
   }
@@ -100,6 +105,7 @@ class Trip {
       coverImage: map['coverImage'] != null ? Uint8List.fromList(map['coverImage']['data'].cast<int>()) : null,
       startDate: map['startDate'] != null ? DateTime.parse(map['startDate']) : null,
       endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
+      defaultCurrency: map['defaultCurrency'],
       users: map['users'] != null ? List<GroupUser>.from(map['users']?.map((x) => GroupUser.fromMap(x))) : null,
       activities: map['activities'] != null ? List<Activity>.from(map['activities']?.map((x) => Activity.fromMap(x))) : null,
       expenses: map['expenses'] != null ? List<Expense>.from(map['expenses']?.map((x) => Expense.fromMap(x))) : null,
@@ -131,6 +137,7 @@ class Trip {
       other.coverImage == coverImage &&
       other.startDate == startDate &&
       other.endDate == endDate &&
+      other.defaultCurrency == defaultCurrency &&
       listEquals(other.users, users) &&
       listEquals(other.activities, activities);
   }
@@ -144,6 +151,7 @@ class Trip {
       coverImage.hashCode ^
       startDate.hashCode ^
       endDate.hashCode ^
+      defaultCurrency.hashCode ^
       users.hashCode^
       activities.hashCode;
   }

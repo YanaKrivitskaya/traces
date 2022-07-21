@@ -50,8 +50,9 @@ class PaidUpdated extends ExpenseCreateEvent {
 class ExpenseSubmitted extends ExpenseCreateEvent {
   Expense? expense;
   final int tripId;  
+  final String? defaultCurrency;
   
-  ExpenseSubmitted(this.expense, this.tripId);
+  ExpenseSubmitted(this.expense, this.tripId, this.defaultCurrency);
 
-  List<Object?> get props => [expense, tripId,];
+  List<Object?> get props => [expense, tripId, defaultCurrency];
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/trips/model/trip_settings.model.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../constants/route_constants.dart';
@@ -23,6 +24,8 @@ class _StartPlanningViewState extends State<StartPlanningView>{
   Trip? newTrip;
   // declare as global
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  List<String> currencies = List.empty(growable: true);
 
   @override
   void initState() {
@@ -113,16 +116,23 @@ class _StartPlanningViewState extends State<StartPlanningView>{
             if (state is StartPlanningInitial){
               return loadingWidget(ColorsPalette.juicyYellow);
             }
-            newTrip = state.trip;            
-            return _createForm(state, newTrip);
-            //return loadingWidget(ColorsPalette.boyzone);
+            newTrip = state.trip;
+            currencies = List.empty(growable: true);
+
+            if(state.currencies != null && state.currencies!.length > 0){
+              state.currencies!.forEach((c) { currencies.add(c.code);});
+            }else{
+              currencies = TripSettings.currency;
+            }
+
+            return _createForm(state, newTrip, currencies);            
           },
         ),
       )  
     );
   }
 
-  Widget _createForm(StartPlanningState state, Trip? trip) => new Container(
+  Widget _createForm(StartPlanningState state, Trip? trip, List<String> currencies) => new Container(
     padding: EdgeInsets.all(viewPadding),
     child: SingleChildScrollView(
       child: Form(
@@ -177,7 +187,14 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                       ),
                       onTap: () => _selectDates(context, state),
                     )
-                )
+                ),
+                SizedBox(height: sizerHeightsm),
+                Text('Trip currency', style: quicksandStyle(fontSize: accentFontSize, weight: FontWeight.bold)),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [                  
+                  SizedBox(width:  formWidth70,
+                    child: _currencySelector(state, currencies)
+                  )
+                ])                
               ],)
             ]),                    
             
@@ -223,5 +240,32 @@ class _StartPlanningViewState extends State<StartPlanningView>{
       context.read<StartPlanningBloc>().add(DateRangeUpdated(startDate, endDate));      
     }
   }
+
+   Widget _currencySelector(StartPlanningState state, List<String> currencies) =>
+      new DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(bottom: -10)
+        ),
+        value: state.trip!.defaultCurrency ?? currencies.first,
+        isExpanded: true,        
+        items:
+          currencies.map((String value) {
+          return new DropdownMenuItem<String>(
+              value: value,
+              child: Row(
+                children: [
+                  new Text(value)
+                ],
+              ));
+        }).toList(),
+        onChanged: (String? value) {
+          state.trip = state.trip!.copyWith(defaultCurrency: value);
+          FocusScope.of(context).unfocus();
+        },
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: (value) {
+          return value == null ? 'Required field' : null;
+        },
+      );
 
 }
