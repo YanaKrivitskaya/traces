@@ -83,7 +83,7 @@ tripDetailsOverview(Trip trip, BuildContext context) {
             Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               Row(children: [
                 Text('Today is the ', style: quicksandStyle(fontSize: fontSize)),
-                Text('$dayNumber ', style: quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.juicyOrange)),
+                Text('${dayNumber + 1} ', style: quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.juicyOrange)),
                 Text('day of the trip', style: quicksandStyle(fontSize: fontSize))
               ],)              
             ],)

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:traces/constants/route_constants.dart';
-import 'package:traces/screens/notes/models/note.model.dart';
-import 'package:traces/screens/notes/models/note_details_args.dart';
-import 'package:traces/screens/notes/widgets/note_tile.dart';
-import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
-import 'package:traces/utils/style/styles.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/constants/color_constants.dart';
+
+import '../../../constants/route_constants.dart';
+import '../../../utils/style/styles.dart';
+import '../../notes/models/note.model.dart';
+import '../../notes/models/note_details_args.dart';
+import '../../notes/widgets/note_tile.dart';
+import 'bloc/tripdetails_bloc.dart';
 
 class TripNotesView extends StatelessWidget{
   final List<Note>? notes;  
@@ -18,8 +19,7 @@ class TripNotesView extends StatelessWidget{
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: <Widget>[
-          //state.searchEnabled! ? _searchBar() : Container(),
+        children: <Widget>[          
           notes != null && notes!.length > 0 ?
           Container(
             child: ListView.builder(
@@ -32,9 +32,13 @@ class TripNotesView extends StatelessWidget{
               }
             ),
           ) : Container(
-            padding: new EdgeInsets.all(25.0),
+            padding: new EdgeInsets.all(viewPadding),
             child: Center(
-              child: Container(child: Center(child: Text("No notes here", style: quicksandStyle(fontSize: 18.0)))),
+              child: Container(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [
+                  Icon(Icons.notes_outlined, color: ColorsPalette.juicyGreen, size: headerFontSize),
+                  SizedBox(height: sizerHeight),
+                  Text('No notes here', style: quicksandStyle(fontSize: fontSize))
+                ]))),
             )
           )
         ],

@@ -153,7 +153,7 @@ class ApiService {
   }
 
   Future<dynamic> get(String url) async{
-    print("get");
+    print("get $url");
     var responseJson;
     Uri uri = Uri.parse(_baseUrl + url);
 
@@ -166,7 +166,7 @@ class ApiService {
   }
 
   Future<dynamic> getSecure(String url, {Map<String, dynamic>? queryParams}) async{
-    print("getSecure");
+    print("getSecure $url");
     var responseJson;
 
     String queryString = Uri(queryParameters: queryParams).query;
@@ -193,7 +193,7 @@ class ApiService {
   }
 
   Future<dynamic> post(String url, String body) async{
-    print("post");
+    print("post $url");
     var responseJson;    
     Uri uri = Uri.parse(_baseUrl + url);
     Map<String, String> headers = {
@@ -212,7 +212,7 @@ class ApiService {
   }
 
   Future<dynamic> postSecure(String url, String? body) async{
-    print("postSecure");
+    print("postSecure $url");
     var responseJson;
     
     Uri uri = Uri.parse(_baseUrl + url);
@@ -237,7 +237,7 @@ class ApiService {
   }
 
   Future<dynamic> postSecureMultipart(String url, String? body, List<int>? fileBytes, String filePath) async{
-    print("postSecure");
+    print("postSecureMultipart $url");
     var responseJson;    
     
     var request = http.MultipartRequest("POST", Uri.parse(_baseUrl + url));
@@ -269,7 +269,7 @@ class ApiService {
   }
 
   Future<dynamic> putSecure(String url, String body) async{
-    print("putSecure");
+    print("putSecure $url");
     var responseJson;
     
     Uri uri = Uri.parse(_baseUrl + url);
@@ -294,7 +294,7 @@ class ApiService {
   }
 
   Future<dynamic> deleteSecure(String url) async{
-    print("deleteSecure");
+    print("deleteSecure $url");
     var responseJson;
    
     Uri uri = Uri.parse(_baseUrl + url);
