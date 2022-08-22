@@ -30,7 +30,7 @@ class ApiService {
 
   static Future<dynamic> init() async{
     if(Platform.isAndroid){
-      await deviceInfoPlugin.androidInfo.then((data) => _deviceId = data.androidId);
+      await deviceInfoPlugin.androidInfo.then((data) => _deviceId = data.id);
     }else if (Platform.isIOS) {
       await deviceInfoPlugin.iosInfo.then((data) => _deviceId = data.identifierForVendor);
     }
