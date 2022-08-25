@@ -53,7 +53,7 @@ Widget avatar(String username, double radius, Color fontColor, double fontSize, 
               fontWeight: FontWeight.w300),
         ),
         radius: radius),
-      radius: radius + radius*0.05 );
+      radius: radius + radius * 0.05 );
 
 String getAvatarName(String profileName){
   if(profileName.length <= 3) return profileName.toUpperCase();

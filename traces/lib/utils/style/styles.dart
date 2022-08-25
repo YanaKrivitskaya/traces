@@ -16,6 +16,7 @@ final double fontSizesm = 12.sp;
 final double buttonPadding = 7.w; // Button padding
 final double viewPadding = 4.w;
 final double borderPadding = 3.w; // Border padding
+final double borderPaddingSm = 2.w; 
 final double formBottomPadding = 4.h;
 final double formTopPadding = 20.h;
 final double imageCoverPadding = 2.5.h;
@@ -33,6 +34,7 @@ final double tripItemHeight = 10.h;
 //ANCHOR Sizer
 final double sizerHeightsm = 1.h;
 final double sizerWidthsm = 1.w;
+final double sizerWidthmd = 2.w;
 final double sizerHeight = 1.5.h;
 final double sizerHeightlg = 2.h;
 
