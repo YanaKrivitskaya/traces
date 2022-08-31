@@ -1,8 +1,10 @@
  import 'package:flutter/material.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
+import 'package:traces/screens/trips/widgets/trip_helpers.dart';
 
 import '../../../utils/style/styles.dart';
+import '../model/ticket.model.dart';
 import '../model/trip.model.dart';
 import '../../../widgets/widgets.dart';
 import 'package:collection/collection.dart';
@@ -20,129 +22,114 @@ tripDetailsOverview(Trip trip, BuildContext context) {
   }
   else{
       tripFinished = true;
-  }
+  } 
 
-  List<String> expenseList = [];
-  List<String> plannedExpenseList = [];
-  double total = 0.0;
-  if(trip.expenses != null){
-    Map<String, List<Expense>> expenses = trip.expenses!.groupListsBy((element) => element.currency!);        
+  int nights = daysBetween(trip.startDate!, trip.endDate!);
+  int days = daysBetween(trip.startDate!, trip.endDate!) + 1;
 
-    total = trip.expenses!.where((element) => 
-        element.isPaid != null && element.isPaid!
-      ).fold(0, (sum, element) => sum + (element.amountDTC ?? 0));
+  int bookedNights = 0;
 
-    expenses.forEach((key, group) {
-      double sum = 0.0;
-      double sumPlanned = 0.0;
-      group.forEach((expense) {
-        if(expense.isPaid != null && expense.isPaid!){
-          sum += expense.amount!;
-        } else{
-          sumPlanned += expense.amount!;
-        }        
-      });
-      sum > 0 ? expenseList.add(sum.toStringAsFixed(2) + ' ' + key) : null;
-      sumPlanned > 0 ? plannedExpenseList.add(sumPlanned.toStringAsFixed(2) + ' ' + key) : null;
-    });      
-  }
+  trip.bookings?.forEach((b) {
+    bookedNights += daysBetween(b.entryDate!, b.exitDate!);
+  });
+
+  Map<String, List<Ticket>> tickets = trip.tickets!.groupListsBy((element) => element.type!);     
+
+  Map<String, int> ticketsByType = new Map();
+
+   tickets.forEach((key, group) {
+      ticketsByType[key] = group.length;
+   });   
   
   return Container(child: Row(
     children: [
       Column(children: [
         Container(                 
-          margin: EdgeInsets.all(10.0),
+          //margin: EdgeInsets.all(10.0),
           child: SingleChildScrollView(child: Column(children: [
           Column(           
             crossAxisAlignment: CrossAxisAlignment.start, children: [
               trip.description!= null ? 
-              Container(width: MediaQuery.of(context).size.width * 0.9, child: Text('${trip.description}', style: quicksandStyle(fontSize: 16.0),),) : Container()
+              Container(width: MediaQuery.of(context).size.width * 0.9, child: Text('${trip.description}', style: quicksandStyle(fontSize: 16.0),),) : SizedBox(height:0)
           ])
         ],))
-        ),
+        ),        
         daysLeft != null ?
         Container(child: Container(
           //color: ColorsPalette.exodusFruit,
           width: MediaQuery.of(context).size.width * 0.9,
-          margin: EdgeInsets.all(10.0),          
+          //margin: EdgeInsets.all(10.0),          
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Text('Trip starts in ', style: quicksandStyle(fontSize: 25.0)),
-                Text('$daysLeft', style: quicksandStyle(fontSize: 30.0, color: ColorsPalette.juicyOrange)),
-                Text(' day(s)', style: quicksandStyle(fontSize: 25.0))
+                Text('Trip starts in ', style: quicksandStyle(fontSize: fontSize)),
+                Text('$daysLeft', style: quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.juicyOrange)),
+                Text(' day(s)', style: quicksandStyle(fontSize: fontSize))
             ],)
             ],)            
           ],),
-        ),) : Container(),
+        ),) : SizedBox(height:0),
         dayNumber != null ?
         Container(child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
-          margin: EdgeInsets.all(10.0),          
+          //margin: EdgeInsets.all(10.0),          
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               Row(children: [
                 Text('Today is the ', style: quicksandStyle(fontSize: fontSize)),
-                Text('$dayNumber ', style: quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.juicyOrange)),
+                Text('${dayNumber + 1} ', style: quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.juicyOrange)),
                 Text('day of the trip', style: quicksandStyle(fontSize: fontSize))
               ],)              
             ],)
           ],),
-        ),) : Container(),
+        ),) : SizedBox(height:0),
         tripFinished ? 
         Container(
           child: Container(            
             width: MediaQuery.of(context).size.width * 0.9,
-            margin: EdgeInsets.all(10.0),          
+            //margin: EdgeInsets.all(10.0),          
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Row(children: [
-                  Text('Trip has finished', style: quicksandStyle(fontSize: 25.0)),
+                  Text('Trip has finished', style: quicksandStyle(fontSize: fontSize)),
                 ],)              
               ],)
             ],),
         )
-        ): Container(),
-        expenseList.length > 0 ? Expanded(
-          child: Container(
-            //color: ColorsPalette.beekeeper,
-            width: MediaQuery.of(context).size.width * 0.9,
-            margin: EdgeInsets.all(10.0),            
-            child: Column(children: [ Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-              crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-                  Text('Expenses:', style: quicksandStyle(fontSize: 20.0, color: ColorsPalette.juicyOrange))                
-                ],),
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  for(var expense in expenseList) Text(expense, style: quicksandStyle(fontSize: 18.0))
-                ],)
-            ],),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text('Total:', style: quicksandStyle(fontSize: 20.0, color: ColorsPalette.juicyOrange))                
-                ],),
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  Text("${double.parse(total.toStringAsFixed(2))} ${trip.defaultCurrency}", style: quicksandStyle(fontSize: 20.0, color: ColorsPalette.juicyOrange))  
-                ],)
-            ],)
-            ],),
-          ),
-        ) : Container(),
-        plannedExpenseList.length > 0 ? Expanded(
-          child: Container(
-            //color: ColorsPalette.beekeeper,
-            width: MediaQuery.of(context).size.width * 0.9,
+        ): SizedBox(height:0),
+        Divider(color: ColorsPalette.juicyYellow),        
+        Expanded(
+          child: Container(            
+            width: MediaQuery.of(context).size.width * 0.8,
             margin: EdgeInsets.all(10.0),            
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Planned expenses:', style: quicksandStyle(fontSize: 20.0, color: ColorsPalette.juicyOrange, decoration: tripFinished ? TextDecoration.lineThrough : null))                
-              ],),
-              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                for(var expense in plannedExpenseList) Text(expense, style: quicksandStyle(fontSize: 18.0, decoration: tripFinished ? TextDecoration.lineThrough : null))
+                days > 0 ? Container(
+                  child: Row(children: [
+                    Text('$days days, $nights nights', style: quicksandStyle(fontSize: fontSize)),
+                  ],)
+                ) : SizedBox(height:0),
+                SizedBox(height: sizerHeight),
+                trip.bookings != null && trip.bookings!.length > 0 ?Row(children: [
+                  Icon(Icons.home, color: ColorsPalette.amMint,),
+                  SizedBox(width: sizerWidthMd),
+                  Text("${trip.bookings!.length}" , style: quicksandStyle(fontSize: fontSize)),
+                  SizedBox(width: sizerWidthMd),
+                  Text("($bookedNights nights)", style: quicksandStyle(fontSize: fontSize)),
+                ],) :SizedBox(height:0),
+                SizedBox(height: sizerHeight),
+                Row(children: [                 
+                  for(var ticketType in ticketsByType.entries) Row(children: [                    
+                    transportIcon(ticketType.key, ColorsPalette.amMint),
+                    SizedBox(width: sizerWidthMd),
+                    Text(ticketType.value.toString(), style: quicksandStyle(fontSize: fontSize)),
+                    SizedBox(width: sizerWidthMd)
+                  ],)
+                ],),
               ],)
             ],)
           ),
-        ) : Container()
+        )        
       ],),      
     ]));
 }

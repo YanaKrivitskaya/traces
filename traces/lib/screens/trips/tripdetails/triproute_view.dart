@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:traces/constants/color_constants.dart';
-import 'package:traces/constants/route_constants.dart';
-import 'package:traces/screens/trips/model/ticket.model.dart';
-import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
-import 'package:traces/screens/trips/model/trip_arguments.model.dart';
-import 'package:traces/screens/trips/model/trip_day.model.dart';
-import 'package:traces/screens/trips/model/trip_object.model.dart';
-import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
-import 'package:traces/screens/trips/widgets/trip_helpers.dart';
-import 'package:traces/utils/style/styles.dart';
+
+import '../../../constants/color_constants.dart';
+import '../../../constants/route_constants.dart';
+import '../../../utils/style/styles.dart';
 import '../../../widgets/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import '../model/trip.model.dart';
+import '../model/trip_arguments.model.dart';
+import '../model/trip_day.model.dart';
+import '../model/trip_object.model.dart';
+import '../widgets/trip_helpers.dart';
+import 'bloc/tripdetails_bloc.dart';
 
 class RouteView extends StatefulWidget{
   final Trip trip;  
@@ -34,32 +34,44 @@ class _RouteViewViewState extends State<RouteView>{
   }
 
   Widget _timelineDays(Trip trip){
-        var days = trip.endDate!.difference(trip.startDate!).inDays + 1;
-        return Container(padding: EdgeInsets.only(left: 20.0), child: ListView.builder(
-          shrinkWrap: true,         
-          itemCount: days,
-          itemBuilder: (context, position){        
-            var date = trip.startDate!.add(Duration(days: position));
-            return TimelineTile(              
-              alignment: TimelineAlign.manual,
-              lineXY: 0.15,
-              isFirst: position == 0,
-              isLast: position == days - 1,
-              indicatorStyle: const IndicatorStyle(
-                width: 15,
-                color: /*Color(0xFF27AA69)*/ColorsPalette.juicyYellow,
-                padding: EdgeInsets.all(3),
+    var today = DateTime.now();
+    var days = trip.endDate!.difference(trip.startDate!).inDays + 1;
+    int tripDayNumber = today.difference(trip.startDate!).inDays;
+
+    return Container(padding: EdgeInsets.only(left: 20.0), child: ListView.builder(
+      shrinkWrap: true,         
+      itemCount: days,
+      itemBuilder: (context, position){        
+        var date = trip.startDate!.add(Duration(days: position));
+        return TimelineTile(              
+          alignment: TimelineAlign.manual,
+          lineXY: 0.15,
+          isFirst: position == 0,
+          isLast: position == days - 1,
+          indicatorStyle: IndicatorStyle(
+            width: 15,
+            color: ColorsPalette.juicyYellow,
+            padding: EdgeInsets.all(3),
+            indicator: tripDayNumber < position ? Container(
+              decoration: BoxDecoration(border: Border.fromBorderSide(
+                BorderSide(
+                  color: ColorsPalette.juicyYellow,
+                  width: 2.0
+                ),
               ),
-              startChild: Text('Day ${position+1}'),
-              endChild: _dayCard(trip, position + 1, date),
-              beforeLineStyle: const LineStyle(
-                color:ColorsPalette.juicyYellow,
-              ),
-            );
-          }
-        )
+              shape: BoxShape.circle,),
+            ) : null
+          ),
+          startChild: Text('Day ${position+1}', style: tripDayNumber == position ? quicksandStyle(weight: FontWeight.bold,) : null),
+          endChild: _dayCard(trip, position + 1, date),
+          beforeLineStyle: const LineStyle(
+            color:ColorsPalette.juicyYellow,
+          ),
         );
       }
+    )
+    );
+  }
 
     Widget _dayCard(Trip trip, int dayNumber, DateTime date){
       
@@ -104,8 +116,8 @@ class _RouteViewViewState extends State<RouteView>{
       });
 
       tickets?.forEach((ticket) {
-        var startDate = null;
-        var endDate = null;
+        var startDate;
+        var endDate;
         if(ticket.arrivalDatetime!.isSameDate(date)) endDate = ticket.arrivalDatetime!;
         if(ticket.departureDatetime!.isSameDate(date)) startDate = ticket.departureDatetime!;
 
@@ -113,8 +125,7 @@ class _RouteViewViewState extends State<RouteView>{
           type: TripEventType.Ticket,
           id: ticket.id!,
           startDate: startDate,
-          endDate: endDate,
-          //objectType: ticket.type,
+          endDate: endDate,          
           event: ticket
         ));
       });
@@ -127,12 +138,16 @@ class _RouteViewViewState extends State<RouteView>{
             ),
             padding: EdgeInsets.all(10.0),        
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-              Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
+              Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(weight: date.isSameDate(DateTime.now()) ? FontWeight.bold : FontWeight.normal, fontSize: 16.0)),
               SizedBox(height: 3.0,),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  for(var tripEvent in sortObjects(tripEvents)) Row(children: [getObjectIcon(tripEvent.type, tripEvent.event), SizedBox(width: 10.0)])              
+                  for(var tripEvent in sortObjects(tripEvents)) 
+                    Row(children: [
+                      getObjectIcon(tripEvent.type, tripEvent.event), 
+                      SizedBox(width: 10.0)]
+                    )
                 ],))],)),
         ),
         onTap: (){
@@ -144,8 +159,9 @@ class _RouteViewViewState extends State<RouteView>{
 
           TripDayArguments args = new TripDayArguments(day: tripDay, trip: trip);
 
-          Navigator.of(context).pushNamed(tripDayRoute, arguments: args).then((value) => {
-            BlocProvider.of<TripDetailsBloc>(context)..add(GetTripDetails(trip.id!))
+          Navigator.of(context).pushNamed(tripDayRoute, arguments: args).then((value) {
+            TripDetailsArguments tripArgs = new TripDetailsArguments(isRoot: false, tripId: trip.id!);
+            BlocProvider.of<TripDetailsBloc>(context)..add(GetTripDetails(tripArgs));
           });
         },
       ));

@@ -3,7 +3,7 @@ class TripSettings{
     "Train",
     "Bus",
     "Plane",
-    "Ship"
+    "Boat"
   ];
 
   static const List<String> currency = [    

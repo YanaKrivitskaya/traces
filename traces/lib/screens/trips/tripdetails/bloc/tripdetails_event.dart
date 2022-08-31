@@ -8,12 +8,12 @@ abstract class TripDetailsEvent {
 }
 
 class GetTripDetails extends TripDetailsEvent {
-  final int tripId;
+  final TripDetailsArguments tripArgs;
 
-  GetTripDetails(this.tripId);
+  GetTripDetails(this.tripArgs);
 
   @override
-  List<Object> get props => [tripId];
+  List<Object> get props => [tripArgs];
 }
 
 class UpdateTripDetailsSuccess extends TripDetailsEvent{

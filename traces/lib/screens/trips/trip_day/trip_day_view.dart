@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -18,10 +19,9 @@ import '../model/trip_day.model.dart';
 import '../model/trip_object.model.dart';
 import '../widgets/trip_helpers.dart';
 import 'bloc/tripday_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TripDayView extends StatefulWidget{
-  Trip trip;
+  final Trip trip;
 
   TripDayView({required this.trip});
 
@@ -66,7 +66,7 @@ class _TripDayState extends State<TripDayView>{
             appBar: AppBar(
               centerTitle: true,
                 title: tripDay != null ? Text('${DateFormat.yMMMd().format(tripDay!.date)}',
-                  style: quicksandStyle(fontSize: 30.0)) : null,
+                  style: quicksandStyle(fontSize: smallHeaderFontSize)) : null,
                 backgroundColor: ColorsPalette.white,
                 elevation: 0,
                 leading: IconButton(
@@ -80,9 +80,9 @@ class _TripDayState extends State<TripDayView>{
               child: _timelineDay(tripDay!),
             ) : tripDay == null ? loadingWidget(ColorsPalette.juicyYellow) 
               : Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [
-                  FaIcon(FontAwesomeIcons.calendarAlt, color: ColorsPalette.juicyOrange, size: 40.0),
-                  SizedBox(height: 20.0,),
-                  Text('You have no scheduled events for this day', style: quicksandStyle(fontSize: 18.0))
+                  Icon(Icons.calendar_month, color: ColorsPalette.juicyOrange, size: headerFontSize),
+                  SizedBox(height: sizerHeight),
+                  Text('You have no scheduled events for this day', style: quicksandStyle(fontSize: fontSize))
                 ])),
           );
         },
@@ -92,7 +92,8 @@ class _TripDayState extends State<TripDayView>{
 
   Widget _timelineDay(TripDay day){    
     var events = sortObjects(day.tripEvents);
-    return Container(padding: EdgeInsets.only(left: 20.0, right: 20.0), child: ListView.builder(
+    print("$fullWidth * $fullheight");
+    return Container(padding: EdgeInsets.symmetric(horizontal: borderPadding), child: ListView.builder(
       shrinkWrap: true,         
       itemCount: events.length,
       itemBuilder: (context, position){
@@ -126,16 +127,15 @@ class _TripDayState extends State<TripDayView>{
           child: InkWell(child: 
           Card(
             child: Container(
-              constraints: const BoxConstraints(
-                minHeight: 60,
+              constraints: BoxConstraints(
+                minHeight: minCardHeight,
               ),
-              padding: EdgeInsets.all(10.0),        
+              padding: EdgeInsets.all(borderPadding),        
               child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                Text('${booking.name}', style: quicksandStyle(fontSize: 16.0,)),
-                //Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
+                Text('${booking.name}', style: quicksandStyle(fontSize: fontSizesm,)),                
                 SizedBox(height: 3.0,),
                 SingleChildScrollView(                  
-                  child:Text('${booking.details}', style: quicksandStyle(fontSize: 15.0,)))
+                  child:Text('${booking.details}', style: quicksandStyle(fontSize: fontSizexs,)))
               ],)),
           ),
           onTap: (){
@@ -154,16 +154,15 @@ class _TripDayState extends State<TripDayView>{
           child: InkWell(child: 
           Card(
             child: Container(
-              constraints: const BoxConstraints(
-                minHeight: 60,
-                maxHeight: 200
+              constraints: BoxConstraints(
+                minHeight: minCardHeight,
+                maxHeight: maxCardHeight
               ),
-              padding: EdgeInsets.all(10.0),        
+              padding: EdgeInsets.all(borderPadding),        
               child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                Text('${ticket.departureLocation} - ${ticket.arrivalLocation}', style: quicksandStyle(fontSize: 16.0,)),
-                //Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
+                Text('${ticket.departureLocation} - ${ticket.arrivalLocation}', style: quicksandStyle(fontSize: fontSizesm,)),                
                 SizedBox(height: 3.0,),
-                Text('${ticket.carrier} - ${ticket.carrierNumber}', style: quicksandStyle(fontSize: 15.0,)),
+                Text('${ticket.carrier} - ${ticket.carrierNumber}', style: quicksandStyle(fontSize: fontSizexs)),
                 SizedBox(height: 3.0,),
                 SingleChildScrollView(                  
                   child:Text('${ticket.details}', style: quicksandStyle(fontSize: 15.0,)))
@@ -185,16 +184,15 @@ class _TripDayState extends State<TripDayView>{
           child: InkWell(child: 
           Card(
             child: Container(
-              constraints: const BoxConstraints(
-                minHeight: 60,
+              constraints: BoxConstraints(
+                minHeight: minCardHeight,
               ),
-              padding: EdgeInsets.all(10.0),        
+              padding: EdgeInsets.all(borderPadding),        
               child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                Text('${activity.name}', style: quicksandStyle(fontSize: 16.0,)),
-                //Text('${DateFormat.E().format(date)}, ${DateFormat.yMMMd().format(date)}', style: quicksandStyle(fontSize: 16.0,)),
+                Text('${activity.name}', style: quicksandStyle(fontSize: fontSizesm)),                
                 SizedBox(height: 3.0,),
                 SingleChildScrollView(                  
-                  child:Text('${activity.description}', style: quicksandStyle(fontSize: 15.0,)))
+                  child:Text('${activity.description}', style: quicksandStyle(fontSize: fontSizexs)))
               ],)),
           ),
           onTap: (){
@@ -207,7 +205,7 @@ class _TripDayState extends State<TripDayView>{
         )
         );
       }
-      default: return Container();
+      default: return SizedBox(height:0);
     }       
   }
 

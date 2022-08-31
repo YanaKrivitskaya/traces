@@ -93,7 +93,7 @@ class _TicketViewState extends State<TicketView>{
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           transportIcon(ticket.type, ColorsPalette.juicyBlue),
           sameDate ? Text('${DateFormat.yMMMd().format(ticket.departureDatetime!)}', 
-            style: quicksandStyle(fontSize: 20.0)) : Container()
+            style: quicksandStyle(fontSize: 20.0)) : SizedBox(height:0)
         ],)
       ),
       Container(padding: EdgeInsets.only(left: 20.0, right: 20.0), child: ListView.builder(
@@ -131,7 +131,7 @@ class _TicketViewState extends State<TicketView>{
               label: Text(ticket.expense!.isPaid! ? 'Paid' : 'Planned', style: TextStyle(color: ticket.expense!.isPaid! ? ColorsPalette.juicyGreen : ColorsPalette.juicyOrangeDark)),
             ),
           ])        
-      ],) : Container()
+      ],) : SizedBox(height:0)
     ],
 
     );    
@@ -142,7 +142,7 @@ class _TicketViewState extends State<TicketView>{
       Text('${DateFormat.Hm().format(ticket.departureDatetime!)}', 
         style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)),
       !sameDate ? Text('${DateFormat.yMMMd().format(ticket.departureDatetime!)}', 
-        style: quicksandStyle(fontSize: 20.0)) : Container()
+        style: quicksandStyle(fontSize: 20.0)) : SizedBox(height:0)
     ],),      
     Text('${ticket.departureLocation}', style: quicksandStyle(fontSize: 16.0)),
     SizedBox(height: 10.0,),
@@ -157,7 +157,7 @@ class _TicketViewState extends State<TicketView>{
       Text('${DateFormat.Hm().format(ticket.arrivalDatetime!)}', 
         style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)),
       !sameDate ? Text('${DateFormat.yMMMd().format(ticket.arrivalDatetime!)}', 
-        style: quicksandStyle(fontSize: 20.0)) : Container()
+        style: quicksandStyle(fontSize: 20.0)) : SizedBox(height:0)
     ],),
     Text('${ticket.arrivalLocation}', style: quicksandStyle(fontSize: 16.0))      
   ],);

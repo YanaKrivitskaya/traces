@@ -120,7 +120,7 @@ class _ActivitiesStateView extends State<ActivitiesView> with TickerProviderStat
           color: isCompleted ? ColorsPalette.juicyGreen : ColorsPalette.juicyOrangeLight),
         title: Text('${activity.name}', style: quicksandStyle(fontSize: fontSize, weight: FontWeight.bold)),
         subtitle: activity.date != null ? Text('${DateFormat.yMMMd().format(activity.date!)}',
-                style: quicksandStyle(color: ColorsPalette.black, fontSize: fontSizesm)) : Container(),
+                style: quicksandStyle(color: ColorsPalette.black, fontSize: fontSizesm)) : SizedBox(height:0),
         shape: RoundedRectangleBorder(
           side: BorderSide(color: ColorsPalette.lynxWhite, width: 1),
           borderRadius: BorderRadius.circular(10),

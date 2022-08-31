@@ -85,11 +85,11 @@ class _CategoriesDeleteDialogViewState extends State<CategoriesDeleteDialog>{
                       key: _formKey,
                       child:_categorySelector(state),
                     )                    
-                  ],) : Container()                  
-                ],) : Container(),
+                  ],) : SizedBox(height:0)                  
+                ],) : SizedBox(height:0),
                 SizedBox(height: 20.0,),
-                showError ? Text(errorText, style: quicksandStyle(color: ColorsPalette.redPigment)) : Container(),
-                state is CategoriesLoading ? loadingWidget(ColorsPalette.amMint) : Container()
+                showError ? Text(errorText, style: quicksandStyle(color: ColorsPalette.redPigment)) : SizedBox(height:0),
+                state is CategoriesLoading ? loadingWidget(ColorsPalette.amMint) : SizedBox(height:0)
               ]),
             ),
             actions: <Widget>[
