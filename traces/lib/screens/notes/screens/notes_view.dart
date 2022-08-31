@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/utils/api/customException.dart';
+import 'package:traces/screens/notes/models/note_details_args.dart';
+import 'package:traces/screens/notes/widgets/note_tile.dart';
+import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/error_widgets.dart';
 
 import '../../../constants/color_constants.dart';
@@ -92,56 +94,30 @@ class _NotesViewState extends State<NotesView> {
 
                 if(!state.searchEnabled!) _searchController!.clear();
 
-                return Container(
-                  padding: EdgeInsets.only(bottom: 65.0, top: 10.0),
+                return Container(                  
+                  padding: EdgeInsets.only(bottom: 65.0, top: 10.0, left: 10.0, right: 10.0),
                   child: Container(
                     child: SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
-                          state.searchEnabled! ? _searchBar() : Container(),
+                          state.searchEnabled! ? _searchBar() : SizedBox(height:0),
                           filteredNotes.length > 0 ?
                           Container(
                             child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: filteredNotes.length,
-                                reverse: state.sortDirection == SortDirections.ASC ? true : false,
-                                itemBuilder: (context, position){
-                                  final note = filteredNotes[position];
-                                  return Card(
-                                    child: Column(
-                                      children: <Widget>[
-                                        ListTile(
-                                          leading: Icon(Icons.description, size: 40.0, color: ColorsPalette.nycTaxi,),
-                                          title: Text('${note.title}'),
-                                          subtitle: (note.createdDate!.day.compareTo(note.updatedDate!.day) == 0) ?
-                                          Text('${DateFormat.yMMMd().format(note.updatedDate!)}',
-                                              style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)) :
-                                          Text('${DateFormat.yMMMd().format(note.updatedDate!)} / ${DateFormat.yMMMd().format(note.createdDate!)}',
-                                              style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.blueHorizon), fontSize: 12.0)),
-                                          //trailing: _popupMenu(note, position),
-                                          onTap: (){
-                                            Navigator.pushNamed(context, noteDetailsRoute, arguments: note.id).then((value)
-                                            {
-                                              context.read<NoteBloc>().add(GetAllNotes());
-                                            });
-                                          },
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                          alignment: Alignment.centerLeft,
-                                          child: note.tags!.isNotEmpty ? getChips(note, _allTagsSelected, _selectedTags): Container(),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                                }
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: filteredNotes.length,
+                              reverse: state.sortDirection == SortDirections.ASC ? true : false,
+                              itemBuilder: (context, position){
+                                final note = filteredNotes[position];
+                                return _noteCard(note);
+                              }
                             ),
                           ) : Container(
-                                padding: new EdgeInsets.all(25.0),
-                                child: Center(
-                                  child: Text("No notes here", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.greenGrass), fontSize: 18.0)),
-                                )
+                            padding: new EdgeInsets.all(25.0),
+                            child: Center(
+                              child: Text("No notes here", style: GoogleFonts.quicksand(textStyle: TextStyle(color: ColorsPalette.greenGrass), fontSize: 18.0)),
+                            )
                           )
                         ],
                       ),
@@ -149,25 +125,53 @@ class _NotesViewState extends State<NotesView> {
                   )
                 );
               }else {
-                return Container();
+                return SizedBox(height:0);
               }
             }
         ))       
     );    
   }
 
+  Widget _noteCard(Note note) => new Card(    
+    child: Column(
+      //crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        note.trip != null ? Container(
+          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+          alignment: Alignment.centerLeft,
+          child: Chip(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+            backgroundColor: /*ColorsPalette.natureGreenLight*/ColorsPalette.amMint,
+            label: Text(note.trip!.name!, style: TextStyle(color: /*ColorsPalette.juicyGreen*/ColorsPalette.white)),
+          ),
+        ) : SizedBox(height:0),    
+        InkWell(
+            onTap: (){
+              NoteDetailsArgs args = new NoteDetailsArgs(noteId: note.id, tripId: null);
+              Navigator.pushNamed(context, noteDetailsRoute, arguments: args).then((value)
+                {
+                  context.read<NoteBloc>().add(GetAllNotes());
+                });
+              },
+          child: NoteTileView(note, _allTagsSelected, _selectedTags),
+        )
+      ],
+    ),
+  );
+
   Widget _searchBar(){
     return Container(
       padding: EdgeInsets.all(10.0),
       child: TextFormField(
         decoration: const InputDecoration(
-          prefixIcon: Icon(Icons.search, color: ColorsPalette.greenGrass),
+          prefixIcon: Icon(Icons.search, color: ColorsPalette.juicyBlue),
           hintText: 'Search...',
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorsPalette.greenGrass,),
+            borderSide: BorderSide(color: ColorsPalette.juicyBlue),
           ),
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorsPalette.greenGrass),
+            borderSide: BorderSide(color: ColorsPalette.juicyBlue),
           ),
         ),
         controller: _searchController,
@@ -178,27 +182,6 @@ class _NotesViewState extends State<NotesView> {
 
   void _onSearchTextChanged() {
     context.read<NoteBloc>().add(SearchTextChanged(noteName: _searchController!.text));
-  }
-
-  Widget getChips(Note note, bool? allTagsSelected, List<Tag>? selectedTags) {    
-    return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: note.tags!
-              .map((tag) => Padding(
-              padding: EdgeInsets.all(3.0),
-              child: Text("#"+tag.name!, style: GoogleFonts.quicksand(
-                  textStyle: TextStyle(color: ColorsPalette.greenGrass),
-                  fontSize: 15.0,
-                  fontWeight: _isTagSelected(tag, allTagsSelected, selectedTags) ? FontWeight.bold : FontWeight.normal))
-          ))
-              .toList(),
-        ));
-  }
-
-  bool _isTagSelected(Tag tag, bool? allTagsSelected, List<Tag>? selectedTags){
-    if(selectedTags != null && selectedTags.any((t) => t.id == tag.id) && !allTagsSelected!) return true;
-    return false;
   }
 
   List<Note> _sortNotes(List<Note> notes, SortFields? sortOption){

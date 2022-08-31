@@ -178,6 +178,33 @@ class ColorsPalette {
   // profile module colors
   static const Color meditSea = const Color(0xFF1289A7); // profile
   static const Color fusionRed = const Color(0xFFFC5C65); //profile
+
+  //French palette
+  static const Color frLightOrange = const Color(4294628240);
+  static const Color frMelon = const Color(4294492817);
+  static const Color frLightViolet = const Color(4285172172);
+  static const Color frLightBlue = const Color(4286762205);
+  static const Color frLightGreen = const Color(4290308500);
+  static const Color frYellow = const Color(4294359355);
+  static const Color frMandarine = const Color(4293218361);
+  static const Color frBlue = const Color(4283066813);
+  static const Color frLightGrayBlueBlue = const Color(4284523452);
+  static const Color frGreen = const Color(4286111887);
+  static const Color frOrange = const Color(4294613050);
+  static const Color frTomato = const Color(4293603078);
+  static const Color frBrightBlue = const Color(4280170393);
+  static const Color frGrayBlue = const Color(4282147714);
+  static const Color frWaterfall = const Color(4281904553);
+  static const Color frDarkOrange = const Color(4293234214);
+  static const Color frPinkRed = const Color(4290188608);
+  static const Color frDarkBlue = const Color(4278985825);
+  static const Color frForestBlue = const Color(4278861154);
+  static const Color frDarkWater = const Color(4278688146);
+
+  static const Color amMint = const Color(4278237332);
+
+
+  //
 }
 
 class LinearGradientMask extends StatelessWidget {

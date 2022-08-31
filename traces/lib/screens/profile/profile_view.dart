@@ -1,21 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:traces/widgets/error_widgets.dart';
 
 import '../../auth/auth_bloc/bloc.dart';
 import '../../constants/color_constants.dart';
 import '../../utils/misc/state_types.dart';
 import '../../utils/style/styles.dart';
+import '../../widgets/error_widgets.dart';
 import '../../widgets/widgets.dart';
 import 'add_family_button.dart';
 import 'bloc/profile/bloc.dart';
 import 'family_dialog.dart';
 import 'model/group_model.dart';
 import 'model/profile_model.dart';
-import 'name_edit_button.dart';
 import 'user_delete_alert.dart';
 import 'vertical_user_list_item.dart';
 
@@ -26,13 +24,11 @@ class ProfileView extends StatefulWidget{
   State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView>{
-  //SlidableController? slidableController; 
+class _ProfileViewState extends State<ProfileView>{ 
   Profile? _profile;
   Group? _familyGroup;
 
-  void initState() { 
-    //slidableController = SlidableController();
+  void initState() {   
     super.initState(); 
   }
 
@@ -72,7 +68,7 @@ class _ProfileViewState extends State<ProfileView>{
       bloc: BlocProvider.of(context),
       builder: (context, state){
         if(state.status == StateStatus.Loading){
-          return Center(child: CircularProgressIndicator());
+          return Center(child: loadingWidget(ColorsPalette.juicyYellow));
         }
         if(state.status == StateStatus.Success || state.status == StateStatus.Error){
           if(state.status == StateStatus.Success){
@@ -85,52 +81,34 @@ class _ProfileViewState extends State<ProfileView>{
             child: state.profile != null ? Container(
               child: Column(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      CircleAvatar(
-                          backgroundColor: ColorsPalette.lynxWhite,
-                          child: Text(getAvatarName(_profile!.name), style: TextStyle(color: ColorsPalette.meditSea, fontSize: 40.0, fontWeight: FontWeight.w300),),
-                          radius: 50.0
-                      ),
-                      Expanded(child: Align(child: Row(
+                  avatar(getAvatarName(_profile!.name), 50.0, ColorsPalette.juicyBlue, 40.0, null),                  
+                  Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    child: Align(child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(_profile!.name, style: TextStyle(fontSize: 20.0)),
-                          NameEditButton(userId: _profile!.userId)
+                          Text(_profile!.name, style: TextStyle(fontSize: 20.0))                          
                         ],
-                      ), alignment: Alignment.center,))
-                    ],
-                  ),
+                      ), alignment: Alignment.center,),
+                  ),                 
                   Container(
-                    padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                    padding: EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
                     alignment: Alignment.centerLeft,
-                    child: Wrap(children: [
-                      Text("Email:", style: TextStyle(fontSize: 15.0)),
-                      Row(children: <Widget>[
-                      Text(_profile!.email, style: TextStyle(fontSize: 15.0)),
-                      _profile!.emailVerified
-                          ? IconButton(icon: Icon(Icons.check, color: ColorsPalette.meditSea), tooltip: 'Verified', onPressed: () {})
-                          : IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.fusionRed), tooltip: 'Not verified', onPressed: () {}),
+                    child: Wrap(children: [                     
+                      Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[
+                      Text(_profile!.email, style: TextStyle(fontSize: 18.0))
                     ],)
                     ],),
                   ),
-                  /*Align(
-                      alignment: Alignment.centerLeft,
-                      child: FlatButton(
-                        color: ColorsPalette.fusionRed,
-                        child: Text("Verify email", style: TextStyle(color: ColorsPalette.lynxWhite),),
-                        onPressed: (){},
-                      ),
-                    ),*/
-                  Divider(color: ColorsPalette.meditSea),
+                  Divider(color: ColorsPalette.juicyBlue),
                   _familyGroup != null ? 
-                  _familyGroupWidget(_familyGroup!, _profile!.accountId, _profile!.userId): Container(),                  
+                  _familyGroupWidget(_familyGroup!, _profile!.accountId, _profile!.userId): SizedBox(height:0),                  
                   _footer()
                 ],
               ),
-            ) : state.exception != null ? errorWidget(context, error: state.exception!) : loadingWidget(ColorsPalette.meditSea)
+            ) : state.exception != null ? errorWidget(context, error: state.exception!) : loadingWidget(ColorsPalette.juicyYellow)
           );
-        }else return loadingWidget(ColorsPalette.meditSea);
+        }else return loadingWidget(ColorsPalette.juicyYellow);
       },
     ),
     );    
@@ -141,11 +119,11 @@ class _ProfileViewState extends State<ProfileView>{
     return Container(
       child: Column(children: [
         Align(
-          alignment: Alignment.centerLeft,child: Text(group.name, style: TextStyle(fontSize: 20.0, color: ColorsPalette.meditSea)),
+          alignment: Alignment.centerLeft,child: Text(group.name, style: TextStyle(fontSize: 20.0, color: ColorsPalette.black)),
         ),
         Container(
           padding: EdgeInsets.only(right: 10.0),
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.3,
           child: SingleChildScrollView(
             child: Column(children: [
               group.users.length > 0 ? Container(
@@ -161,8 +139,9 @@ class _ProfileViewState extends State<ProfileView>{
                         extentRatio: 0.25,
                         children: member.accountId == null || member.accountId == accountId ? [
                           SlidableAction(
-                            backgroundColor: ColorsPalette.meditSea, 
-                            icon: FontAwesomeIcons.edit, 
+                            backgroundColor: ColorsPalette.white, 
+                            icon: Icons.edit, 
+                            foregroundColor: ColorsPalette.juicyBlue,
                             onPressed: (context) => showDialog(barrierDismissible: false, context: context,builder: (_) =>
                               BlocProvider.value(
                                 value: context.read<ProfileBloc>()..add(ShowFamilyDialog()),
@@ -178,7 +157,8 @@ class _ProfileViewState extends State<ProfileView>{
                         extentRatio: 0.25,
                         children: [
                           SlidableAction(
-                            backgroundColor: ColorsPalette.carminePink, 
+                            backgroundColor: ColorsPalette.white, 
+                            foregroundColor: ColorsPalette.redPigment,
                             icon: FontAwesomeIcons.trashAlt, 
                             onPressed: (context) => showDialog(barrierDismissible: false, context: context,builder: (_) =>
                               BlocProvider.value(
@@ -190,14 +170,10 @@ class _ProfileViewState extends State<ProfileView>{
                         ],
                       ),                      
                       child: VerticalUserListItem(group, member)                      
-                    );
-                    /*return ListTile(
-                      title: Text(member.name),
-                      trailing: EditFamilyButton(member, group.id!),
-                    );*/
+                    );                   
                   }),
               )
-              : Container(child: Align(child: Text("No one added yet"), alignment: Alignment.centerLeft)),
+              : Container(child: Align(child: Text("Group is empty"), alignment: Alignment.centerLeft)),
                 Align(
                   alignment: Alignment.centerLeft,child: AddFamilyButton(group.id!)
                 ),
@@ -216,15 +192,16 @@ class _ProfileViewState extends State<ProfileView>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Divider(color: ColorsPalette.meditSea),
+                Divider(color: ColorsPalette.juicyBlue),
                 OutlinedButton(
                   child: ListTile(
-                      leading: FaIcon(FontAwesomeIcons.signOutAlt, color: ColorsPalette.fusionRed),
+                      leading: Icon(Icons.logout, color: ColorsPalette.juicyOrange),
                       title: Text('Sign out')),
                   onPressed: (){
                     BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
                     Navigator.of(context).pushNamedAndRemoveUntil(Navigator.defaultRouteName, (Route<dynamic> route) => false);
-                  },),],
+                  },                  
+                ),],
             ))
       ));
   }

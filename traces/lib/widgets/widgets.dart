@@ -26,13 +26,12 @@ int daysBetween(DateTime from, DateTime to) {
 
 
 Widget transportIcon(String? transport, Color color) => new Container(
-    child: transport == 'Train' ? FaIcon(FontAwesomeIcons.train, color: color)
-        : transport == 'Plane' ? FaIcon(FontAwesomeIcons.plane, color: color)
-        : transport =='Car/Bus' ? FaIcon(FontAwesomeIcons.car, color: color)
-        : transport =='Bus' ? FaIcon(FontAwesomeIcons.bus, color: color)
-        : transport == 'Ship' ? FaIcon(FontAwesomeIcons.ship, color: color)
-        : transport == 'On foot' ? FaIcon(FontAwesomeIcons.walking, color: color)
-        : Container()
+    child: transport == 'Train' ? Icon(Icons.directions_train, color: color)
+        : transport == 'Plane' ? Icon(Icons.flight, color: color)
+        : transport =='Car/Bus' ? Icon(Icons.directions_car, color: color)
+        : transport =='Bus' ? Icon(Icons.directions_bus, color: color)
+        : transport == 'Ship' || transport == 'Boat' ? Icon(Icons.directions_boat, color: color)
+        :  Icon(Icons.directions_car, color: ColorsPalette.black)
 );
 
 Widget loadingWidget(Color color) => new Center(
@@ -41,16 +40,19 @@ Widget loadingWidget(Color color) => new Center(
   ),
 );
 
-Widget avatar(String username, double? radius, Color fontColor, double fontSize) => new CircleAvatar(
-      backgroundColor: ColorsPalette.lynxWhite,
-      child: Text(
-        getAvatarName(username),
-        style: TextStyle(
-            color: fontColor,
-            fontSize: fontSize,
-            fontWeight: FontWeight.w300),
-      ),
-      radius: radius);
+Widget avatar(String username, double radius, Color fontColor, double fontSize, Color? backColor) => new CircleAvatar(
+      backgroundColor: fontColor,
+      child: CircleAvatar(
+        backgroundColor: backColor ?? ColorsPalette.lynxWhite,
+        child: Text(
+          getAvatarName(username),
+          style: TextStyle(
+              color: fontColor,
+              fontSize: fontSize,            
+              fontWeight: FontWeight.w300),
+        ),
+        radius: radius),
+      radius: radius + radius*0.05 );
 
 String getAvatarName(String profileName){
   if(profileName.length <= 3) return profileName.toUpperCase();

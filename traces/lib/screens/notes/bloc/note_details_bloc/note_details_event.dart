@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 import '../../models/note.model.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 
 abstract class NoteDetailsEvent extends Equatable {
@@ -19,7 +22,14 @@ class GetNoteDetails extends NoteDetailsEvent{
   List<Object?> get props => [noteId];
 }
 
-class NewNoteMode extends NoteDetailsEvent{}
+class NewNoteMode extends NoteDetailsEvent{
+  final int? tripId;
+
+  NewNoteMode(this.tripId);
+
+  @override
+  List<Object?> get props => [tripId];
+}
 
 class EditModeClicked extends NoteDetailsEvent{
   final Note? note;
@@ -32,11 +42,12 @@ class EditModeClicked extends NoteDetailsEvent{
 
 class SaveNoteClicked extends NoteDetailsEvent{
   final Note note;
+  final int? tripId;
 
-  SaveNoteClicked(this.note);
+  SaveNoteClicked(this.note, this.tripId);
 
   @override
-  List<Object> get props => [note];
+  List<Object?> get props => [note, tripId];
 }
 
 class DeleteNote extends NoteDetailsEvent {
@@ -46,4 +57,13 @@ class DeleteNote extends NoteDetailsEvent {
 
   @override
   List<Object?> get props => [note];
+}
+
+class GetImage extends NoteDetailsEvent{
+  final CroppedFile? image;
+
+  const GetImage(this.image);
+
+  @override
+  List<Object?> get props => [image];
 }

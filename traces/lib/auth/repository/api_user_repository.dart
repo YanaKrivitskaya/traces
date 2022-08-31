@@ -2,26 +2,34 @@ import '../../utils/services/api_service.dart';
 import '../model/login.model.dart';
 import '../model/account.model.dart';
 import 'userRepository.dart';
+import 'dart:convert';
 
 
 class ApiUserRepository extends UserRepository{
   
   ApiService apiProvider = ApiService();
-  String authUrl = 'auth/'; 
+  String authUrl = 'auth/';
 
-  @override
-  Future<void> signUp(Account user) async{
-    print("signUp");
-    final response = await apiProvider.post(authUrl + 'register', user.toJson());
-    return response;
+  Future<void> signInWithEmail(String email) async {   
+    var body = {
+      "email": email      
+    };   
+    try{
+      await apiProvider.sendOtpToEmail(authUrl + 'verify-email', json.encode(body));
+      //var user = Account.fromMap(response["account"]);      
+    } on Exception catch(e){      
+      throw(e);
+    }    
   }
 
-  @override
-  Future<Account> signInWithEmailAndPassword(LoginModel loginModel) async {   
-    print("signIn");     
-    try{      
-      final response = await apiProvider.post(authUrl + 'login', loginModel.toJson());
-      var user = Account.fromMap(response["account"]);      
+  Future<Account> verifyOtp(String otp, String email) async {   
+    var body = {
+      "email": email,
+      "otp": otp
+    };   
+    try{
+      var response = await apiProvider.verifyOtp(authUrl + 'login', json.encode(body));
+      var user = Account.fromMap(response["account"]);
       return user;
     } on Exception catch(e){      
       throw(e);
@@ -45,6 +53,17 @@ class ApiUserRepository extends UserRepository{
     final response = await apiProvider.getSecure(authUrl + '/users/$userIdParam');
     return Account.fromMap(response);
   }
+
+  @override
+  Future<Account> updateEmail(String email) async{
+    print("updateEmail");
+    var body = {
+      "email": email      
+    };
+    final response = await apiProvider.putSecure(authUrl + 'email', json.encode(body));
+   
+    return Account.fromMap(response["account"]);
+  }
   
 
   @override
@@ -63,6 +82,12 @@ class ApiUserRepository extends UserRepository{
   @override
   Future<Account> isSignedIn() {
     // TODO: implement isSignedIn
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Account> signInWithEmailAndPassword(LoginModel loginModel) {
+    // TODO: implement signInWithEmailAndPassword
     throw UnimplementedError();
   }
 }

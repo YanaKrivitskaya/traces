@@ -8,12 +8,12 @@ abstract class TripDetailsEvent {
 }
 
 class GetTripDetails extends TripDetailsEvent {
-  final int tripId;
+  final TripDetailsArguments tripArgs;
 
-  GetTripDetails(this.tripId);
+  GetTripDetails(this.tripArgs);
 
   @override
-  List<Object> get props => [tripId];
+  List<Object> get props => [tripArgs];
 }
 
 class UpdateTripDetailsSuccess extends TripDetailsEvent{
@@ -53,16 +53,43 @@ class DateRangeUpdated extends TripDetailsEvent {
   List<Object> get props => [startDate, endDate];
 }
 
-class TabUpdated extends TripDetailsEvent{
+class TripTabUpdated extends TripDetailsEvent{
   final int tab;
+  final String tabKey;
 
-  const TabUpdated(this.tab);
-
-  @override
-  List<Object> get props => [tab];
+  const TripTabUpdated(this.tab, this.tabKey);
 
   @override
-  String toString() => 'UpdateTab { tab: $tab }';
+  List<Object> get props => [tab, tabKey];
+
+  @override
+  String toString() => 'TripTabUpdated { tab: $tab, tabKey: $tabKey }';
+}
+
+class ActivityTabUpdated extends TripDetailsEvent{
+  final int tab;
+  final String tabKey;
+
+  const ActivityTabUpdated(this.tab, this.tabKey);
+
+  @override
+  List<Object> get props => [tab, tabKey];
+
+  @override
+  String toString() => 'ActivityTabUpdated { tab: $tab, tabKey: $tabKey }';
+}
+
+class ExpenseTabUpdated extends TripDetailsEvent{
+  final int tab;
+  final String tabKey;
+
+  const ExpenseTabUpdated(this.tab, this.tabKey);
+
+  @override
+  List<Object> get props => [tab, tabKey];
+
+  @override
+  String toString() => 'ExpenseTabUpdated { tab: $tab, tabKey: $tabKey }';
 }
 
 class UpdateExpenses extends TripDetailsEvent{
@@ -92,17 +119,28 @@ class UpdateTickets extends TripDetailsEvent{
   List<Object?> get props => [tripId];
 }
 
-class UpdateActivities extends TripDetailsEvent{
+class UpdateNotes extends TripDetailsEvent{
   final int tripId;
 
-  const UpdateActivities(this.tripId);
+  const UpdateNotes(this.tripId);
 
   @override
   List<Object?> get props => [tripId];
 }
 
+class UpdateActivities extends TripDetailsEvent{
+  final int tripId;
+  final int? tab;
+  final String? tabKey;
+
+  const UpdateActivities(this.tripId, {this.tab, this.tabKey});
+
+  @override
+  List<Object?> get props => [tripId, tab, tabKey];
+}
+
 class GetImage extends TripDetailsEvent{
-  final File? image;
+  final CroppedFile? image;
 
   const GetImage(this.image);
 

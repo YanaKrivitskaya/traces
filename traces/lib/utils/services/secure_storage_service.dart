@@ -17,5 +17,9 @@ class SecureStorage {
     return _storage!.write(key: key, value: value);
   }
 
+  Future<void> delete({required String key}){
+    return _storage!.delete(key: key);
+  }
+
   factory SecureStorage() => _instance ?? SecureStorage._internal();
 }

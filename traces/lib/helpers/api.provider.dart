@@ -127,6 +127,25 @@ class ApiProvider{
     return responseJson;
   }
 
+  Future<dynamic> sendOtpToEmail(String url, String body) async{
+    var responseJson;
+    Uri uri = Uri.parse(_baseUrl + url);
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json"      
+    };
+
+    try{
+      responseJson = await  sendPost(uri, headers, body);
+      var verificationKey = responseJson["verificationKey"];
+      _storage.write(key: "verificationKey", value: verificationKey);
+
+    }on SocketException catch(e) {
+      throw ConnectionException('No Internet connection');
+    }
+    
+    return responseJson;
+  }
+
   dynamic _response(http.Response response) async{
     if(response.headers["set-cookie"] != null){      
       var refreshToken = response.headers["set-cookie"].toString().split(';')[0].substring(13);

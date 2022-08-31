@@ -10,10 +10,15 @@ class LoginSignupPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+
     return Scaffold(
+      key: _scaffoldKey,
       body: BlocProvider<LoginSignupBloc>(
         create: (context) => LoginSignupBloc(),
-        child: LoginSignupForm(),
+        child: LoginSignupForm(_scaffoldKey),
       ),
     );
   }

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/model/expense.model.dart';
-import 'package:traces/screens/trips/model/expense_category.model.dart';
+import 'package:traces/screens/settings/model/category.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_settings.model.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:traces/screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
 
@@ -30,6 +29,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
   TextEditingController? _amountController;
   TextEditingController? _categoryController;
   TextEditingController? _descriptionController;
+  List<String> currencies = List.empty(growable: true);
 
   @override
   void initState() {
@@ -56,6 +56,13 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
           if(_categoryController!.text.length == 0 && state.expense!.category != null) _categoryController!.text = state.expense!.category!.name!;
           if(_descriptionController!.text.length == 0) _descriptionController!.text = state.expense!.description ?? '';
           if(_amountController!.text.length == 0 && state.expense!.amount != null) _amountController!.text = state.expense!.amount.toString();
+
+          currencies = List.empty(growable: true);
+            if(state.currencies != null && state.currencies!.length > 0){
+              state.currencies!.forEach((c) { currencies.add(c.code);});
+            }else{
+              currencies = TripSettings.currency;
+            }
         }
       },
       child: BlocBuilder<ExpenseCreateBloc, ExpenseCreateState>(
@@ -84,7 +91,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
                 onPressed: () {
                   var isFormValid = _formKey.currentState!.validate();
 
-                  var category = new ExpenseCategory(name: _categoryController!.text.trim());
+                  var category = new Category(name: _categoryController!.text.trim());
                   if(state.categories != null){
                     category = state.categories!.firstWhere((c) => c.name! == _categoryController!.text.trim(), orElse: () => category);
                   }                  
@@ -123,22 +130,40 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
     new Column(crossAxisAlignment:  CrossAxisAlignment.start, children: [
       Text('Category', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
       _categorySelector(state),
-      SizedBox(height: 20.0),
-      Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Icon(Icons.date_range),
-        SizedBox(width: 20.0),
-        InkWell(
-          child: state.expense!.date != null 
-            ? Text('${DateFormat.yMMMd().format(state.expense!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
-            : Text('Date', style: quicksandStyle(fontSize: 18.0)),
-          onTap: () => _selectDate(context, state, widget.trip!)
-        )],),
+      SizedBox(height: sizerHeight),
+       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Container(
+          //width:  MediaQuery.of(context).size.width * 0.45,
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Icon(Icons.date_range),
+            SizedBox(width: sizerWidthsm),
+            InkWell(
+              child: state.expense!.date != null 
+                ? Text('${DateFormat.yMMMd().format( state.expense!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
+                : Text('Date', style: quicksandStyle(fontSize: fontSize)),
+              onTap: () => _selectDate(context, state, widget.trip!)
+            )
+          ],),
+        ),       
+        Container(          
+          child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            SizedBox(width: sizerHeight),
+            Icon(Icons.schedule),
+            SizedBox(width: sizerWidthsm),
+            InkWell(
+              child: state.expense!.date != null 
+                ? Text('${DateFormat.jm().format(state.expense!.date!)}', style: quicksandStyle(fontSize: 18.0)) 
+                : Text('Time', style: quicksandStyle(fontSize: fontSize)),
+              onTap: () => _selectTime(context, state, widget.trip!),
+            )],),
+        ) 
+      ],),
       SizedBox(height: 20.0,),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [          
           Text('Amount', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
           SizedBox(height: 9.0),
-          SizedBox(width:  MediaQuery.of(context).size.width * 0.30,
+          SizedBox(width:  MediaQuery.of(context).size.width * 0.35,
             child: TextFormField(
               decoration: InputDecoration(
                 isDense: true,                      
@@ -156,7 +181,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
         ]),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Currency', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)), 
-          SizedBox(width:  MediaQuery.of(context).size.width * 0.30,
+          SizedBox(width:  MediaQuery.of(context).size.width * 0.35,
             child: _currencySelector(state)
           )
         ])
@@ -197,10 +222,10 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(bottom: -10)
         ),
-        value: state.expense!.currency ?? TripSettings.currency.first,
+        value: state.expense!.currency ?? currencies.first,
         isExpanded: true,        
         items:
-          TripSettings.currency.map((String value) {
+          currencies.map((String value) {
           return new DropdownMenuItem<String>(
               value: value,
               child: Row(
@@ -230,12 +255,33 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
         );
       },
       context: context,   
-      initialDate: state.expense!.date ?? DateTime.now(),      
+      initialDate: state.expense!.date ?? trip.startDate ?? DateTime.now(),      
       firstDate: DateTime(2015),
       lastDate: trip.endDate ?? DateTime(2101),        
     );
     if (picked != null) {
       context.read<ExpenseCreateBloc>().add(DateUpdated(picked));      
+    }
+  }
+
+  Future<Null> _selectTime(BuildContext context, ExpenseCreateState state, Trip trip) async {
+    final TimeOfDay? picked = await showTimePicker(
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData(primarySwatch: ColorsPalette.matTripCalendarColor),
+          child: child!,
+        );
+      },
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(state.expense!.date ?? DateTime.now()),
+    );
+    if (picked != null) {
+      if(state.expense!.date != null){      
+        var date = state.expense!.date!;
+        var expenseDate = new DateTime.utc(date.year, date.month, date.day, picked.hour, picked.minute);
+        context.read<ExpenseCreateBloc>().add(DateUpdated(expenseDate));    
+      }
+      
     }
   }
   

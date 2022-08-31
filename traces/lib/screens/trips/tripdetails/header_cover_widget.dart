@@ -7,8 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:traces/constants/route_constants.dart';
+import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 import 'package:traces/screens/trips/widgets/update_trip_header_dialog.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:traces/widgets/image_crop_view.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../utils/style/styles.dart';
@@ -27,7 +30,7 @@ Widget headerCoverWidget(Trip trip, List<GroupUser> familyMembers, BuildContext 
   children: [
     _coverImage(trip.coverImage),
     //back button
-    Positioned(top: 35, left: 10,
+    Positioned(top: 50, left: 10,
       child: InkWell(
         onTap: (){
           sharedPrefsService.remove(key: key);
@@ -36,7 +39,7 @@ Widget headerCoverWidget(Trip trip, List<GroupUser> familyMembers, BuildContext 
         child:Icon(Icons.arrow_back, color: ColorsPalette.white)
       ),
     ),
-    Positioned(top: 20, right: 10,
+    Positioned(top: 35, right: 10,
       child: _popupMenu(trip, context)
     ),
     Positioned(bottom: 0,
@@ -119,8 +122,10 @@ Widget _tripInfoCard(Trip trip, List<GroupUser> familyMembers, BuildContext cont
                 value: context.read<TripDetailsBloc>(),
                 child: UpdateTripHeaderDialog(
                   trip: trip,
-                  callback: (val) =>
-                    val == 'Update' ? context.read<TripDetailsBloc>().add(GetTripDetails(trip.id!)) : '',
+                  callback: (val) {
+                    TripDetailsArguments args = new TripDetailsArguments(isRoot: false, tripId: trip.id!);
+                    val == 'Update' ? context.read<TripDetailsBloc>().add(GetTripDetails(args)) : '';
+                    },
                 ),
               ));
           },
@@ -135,8 +140,10 @@ Widget _tripInfoCard(Trip trip, List<GroupUser> familyMembers, BuildContext cont
                 create: (context) => TripMembersBloc()..add(GetMembers(trip.id)),
                   child: TripMembersDialog(
                     trip: trip,
-                    callback: (val) =>
-                      val == 'Update' ? context.read<TripDetailsBloc>().add(GetTripDetails(trip.id!)) : '',
+                    callback: (val) {
+                      TripDetailsArguments args = new TripDetailsArguments(isRoot: false, tripId: trip.id!);
+                      val == 'Update' ? context.read<TripDetailsBloc>().add(GetTripDetails(args)) : '';
+                    }
                   )));
           })
       ])
@@ -152,10 +159,10 @@ Widget _tripMembers(List<GroupUser>? tripMembers, List<GroupUser> familyMembers)
           tripMembers.length > 1 ? 
           Positioned(top: 0, right: 10,
             child:_tripMemberAvatar(tripMembers.last.userId!, familyMembers)                                        )
-        : Container()
+        : SizedBox(height:0)
         ],),
       );
-    } return Container();
+    } return SizedBox(height:0);
   }
 
   Widget _tripMemberAvatar(int memberId, List<GroupUser> familyMembers) => Container(
@@ -180,9 +187,13 @@ Widget _tripMembers(List<GroupUser>? tripMembers, List<GroupUser> familyMembers)
     final pickedFile = await picker.pickImage(source: imageSource);
 
     if(pickedFile != null){
-      Navigator.pushNamed(context, imageCropRoute, arguments: File(pickedFile.path)).then((imageFile) {
-        if(imageFile != null){
-          context.read<TripDetailsBloc>().add(GetImage(imageFile as File));
+      var fileSize = await pickedFile.length();
+      var compressPercent = (1048576 / fileSize * 100).toInt();
+
+      var args = new ImageCropArguments(compress: compressPercent, file: File(pickedFile.path));
+      Navigator.pushNamed(context, imageCropRoute, arguments: args).then((imageFile) {
+        if(imageFile != null){          
+          context.read<TripDetailsBloc>().add(GetImage(imageFile as CroppedFile));
         }
       });
     }

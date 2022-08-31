@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
 
 import '../../../../../constants/color_constants.dart';
 import '../../../../../utils/style/styles.dart';
@@ -10,7 +11,6 @@ import '../../../model/ticket.model.dart';
 import '../../../model/trip.model.dart';
 import '../../../model/trip_settings.model.dart';
 import '../../../widgets/create_expense_dialog.dart';
-import '../../expenses/bloc/expensecreate_bloc.dart';
 import 'bloc/ticketedit_bloc.dart';
 
 class TicketEditView extends StatefulWidget{
@@ -145,7 +145,7 @@ class _TicketEditViewState extends State<TicketEditView>{
               backgroundColor: ColorsPalette.white,
               elevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.close_rounded),
+                icon: Icon(Icons.close_rounded, color: ColorsPalette.black,),
                 onPressed: ()=> Navigator.pop(context)
               ),
               actions: [
@@ -163,7 +163,7 @@ class _TicketEditViewState extends State<TicketEditView>{
               ],
             ),
             body: state.ticket != null ? Container(
-              padding: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0, bottom: 40.0),
+              padding: EdgeInsets.only(top: borderPadding, left: borderPadding, right: borderPadding, bottom: formBottomPadding),
               child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
@@ -203,14 +203,17 @@ class _TicketEditViewState extends State<TicketEditView>{
             ),
             onPressed: (){
               Expense expense;
-              String category = 'Ticket';
+              String category = 'Tickets';
                             
               if(state.ticket!.expense != null){
                 expense = state.ticket!.expense!;
               }else{                
                 String description = '${state.ticket!.type ?? TripSettings.ticketType.first} ticket ${_depLocationController!.text.trim()} - ${_arrivalLocationController!.text.trim()}';
                 DateTime now = DateTime.now();
-                DateTime date = new DateTime.utc(now.year, now.month, now.day);
+                DateTime tripEnd = widget.trip.endDate ?? now;
+                DateTime date = tripEnd.isAfter(now) 
+                  ? new DateTime.utc(now.year, now.month, now.day) 
+                  : new DateTime.utc(tripEnd.year, tripEnd.month, tripEnd.day);
                 expense = new Expense(date: date, description: description);
               }
               

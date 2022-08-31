@@ -93,7 +93,7 @@ class _VisasViewState extends State<VisasView> {
                               child: Container(padding: EdgeInsets.all(10.0),
                                 child: Column(children: <Widget>[
                                   Row( mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-                                    avatar(visa.user!.name, 30.0, ColorsPalette.algalFuel, 25.0),
+                                    avatar(visa.user!.name, 30.0, ColorsPalette.algalFuel, 25.0, null),
                                     _visaDetails(visa)
                                   ])]))),
                             );

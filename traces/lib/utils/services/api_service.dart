@@ -6,12 +6,16 @@ import 'package:http/http.dart' as http;
 import 'package:traces/utils/api/customException.dart';
 import 'package:traces/utils/services/secure_storage_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class ApiService {
   static ApiService? _instance;
-  static String _baseUrl = "http://10.0.2.2:8080/";
-  //static String _baseUrl = "http://192.168.7.200:3002/";
-  //static String _baseUrl = "http://178.124.197.224:8002/";
+
+  // ANCHOR API URLs
+  //static String _baseUrl = "http://10.0.2.2:8080/"; //emulator
+  //static String _baseUrl = "http://192.168.7.109:8080/"; // local IP
+  static String _baseUrl = "http://192.168.7.200:3002/"; // Local NAS
+  //static String _baseUrl = "http://178.124.197.224:3002/"; // External NAS
   static SecureStorage? _storage;
   static String? _accessToken;
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
@@ -26,7 +30,7 @@ class ApiService {
 
   static Future<dynamic> init() async{
     if(Platform.isAndroid){
-      await deviceInfoPlugin.androidInfo.then((data) => _deviceId = data.androidId);
+      await deviceInfoPlugin.androidInfo.then((data) => _deviceId = data.id);
     }else if (Platform.isIOS) {
       await deviceInfoPlugin.iosInfo.then((data) => _deviceId = data.identifierForVendor);
     }
@@ -42,7 +46,7 @@ class ApiService {
       "token": refreshToken,
       "device": _deviceId
     };
-
+ 
     try{
       final response = await http.post(
         Uri.parse(_baseUrl + 'auth/refresh-token'), 
@@ -53,11 +57,51 @@ class ApiService {
         body: body
       );
       responseJson = await _response(response);
-      _accessToken = responseJson["accessToken"];     
+      _accessToken = responseJson["accessToken"];      
 
     }on SocketException catch(e) {
       throw ConnectionException('No Internet connection');
     }
+    return responseJson;
+  }
+
+  Future<dynamic> sendOtpToEmail(String url, String body) async{
+    var responseJson;
+    Uri uri = Uri.parse(_baseUrl + url);
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json"      
+    };
+
+    try{
+      responseJson = await  sendPost(uri, headers, body);
+      var verificationKey = responseJson["verificationKey"];
+      await _storage!.write(key: "verificationKey", value: verificationKey);
+
+    }on SocketException catch(e) {
+      throw ConnectionException(e.message);
+    }
+    
+    return responseJson;
+  }
+
+  Future<dynamic> verifyOtp(String url, String body) async{
+    var responseJson;
+    Uri uri = Uri.parse(_baseUrl + url);
+
+    var verificationKey = await _storage!.read(key: "verificationKey");
+    if(verificationKey == null) throw "Verification key not found";
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json",
+      "verification-key": verificationKey,
+      "device-info": _deviceId ?? ''
+    };
+
+    try{
+      responseJson = await sendPost(uri, headers, body);
+    }on SocketException catch(e) {
+      throw ConnectionException('No Internet connection');
+    }
+    
     return responseJson;
   }
   
@@ -81,7 +125,12 @@ class ApiService {
     };
 
     try{
-      responseJson = await sendPost(uri, headers, json.encode(body));      
+      //await _storage!.delete(key: "refresh_token"); 
+      responseJson = await sendPost(uri, headers, json.encode(body));
+      await _storage!.delete(key: "refresh_token"); 
+      _accessToken = null;
+
+      var res = responseJson;
 
     }on SocketException catch(e) {
       throw ConnectionException('No Internet connection');
@@ -96,13 +145,15 @@ class ApiService {
         "token": token
       };
       
-      responseJson = await sendPost(uri, headers, json.encode(body));      
+      responseJson = await sendPost(uri, headers, json.encode(body));   
+      await _storage!.delete(key: "refresh_token");   
+      _accessToken = null; 
     }
     return responseJson;
   }
 
   Future<dynamic> get(String url) async{
-    print("get");
+    print("get $url");
     var responseJson;
     Uri uri = Uri.parse(_baseUrl + url);
 
@@ -115,7 +166,7 @@ class ApiService {
   }
 
   Future<dynamic> getSecure(String url, {Map<String, dynamic>? queryParams}) async{
-    print("getSecure");
+    print("getSecure $url");
     var responseJson;
 
     String queryString = Uri(queryParameters: queryParams).query;
@@ -124,7 +175,7 @@ class ApiService {
     Map<String, String> headers = {      
       HttpHeaders.authorizationHeader: "Bearer $_accessToken",
       "device-info": _deviceId ?? ''
-    };
+    };    
 
     try{      
       responseJson = await sendGet(uri, headers);
@@ -133,7 +184,7 @@ class ApiService {
     }on UnauthorizedException {
       await refreshToken();
 
-      headers["authorization"] = "Bearer $_accessToken";
+      headers["authorization"] = "Bearer $_accessToken";      
       
       responseJson = await sendGet(uri, headers);      
     }
@@ -142,7 +193,7 @@ class ApiService {
   }
 
   Future<dynamic> post(String url, String body) async{
-    print("post");
+    print("post $url");
     var responseJson;    
     Uri uri = Uri.parse(_baseUrl + url);
     Map<String, String> headers = {
@@ -161,7 +212,7 @@ class ApiService {
   }
 
   Future<dynamic> postSecure(String url, String? body) async{
-    print("postSecure");
+    print("postSecure $url");
     var responseJson;
     
     Uri uri = Uri.parse(_baseUrl + url);
@@ -185,18 +236,18 @@ class ApiService {
     return responseJson;  
   }
 
-  Future<dynamic> postSecureMultipart(String url, String? body, File? file) async{
-    print("postSecure");
+  Future<dynamic> postSecureMultipart(String url, String? body, List<int>? fileBytes, String filePath) async{
+    print("postSecureMultipart $url");
     var responseJson;    
     
     var request = http.MultipartRequest("POST", Uri.parse(_baseUrl + url));
 
     request.headers["Content-Type"] = "multipart/form-data";
     request.headers["Authorization"] = "Bearer $_accessToken";
-    request.headers["device-info"] = _deviceId ?? '';
+    request.headers["device-info"] = _deviceId ?? '';    
 
-    if(file != null){
-      request.files.add(http.MultipartFile.fromBytes("file", file.readAsBytesSync(), filename: file.path));
+    if(fileBytes != null){     
+      request.files.add(http.MultipartFile.fromBytes("file", fileBytes, filename: filePath));
     }
     
     try{
@@ -218,7 +269,7 @@ class ApiService {
   }
 
   Future<dynamic> putSecure(String url, String body) async{
-    print("putSecure");
+    print("putSecure $url");
     var responseJson;
     
     Uri uri = Uri.parse(_baseUrl + url);
@@ -243,7 +294,7 @@ class ApiService {
   }
 
   Future<dynamic> deleteSecure(String url) async{
-    print("deleteSecure");
+    print("deleteSecure $url");
     var responseJson;
    
     Uri uri = Uri.parse(_baseUrl + url);
@@ -289,7 +340,8 @@ class ApiService {
   dynamic _response(http.Response response) async{
     if(response.headers["set-cookie"] != null){      
       var refreshToken = response.headers["set-cookie"].toString().split(';')[0].substring(13);
-      await _storage!.write(key: "refresh_token", value: refreshToken);      
+      await _storage!.write(key: "refresh_token", value: refreshToken);
+      //_accessToken = refreshToken;
     }
     var errorMessage;
 
@@ -310,7 +362,7 @@ class ApiService {
         throw ForbiddenException(errorMessage);      
       default:
         throw CustomException(Error.Default, 
-            'Server Error. StatusCode: ${response.statusCode}. Error: ${errorMessage}');
+            'Server Error. StatusCode: ${response.statusCode}. Error: $errorMessage');
     }
   }  
 

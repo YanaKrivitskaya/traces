@@ -2,7 +2,7 @@ part of 'activitycreate_bloc.dart';
 
 abstract class ActivityCreateState {
   Activity? activity;
-  List<ActivityCategory>? categories;
+  List<Category>? categories;
 
   ActivityCreateState(this.activity, this.categories);
 
@@ -11,13 +11,13 @@ abstract class ActivityCreateState {
 }
 
 class ActivityCreateInitial extends ActivityCreateState {
-  ActivityCreateInitial(Activity? activity, List<ActivityCategory>? categories) : super(activity, categories);
+  ActivityCreateInitial(Activity? activity, List<Category>? categories) : super(activity, categories);
 }
 
 class ActivityCreateEdit extends ActivityCreateState {
   final bool loading;
 
-  ActivityCreateEdit(Activity? activity, List<ActivityCategory>? categories, this.loading) : super(activity, categories);
+  ActivityCreateEdit(Activity? activity, List<Category>? categories, this.loading) : super(activity, categories);
 
   @override
   List<Object?> get props => [activity, loading];
@@ -26,7 +26,7 @@ class ActivityCreateEdit extends ActivityCreateState {
 class ActivityCreateError extends ActivityCreateState {
   final String error;
 
-  ActivityCreateError(Activity? activity, List<ActivityCategory>? categories, this.error) : super(activity, categories);
+  ActivityCreateError(Activity? activity, List<Category>? categories, this.error) : super(activity, categories);
 
   @override
   List<Object?> get props => [activity, error];
@@ -34,7 +34,7 @@ class ActivityCreateError extends ActivityCreateState {
 
 class ActivityCreateSuccess extends ActivityCreateState {
 
-  ActivityCreateSuccess(Activity? activity, List<ActivityCategory>? categories) : super(activity, categories);
+  ActivityCreateSuccess(Activity? activity, List<Category>? categories) : super(activity, categories);
 
   @override
   List<Object?> get props => [activity];

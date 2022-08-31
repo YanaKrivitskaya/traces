@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:traces/screens/notes/models/note_details_args.dart';
+import 'package:traces/utils/style/styles.dart';
 
 import '../../../constants/color_constants.dart';
 import '../../../constants/route_constants.dart';
@@ -29,14 +31,20 @@ class NotesPage extends StatelessWidget{
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: FaIcon(FontAwesomeIcons.chevronLeft, color: ColorsPalette.lynxWhite),
-            onPressed: () => Navigator.of(context).pop(),
+            icon: Icon(Icons.arrow_back, color: ColorsPalette.black),
+            onPressed: (){
+              Navigator.pop(context);
+            },
           ),
-          title: Text('Notes', style: GoogleFonts.quicksand(textStyle: TextStyle(color: Colors.white, fontSize: 25.0))),
-          backgroundColor: ColorsPalette.greenGrass,
+          centerTitle: true,
+          title: Text('Notes', style: quicksandStyle(fontSize: 30.0, color: ColorsPalette.black)),
+          elevation: 0,
+          backgroundColor: ColorsPalette.white,
           actions: [
             IconButton(
-              icon: FaIcon(FontAwesomeIcons.search, color: ColorsPalette.lynxWhite),
+              padding: EdgeInsets.only(right: 10.0),
+              constraints: BoxConstraints(),      
+              icon: Icon(Icons.search, color: ColorsPalette.black),
               onPressed: (){
                 context.read<NoteBloc>().add(SearchBarToggle());
               },
@@ -45,15 +53,17 @@ class NotesPage extends StatelessWidget{
             NoteFilterButton()
           ],
         ),
-        body:  NotesView(),
-        floatingActionButton: FloatingActionButton(
+        body:  NotesView(),        
+        floatingActionButton:  FloatingActionButton.extended(
           onPressed: (){
-            Navigator.pushNamed(context, noteDetailsRoute, arguments: 0).then((value) 
+            NoteDetailsArgs args = new NoteDetailsArgs(noteId: 0, tripId: null);
+            Navigator.pushNamed(context, noteDetailsRoute, arguments: args).then((value) 
               => context.read<NoteBloc>().add(GetAllNotes()));
           },
           tooltip: 'Add New Note',
-          backgroundColor: ColorsPalette.nycTaxi,
-          child: Icon(Icons.add, color: ColorsPalette.white),
+          backgroundColor: ColorsPalette.juicyYellow,
+          label: Text("Create", style: quicksandStyle(color: ColorsPalette.white),),
+          icon: Icon(Icons.add, color: ColorsPalette.white),
         ),
       ),
     );

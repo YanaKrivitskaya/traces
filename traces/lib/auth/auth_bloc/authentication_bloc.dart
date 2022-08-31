@@ -1,12 +1,14 @@
 import 'package:bloc/bloc.dart';
+import 'package:traces/auth/repository/mock_user_repository.dart';
+import 'package:traces/auth/repository/userRepository.dart';
 import '../repository/api_user_repository.dart';
 import 'bloc.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {  
-  final ApiUserRepository _userRepository;
+  final UserRepository _userRepository;
 
-  AuthenticationBloc(): 
-      _userRepository = new ApiUserRepository(),
+  AuthenticationBloc():       
+      _userRepository = const String.fromEnvironment("mode") == "test" ? new MockUserRepository() : new ApiUserRepository(),
       super(Uninitialized()){
         on<AppStarted>(_onAppStarted);
         on<LoggedIn>(_onLoggedIn);

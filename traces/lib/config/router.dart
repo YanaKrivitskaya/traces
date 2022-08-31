@@ -1,19 +1,29 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:traces/auth/login_signup/otp/otp_verification_view.dart';
+import 'package:traces/screens/notes/models/note_details_args.dart';
+import 'package:traces/screens/notes/screens/note_image_view.dart';
+import 'package:traces/screens/settings/categories/bloc/categories_bloc.dart';
+import 'package:traces/screens/settings/categories/categories_page.dart';
 import 'package:traces/screens/trips/model/ticket.model.dart';
+import 'package:traces/screens/trips/tripdetails/activities/activity_details_view/activity_view.dart';
+import 'package:traces/screens/trips/tripdetails/activities/activity_details_view/bloc/activityview_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
-import 'package:traces/screens/trips/tripdetails/activities/activity_view/activity_view.dart';
-import 'package:traces/screens/trips/tripdetails/activities/activity_view/bloc/activityview_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/booking_edit/bloc/bookingcreate_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/booking_view/bloc/bookingview_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/booking_view/booking_view.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expenses_view/bloc/expenseview_bloc.dart';
+import 'package:traces/screens/trips/tripdetails/expenses/expenses_view/expense_view.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_edit/bloc/ticketedit_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_edit/ticket_edit_view.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_view/bloc/ticketview_bloc.dart';
 import 'package:traces/screens/trips/tripdetails/tickets/ticket_view/ticket_view.dart';
 
+import '../auth/login_signup/otp/bloc/otp_bloc.dart';
 import '../constants/route_constants.dart';
 import '../screens/expenses.dart';
 import '../screens/home.dart';
@@ -26,9 +36,9 @@ import '../screens/notes/screens/note_detail_view.dart';
 import '../screens/notes/screens/note_page.dart';
 import '../screens/profile/bloc/profile/bloc.dart';
 import '../screens/profile/profile_page.dart';
-import '../screens/settings/bloc/settings_bloc.dart';
 import '../screens/settings/settings_page.dart';
-import '../screens/settings/themes_settings_view.dart';
+import '../screens/settings/themes/bloc/settings_bloc.dart';
+import '../screens/settings/themes/themes_settings_view.dart';
 import '../screens/trips/bloc/trips_bloc.dart';
 import '../screens/trips/model/trip_arguments.model.dart';
 import '../screens/trips/start_planning/bloc/startplanning_bloc.dart';
@@ -38,9 +48,8 @@ import '../screens/trips/trip_day/trip_day_view.dart';
 import '../screens/trips/tripdetails/activities/activity_edit/activity_create_view.dart';
 import '../screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
 import '../screens/trips/tripdetails/bookings/booking_edit/booking_create.view.dart';
-import '../screens/trips/tripdetails/expenses/bloc/expensecreate_bloc.dart';
-import '../screens/trips/tripdetails/expenses/expense_create_view.dart';
-import '../screens/trips/tripdetails/image_crop_view.dart';
+import '../screens/trips/tripdetails/expenses/expense_edit/expense_create_view.dart';
+import '../widgets/image_crop_view.dart';
 import '../screens/trips/tripdetails/tripdetails_view.dart';
 import '../screens/trips/trips_page.dart';
 import '../screens/visas/bloc/visa/visa_bloc.dart';
@@ -57,69 +66,99 @@ class RouteGenerator {
     switch (settings.name) {
       case homeRoute:       
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<SettingsBloc>(
+          builder: (_) => BlocProvider<ThemeSettingsBloc>(
             create: (context) =>
-                SettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/),
+                ThemeSettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/),
             child: HomePage(),
           ),
       );
+      case otpVerificationRoute:
+        {
+          if (args is String) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<OtpBloc>(
+                create: (context) => OtpBloc()
+                  /*..add(OtpSent(args))*/,
+                child: OtpVerificationView(args),
+              ),
+            );
+          }
+          return _errorRoute();
+        }  
       case notesRoute:
-      return MaterialPageRoute(
+        return MaterialPageRoute(
         builder: (_) => MultiBlocProvider(
-                      providers: [                       
-                        BlocProvider<TagFilterBloc>(
-                          create: (context) => TagFilterBloc(),
-                        ),
-                         BlocProvider<NoteBloc>(
-                          create: (context) => NoteBloc()..add(GetAllNotes())
-                        ),
-                      ],
-                      child: NotesPage(),
-                    )
+          providers: [                       
+            BlocProvider<TagFilterBloc>(
+              create: (context) => TagFilterBloc(),
+            ),
+            BlocProvider<NoteBloc>(
+              create: (context) => NoteBloc()..add(GetAllNotes())
+            ),
+          ],
+          child: NotesPage(),
+        )
       );
+      case noteImageView:
+      {
+        if (args is Uint8List) {
+            return MaterialPageRoute(
+              builder: (_) => NotesImageView(args));
+          }
+          return _errorRoute();
+      }      
       case noteDetailsRoute:
         {
-          if (args is int) {
+          if (args is NoteDetailsArgs) {
             return MaterialPageRoute(
-                builder: (_) => MultiBlocProvider(
-                      providers: [
-                        BlocProvider<NoteDetailsBloc>(
-                          create: (context) => NoteDetailsBloc()..add(args != 0
-                              ? GetNoteDetails(args)
-                              : NewNoteMode()),
-                        ),
-                        BlocProvider<TagFilterBloc>(
-                          create: (context) => TagFilterBloc()..add(GetTags()),
-                        ),
-                      ],
-                      child: NoteDetailsView(),
-                    ));
+              builder: (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider<NoteDetailsBloc>(
+                    create: (context) => NoteDetailsBloc()..add(args.noteId != 0
+                      ? GetNoteDetails(args.noteId)
+                      : NewNoteMode(args.tripId)),
+                    ),
+                  BlocProvider<TagFilterBloc>(
+                    create: (context) => TagFilterBloc()..add(GetTags()),
+                  ),
+                ],
+                child: NoteDetailsView(),
+            ));
           }
           return _errorRoute();
         }
-    case profileRoute:
+      case profileRoute:
         return MaterialPageRoute(
           builder: (_) => BlocProvider<ProfileBloc>(
             create: (context) =>
-                ProfileBloc(),
+                ProfileBloc()..add(GetProfile()),
             child: ProfilePage(),
           ),
         );
       case settingsRoute:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<SettingsBloc>(
+          builder: (_) => BlocProvider<ThemeSettingsBloc>(
             create: (context) =>
-                SettingsBloc(),
+                ThemeSettingsBloc(),
             child: SettingsPage(),
           ),
       );
       case themeSettingsRoute:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<SettingsBloc>(
+          builder: (_) => BlocProvider<ThemeSettingsBloc>(
             create: (context) =>
-                SettingsBloc()
+                ThemeSettingsBloc()
                   ..add(GetAppSettings()),
             child: ThemeSettingsView(),
+          ),
+      );
+      case categoriesRoute:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<CategoriesBloc>(
+            create: (context) =>
+                CategoriesBloc()
+                  ..add(GetCategories()),
+            child: CategoriesPage(),
           ),
       );
       case visasRoute:
@@ -181,11 +220,11 @@ class RouteGenerator {
       }      
       case tripDetailsRoute:
         {
-          if (args is int) {
+          if (args is TripDetailsArguments) {
             return MaterialPageRoute(
               builder: (_) => BlocProvider<TripDetailsBloc>(
                 create: (context) => TripDetailsBloc()..add(GetTripDetails(args)),
-                child: TripDetailsView(tripId: args),
+                child: TripDetailsView(tripId: args.tripId),
               ),
             );
           }
@@ -275,6 +314,30 @@ class RouteGenerator {
           }
           return _errorRoute();          
         }
+        case expenseEditRoute:
+        {
+          if (args is ExpenseEditArguments) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<ExpenseCreateBloc>(
+                create: (context) => ExpenseCreateBloc()..add(EditExpenseMode(args.expense)),
+                child: ExpenseCreateView(trip: args.trip),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }
+        case expenseViewRoute:
+        {
+          if (args is ExpenseViewArguments) {
+            return MaterialPageRoute(
+              builder: (_) => BlocProvider<ExpenseViewBloc>(
+                create: (context) => ExpenseViewBloc()..add(GetExpenseDetails(args.expenseId)),
+                child: ExpenseView(trip: args.trip),
+              ),
+            );
+          }
+          return _errorRoute();          
+        }
       case activityCreateRoute:
         {
           if (args is EventArguments) {
@@ -313,12 +376,11 @@ class RouteGenerator {
       }
       case imageCropRoute:
         {
-          if (args is File) {
+          if (args is ImageCropArguments) {
             return MaterialPageRoute(
-              builder: (_) => BlocProvider<TripDetailsBloc>(
-                create: (context) => TripDetailsBloc(),
-                child: ImageCropView(args),
-              ),
+              builder: (_) {
+                return ImageCropView(args.file, args.compress);
+              }
             );
           }
         return _errorRoute();          

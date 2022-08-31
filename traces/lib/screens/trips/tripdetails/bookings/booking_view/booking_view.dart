@@ -9,8 +9,6 @@ import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 import 'package:traces/screens/trips/tripdetails/bookings/booking_view/bloc/bookingview_bloc.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
-import 'package:timeline_tile/timeline_tile.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BookingView extends StatefulWidget{
   final Trip trip;
@@ -56,12 +54,12 @@ class _BookingViewState extends State<BookingView>{
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-              title: Text('Booking details',
+              title: Text('Booking',
                 style: quicksandStyle(fontSize: 25.0)),
               backgroundColor: ColorsPalette.white,
               elevation: 0,
               leading: IconButton(
-                icon: Icon(Icons.close_rounded),
+                icon: Icon(Icons.close_rounded, color: ColorsPalette.black),
                 onPressed: ()=> Navigator.pop(context)
               ),
               actions: booking != null ? [
@@ -70,8 +68,8 @@ class _BookingViewState extends State<BookingView>{
                   Navigator.pushNamed(context, bookingEditRoute, arguments: args).then((value){
                     value != null ? context.read<BookingViewBloc>().add(GetBookingDetails(booking!.id!)) : '';
                   });
-                }, icon: Icon(Icons.edit_outlined)),
-                IconButton(onPressed: (){}, icon: Icon(Icons.delete_outline))
+                }, icon: Icon(Icons.edit_outlined, color: ColorsPalette.black)),
+                IconButton(onPressed: (){}, icon: Icon(Icons.delete_outline, color: ColorsPalette.black))
               ] : [],
             ),
             
@@ -98,8 +96,8 @@ class _BookingViewState extends State<BookingView>{
       Container(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [        
         Text('${booking.location ?? ''}', style: quicksandStyle(fontSize: 18.0)),
         Text(booking.name ?? '', style: quicksandStyle(fontSize: 18.0)),
-        booking.reservationNumber != '' ? Text('Reservation #: ${booking.reservationNumber}', style: quicksandStyle(fontSize: 18.0)) : Container(),
-        booking.reservationUrl != '' ? SelectableText('Reservation Url: ${booking.reservationUrl}', style: quicksandStyle(fontSize: 18.0)) : Container(),
+        booking.reservationNumber != '' ? Text('Reservation #: ${booking.reservationNumber}', style: quicksandStyle(fontSize: 18.0)) : SizedBox(height:0),
+        booking.reservationUrl != '' ? SelectableText('Reservation Url: ${booking.reservationUrl}', style: quicksandStyle(fontSize: 18.0)) : SizedBox(height:0),
         Text(booking.details ?? '', style: quicksandStyle(fontSize: 18.0))        
       ],)),
       Container(
@@ -124,7 +122,7 @@ class _BookingViewState extends State<BookingView>{
               label: Text(booking.expense!.isPaid! ? 'Paid' : 'Planned', style: TextStyle(color: booking.expense!.isPaid! ? ColorsPalette.juicyGreen : ColorsPalette.juicyOrangeDark)),
             ),
           ])        
-      ],) : Container()
+      ],) : SizedBox(height:0)
     ],
 
     );    

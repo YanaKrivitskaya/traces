@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../../constants/color_constants.dart';
 import 'bloc/profile/bloc.dart';
 
@@ -17,7 +14,7 @@ class NameEditButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        icon: FaIcon(FontAwesomeIcons.edit, size: 20.0, color: ColorsPalette.meditSea),
+        icon: Icon(Icons.edit, size: 20.0, color: ColorsPalette.black),
         onPressed: (){
           showDialog(barrierDismissible: false, context: context,builder: (_) =>
               BlocProvider.value(
@@ -41,6 +38,7 @@ class NameEditDialog extends StatefulWidget{
 
 class _NameEditDialogState extends State<NameEditDialog>{
   TextEditingController? _usernameController;
+  TextEditingController? _emailController;
 
   @override
   void initState() {
@@ -48,11 +46,15 @@ class _NameEditDialogState extends State<NameEditDialog>{
 
     _usernameController = TextEditingController(text: context.read<ProfileBloc>().state.profile!.name);
     _usernameController!.addListener(_onUsernameChanged);
+
+    _emailController = TextEditingController(text: context.read<ProfileBloc>().state.profile!.email);
+    _emailController!.addListener(_onEmailChanged);
   }
 
   @override
   void dispose(){
     _usernameController!.dispose();
+    _emailController!.dispose();
     super.dispose();
   }
 
@@ -62,12 +64,12 @@ class _NameEditDialogState extends State<NameEditDialog>{
     builder: (context, state) {
 
       return new AlertDialog(
-        title: Text('Update name'),
+        title: Text('Update user'),
         actions: <Widget>[
           TextButton(
             child: Text('Done'),
             onPressed: () {
-              context.read<ProfileBloc>().add(UsernameUpdated(userId: widget.userId, username: _usernameController!.text));
+              context.read<ProfileBloc>().add(UserUpdated(userId: widget.userId, username: _usernameController!.text, email: _emailController!.text));
               Navigator.pop(context);
             },
             style: ButtonStyle(
@@ -79,7 +81,8 @@ class _NameEditDialogState extends State<NameEditDialog>{
         content: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              _usernameTextField(_usernameController, state)
+              _usernameTextField(_usernameController, state),
+              _emailTextField(_emailController, state)
             ],
           ),
         ),
@@ -99,8 +102,24 @@ class _NameEditDialogState extends State<NameEditDialog>{
     controller: usernameController,
   );
 
+  Widget _emailTextField(TextEditingController? emailController, ProfileState state) => new TextFormField(
+    decoration: const InputDecoration(
+      labelText: 'Email',
+    ),
+    keyboardType: TextInputType.text,
+    autovalidateMode: AutovalidateMode.onUserInteraction,
+    validator: (_) {
+      return !state.isEmailValid ? 'Invalid Email' : null;
+    },
+    controller: emailController,
+  );
+
   void _onUsernameChanged() {
     context.read<ProfileBloc>().add(UsernameChanged(username: _usernameController!.text));
+  }
+
+  void _onEmailChanged() {
+    context.read<ProfileBloc>().add(EmailChanged(email: _emailController!.text));
   }
 }
 
