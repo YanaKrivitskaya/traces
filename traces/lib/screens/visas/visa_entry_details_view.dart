@@ -120,12 +120,12 @@ class _VisaEntryDetailsViewState extends State<VisaEntryDetailsView> {
                 return Container(padding: EdgeInsets.all(10.0), color: ColorsPalette.white, child: SingleChildScrollView(
                   child: Form(key: this._formKey, child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
                     _entryEditContainer(context, state),
-                    state.visaEntry!.id !=null ? _exitEditContainer(context, state) : Container(),
+                    state.visaEntry!.id !=null ? _exitEditContainer(context, state) : SizedBox(height:0),
                     _submitButton(state)
                   ],)),
                 ));
               }
-              return Container();
+              return SizedBox(height:0);
             },
           ),
         ));

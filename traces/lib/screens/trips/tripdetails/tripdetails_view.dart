@@ -96,7 +96,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
         child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
           builder: (context, state){           
             return Scaffold(       
-              floatingActionButton: state.trip != null ? _floatingButton(state.trip!) : Container(),       
+              floatingActionButton: state.trip != null ? _floatingButton(state.trip!) : SizedBox(height:0),       
               body: (state is TripDetailsSuccessState) ? 
               SingleChildScrollView(
                 child: Column(children: [

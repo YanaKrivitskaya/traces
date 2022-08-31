@@ -35,7 +35,7 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
     List<Category>? categories = await _categoriesRepository.getCategories();
     List<Currency>? currencies = await _currencyRepository.getCurrencies();
 
-    emit(ExpenseCreateEdit(new Expense(date: event.date), categories, false, currencies));
+    emit(ExpenseCreateEdit(new Expense(date: event.date ?? DateTime.now()), categories, false, currencies));
   } 
 
   void _onEditExpenseMode(EditExpenseMode event, Emitter<ExpenseCreateState> emit) async{

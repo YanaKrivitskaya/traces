@@ -159,8 +159,9 @@ class _RouteViewViewState extends State<RouteView>{
 
           TripDayArguments args = new TripDayArguments(day: tripDay, trip: trip);
 
-          Navigator.of(context).pushNamed(tripDayRoute, arguments: args).then((value) => {
-            BlocProvider.of<TripDetailsBloc>(context)..add(GetTripDetails(trip.id!))
+          Navigator.of(context).pushNamed(tripDayRoute, arguments: args).then((value) {
+            TripDetailsArguments tripArgs = new TripDetailsArguments(isRoot: false, tripId: trip.id!);
+            BlocProvider.of<TripDetailsBloc>(context)..add(GetTripDetails(tripArgs));
           });
         },
       ));

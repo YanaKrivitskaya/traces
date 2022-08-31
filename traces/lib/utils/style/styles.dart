@@ -32,10 +32,13 @@ final double loginFormHeight = 60.h;
 final double tripItemHeight = 10.h; 
 final double minCardHeight = 7.h;
 final double maxCardHeight = 25.h;
+final double scrollViewHeight = 60.h;
+final double scrollViewHeightSm = 30.h;
 
 //ANCHOR Sizer
 final double sizerHeightsm = 1.h;
 final double sizerWidthsm = 1.w;
+final double sizerWidthMd = 2.w;
 final double sizerHeight = 1.5.h;
 final double sizerHeightlg = 2.h;
 

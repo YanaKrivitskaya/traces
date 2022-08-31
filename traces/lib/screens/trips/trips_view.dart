@@ -9,6 +9,7 @@ import 'package:traces/widgets/widgets.dart';
 import '../../constants/color_constants.dart';
 import '../../utils/services/shared_preferencies_service.dart';
 import 'bloc/trips_bloc.dart';
+import 'model/trip_arguments.model.dart';
 //import 'package:timelines/timelines.dart';
 
 class TripsView extends StatefulWidget{
@@ -92,7 +93,8 @@ class _TripsStateView extends State<TripsView> with TickerProviderStateMixin{
                       child: InkWell(
                         child: viewOption == 2 ? _compactTripsViewItem(trip) : _comfyTripsListItem(trip),
                         onTap: (){
-                          Navigator.pushNamed(context, tripDetailsRoute, arguments: trip.id).then((value) => {
+                          TripDetailsArguments args = new TripDetailsArguments(isRoot: true, tripId: trip.id!);
+                          Navigator.pushNamed(context, tripDetailsRoute, arguments: args).then((value) => {
                             context.read<TripsBloc>().add(GetAllTrips())
                           });
                         }

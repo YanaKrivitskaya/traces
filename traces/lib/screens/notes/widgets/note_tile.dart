@@ -29,7 +29,7 @@ class NoteTileView extends StatelessWidget{
         Container(
           padding: EdgeInsets.symmetric(horizontal: borderPadding),
           alignment: Alignment.centerLeft,
-          child: note.tags!.isNotEmpty ? getChips(note, allTagsSelected, selectedTags): Container(),
+          child: note.tags!.isNotEmpty ? getChips(note, allTagsSelected, selectedTags): SizedBox(height:0),
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: borderPadding),
@@ -40,7 +40,7 @@ class NoteTileView extends StatelessWidget{
           padding: EdgeInsets.all(borderPadding),
           child: Text(note.content!.substring(0, note.content!.length > 100 ? 100 : note.content!.length), style: quicksandStyle(fontSize: fontSizesm)),
         )
-        ) : Container()
+        ) : SizedBox(height:0)
       ])
     );
 }

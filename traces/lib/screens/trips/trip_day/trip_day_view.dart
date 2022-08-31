@@ -205,7 +205,7 @@ class _TripDayState extends State<TripDayView>{
         )
         );
       }
-      default: return Container();
+      default: return SizedBox(height:0);
     }       
   }
 

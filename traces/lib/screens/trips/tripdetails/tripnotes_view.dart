@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:traces/constants/color_constants.dart';
+import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 
 import '../../../constants/route_constants.dart';
 import '../../../utils/style/styles.dart';
@@ -34,9 +35,7 @@ class TripNotesView extends StatelessWidget{
           ) : Container(
             padding: new EdgeInsets.all(viewPadding),
             child: Center(
-              child: Container(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [
-                  Icon(Icons.notes_outlined, color: ColorsPalette.juicyGreen, size: headerFontSize),
-                  SizedBox(height: sizerHeight),
+              child: Container(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,children: [                 
                   Text('No notes here', style: quicksandStyle(fontSize: fontSize))
                 ]))),
             )
@@ -54,7 +53,8 @@ class TripNotesView extends StatelessWidget{
               NoteDetailsArgs args = new NoteDetailsArgs(noteId: note.id, tripId: null);
               Navigator.pushNamed(context, noteDetailsRoute, arguments: args).then((value)
                 {
-                  BlocProvider.of<TripDetailsBloc>(context)..add(GetTripDetails(tripId));
+                  TripDetailsArguments args = new TripDetailsArguments(isRoot: false, tripId: tripId);
+                  BlocProvider.of<TripDetailsBloc>(context)..add(GetTripDetails(args));
                 });
               },
           child: NoteTileView(note, false, null),

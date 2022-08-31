@@ -51,7 +51,7 @@ class _ExpenseDeleteDialogViewState extends State<ExpenseDeleteDialog>{
                 Text('${widget.expense.amount} ${widget.expense.currency}'),
                 SizedBox(height: 20.0,),
                 Divider(color: ColorsPalette.juicyOrange),
-                showError ? Text(errorText, style: quicksandStyle(color: ColorsPalette.redPigment)) : Container(),
+                showError ? Text(errorText, style: quicksandStyle(color: ColorsPalette.redPigment)) : SizedBox(height:0),
               ]),              
             ),
             actions: [

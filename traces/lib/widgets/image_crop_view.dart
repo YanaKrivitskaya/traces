@@ -39,7 +39,7 @@ class _ImageCropViewState extends State<ImageCropView> {
 
   @override
   Widget build(BuildContext context) {    
-    return Container();
+    return SizedBox(height:0);
   }
 
 Future<Null> _cropImage(int compress) async {
