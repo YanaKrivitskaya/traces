@@ -11,6 +11,7 @@ final double smallHeaderFontSize = 20.sp; // View headers
 final double accentFontSize = 16.sp; // Form headers
 final double fontSize = 14.sp; // Form fields
 final double fontSizesm = 12.sp;
+final double fontSizexs = 10.sp;
 
 //ANCHOR Padding
 final double buttonPadding = 7.w; // Button padding
@@ -30,11 +31,15 @@ final double tripItemWidth35 = 35.w;
 // ANCHOR Height 
 final double loginFormHeight = 60.h; 
 final double tripItemHeight = 10.h; 
+final double minCardHeight = 7.h;
+final double maxCardHeight = 25.h;
+final double scrollViewHeight = 60.h;
+final double scrollViewHeightSm = 30.h;
 
 //ANCHOR Sizer
 final double sizerHeightsm = 1.h;
 final double sizerWidthsm = 1.w;
-final double sizerWidthmd = 2.w;
+final double sizerWidthMd = 2.w;
 final double sizerHeight = 1.5.h;
 final double sizerHeightlg = 2.h;
 
@@ -43,7 +48,6 @@ final double homeIconSize = 12.5.w;
 final double homeBigIconSize = 16.w;
 final double noTripsIconSize = 50.w;
 final double iconSize = 10.w;
-
 
 
 TextStyle patrickStyle({Color? color, double? fontSize}) => 

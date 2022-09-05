@@ -33,7 +33,7 @@ class EntryExitDeleteAlert extends StatelessWidget {
             child: Column( crossAxisAlignment: CrossAxisAlignment.start,
               children: [                
                 Text('Entry: ${entryExit!.entryCountry} - ${DateFormat.yMMMd().format(entryExit!.entryDate)}'),
-                entryExit!.hasExit! ? Text('Exit: ${entryExit!.exitCountry} - ${DateFormat.yMMMd().format(entryExit!.exitDate!)}') : Container()
+                entryExit!.hasExit! ? Text('Exit: ${entryExit!.exitCountry} - ${DateFormat.yMMMd().format(entryExit!.exitDate!)}') : SizedBox(height:0)
               ],
             )
           ),

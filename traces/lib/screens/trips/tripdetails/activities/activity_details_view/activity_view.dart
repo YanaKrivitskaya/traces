@@ -89,13 +89,13 @@ class _ActivityViewState extends State<ActivityView>{
       Container(
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           activity.date != null ? Text('${DateFormat.yMMMd().format(activity.date!)}', 
-            style: quicksandStyle(fontSize: 20.0)) : Container()
+            style: quicksandStyle(fontSize: 20.0)) : SizedBox(height:0)
         ],)  
       ),
       Container(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
           activity.date!= null ? Text('${DateFormat.Hm().format(activity.date!)}', 
-          style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)) : Container(),
+          style: quicksandStyle(fontSize: 20.0, weight: FontWeight.bold)) : SizedBox(height:0),
           
         ],),
         Text('${activity.location ?? ''}', style: quicksandStyle(fontSize: 18.0)),
@@ -125,7 +125,7 @@ class _ActivityViewState extends State<ActivityView>{
               label: Text(activity.expense!.isPaid! ? 'Paid' : 'Planned', style: TextStyle(color: activity.expense!.isPaid! ? ColorsPalette.juicyGreen : ColorsPalette.juicyOrangeDark)),
             ),
           ])        
-      ],) : Container()
+      ],) : SizedBox(height:0)
     ],
 
     );    

@@ -7,6 +7,7 @@ import 'package:traces/screens/profile/model/group_model.dart';
 import 'package:traces/screens/profile/model/group_user_model.dart';
 import 'package:traces/screens/profile/repository/api_profile_repository.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
+import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 import 'package:traces/screens/trips/repository/api_activities_repository.dart';
 import 'package:traces/screens/trips/repository/api_bookings_repository.dart';
 import 'package:traces/screens/trips/repository/api_expenses_repository.dart';
@@ -70,7 +71,11 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
 
   void _onGetTripDetails(GetTripDetails event, Emitter<TripDetailsState> emit) async {
     try{
-      Trip? trip = await _tripsRepository.getTripById(event.tripId);
+      if(event.tripArgs.isRoot){
+        await sharedPrefsService.writeInt(key: "tripTab", value: 0);
+      }      
+
+      Trip? trip = await _tripsRepository.getTripById(event.tripArgs.tripId);
       var profile = await _profileRepository.getProfileWithGroups();      
       var familyGroup = profile.groups!.firstWhere((g) => g.name == "Family");
 
@@ -80,7 +85,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
         int idx = -1;
         trip.expenses!.forEach((exp) async {
           idx = trip.expenses!.indexOf(exp);
-          if(exp.amount != null && trip.defaultCurrency != null && exp.amountDTC == null){
+          if(exp.amount != null && trip.defaultCurrency != null && exp.amountDTC == null && exp.date!.compareTo(DateTime.now()) <= 0){
             if(exp.currency! != trip.defaultCurrency){
               var currencyRate = await _currencyRepository.getCurrencyRateAmountForDate(exp.currency!, trip.defaultCurrency!, exp.amount!, exp.date ?? DateTime.now());
               exp = exp.copyWith(amountDTC: currencyRate.rateAmount);

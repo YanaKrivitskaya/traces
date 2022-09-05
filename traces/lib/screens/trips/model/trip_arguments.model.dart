@@ -5,6 +5,12 @@ import 'package:traces/screens/trips/model/ticket.model.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_day.model.dart';
 
+class TripDetailsArguments {
+  TripDetailsArguments({ required this.isRoot, required this.tripId });
+  final bool isRoot;
+  final int tripId;      
+}
+
 class TripDayArguments {
   TripDayArguments({ required this.day, required this.trip });
   final TripDay day;

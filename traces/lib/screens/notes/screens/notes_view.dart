@@ -100,7 +100,7 @@ class _NotesViewState extends State<NotesView> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
-                          state.searchEnabled! ? _searchBar() : Container(),
+                          state.searchEnabled! ? _searchBar() : SizedBox(height:0),
                           filteredNotes.length > 0 ?
                           Container(
                             child: ListView.builder(
@@ -125,7 +125,7 @@ class _NotesViewState extends State<NotesView> {
                   )
                 );
               }else {
-                return Container();
+                return SizedBox(height:0);
               }
             }
         ))       
@@ -145,7 +145,7 @@ class _NotesViewState extends State<NotesView> {
             backgroundColor: /*ColorsPalette.natureGreenLight*/ColorsPalette.amMint,
             label: Text(note.trip!.name!, style: TextStyle(color: /*ColorsPalette.juicyGreen*/ColorsPalette.white)),
           ),
-        ) : Container(),    
+        ) : SizedBox(height:0),    
         InkWell(
             onTap: (){
               NoteDetailsArgs args = new NoteDetailsArgs(noteId: note.id, tripId: null);

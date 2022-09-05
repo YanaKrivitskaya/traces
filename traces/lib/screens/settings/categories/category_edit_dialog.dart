@@ -188,8 +188,8 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
             colors.map((c) => _colorOption(c, selectedColor)).toList(),           
         )),
         SizedBox(height: sizerHeightlg),
-        showError ? Text(errorText, style: quicksandStyle(color: ColorsPalette.redPigment)) : Container(),
-        state is CategoriesLoading ? loadingWidget(ColorsPalette.amMint) : Container()
+        showError ? Text(errorText, style: quicksandStyle(color: ColorsPalette.redPigment)) : SizedBox(height:0),
+        state is CategoriesLoading ? loadingWidget(ColorsPalette.amMint) : SizedBox(height:0)
     ],
   );
 

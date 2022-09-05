@@ -26,7 +26,7 @@ class ProfilePage extends StatelessWidget{
             onPressed: () => Navigator.of(context).pop(),
           ),
           actions: [            
-            (state.profile != null) ? NameEditButton(userId: state.profile!.userId) : Container()
+            (state.profile != null) ? NameEditButton(userId: state.profile!.userId) : SizedBox(height:0)
           ],
           elevation: 0,
           backgroundColor: ColorsPalette.white

@@ -30,7 +30,7 @@ class TripDeleteAlert extends StatelessWidget {
             child: Column( crossAxisAlignment: CrossAxisAlignment.start,
               children: [                
                 Text('${trip!.name}'),
-                trip!.description != null ? Text('${trip!.description}') : Container(),
+                trip!.description != null ? Text('${trip!.description}') : SizedBox(height:0),
                 Text('${DateFormat.yMMMd().format(trip!.startDate!)} - ${DateFormat.yMMMd().format(trip!.endDate!)}')                
               ],
             )
