@@ -90,7 +90,7 @@ class ExpenseCreateBloc extends Bloc<ExpenseCreateEvent, ExpenseCreateState> {
       }
       Expense expense;      
 
-      if(event.expense!.amount != null && event.defaultCurrency != null){
+      if(event.expense!.amount != null && event.defaultCurrency != null && event.expense!.date!.compareTo(DateTime.now()) <= 0){
         if(event.expense!.currency != event.defaultCurrency){
           var currencyRate = await _currencyRepository.convert(event.expense!.currency!, event.defaultCurrency!, event.expense!.amount!);
           event.expense = event.expense!.copyWith(amountDTC: currencyRate.rateAmount);

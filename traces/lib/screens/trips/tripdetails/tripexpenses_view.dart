@@ -299,8 +299,8 @@ class ExpensesView extends StatefulWidget{
                       Text('${DateFormat.Hm().format(expense.date!)}', style: quicksandStyle(fontSize: 15.0, weight: FontWeight.bold)),
                       SizedBox(width: 10.0),  
                       Row(children: [
-                        Text('${expense.amountDTC?.toStringAsFixed(2)} ${widget.trip.defaultCurrency}', style: quicksandStyle(fontSize: 15.0, 
-                        color: expense.isPaid ?? false ? ColorsPalette.black : ColorsPalette.juicyOrangeLight)),
+                        expense.amountDTC != null ? Text('${expense.amountDTC?.toStringAsFixed(2)} ${widget.trip.defaultCurrency}', style: quicksandStyle(fontSize: 15.0, 
+                        color: expense.isPaid ?? false ? ColorsPalette.black : ColorsPalette.juicyOrangeLight)) : SizedBox(height: 0),
                         expense.currency != widget.trip.defaultCurrency ? 
                           Text('(${expense.amount?.toStringAsFixed(2)} ${expense.currency})', style: quicksandStyle(fontSize: 15.0, 
                             color: expense.isPaid ?? false ? ColorsPalette.black : ColorsPalette.juicyOrangeLight)) 
