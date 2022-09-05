@@ -308,14 +308,14 @@ class VerticalListItem extends StatelessWidget {
                   Text('${item.exitCountry}, ${item.exitCity}'),
                   transportIcon(item.exitTransport, ColorsPalette.mazarineBlue)],
                 crossAxisAlignment: CrossAxisAlignment.start))])
-              : Container(),
+              : SizedBox(height:0),
               //duration
               Column(children: [Container(padding: EdgeInsets.only(right: 10.0), child: Column(children: [
                 Row(children: [
                   Text(tripDuration(item.entryDate, item.exitDate).toString() + " days"),
                   tripDuration(item.entryDate, item.exitDate) > visa!.durationOfStay! ?
                   IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.carminePink), 
-                    tooltip: 'Trip duration is more than visa duration', onPressed: () {},) : Container()
+                    tooltip: 'Trip duration is more than visa duration', onPressed: () {},) : SizedBox(height:0)
                 ])],
                 crossAxisAlignment: CrossAxisAlignment.end))])]),
               onTap: () {

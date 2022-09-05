@@ -4,10 +4,10 @@ import 'package:traces/constants/route_constants.dart';
 import 'package:traces/screens/notes/models/note_details_args.dart';
 import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_arguments.model.dart';
-import 'package:traces/screens/trips/tripdetails/activities_view.dart';
-import 'package:traces/screens/trips/tripdetails/expenses_view.dart';
+import 'package:traces/screens/trips/tripdetails/tripactivities_view.dart';
+import 'package:traces/screens/trips/tripdetails/tripexpenses_view.dart';
 
-import 'package:traces/screens/trips/tripdetails/route_view.dart';
+import 'package:traces/screens/trips/tripdetails/triproute_view.dart';
 import 'package:traces/screens/trips/tripdetails/tripnotes_view.dart';
 import 'package:traces/utils/services/shared_preferencies_service.dart';
 
@@ -96,7 +96,7 @@ class _TripDetailsViewViewState extends State<TripDetailsView> with TickerProvid
         child: BlocBuilder<TripDetailsBloc, TripDetailsState>(
           builder: (context, state){           
             return Scaffold(       
-              floatingActionButton: state.trip != null ? _floatingButton(state.trip!) : Container(),       
+              floatingActionButton: state.trip != null ? _floatingButton(state.trip!) : SizedBox(height:0),       
               body: (state is TripDetailsSuccessState) ? 
               SingleChildScrollView(
                 child: Column(children: [

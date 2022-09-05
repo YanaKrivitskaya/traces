@@ -105,10 +105,10 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
               },
             ),                     
             actions: <Widget>[
-               _note!.id != null && _note!.image == null ? _imageAction(_note, context) : Container(),
+               _note!.id != null && _note!.image == null ? _imageAction(_note, context) : SizedBox(height:0),
                _isEditMode ? _saveAction(_note, _tripId) : _editAction(state),
-              _note!.id != null ? _tagsAction(_note!.id): Container(),             
-              _note!.id != null ? _deleteAction(_note, context) : Container()              
+              _note!.id != null ? _tagsAction(_note!.id): SizedBox(height:0),             
+              _note!.id != null ? _deleteAction(_note, context) : SizedBox(height:0)              
             ],
             backgroundColor: ColorsPalette.white,
             elevation: 0,
@@ -147,12 +147,12 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        _note!.id != null ? _tripAction() : Container(),
+        _note!.id != null ? _tripAction() : SizedBox(height:0),
         Text('${_note!.title}', style: quicksandStyle(fontSize: 18.0, weight: FontWeight.bold)),
         Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate!)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate!)}',
             style: quicksandStyle(fontSize: 14.0
             )),
-        _note!.tags!.length > 0 ? Divider(color: ColorsPalette.juicyYellow) : Container(),
+        _note!.tags!.length > 0 ? Divider(color: ColorsPalette.juicyYellow) : SizedBox(height:0),
         _getTags(tags),
         Divider(color: ColorsPalette.juicyYellow),        
         Container(
@@ -194,7 +194,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
                         ),
                       ))
                 ],
-              ): Container()      
+              ): SizedBox(height:0)      
             )
             
           ]))) 
@@ -204,7 +204,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
     Widget _noteCardEdit(List<Tag>? tags) => new Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        _note!.id != null ? _tripAction() : Container(),
+        _note!.id != null ? _tripAction() : SizedBox(height:0),
         TextFormField(
           cursorColor: ColorsPalette.black,
           decoration: const InputDecoration(
@@ -219,7 +219,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
         Text('Created: ${DateFormat.yMMMd().format(_note!.createdDate ?? _date)} | Modified: ${DateFormat.yMMMd().format(_note!.updatedDate ?? _date)}',
             style: quicksandStyle(fontSize: 14.0
             )),
-        _note!.tags != null && _note!.tags!.length > 0 ? _getTags(tags!) : Container(),
+        _note!.tags != null && _note!.tags!.length > 0 ? _getTags(tags!) : SizedBox(height:0),
         Divider(color: ColorsPalette.juicyYellow),
         Container(
           padding: EdgeInsets.only(bottom: 20.0),
@@ -269,7 +269,7 @@ class _NotesDetailsViewState extends State<NoteDetailsView>{
                         ),
                       ))
                 ],
-              ): Container()      
+              ): SizedBox(height:0)      
             )
           ])))
       ],

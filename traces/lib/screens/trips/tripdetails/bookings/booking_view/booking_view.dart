@@ -96,8 +96,8 @@ class _BookingViewState extends State<BookingView>{
       Container(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [        
         Text('${booking.location ?? ''}', style: quicksandStyle(fontSize: 18.0)),
         Text(booking.name ?? '', style: quicksandStyle(fontSize: 18.0)),
-        booking.reservationNumber != '' ? Text('Reservation #: ${booking.reservationNumber}', style: quicksandStyle(fontSize: 18.0)) : Container(),
-        booking.reservationUrl != '' ? SelectableText('Reservation Url: ${booking.reservationUrl}', style: quicksandStyle(fontSize: 18.0)) : Container(),
+        booking.reservationNumber != '' ? Text('Reservation #: ${booking.reservationNumber}', style: quicksandStyle(fontSize: 18.0)) : SizedBox(height:0),
+        booking.reservationUrl != '' ? SelectableText('Reservation Url: ${booking.reservationUrl}', style: quicksandStyle(fontSize: 18.0)) : SizedBox(height:0),
         Text(booking.details ?? '', style: quicksandStyle(fontSize: 18.0))        
       ],)),
       Container(
@@ -122,7 +122,7 @@ class _BookingViewState extends State<BookingView>{
               label: Text(booking.expense!.isPaid! ? 'Paid' : 'Planned', style: TextStyle(color: booking.expense!.isPaid! ? ColorsPalette.juicyGreen : ColorsPalette.juicyOrangeDark)),
             ),
           ])        
-      ],) : Container()
+      ],) : SizedBox(height:0)
     ],
 
     );    

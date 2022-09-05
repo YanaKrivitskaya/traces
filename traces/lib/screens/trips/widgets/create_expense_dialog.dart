@@ -29,6 +29,7 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
   TextEditingController? _amountController;
   TextEditingController? _categoryController;
   TextEditingController? _descriptionController;
+  List<String> currencies = List.empty(growable: true);
 
   @override
   void initState() {
@@ -55,6 +56,13 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
           if(_categoryController!.text.length == 0 && state.expense!.category != null) _categoryController!.text = state.expense!.category!.name!;
           if(_descriptionController!.text.length == 0) _descriptionController!.text = state.expense!.description ?? '';
           if(_amountController!.text.length == 0 && state.expense!.amount != null) _amountController!.text = state.expense!.amount.toString();
+
+          currencies = List.empty(growable: true);
+            if(state.currencies != null && state.currencies!.length > 0){
+              state.currencies!.forEach((c) { currencies.add(c.code);});
+            }else{
+              currencies = TripSettings.currency;
+            }
         }
       },
       child: BlocBuilder<ExpenseCreateBloc, ExpenseCreateState>(
@@ -214,10 +222,10 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(bottom: -10)
         ),
-        value: state.expense!.currency ?? TripSettings.currency.first,
+        value: state.expense!.currency ?? currencies.first,
         isExpanded: true,        
         items:
-          TripSettings.currency.map((String value) {
+          currencies.map((String value) {
           return new DropdownMenuItem<String>(
               value: value,
               child: Row(

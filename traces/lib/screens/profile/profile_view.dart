@@ -102,7 +102,7 @@ class _ProfileViewState extends State<ProfileView>{
                   ),
                   Divider(color: ColorsPalette.juicyBlue),
                   _familyGroup != null ? 
-                  _familyGroupWidget(_familyGroup!, _profile!.accountId, _profile!.userId): Container(),                  
+                  _familyGroupWidget(_familyGroup!, _profile!.accountId, _profile!.userId): SizedBox(height:0),                  
                   _footer()
                 ],
               ),

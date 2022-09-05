@@ -63,13 +63,18 @@ class ExpensesView extends StatefulWidget{
     List<ExpenseDay> expenseDays = [];
     List<ExpenseChartData> expenseChartParts = [];
     double total = 0.0;
+    double plannedTotal = 0.0;
     List<Map<String, dynamic>> chartData = [];
 
     if(widget.expenses != null && widget.expenses!.length > 0){
 
       total = widget.expenses!.where((element) => 
-        element.isPaid != null && element.isPaid!
-      ).fold(0, (sum, element) => sum + (element.currency == "USD" ? element.amount! : element.amountUSD ?? 0));
+        element.isPaid != null && (element.isPaid ?? false)
+      ).fold(0, (sum, element) => sum + (element.amountDTC ?? 0));
+
+      plannedTotal = widget.expenses!.where((element) => 
+        !(element.isPaid ?? false)
+      ).fold(0, (sum, element) => sum + (element.amountDTC ?? 0));
     }
 
     Map<String, List<Expense>> expensesListByCategory = widget.expenses!.groupListsBy((element) => element.category?.name ?? 'Other');     
@@ -78,22 +83,22 @@ class ExpensesView extends StatefulWidget{
         double sum = 0.0;
         group.forEach((expense) {
             if(expense.isPaid != null && expense.isPaid!){
-              sum += expense.currency == "USD" ? expense.amount! : expense.amountUSD ?? 0;             
+              sum += expense.amountDTC ?? 0;             
             }        
           });
         
         sum > 0 ? expenseChartParts.add(new ExpenseChartData(
           categoryName: key, 
           amount: sum, 
-          currency: "USD", 
+          currency: widget.trip.defaultCurrency ?? group.first.currency!, 
           color: group.first.category?.color,
           icon: group.first.category?.icon,
-          amountPercent: (sum / total) * 100)) : null;
+          amountPercent: (sum / total) * 100)) : 0;
       });
 
         expenseChartParts.forEach((part) {
         chartData.add({'domain': part.categoryName, 'measure': double.parse(part.amountPercent.toStringAsFixed(2))});
-      });
+      });      
 
       expenseChartParts.sort((a, b) => b.amount.compareTo(a.amount));
 
@@ -136,16 +141,15 @@ class ExpensesView extends StatefulWidget{
             onRefresh: () async{
               BlocProvider.of<TripDetailsBloc>(context)..add(UpdateExpenses(widget.trip.id!));
             },
-            child: SingleChildScrollView(
-              child: (widget.expenses?.length ?? 0) > 0 && state is TripDetailsSuccessState ?  Column(children: [                
+            child: (widget.expenses?.length ?? 0) > 0 && state is TripDetailsSuccessState ?  Column(children: [                
                   TabBar(
                     isScrollable: true,              
                     controller: tabController,
                     indicatorColor: Theme.of(context).colorScheme.outline,
                     tabs: viewTabs
                   ),
-                  tabController.index == 0 ?_expensesTable(expenseDays, context) 
-                  : _expenseChart(total, expenseDays, context, chartData, expenseChartParts)
+                  tabController.index == 0 ?_expensesTable(total, plannedTotal, expenseDays, context) 
+                  : _expenseChart(total, plannedTotal, expenseDays, context, chartData, expenseChartParts)
               ],
             ) : (widget.expenses?.length ?? 0) == 0 ? Container(
                     padding: new EdgeInsets.all(25.0),
@@ -153,26 +157,56 @@ class ExpensesView extends StatefulWidget{
                       child: Container(child: Center(child: Text("No expenses", style: quicksandStyle(fontSize: 18.0)))),
                     )
                   ) : loadingWidget(ColorsPalette.amMint),
-          )
           ); 
         }
     ));         
   }
 
-  _expensesTable(List<ExpenseDay> expenseDays, BuildContext context) => new Container(
+  _expensesTable(double total, double plannedTotal, List<ExpenseDay> expenseDays, BuildContext context) => new Container(
     padding: EdgeInsets.all(10.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: expenseDays.length,              
-        itemBuilder: (context, position){
-          final expenseDay = expenseDays[position];
-          return _expenseDay(expenseDay, context);                  
-        }
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Container(padding: EdgeInsets.symmetric(horizontal: borderPadding),child:
+        Card(
+          shape: RoundedRectangleBorder(            
+            borderRadius: BorderRadius.circular(10.0)
+          ),
+          color: ColorsPalette.juicyYellow,
+          child: Container(
+            padding: EdgeInsets.all(10.0),
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              Column(children: [
+                Text("Total spent: ", style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold, color: ColorsPalette.white)),
+                Text("${double.parse(total.toStringAsFixed(2))} ${widget.trip.defaultCurrency}", 
+                  style: quicksandStyle(fontSize: accentFontSize, weight: FontWeight.bold, color: ColorsPalette.white))
+              ],),
+              Column(children: [
+                Text("Planned: ", style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold, color: ColorsPalette.white)),
+                Text("${double.parse(plannedTotal.toStringAsFixed(2))} ${widget.trip.defaultCurrency}", 
+                  style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold, color: ColorsPalette.white))
+              ],)
+            ],)
+          )
+        ),         
       ),
+      SingleChildScrollView(child: Container(
+        constraints: BoxConstraints(
+          maxHeight: scrollViewHeight,
+        ),
+        child: ListView.builder(
+            shrinkWrap: true,
+            //physics: NeverScrollableScrollPhysics(),
+            itemCount: expenseDays.length,              
+            itemBuilder: (context, position){
+              final expenseDay = expenseDays[position];
+              return _expenseDay(expenseDay, context);                  
+            }
+          )
+      )        
+      )
+      ], ),
   );
 
-  _expenseChart(double total, List<ExpenseDay> expenseDays, BuildContext context,  List<Map<String, dynamic>> chartData, List<ExpenseChartData> expenseChartParts) =>new Container(  
+  _expenseChart(double total, double plannedTotal, List<ExpenseDay> expenseDays, BuildContext context,  List<Map<String, dynamic>> chartData, List<ExpenseChartData> expenseChartParts) =>new Container(  
     padding: EdgeInsets.only(top: sizerHeightlg),  
     child: Column(children: [
       Padding(
@@ -191,13 +225,25 @@ class ExpensesView extends StatefulWidget{
           ),
         ),
       ),
-      Container(width: formWidth70, child: 
-        Text("Total spent: \$${double.parse(total.toStringAsFixed(2))}", style: quicksandStyle(weight: FontWeight.bold))
-      ),      
-      Container(width: formWidth70, child: 
-        ListView.builder(
+      Container(width: formWidth70, padding: EdgeInsets.symmetric(horizontal: borderPadding),child: Column(children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text("Total spent: ", style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold)),
+          Text("${double.parse(total.toStringAsFixed(2))} ${widget.trip.defaultCurrency}", style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold))
+        ],),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text("Planned expenses: ", style: quicksandStyle(fontSize: 16.0)),
+          Text("${double.parse(plannedTotal.toStringAsFixed(2))} ${widget.trip.defaultCurrency}", style: quicksandStyle(fontSize: 16.0))
+        ],)
+      ],)
+        ) , 
+      SingleChildScrollView(child: Container(
+        width: formWidth70,
+        constraints: BoxConstraints(
+          maxHeight: scrollViewHeightSm,
+        ),
+        child:  ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          //physics: NeverScrollableScrollPhysics(),
           itemCount: expenseChartParts.length,
           itemBuilder: (context, position){
             final chartPart = expenseChartParts[position];                    
@@ -208,11 +254,13 @@ class ExpensesView extends StatefulWidget{
                 Text(chartPart.categoryName),
               ],),
               Row(children: [                
-                Text("\$${double.parse(chartPart.amount.toStringAsFixed(2))} | ${double.parse(chartPart.amountPercent.toStringAsFixed(2))}%")
+                Text("${double.parse(chartPart.amount.toStringAsFixed(2))} ${widget.trip.defaultCurrency} | ${double.parse(chartPart.amountPercent.toStringAsFixed(2))}%")
               ],),
               //Text("\$${double.parse(chartPart.amount.toStringAsFixed(2))} | ${double.parse(chartPart.amountPercent.toStringAsFixed(2))}%")
             ],);})
-    )] )
+      )        
+      )
+      ] )
   );
 
   _expenseDay(ExpenseDay expenseDay, BuildContext context) {
@@ -221,21 +269,15 @@ class ExpensesView extends StatefulWidget{
 
     return new Container(
       child: Card(
-        elevation: 0.0,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: ColorsPalette.juicyGreen, width: 1),
-          borderRadius: BorderRadius.circular(10),
-        ),
+        elevation: 0.0,        
         child: Container(padding: EdgeInsets.all(10.0),child: Column(children: [
         Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Column(children: [
             Text('${DateFormat.yMMMd().format(expenseDay.date)}', style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold))
-          ],),
-          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          for(var expenseTotal in expenseDay.expenseTotalList) Text(expenseTotal, style: quicksandStyle(fontSize: 16.0, weight: FontWeight.bold))
-          ],)
+          ],),          
         ],),
-        Divider(color: ColorsPalette.juicyGreen),
+         SizedBox(height: 5.0),
+        //Divider(color: ColorsPalette.juicyGreen),
         ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
@@ -251,13 +293,21 @@ class ExpensesView extends StatefulWidget{
                     Navigator.of(context).pushNamed(expenseViewRoute, arguments: args).then((value) => {
                       BlocProvider.of<TripDetailsBloc>(context)..add(UpdateExpenses(widget.trip.id!))
                     });
-                  },
+                  },                  
                   child: Column(children: [
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text('${DateFormat.Hm().format(expense.date!)}', style: quicksandStyle(fontSize: 15.0, weight: FontWeight.bold)),
-                      SizedBox(width: 10.0),                         
-                      Text('${expense.amount} ${expense.currency}', style: quicksandStyle(fontSize: 15.0)),
-                    ],),
+                      SizedBox(width: 10.0),  
+                      Row(children: [
+                        Text('${expense.amountDTC?.toStringAsFixed(2)} ${widget.trip.defaultCurrency}', style: quicksandStyle(fontSize: 15.0, 
+                        color: expense.isPaid ?? false ? ColorsPalette.black : ColorsPalette.juicyOrangeLight)),
+                        expense.currency != widget.trip.defaultCurrency ? 
+                          Text('(${expense.amount?.toStringAsFixed(2)} ${expense.currency})', style: quicksandStyle(fontSize: 15.0, 
+                            color: expense.isPaid ?? false ? ColorsPalette.black : ColorsPalette.juicyOrangeLight)) 
+                          : SizedBox(height: 0)
+                      ],)                       
+                     
+                    ],),                   
                     Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Column(children: [
                         Row(children: [
@@ -266,11 +316,11 @@ class ExpensesView extends StatefulWidget{
                         ],)                                            
                       ],),                    
                       Expanded(child: Text(
-                        '${expense.category?.name} ${(expense.description != null && expense.description!.length > 0) ? ' - ' : ''} ${expense.description}', 
+                        '${(expense.description != null && expense.description!.length > 0) ? expense.description : expense.category?.name}', 
                         style: quicksandStyle(fontSize: 15.0)))
                     ],),
-                    SizedBox(height: 10.0)
-                  ],) 
+                    //SizedBox(height: 5.0)
+                  ],)
                 )
               ],
             );

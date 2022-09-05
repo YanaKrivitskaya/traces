@@ -6,3 +6,5 @@ traces/android/app/google-services.json
 traces/.vscode/
 
 .vscode/
+
+traces/.env

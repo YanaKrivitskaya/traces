@@ -72,7 +72,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                           badgeColor: ColorsPalette.pureApple,
                           child: Image.asset(item.path, fit: BoxFit.cover)
                         ) : Image.asset(item.path, fit: BoxFit.cover),
-                        (item.author != null && _currentIndex == AppThemes.indexOf(item)) ? Text("designed by ${item.author} from Flaticon") : Container()
+                        (item.author != null && _currentIndex == AppThemes.indexOf(item)) ? Text("designed by ${item.author} from Flaticon") : SizedBox(height:0)
                       ],)
                     ),
                   )).toList()),

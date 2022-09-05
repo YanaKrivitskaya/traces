@@ -9,8 +9,8 @@ class Expense {
   final DateTime? date;
   final String? description;
   final double? amount;
-  final String? currency;
-  final double? amountUSD;
+  final String? currency;  
+  final double? amountDTC;
   final bool? isPaid;
   final DateTime? createdDate;
   final DateTime? updatedDate;
@@ -20,8 +20,8 @@ class Expense {
     this.date,    
     this.description,
     this.amount,
-    this.currency,
-    this.amountUSD,
+    this.currency,    
+    this.amountDTC,
     this.isPaid,
     this.createdDate,
     this.updatedDate,
@@ -33,8 +33,8 @@ class Expense {
     DateTime? date,    
     String? description,
     double? amount,
-    String? currency,
-    double? amountUSD,
+    String? currency,   
+    double? amountDTC,
     bool? isPaid,
     DateTime? createdDate,
     DateTime? updatedDate,
@@ -45,8 +45,8 @@ class Expense {
       date: date ?? this.date,      
       description: description ?? this.description,
       amount: amount ?? this.amount,
-      currency: currency ?? this.currency,
-      amountUSD: amountUSD ?? this.amountUSD,
+      currency: currency ?? this.currency,      
+      amountDTC: amountDTC ?? this.amountDTC,
       isPaid: isPaid ?? this.isPaid,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
@@ -61,7 +61,7 @@ class Expense {
       'description': description,
       'amount': amount,
       'currency': currency,
-      'amountUSD': amountUSD,
+      'amountDTC': amountDTC,
       'isPaid': isPaid,
       'category': category?.toMap()
     };
@@ -73,8 +73,8 @@ class Expense {
       date: map['date'] != null ? DateTime.parse(map['date']) : null,    
       description: map['description'],
       amount: double.parse(map['amount']),
-      currency: map['currency'],
-      amountUSD: map['amountUSD'] != null ? double.parse(map['amountUSD']) : null,
+      currency: map['currency'],     
+      amountDTC: map['amountDTC'] != null ? double.parse(map['amountDTC']) : null,
       isPaid: map['isPaid'],
       createdDate: map['createdDate'] != null ? DateTime.parse(map['createdDate']) : null,
       updatedDate: map['updatedDate'] != null ? DateTime.parse(map['updatedDate']) : null,
@@ -88,7 +88,7 @@ class Expense {
 
   @override
   String toString() {
-    return 'Expense(id: $id, date: $date, description: $description, amount: $amount, currency: $currency, amountUSD: $amountUSD, isPaid: $isPaid)';
+    return 'Expense(id: $id, date: $date, description: $description, amount: $amount, currency: $currency, amountDTC: $amountDTC, isPaid: $isPaid)';
   }
 
   @override
@@ -100,8 +100,8 @@ class Expense {
       other.date == date &&     
       other.description == description &&
       other.amount == amount &&
-      other.currency == currency &&
-      other.amountUSD == amountUSD &&
+      other.currency == currency &&      
+      other.amountDTC == amountDTC &&
       other.isPaid == isPaid &&
       other.createdDate == createdDate &&
       other.updatedDate == updatedDate;
@@ -113,8 +113,8 @@ class Expense {
       date.hashCode ^   
       description.hashCode ^
       amount.hashCode ^
-      currency.hashCode ^
-      amountUSD.hashCode ^
+      currency.hashCode ^      
+      amountDTC.hashCode ^
       isPaid.hashCode ^
       createdDate.hashCode ^
       updatedDate.hashCode;

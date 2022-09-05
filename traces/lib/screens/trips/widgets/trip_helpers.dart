@@ -15,7 +15,7 @@ Widget getObjectIcon(TripEventType type, dynamic event) {
       case TripEventType.Ticket:
         return transportIcon((event as Ticket).type, ColorsPalette.juicyBlue);       
       default:
-        return Container();
+        return SizedBox(height:0);
     }
   }
 

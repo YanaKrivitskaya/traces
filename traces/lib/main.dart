@@ -74,7 +74,7 @@ class TracesApp extends StatelessWidget{
               if(state is Authenticated){
                 return HomePage();
               }
-              return Container();
+              return SizedBox(height:0);
             },
           ),
           onGenerateRoute: RouteGenerator.generateRoute,
