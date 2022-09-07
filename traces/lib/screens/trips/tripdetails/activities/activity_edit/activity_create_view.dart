@@ -312,7 +312,7 @@ class _ActivityCreateViewViewState extends State<ActivityCreateView>{
                   barrierDismissible: false, context: context, builder: (_) =>
                     BlocProvider<ExpenseCreateBloc>(
                       create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(category, expense)),
-                      child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                      child: CreateExpenseDialog(trip: widget.trip, submitExpense: false, callback: (val) async {
                         if(val != null){
                           context.read<ActivityCreateBloc>().add(ExpenseUpdated(val));                
                         }
@@ -416,7 +416,7 @@ Widget _expenseDetails(ActivityCreateState state) => new Column(
             barrierDismissible: false, context: context, builder: (_) =>
               BlocProvider<ExpenseCreateBloc>(
                 create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(state.activity!.expense!.category!.name, state.activity!.expense!)),
-                  child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                  child: CreateExpenseDialog(trip: widget.trip, submitExpense: false, callback: (val) async {
                     if(val != null){
                       context.read<ActivityCreateBloc>().add(ExpenseUpdated(val));
                     }

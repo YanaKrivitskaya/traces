@@ -21,6 +21,15 @@ class ApiTripsRepository{
     return tripResponse;
   }
 
+  Future <Trip?> getCurrentTrip() async{    
+    print("getCurrentTrip");
+    final response = await apiProvider.getSecure(tripsUrl + '/current');
+      
+     var tripResponse = response["trip"] != null ? 
+      Trip.fromMap(response['trip']) : null;
+    return tripResponse;
+  }
+
   Future<List<Trip>?> getTripsList() async{    
     print("getTrips");
     final response = await apiProvider.getSecure(tripsUrl + '/list');

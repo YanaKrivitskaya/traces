@@ -2,23 +2,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/auth/auth_bloc/bloc.dart';
-import 'package:traces/screens/profile/bloc/profile/bloc.dart';
-import 'package:traces/screens/settings/model/app_theme.dart';
-import 'package:traces/screens/settings/themes/bloc/settings_bloc.dart';
-import 'package:traces/utils/misc/state_types.dart';
-import 'package:traces/utils/style/styles.dart';
+import 'package:traces/screens/settings/app_settings/bloc/settings_bloc.dart';
+import 'package:traces/screens/settings/model/app_menu.dart';
 
-import '../auth/auth_bloc/authentication_bloc.dart';
 import '../constants/color_constants.dart';
 import '../constants/route_constants.dart';
+import '../utils/misc/state_types.dart';
+import '../utils/style/styles.dart';
 import '../widgets/widgets.dart';
+import 'profile/bloc/profile/bloc.dart';
+import 'settings/model/app_theme.dart';
+import 'trips/current_trip/bloc/current_trip_bloc.dart';
+import 'trips/model/expense.model.dart';
+import 'trips/model/trip.model.dart';
+import 'trips/model/trip_arguments.model.dart';
+import 'trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
+import 'trips/widgets/comfy_trip_list_item.dart';
+import 'trips/widgets/create_expense_dialog.dart';
 
 class HomePage extends StatefulWidget {
-
-  var newUI = true;
-  
+   
   HomePage({Key? key}) : super(key: key);
 
   @override
@@ -27,32 +30,39 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AppTheme? _theme; 
+  AppMenu? _menu;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ThemeSettingsBloc>(
-          create: (BuildContext context) => ThemeSettingsBloc()..add(GetAppSettings()),
+        BlocProvider<AppSettingsBloc>(
+          create: (BuildContext context) => AppSettingsBloc()..add(GetAppSettings()),
         ),
         BlocProvider<ProfileBloc>(
           create: (BuildContext context) => ProfileBloc()..add(GetProfile()),
+        ),
+        BlocProvider<CurrentTripBloc>(
+          create: (BuildContext context) => CurrentTripBloc()..add(GetCurrentTrip()),
         )
       ],
-      child: BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(
+      child: BlocBuilder<AppSettingsBloc, AppSettingsState>(
         builder: (context, state){
           if(state is SuccessSettingsState){         
             _theme = state.userTheme;
+            _menu = state.userMenu;
+            
             return BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state){
                 if(state.status == StateStatus.Success){                  
-                  return widget.newUI ? _homeMenuNewUI(_theme, context, state) : _homeMenu(_theme, context);
+                  return _menu?.name == 'drawer' ? _homeMenuNewUI(_theme, context, state, _scaffoldKey) : _homeMenu(_theme, context);
                 }
-                return loadingWidget(ColorsPalette.pureApple);
+                return new Scaffold(body: loadingWidget(ColorsPalette.juicyGreen));
               }
             );
           }
-          return loadingWidget(ColorsPalette.pureApple);
+          return new Scaffold(body: loadingWidget(ColorsPalette.juicyGreen));
         }
       ),
     );    
@@ -124,27 +134,26 @@ Column _menuTile(IconData icon, AppTheme? theme, String iconName, String title, 
   ]
 );
 
-Widget _homeMenuNewUI(AppTheme? _theme, BuildContext context, ProfileState state) => new Scaffold( 
+Widget _homeMenuNewUI(AppTheme? _theme, BuildContext context, ProfileState state, GlobalKey _scaffoldKey,) => new Scaffold( 
+  key: _scaffoldKey,
   appBar: AppBar(
     elevation: 0,    
-    title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      /*avatar(getAvatarName(state.profile!.name), 20.0, ColorsPalette.juicyBlue, fontSize, ColorsPalette.white),
-      SizedBox(width: sizerWidthmd),*/
+    title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [      
       Text('Hello, ', style:quicksandStyle(fontSize: accentFontSize)), 
       InkWell(
         child: Text('${state.profile?.name}!', style:quicksandStyle(color: ColorsPalette.juicyOrange, fontSize: accentFontSize)),
         onTap: (){
           Navigator.pushNamed(context, profileRoute).then((value) => 
            BlocProvider.of<ProfileBloc>(context)..add(GetProfile())
-    ); 
+          ); 
         },
       )
-            
-    ]),      
+    ]),
     backgroundColor: ColorsPalette.white,
     leading: Builder(
       builder: (context) => Container(padding: EdgeInsets.all(borderPaddingSm), child: InkWell(
-        child: avatar(getAvatarName(state.profile!.name), 19.0, ColorsPalette.juicyBlue, fontSize, ColorsPalette.white),
+        child:         
+        Icon(Icons.menu, color: ColorsPalette.black,),
         onTap: () => Scaffold.of(context).openDrawer(),
       )),
     ),
@@ -157,41 +166,92 @@ Widget _homeMenuNewUI(AppTheme? _theme, BuildContext context, ProfileState state
           decoration: BoxDecoration(
             color: ColorsPalette.juicyYellow,
           ),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-            avatar(getAvatarName(state.profile!.name), 25.0, ColorsPalette.juicyBlue, fontSize, ColorsPalette.white),            
-            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            /*avatar(getAvatarName(state.profile!.name), 20.0, ColorsPalette.juicyBlue, fontSize, ColorsPalette.white),
-            SizedBox(width: sizerWidthmd),*/
-            Text('Hello, ', style:quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.white)), 
-            InkWell(
-              child: Text('${state.profile?.name}!', style:quicksandStyle(color: ColorsPalette.white, fontSize: accentFontSize, weight: FontWeight.bold)),
-              onTap: (){
-                Navigator.pushNamed(context, profileRoute).then((value) => 
-                BlocProvider.of<ProfileBloc>(context)..add(GetProfile())
-          ); 
-              },
-            )
-                  
-          ])
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [            
+          Row(children: [
+              Text('Welcome to ', style:quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.white)), 
+              Text('Traces!', style:quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.white, weight: FontWeight.bold)),        
+            ],)
           ],)
         ),
-        _menuTileNewUI(Icons.home, "Home", context, homeRoute),
-        _menuTileNewUI(Icons.map, "Trips", context, tripsRoute),
-        _menuTileNewUI(Icons.description, "Notes", context, notesRoute),
-        _menuTileNewUI(Icons.branding_watermark, "Visas", context, visasRoute),
-        _menuTileNewUI(Icons.account_circle, "Profile", context, profileRoute),
-        _menuTileNewUI(Icons.settings, "Settings", context, settingsRoute),
+        _menuTileNewUI(_theme, '0-house.png', Icons.home, "Home", context, homeRoute),
+        _menuTileNewUI(_theme, '1-trips.png', Icons.map, "Trips", context, tripsRoute),
+        _menuTileNewUI(_theme, '3-notes.png', Icons.description, "Notes", context, notesRoute),
+        _menuTileNewUI(_theme, '7-visas.png', Icons.branding_watermark, "Visas", context, visasRoute),
+        _menuTileNewUI(_theme, '8-profile.png', Icons.account_circle, "Profile", context, profileRoute),
+        _menuTileNewUI(_theme, '9-settings.png', Icons.settings, "Settings", context, settingsRoute),
       ],
     ),
   ),
+  body: BlocBuilder<CurrentTripBloc, CurrentTripState>(
+    builder: (context, state){
+      if(state is CurrentTripSuccessState && state.trip != null){
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: viewPadding),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
+            Text("Today's trip:", style: quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.juicyOrange, weight: FontWeight.bold)),
+            SizedBox(height: sizerHeightlg),
+            InkWell(
+            child: comfyTripsListItem(state.trip!, context),
+            onTap: (){
+              TripDetailsArguments args = new TripDetailsArguments(isRoot: true, tripId: state.trip!.id!);
+              Navigator.pushNamed(context, tripDetailsRoute, arguments: args).then((value) => {});
+            }
+          ),          
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            _addExpenseButton(state.trip!, context),
+          ])
+        ]));
+      }
+      return loadingWidget(ColorsPalette.juicyGreen);
+    }
+  ),
 );
 
-Widget _menuTileNewUI(IconData icon, String title, BuildContext context, String routeName) => ListTile(
-  leading: Icon(icon, color: ColorsPalette.juicyDarkBlue),
-  title: Text(title),
+Widget _menuTileNewUI(AppTheme? theme, String iconName, IconData icon, String title, BuildContext context, String routeName) => ListTile(
+  leading: theme?.iconsPath != null ?  
+          Image(image: AssetImage('${theme!.iconsPath}$iconName'), height: iconSizeSm, width: iconSizeSm,)
+        : Icon(icon, color: ColorsPalette.juicyOrange, size: iconSizeSm),
+  title: Text(title, style: quicksandStyle(fontSize: fontSize)),
   onTap: (){
     Navigator.pushNamed(context, routeName).then((value) => 
       BlocProvider.of<ProfileBloc>(context)..add(GetProfile())
     ); 
   },
 );
+
+Widget _addExpenseButton(Trip trip, BuildContext context) => ElevatedButton(
+  child: Row(children: [
+    Text("\$", style: quicksandStyle(fontSize: accentFontSize, color: ColorsPalette.white, weight: FontWeight.bold)),
+    SizedBox(width: sizerWidthMd), 
+    Text("Add expense")
+  ],),
+  style: ButtonStyle(
+    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+    backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.amMint),
+    foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.white)
+  ),
+  onPressed: () {
+    Expense expense = new Expense(date: DateTime.now());             
+    
+    showDialog(                
+      barrierDismissible: false, context: context, builder: (dialogContext) =>
+        BlocProvider<ExpenseCreateBloc>(
+          create: (dialogContext) => ExpenseCreateBloc()..add(AddExpenseMode(null, expense)),
+          child: CreateExpenseDialog(trip: trip, submitExpense: true, callback: (val) async {
+            if(val != null){
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                  backgroundColor: ColorsPalette.amMint,
+                  content: Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [ 
+                        Icon(Icons.check, color: ColorsPalette.lynxWhite,)
+                    ],
+                    ),
+                  ));                                          
+            }
+          }),
+        )
+    );}
+);
+

@@ -12,6 +12,7 @@ const String visasRoute = '/visas';
 const String profileRoute = '/profile';
 const String settingsRoute = '/settings';
 const String themeSettingsRoute = '/themeSettings';
+const String menuSettingsRoute = '/menuSettings';
 const String loginSignupRoute = '/loginSignup';
 const String otpVerificationRoute = '/otpVerification';
 const String noteDetailsRoute = '/noteDetails';

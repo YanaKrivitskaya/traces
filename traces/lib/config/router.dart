@@ -1,29 +1,10 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:traces/auth/login_signup/otp/otp_verification_view.dart';
-import 'package:traces/screens/notes/models/note_details_args.dart';
-import 'package:traces/screens/notes/screens/note_image_view.dart';
-import 'package:traces/screens/settings/categories/bloc/categories_bloc.dart';
-import 'package:traces/screens/settings/categories/categories_page.dart';
-import 'package:traces/screens/trips/model/ticket.model.dart';
-import 'package:traces/screens/trips/tripdetails/activities/activity_details_view/activity_view.dart';
-import 'package:traces/screens/trips/tripdetails/activities/activity_details_view/bloc/activityview_bloc.dart';
-import 'package:traces/screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
-import 'package:traces/screens/trips/tripdetails/bookings/booking_edit/bloc/bookingcreate_bloc.dart';
-import 'package:traces/screens/trips/tripdetails/bookings/booking_view/bloc/bookingview_bloc.dart';
-import 'package:traces/screens/trips/tripdetails/bookings/booking_view/booking_view.dart';
-import 'package:traces/screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
-import 'package:traces/screens/trips/tripdetails/expenses/expenses_view/bloc/expenseview_bloc.dart';
-import 'package:traces/screens/trips/tripdetails/expenses/expenses_view/expense_view.dart';
-import 'package:traces/screens/trips/tripdetails/tickets/ticket_edit/bloc/ticketedit_bloc.dart';
-import 'package:traces/screens/trips/tripdetails/tickets/ticket_edit/ticket_edit_view.dart';
-import 'package:traces/screens/trips/tripdetails/tickets/ticket_view/bloc/ticketview_bloc.dart';
-import 'package:traces/screens/trips/tripdetails/tickets/ticket_view/ticket_view.dart';
 
 import '../auth/login_signup/otp/bloc/otp_bloc.dart';
+import '../auth/login_signup/otp/otp_verification_view.dart';
 import '../constants/route_constants.dart';
 import '../screens/expenses.dart';
 import '../screens/home.dart';
@@ -32,24 +13,41 @@ import '../screens/map.dart';
 import '../screens/notes/bloc/note_bloc/bloc.dart';
 import '../screens/notes/bloc/note_details_bloc/bloc.dart';
 import '../screens/notes/bloc/tag_filter_bloc/bloc.dart';
+import '../screens/notes/models/note_details_args.dart';
 import '../screens/notes/screens/note_detail_view.dart';
+import '../screens/notes/screens/note_image_view.dart';
 import '../screens/notes/screens/note_page.dart';
 import '../screens/profile/bloc/profile/bloc.dart';
 import '../screens/profile/profile_page.dart';
+import '../screens/settings/app_settings/bloc/settings_bloc.dart';
+import '../screens/settings/app_settings/menu_settings_view.dart';
+import '../screens/settings/app_settings/themes_settings_view.dart';
+import '../screens/settings/categories/bloc/categories_bloc.dart';
+import '../screens/settings/categories/categories_page.dart';
 import '../screens/settings/settings_page.dart';
-import '../screens/settings/themes/bloc/settings_bloc.dart';
-import '../screens/settings/themes/themes_settings_view.dart';
 import '../screens/trips/bloc/trips_bloc.dart';
 import '../screens/trips/model/trip_arguments.model.dart';
 import '../screens/trips/start_planning/bloc/startplanning_bloc.dart';
 import '../screens/trips/start_planning/start_planning_view.dart';
 import '../screens/trips/trip_day/bloc/tripday_bloc.dart';
 import '../screens/trips/trip_day/trip_day_view.dart';
+import '../screens/trips/tripdetails/activities/activity_details_view/activity_view.dart';
+import '../screens/trips/tripdetails/activities/activity_details_view/bloc/activityview_bloc.dart';
 import '../screens/trips/tripdetails/activities/activity_edit/activity_create_view.dart';
+import '../screens/trips/tripdetails/activities/activity_edit/bloc/activitycreate_bloc.dart';
 import '../screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
+import '../screens/trips/tripdetails/bookings/booking_edit/bloc/bookingcreate_bloc.dart';
 import '../screens/trips/tripdetails/bookings/booking_edit/booking_create.view.dart';
+import '../screens/trips/tripdetails/bookings/booking_view/bloc/bookingview_bloc.dart';
+import '../screens/trips/tripdetails/bookings/booking_view/booking_view.dart';
+import '../screens/trips/tripdetails/expenses/expense_edit/bloc/expensecreate_bloc.dart';
 import '../screens/trips/tripdetails/expenses/expense_edit/expense_create_view.dart';
-import '../widgets/image_crop_view.dart';
+import '../screens/trips/tripdetails/expenses/expenses_view/bloc/expenseview_bloc.dart';
+import '../screens/trips/tripdetails/expenses/expenses_view/expense_view.dart';
+import '../screens/trips/tripdetails/tickets/ticket_edit/bloc/ticketedit_bloc.dart';
+import '../screens/trips/tripdetails/tickets/ticket_edit/ticket_edit_view.dart';
+import '../screens/trips/tripdetails/tickets/ticket_view/bloc/ticketview_bloc.dart';
+import '../screens/trips/tripdetails/tickets/ticket_view/ticket_view.dart';
 import '../screens/trips/tripdetails/tripdetails_view.dart';
 import '../screens/trips/trips_page.dart';
 import '../screens/visas/bloc/visa/visa_bloc.dart';
@@ -58,6 +56,7 @@ import '../screens/visas/bloc/visa_tab/visa_tab_bloc.dart';
 import '../screens/visas/visa_details_view.dart';
 import '../screens/visas/visa_edit_view.dart';
 import '../screens/visas/visas_page.dart';
+import '../widgets/image_crop_view.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -66,9 +65,9 @@ class RouteGenerator {
     switch (settings.name) {
       case homeRoute:       
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<ThemeSettingsBloc>(
+          builder: (_) => BlocProvider<AppSettingsBloc>(
             create: (context) =>
-                ThemeSettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/),
+                AppSettingsBloc(/*settingsRepository: FirebaseAppSettingsRepository()*/),
             child: HomePage(),
           ),
       );
@@ -137,19 +136,28 @@ class RouteGenerator {
         );
       case settingsRoute:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<ThemeSettingsBloc>(
+          builder: (_) => BlocProvider<AppSettingsBloc>(
             create: (context) =>
-                ThemeSettingsBloc(),
+                AppSettingsBloc(),
             child: SettingsPage(),
           ),
       );
       case themeSettingsRoute:
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<ThemeSettingsBloc>(
+          builder: (_) => BlocProvider<AppSettingsBloc>(
             create: (context) =>
-                ThemeSettingsBloc()
+                AppSettingsBloc()
                   ..add(GetAppSettings()),
             child: ThemeSettingsView(),
+          ),
+      );
+      case menuSettingsRoute:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<AppSettingsBloc>(
+            create: (context) =>
+                AppSettingsBloc()
+                  ..add(GetAppSettings()),
+            child: MenuSettingsView(),
           ),
       );
       case categoriesRoute:

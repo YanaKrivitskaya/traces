@@ -48,6 +48,7 @@ final double homeIconSize = 12.5.w;
 final double homeBigIconSize = 16.w;
 final double noTripsIconSize = 50.w;
 final double iconSize = 10.w;
+final double iconSizeSm = 8.w;
 
 
 TextStyle patrickStyle({Color? color, double? fontSize}) => 

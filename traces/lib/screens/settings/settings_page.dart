@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/screens/settings/themes/bloc/settings_bloc.dart';
+import 'package:traces/screens/settings/app_settings/bloc/settings_bloc.dart';
 
 import '../../constants/color_constants.dart';
 import '../../constants/route_constants.dart';
@@ -13,9 +13,9 @@ class SettingsPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ThemeSettingsBloc>(
+    return BlocProvider<AppSettingsBloc>(
       create: (context) => 
-        ThemeSettingsBloc()..add(GetAppSettings()),
+        AppSettingsBloc()..add(GetAppSettings()),
       child: WillPopScope(
         onWillPop: (()=> Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false) as Future<bool>),
         child: Scaffold(

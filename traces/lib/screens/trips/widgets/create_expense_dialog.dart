@@ -14,9 +14,10 @@ import 'package:traces/widgets/widgets.dart';
 class CreateExpenseDialog extends StatefulWidget {
 
   final Trip? trip;
+  final bool submitExpense;
   final ExpenseCallback? callback;
 
-  const CreateExpenseDialog({Key? key, this.trip, this.callback}) : super(key: key);
+  const CreateExpenseDialog({Key? key, this.trip, required this.submitExpense, this.callback}) : super(key: key);
 
    @override
   _CreateExpenseDialogState createState() => new _CreateExpenseDialogState();
@@ -104,6 +105,11 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
                       category: category,
                       isPaid: state.expense!.isPaid ?? true
                     );
+
+                    if(widget.submitExpense){
+                      context.read<ExpenseCreateBloc>().add(ExpenseSubmitted(newExpense, widget.trip!.id!, widget.trip!.defaultCurrency));
+                    }
+
                     widget.callback!(newExpense);
                     Navigator.pop(context);
                   }                  
