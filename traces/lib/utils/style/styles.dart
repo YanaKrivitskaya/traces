@@ -35,6 +35,7 @@ final double minCardHeight = 7.h;
 final double maxCardHeight = 25.h;
 final double scrollViewHeight = 60.h;
 final double scrollViewHeightSm = 30.h;
+final double scrollViewHeightMd = 35.h;
 
 //ANCHOR Sizer
 final double sizerHeightsm = 1.h;

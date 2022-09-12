@@ -13,8 +13,9 @@ class CurrentTripLoadingState extends CurrentTripState {
 
 class CurrentTripSuccessState extends CurrentTripState {  
   final Trip? trip;
-  CurrentTripSuccessState(this.trip):super();
+  final TripDay? tripDay;
+  CurrentTripSuccessState(this.trip, this.tripDay):super();
 
   @override
-  List<Object?> get props => [trip];
+  List<Object?> get props => [trip, tripDay];
 }

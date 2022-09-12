@@ -81,11 +81,11 @@ class TripDay {
         endDate: endDate,        
         event: ticket
       ));
-    });
+    });    
 
     return TripDay(
       tripEvents: tripEvents,
-      tripId: int.parse(map['tripId']),
+      tripId: int.parse(map['tripId'].toString()),
       date: date,
     );
   }

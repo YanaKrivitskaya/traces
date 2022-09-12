@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:traces/screens/trips/model/trip_day.model.dart';
 import 'package:traces/screens/trips/repository/api_trips_repository.dart';
 import 'package:traces/utils/api/customException.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../model/trip.model.dart';
 
@@ -16,10 +18,11 @@ class CurrentTripBloc extends Bloc<CurrentTripEvent, CurrentTripState> {
     on<GetCurrentTrip>((event, emit) async {
       emit(CurrentTripInitial());
     try{
-      var trip = await _tripsRepository.getCurrentTrip();
-      emit(CurrentTripSuccessState(trip));
+      Tuple2<Trip?, TripDay?> tupleResponse = await _tripsRepository.getCurrentTrip();
+      emit(CurrentTripSuccessState(tupleResponse.item1, tupleResponse.item2));
     } on CustomException catch(e){
       //yield T(error: e);
+      print(e);
     }
     });
   }
