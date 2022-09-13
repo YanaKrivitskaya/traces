@@ -12,7 +12,8 @@ class AppTheme {
 }
 
 const List<AppTheme> AppThemes = [ 
-  AppTheme(name: "plainOrange", path: "assets/plainOrangeTheme.jpg"),
-  AppTheme(name: "brightBlue", path: "assets/brightBlueTheme.jpg", iconsPath: "assets/brightBlueTheme/", author: "monkik"),
-  AppTheme(name: "calmGreen", path: "assets/calmGreenTheme.jpg", iconsPath: "assets/calmGreenTheme/", author: "Freepik")
+  AppTheme(name: "plainOrange", path: "assets/plainOrangeTheme.png"),
+  AppTheme(name: "brightBlue", path: "assets/brightBlueTheme.png", iconsPath: "assets/brightBlueTheme/", author: "monkik"),
+  AppTheme(name: "calmGreen", path: "assets/calmGreenTheme.png", iconsPath: "assets/calmGreenTheme/", author: "Freepik"),
+  AppTheme(name: "strictGreen", path: "assets/strictGreenTheme.png", iconsPath: "assets/strictGreenTheme/", author: "pikslgrafik")
 ];

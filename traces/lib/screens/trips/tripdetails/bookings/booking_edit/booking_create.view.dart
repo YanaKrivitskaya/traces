@@ -293,7 +293,7 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
                   barrierDismissible: false, context: context, builder: (_) =>
                     BlocProvider<ExpenseCreateBloc>(
                       create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(category, expense)),
-                      child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                      child: CreateExpenseDialog(trip: widget.trip, submitExpense: false, callback: (val) async {
                         if(val != null){
                           context.read<BookingCreateBloc>().add(ExpenseUpdated(val));                
                         }
@@ -416,7 +416,7 @@ class _BookingCreateViewViewState extends State<BookingCreateView>{
             barrierDismissible: false, context: context, builder: (_) =>
               BlocProvider<ExpenseCreateBloc>(
                 create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(state.booking!.expense!.category!.name, state.booking!.expense!)),
-                  child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                  child: CreateExpenseDialog(trip: widget.trip, submitExpense: false, callback: (val) async {
                     if(val != null){
                       context.read<BookingCreateBloc>().add(ExpenseUpdated(val));
                     }

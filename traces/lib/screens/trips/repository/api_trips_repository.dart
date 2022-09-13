@@ -5,6 +5,7 @@ import 'package:traces/screens/trips/model/trip.model.dart';
 import 'package:traces/screens/trips/model/trip_day.model.dart';
 import 'package:intl/intl.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../../utils/services/api_service.dart';
 
@@ -21,9 +22,22 @@ class ApiTripsRepository{
     return tripResponse;
   }
 
+  Future <Tuple2<Trip?, TripDay?>> getCurrentTrip() async{    
+    print("getCurrentTrip");
+    final response = await apiProvider.getSecure(tripsUrl + 'current');
+      
+    Trip? trip = response["tripsResponse"] != null ? 
+      Trip.fromMap(response['tripsResponse']) : null;
+
+    TripDay? tripDay = response["tripDay"] != null ? 
+      TripDay.fromMap(response['tripDay'], DateTime.now()) : null;
+    
+    return Tuple2<Trip?, TripDay?>(trip, tripDay);
+  }
+
   Future<List<Trip>?> getTripsList() async{    
     print("getTrips");
-    final response = await apiProvider.getSecure(tripsUrl + '/list');
+    final response = await apiProvider.getSecure(tripsUrl + 'list');
       
     var tripResponse = response["trips"] != null ? 
       response['trips'].map<Trip>((map) => Trip.fromMap(map)).toList() : null;

@@ -10,6 +10,7 @@ import '../../constants/color_constants.dart';
 import '../../utils/services/shared_preferencies_service.dart';
 import 'bloc/trips_bloc.dart';
 import 'model/trip_arguments.model.dart';
+import 'widgets/comfy_trip_list_item.dart';
 //import 'package:timelines/timelines.dart';
 
 class TripsView extends StatefulWidget{
@@ -91,7 +92,7 @@ class _TripsStateView extends State<TripsView> with TickerProviderStateMixin{
                       width: viewWidth80,
                       //height: MediaQuery.of(context).size.height * 0.3,
                       child: InkWell(
-                        child: viewOption == 2 ? _compactTripsViewItem(trip) : _comfyTripsListItem(trip),
+                        child: viewOption == 2 ? _compactTripsViewItem(trip) : comfyTripsListItem(trip, context),
                         onTap: (){
                           TripDetailsArguments args = new TripDetailsArguments(isRoot: true, tripId: trip.id!);
                           Navigator.pushNamed(context, tripDetailsRoute, arguments: args).then((value) => {
@@ -121,38 +122,6 @@ class _TripsStateView extends State<TripsView> with TickerProviderStateMixin{
       )
     );    
   }
-
-  Widget _comfyTripsListItem(Trip trip) => Container(child: Stack(
-    alignment: AlignmentDirectional.bottomCenter,
-    children: [
-      Container(
-        padding: EdgeInsets.only(bottom: imageCoverPadding),
-        child: trip.coverImage != null ? Image.memory(trip.coverImage!) : Image.asset("assets/sunset.jpg")                            
-        ),
-      Positioned(
-        bottom: 0,
-          child: Container(
-            margin: EdgeInsets.all(sizerHeight),
-            child: Material(
-              elevation: 10.0,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              color:  ColorsPalette.white,
-              child: Container(
-                margin: EdgeInsets.all(sizerHeight),
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [                                
-                  Text(trip.name!, style: quicksandStyle(fontSize: fontSize, weight: FontWeight.bold)),
-                  Text(trip.endDate!.isAfter(trip.startDate!) ? 
-                    '${DateFormat.yMMMd().format(trip.startDate!)} - ${DateFormat.yMMMd().format(trip.endDate!)}' 
-                    : '${DateFormat.yMMMd().format(trip.startDate!)}',  
-                    style: quicksandStyle(fontSize: fontSizesm)),
-                ],)
-              )
-            )
-          )
-      )
-    ]
-  ));
 
   Widget _compactTripsViewItem(Trip trip) => Container(
     height: tripItemHeight,

@@ -1,55 +1,56 @@
-import 'package:badges/badges.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:traces/screens/settings/model/app_theme.dart';
-import 'package:traces/screens/settings/themes/bloc/settings_bloc.dart';
+import 'package:traces/screens/settings/app_settings/bloc/settings_bloc.dart';
+import 'package:traces/screens/settings/model/app_menu.dart';
+import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:badges/badges.dart';
 
 import '../../../constants/color_constants.dart';
 
-class ThemeSettingsView extends StatefulWidget{
+class MenuSettingsView extends StatefulWidget{
 
   @override
-  State<ThemeSettingsView> createState() => _ThemeSettingsViewState();
-
+  State<MenuSettingsView> createState() => _MenuSettingsViewState();
 }
 
-class _ThemeSettingsViewState extends State<ThemeSettingsView>{
-
+class _MenuSettingsViewState extends State<MenuSettingsView>{
   int _currentIndex=0;
-  AppTheme? _userTheme;
-
+  
+  AppMenu? _userMenu;
+  
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ThemeSettingsBloc, ThemeSettingsState>(
+    
+    return BlocListener<AppSettingsBloc, AppSettingsState>(
       listener: (context, state) {
-        if(state is SuccessSettingsState){         
-          _userTheme = state.userTheme;         
+        if(state is SuccessSettingsState){          
+          
+          _userMenu = state.userMenu;         
 
-          if(_userTheme == null){
-            _userTheme = AppThemes[0];
+          if(_userMenu == null){
+            _userMenu = AppMenues[0];
           }
-         
-          _currentIndex = AppThemes.indexOf(state.selectedTheme ?? _userTheme!);          
+
+          _currentIndex = AppMenues.indexOf(state.selectedMenu ?? _userMenu!); 
         }
       },
-      child: BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(
+      child: BlocBuilder<AppSettingsBloc, AppSettingsState>(
       bloc: BlocProvider.of(context),
       builder: (context, state){
-        
         return new Scaffold(
           appBar: AppBar(
-            title: Text('Themes', style: GoogleFonts.quicksand(textStyle: TextStyle(
-              color: ColorsPalette.white, fontSize: 30.0))),
+            //centerTitle: true,
+            title: Text('Main menu', style: quicksandStyle(fontSize: headerFontSize, color: ColorsPalette.white)),
             leading: IconButton(
-              icon: FaIcon(FontAwesomeIcons.arrowLeft, color: ColorsPalette.lynxWhite),
-              onPressed: () => Navigator.of(context).pop(),
-            )            
+              icon: Icon(Icons.arrow_back, color: ColorsPalette.white),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            ),              
           ),
-          body: state is SuccessSettingsState ?  Container(
+          body: state is SuccessSettingsState ? Container(
             padding: EdgeInsets.only(top: 20.0),
             child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               CarouselSlider(
@@ -59,27 +60,26 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                     enlargeCenterPage: true,
                     enableInfiniteScroll: false,
                     onPageChanged: (index, reason) {
-                      var theme = AppThemes[index];
-                      context.read<ThemeSettingsBloc>().add(ThemeSelected(theme)); 
+                      var menu = AppMenues[index];
+                      context.read<AppSettingsBloc>().add(MenuSelected(menu)); 
                     },
                   ),
-                  items: AppThemes.map((item) => Container(   
+                  items: AppMenues.map((item) => Container(   
                     padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),                                     
                     child: Center(
                       child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [                        
-                        item == _userTheme ? Badge(
+                        item == _userMenu ? Badge(
                           badgeContent: Icon(Icons.check, color: ColorsPalette.lynxWhite),
                           badgeColor: ColorsPalette.pureApple,
                           child: Image.asset(item.path, fit: BoxFit.cover)
-                        ) : Image.asset(item.path, fit: BoxFit.cover),
-                        (item.author != null && _currentIndex == AppThemes.indexOf(item)) ? Text("designed by ${item.author} from Flaticon") : SizedBox(height:0)
+                        ) : Image.asset(item.path, fit: BoxFit.cover),                        
                       ],)
                     ),
                   )).toList()),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children:AppThemes.map((img) {
-                  int index = AppThemes.indexOf(img);
+                children: AppMenues.map((img) {
+                  int index = AppMenues.indexOf(img);
                   return Container(
                     width: 8.0,
                     height: 8.0,
@@ -100,17 +100,17 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                 foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
               ),
               onPressed: () {
-                var theme = AppThemes[_currentIndex];
-                context.read<ThemeSettingsBloc>().add(SubmitTheme(theme));                
+                var menu = AppMenues[_currentIndex];
+                context.read<AppSettingsBloc>().add(SubmitMenu(menu));                
               },
-              child: Text('Select theme'),
+              child: Text('Select menu'),
             )
-            ],)  ,
-          ) : loadingWidget(ColorsPalette.picoVoid)
+            ],)
+          ) : loadingWidget(ColorsPalette.juicyBlue),
         );
       }
-    ),
-    );    
+    )
+    );
   }
 
 }

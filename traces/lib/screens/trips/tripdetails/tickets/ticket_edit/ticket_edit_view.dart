@@ -221,7 +221,7 @@ class _TicketEditViewState extends State<TicketEditView>{
                   barrierDismissible: false, context: context, builder: (_) =>
                     BlocProvider<ExpenseCreateBloc>(
                       create: (context) =>ExpenseCreateBloc()..add(AddExpenseMode(category, expense)),
-                      child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                      child: CreateExpenseDialog(trip: widget.trip, submitExpense: false, callback: (val) async {
                         if(val != null){
                           context.read<TicketEditBloc>().add(ExpenseUpdated(val));                
                         }
@@ -557,7 +557,7 @@ class _TicketEditViewState extends State<TicketEditView>{
             barrierDismissible: false, context: context, builder: (_) =>
               BlocProvider<ExpenseCreateBloc>(
                 create: (context) => ExpenseCreateBloc()..add(AddExpenseMode(state.ticket!.expense!.category!.name, state.ticket!.expense!)),
-                  child: CreateExpenseDialog(trip: widget.trip, callback: (val) async {
+                  child: CreateExpenseDialog(trip: widget.trip, submitExpense: false, callback: (val) async {
                     if(val != null){
                       context.read<TicketEditBloc>().add(ExpenseUpdated(val));
                     }

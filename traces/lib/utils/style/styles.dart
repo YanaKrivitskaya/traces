@@ -17,6 +17,7 @@ final double fontSizexs = 10.sp;
 final double buttonPadding = 7.w; // Button padding
 final double viewPadding = 4.w;
 final double borderPadding = 3.w; // Border padding
+final double borderPaddingSm = 2.w; 
 final double formBottomPadding = 4.h;
 final double formTopPadding = 20.h;
 final double imageCoverPadding = 2.5.h;
@@ -34,6 +35,7 @@ final double minCardHeight = 7.h;
 final double maxCardHeight = 25.h;
 final double scrollViewHeight = 60.h;
 final double scrollViewHeightSm = 30.h;
+final double scrollViewHeightMd = 35.h;
 
 //ANCHOR Sizer
 final double sizerHeightsm = 1.h;
@@ -47,6 +49,7 @@ final double homeIconSize = 12.5.w;
 final double homeBigIconSize = 16.w;
 final double noTripsIconSize = 50.w;
 final double iconSize = 10.w;
+final double iconSizeSm = 8.w;
 
 
 TextStyle patrickStyle({Color? color, double? fontSize}) => 
