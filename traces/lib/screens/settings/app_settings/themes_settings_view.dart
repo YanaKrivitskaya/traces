@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as BadgesLib;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,9 +67,9 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>{
                     padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),                                     
                     child: Center(
                       child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [                        
-                        item == _userTheme ? Badge(
+                        item == _userTheme ? BadgesLib.Badge(
                           badgeContent: Icon(Icons.check, color: ColorsPalette.lynxWhite),
-                          badgeColor: ColorsPalette.pureApple,
+                            badgeStyle: BadgesLib.BadgeStyle(badgeColor: ColorsPalette.pureApple),
                           child: Image.asset(item.path, fit: BoxFit.cover)
                         ) : Image.asset(item.path, fit: BoxFit.cover),
                         (item.author != null && _currentIndex == AppThemes.indexOf(item)) ? Text("designed by ${item.author} from Flaticon") : SizedBox(height:0)

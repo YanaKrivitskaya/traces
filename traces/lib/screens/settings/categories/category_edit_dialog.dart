@@ -58,7 +58,7 @@ class _CategoryEditDialogState extends State<CategoryEditDialog>{
   }
 
   _pickIcon() async {
-    IconData? icon = await FlutterIconPicker.showIconPicker(context,
+    IconData? icon = await showIconPicker(context,
         iconPackModes: [IconPack.material]);
 
       if(icon != null){

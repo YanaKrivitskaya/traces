@@ -229,14 +229,14 @@ class _VisaEditViewState extends State<VisaEditView> {
                   children: <Widget>[
                     IconButton(
                       icon: FaIcon(
-                        FontAwesomeIcons.calendarAlt,
+                        FontAwesomeIcons.calendarDays,
                         color: ColorsPalette.mazarineBlue,
                       ),
                       onPressed: () => _selectValidFromDate(context, state),
                     ),
                     IconButton(
                       icon: FaIcon(
-                        FontAwesomeIcons.calendarAlt,
+                        FontAwesomeIcons.calendarDays,
                         color: ColorsPalette.mazarineBlue,
                       ),
                       onPressed: () => _selectValidToDate(context, state),
@@ -291,13 +291,17 @@ class _VisaEditViewState extends State<VisaEditView> {
             return value == null ? 'Required field' : null;
           });
 
-  Widget _countrySelector(VisaDetailsState state) => new TypeAheadFormField(
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: this._countryController,
-        decoration: InputDecoration(
-            labelText: 'Country of issue',
-            labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      ),
+  Widget _countrySelector(VisaDetailsState state) => new TypeAheadField(
+      controller: this._countryController,
+      builder: (context, controller, focusNode) {
+        return TextField(
+          controller: controller, // note how the controller is passed
+          focusNode: focusNode,
+          decoration: InputDecoration(
+              labelText: 'Country of issue',
+              labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
+        );
+      },
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
           /*var filteredCountries = state.userSettings!.countries!
@@ -317,20 +321,20 @@ class _VisaEditViewState extends State<VisaEditView> {
           title: Text(suggestion),
         );
       },
-      transitionBuilder: (context, suggestionsBox, controller) {
+      /*transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
-      },
-      onSuggestionSelected: (dynamic suggestion) {
+      },*/
+      onSelected: (dynamic suggestion) {
         this._countryController!.text = suggestion;
         FocusScope.of(context).unfocus();
       },
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) {
+      //autovalidateMode: AutovalidateMode.onUserInteraction,
+      /*validator: (value) {
         if (value!.isEmpty) {
           return 'Required field';
         }
         return null;
-      });
+      }*/);
 
   Widget _durationSelector(VisaDetailsState state) => new TextFormField(
       decoration: const InputDecoration(

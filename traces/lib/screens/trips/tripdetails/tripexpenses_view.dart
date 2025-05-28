@@ -64,7 +64,8 @@ class ExpensesView extends StatefulWidget{
     List<ExpenseChartData> expenseChartParts = [];
     double total = 0.0;
     double plannedTotal = 0.0;
-    List<Map<String, dynamic>> chartData = [];
+    //List<Map<String, dynamic>> chartData = [];
+    List <OrdinalData> chartData = [];
 
     if(widget.expenses != null && widget.expenses!.length > 0){
 
@@ -97,7 +98,7 @@ class ExpensesView extends StatefulWidget{
       });
 
         expenseChartParts.forEach((part) {
-        chartData.add({'domain': part.categoryName, 'measure': double.parse(part.amountPercent.toStringAsFixed(2))});
+        chartData.add(new OrdinalData(domain: part.categoryName, measure: double.parse(part.amountPercent.toStringAsFixed(2)), others: part.color));
       });      
 
       expenseChartParts.sort((a, b) => b.amount.compareTo(a.amount));
@@ -206,22 +207,23 @@ class ExpensesView extends StatefulWidget{
       ], ),
   );
 
-  _expenseChart(double total, double plannedTotal, List<ExpenseDay> expenseDays, BuildContext context,  List<Map<String, dynamic>> chartData, List<ExpenseChartData> expenseChartParts) =>new Container(  
+  _expenseChart(double total, double plannedTotal, List<ExpenseDay> expenseDays, BuildContext context,  List <OrdinalData> chartData, List<ExpenseChartData> expenseChartParts) =>new Container(
     padding: EdgeInsets.only(top: sizerHeightlg),  
     child: Column(children: [
       Padding(
         padding: EdgeInsets.all(16),
         child: AspectRatio(
           aspectRatio: 16 / 9,
-          child: DChartPie(          
+          child: DChartPieO(
             data: chartData,
-            fillColor: (pieData, index) {
+            configSeriesPie: ConfigSeriesPieO(),
+            /*fillColor: (pieData, index) {
               return expenseChartParts.firstWhere((element) => element.categoryName == pieData["domain"]).color ?? ColorsPalette.amMint;
-            },
-            pieLabel: (pieData, index) {
+            },*/
+            /*pieLabel: (pieData, index) {
               return "";
-            },
-            labelPosition: PieLabelPosition.inside,          
+            },*/
+            /*labelPosition: PieLabelPosition.inside,   */
           ),
         ),
       ),

@@ -6,7 +6,6 @@ import 'package:image_cropper/image_cropper.dart';
 
 import 'package:traces/constants/color_constants.dart';
 import 'package:traces/screens/trips/tripdetails/bloc/tripdetails_bloc.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
 
 class ImageCropArguments {
   final File file;
@@ -43,12 +42,10 @@ class _ImageCropViewState extends State<ImageCropView> {
   }
 
 Future<Null> _cropImage(int compress) async {
-
-    File compressedFile = await FlutterNativeImage.compressImage(imageFile!.path,
-    quality: compress < 100 ? compress : 100);
   
     CroppedFile? croppedFile = await ImageCropper().cropImage(
-        sourcePath: compressedFile.path,       
+        sourcePath: imageFile!.path,
+        compressQuality: compress < 100 ? compress : 100,
         aspectRatio: CropAspectRatio(ratioX: 16, ratioY: 9),        
         uiSettings: [
           AndroidUiSettings(            

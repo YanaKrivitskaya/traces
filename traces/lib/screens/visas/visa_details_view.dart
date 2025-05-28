@@ -163,7 +163,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
   }
 
   Widget _editAction(VisaDetailsState state) => new IconButton(
-        icon: FaIcon(FontAwesomeIcons.edit, color: ColorsPalette.lynxWhite),
+        icon: FaIcon(FontAwesomeIcons.penToSquare, color: ColorsPalette.lynxWhite),
         onPressed: () {
           Navigator.pushNamed(context, visaEditRoute,
               arguments: state.visa!.id);
@@ -171,7 +171,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
       );
 
   Widget _deleteAction(VisaDetailsState state) => new IconButton(
-        icon: FaIcon(FontAwesomeIcons.trashAlt, color: ColorsPalette.lynxWhite),
+        icon: FaIcon(FontAwesomeIcons.trashCan, color: ColorsPalette.lynxWhite),
         onPressed: () {
           showDialog<String>(
               context: context,
@@ -242,7 +242,7 @@ class _VisaDetailsViewState extends State<VisaDetailsView> with SingleTickerProv
                         children: [
                           SlidableAction(
                             backgroundColor: ColorsPalette.carminePink, 
-                            icon: FontAwesomeIcons.trashAlt, 
+                            icon: FontAwesomeIcons.trashCan,
                             onPressed: (context) => showDialog<String>(
                               context: context,
                               barrierDismissible: false, // user must tap button!
@@ -314,7 +314,7 @@ class VerticalListItem extends StatelessWidget {
                 Row(children: [
                   Text(tripDuration(item.entryDate, item.exitDate).toString() + " days"),
                   tripDuration(item.entryDate, item.exitDate) > visa!.durationOfStay! ?
-                  IconButton(icon: FaIcon(FontAwesomeIcons.exclamationCircle, color: ColorsPalette.carminePink), 
+                  IconButton(icon: FaIcon(FontAwesomeIcons.circleExclamation, color: ColorsPalette.carminePink),
                     tooltip: 'Trip duration is more than visa duration', onPressed: () {},) : SizedBox(height:0)
                 ])],
                 crossAxisAlignment: CrossAxisAlignment.end))])]),

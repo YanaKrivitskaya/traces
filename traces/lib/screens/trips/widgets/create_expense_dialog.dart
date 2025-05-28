@@ -291,10 +291,14 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
     }
   }
   
-  Widget _categorySelector(ExpenseCreateState state) => new TypeAheadFormField(
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: this._categoryController,      
-      ),
+  Widget _categorySelector(ExpenseCreateState state) => new TypeAheadField(
+      controller: this._categoryController,
+      builder: (context, controller, focusNode) {
+        return TextField(
+          controller: controller, // note how the controller is passed
+          focusNode: focusNode,
+        );
+      },
       suggestionsCallback: (pattern) {
         {
           var filteredCategories = state.categories != null ? state.categories!
@@ -313,20 +317,20 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog>{
           title: Text(category.name),
         );
       },
-      transitionBuilder: (context, suggestionsBox, controller) {
+      /*transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
-      },
-      onSuggestionSelected: (dynamic suggestion) {
+      },*/
+      onSelected: (dynamic suggestion) {
         this._categoryController!.text = suggestion.name;
         FocusScope.of(context).unfocus();
       },
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) {
+      //autovalidateMode: AutovalidateMode.onUserInteraction,
+      /*validator: (value) {
         if (value!.isEmpty) {
           return 'Required field';
         }
         return null;
-      });
+      }*/);
 }
 
   

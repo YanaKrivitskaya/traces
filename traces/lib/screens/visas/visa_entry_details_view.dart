@@ -205,13 +205,17 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
     }
   }
   
-   Widget _entryCountrySelector(VisaEntryState state) => new TypeAheadFormField(
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: this._entryCountryController,
-        decoration: InputDecoration(
-            labelText: 'Country',
-            labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      ),
+   Widget _entryCountrySelector(VisaEntryState state) => new TypeAheadField(
+       controller: this._entryCountryController,
+       builder: (context, controller, focusNode) {
+         return TextField(
+           controller: controller, // note how the controller is passed
+           focusNode: focusNode,
+           decoration: InputDecoration(
+               labelText: 'Country',
+               labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
+         );
+       },
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
@@ -232,28 +236,32 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
           title: Text(suggestion),
         );
       },
-      transitionBuilder: (context, suggestionsBox, controller) {
+      /*transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
-      },
-      onSuggestionSelected: (dynamic suggestion) {
+      },*/
+      onSelected: (dynamic suggestion) {
         this._entryCountryController!.text = suggestion;
         FocusScope.of(context).unfocus();
       },
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) {
+      //autovalidateMode: AutovalidateMode.onUserInteraction,
+      /*validator: (value) {
         if (value!.isEmpty) {
           return 'Required field';
         }
         return null;
-      });
+      }*/);
 
-  Widget _exitCountrySelector(VisaEntryState state) => new TypeAheadFormField(
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: this._exitCountryController,
-        decoration: InputDecoration(
-            labelText: 'Country',
-            labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      ),
+  Widget _exitCountrySelector(VisaEntryState state) => new TypeAheadField(
+      controller: this._exitCountryController,
+      builder: (context, controller, focusNode) {
+        return TextField(
+          controller: controller, // note how the controller is passed
+          focusNode: focusNode,
+          decoration: InputDecoration(
+              labelText: 'Country',
+              labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
+        );
+      },
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
@@ -274,21 +282,25 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
           title: Text(suggestion),
         );
       },
-      transitionBuilder: (context, suggestionsBox, controller) {
+      /*transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
-      },
-      onSuggestionSelected: (dynamic suggestion) {
+      },*/
+      onSelected: (dynamic suggestion) {
         this._exitCountryController!.text = suggestion;
         FocusScope.of(context).unfocus();
       });
 
-  Widget _entryCitySelector(VisaEntryState state) => new TypeAheadFormField(
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: this._entryCityController,
-        decoration: InputDecoration(
-            labelText: 'City',
-            labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      ),
+  Widget _entryCitySelector(VisaEntryState state) => new TypeAheadField(
+      controller: this._entryCityController,
+      builder: (context, controller, focusNode) {
+        return TextField(
+          controller: controller, // note how the controller is passed
+          focusNode: focusNode,
+          decoration: InputDecoration(
+              labelText: 'City',
+              labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
+        );
+      },
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
@@ -309,28 +321,32 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
           title: Text(suggestion),
         );
       },
-      transitionBuilder: (context, suggestionsBox, controller) {
+      /*transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
-      },
-      onSuggestionSelected: (dynamic suggestion) {
+      },*/
+      onSelected: (dynamic suggestion) {
         this._entryCityController!.text = suggestion;
         FocusScope.of(context).unfocus();
       },
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (value) {
+      //autovalidateMode: AutovalidateMode.onUserInteraction,
+      /*validator: (value) {
         if (value!.isEmpty) {
           return 'Required field';
         }
         return null;
-      });
+      }*/);
 
-  Widget _exitCitySelector(VisaEntryState state) => new TypeAheadFormField(
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: this._exitCityController,
-        decoration: InputDecoration(
-            labelText: 'City',
-            labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
-      ),
+  Widget _exitCitySelector(VisaEntryState state) => new TypeAheadField(
+      controller: this._exitCityController,
+      builder: (context, controller, focusNode) {
+        return TextField(
+            controller: controller, // note how the controller is passed
+            focusNode: focusNode,
+            decoration: InputDecoration(
+                labelText: 'City',
+                labelStyle: TextStyle(color: ColorsPalette.mazarineBlue)),
+        );
+      },
       // ignore: missing_return
       suggestionsCallback: (pattern) {
         if (pattern.isNotEmpty) {
@@ -351,10 +367,10 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
           title: Text(suggestion),
         );
       },
-      transitionBuilder: (context, suggestionsBox, controller) {
+      /*transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
-      },
-      onSuggestionSelected: (dynamic suggestion) {
+      },*/
+      onSelected: (dynamic suggestion) {
         this._exitCityController!.text = suggestion;
         FocusScope.of(context).unfocus();
       });
@@ -421,9 +437,9 @@ Widget _exitEditContainer(BuildContext context, VisaEntryState state) => new Con
       child: Container(padding: EdgeInsets.only(top: 10.0),
         child: ElevatedButton(child: Text('Save'),
         style: ButtonStyle(
-            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
-            backgroundColor: MaterialStateProperty.all<Color>(ColorsPalette.algalFuel),
-            foregroundColor: MaterialStateProperty.all<Color>(ColorsPalette.lynxWhite)
+            padding: WidgetStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.only(left: 25.0, right: 25.0)),
+            backgroundColor: WidgetStateProperty.all<Color>(ColorsPalette.algalFuel),
+            foregroundColor: WidgetStateProperty.all<Color>(ColorsPalette.lynxWhite)
           ),         
           onPressed: () {
             var isFormValid = _formKey.currentState!.validate();

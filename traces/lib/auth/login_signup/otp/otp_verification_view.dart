@@ -188,7 +188,6 @@ class _OtpVerificationViewState extends State<OtpVerificationView>{
           controller: pinController,
           focusNode: focusNode,
           defaultPinTheme: defaultTheme,
-          separator: SizedBox(width: 16),
           focusedPinTheme: defaultTheme.copyWith(
             decoration: BoxDecoration(
               color: Colors.white,

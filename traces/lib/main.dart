@@ -21,11 +21,8 @@ Future<void> main() async {
   await ApiService.init();
   await SharedPreferencesService.init();
   await dotenv.load(fileName: ".env");
-   BlocOverrides.runZoned(
-    () {},
-    blocObserver: SimpleBlocDelegate()
-  );  
-  
+  Bloc.observer = SimpleBlocDelegate();
+
   runApp(
     BlocProvider(
       create: (context) => AuthenticationBloc()

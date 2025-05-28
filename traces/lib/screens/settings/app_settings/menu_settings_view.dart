@@ -5,7 +5,7 @@ import 'package:traces/screens/settings/model/app_menu.dart';
 import 'package:traces/utils/style/styles.dart';
 import 'package:traces/widgets/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as BadgesLib;
 
 import '../../../constants/color_constants.dart';
 
@@ -68,9 +68,9 @@ class _MenuSettingsViewState extends State<MenuSettingsView>{
                     padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),                                     
                     child: Center(
                       child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [                        
-                        item == _userMenu ? Badge(
+                        item == _userMenu ? BadgesLib.Badge(
                           badgeContent: Icon(Icons.check, color: ColorsPalette.lynxWhite),
-                          badgeColor: ColorsPalette.pureApple,
+                          badgeStyle: BadgesLib.BadgeStyle(badgeColor: ColorsPalette.pureApple),
                           child: Image.asset(item.path, fit: BoxFit.cover)
                         ) : Image.asset(item.path, fit: BoxFit.cover),                        
                       ],)
