@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:traces/screens/trips/model/trip_arguments.model.dart';
 import 'package:traces/screens/trips/model/trip_settings.model.dart';
 
 import '../../../constants/color_constants.dart';
@@ -41,8 +42,6 @@ class _StartPlanningViewState extends State<StartPlanningView>{
 
   @override
   Widget build(BuildContext context) {
-    print("Width: ${MediaQuery.of(context).size.width}");
-    print("Height: ${MediaQuery.of(context).size.height}");
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -88,7 +87,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
               ));
               Future.delayed(const Duration(seconds: 1), () {
                 Navigator.popAndPushNamed(context, tripDetailsRoute,
-                    arguments: state.trip!.id);
+                    arguments: TripDetailsArguments(isRoot: true, tripId: state.trip!.id!));
               });
           }
           if(state is StartPlanningErrorState){
@@ -211,7 +210,7 @@ class _StartPlanningViewState extends State<StartPlanningView>{
                   var isFormValid = _formKey.currentState!.validate();                 
 
                   if(isFormValid){
-                    Trip newTrip = trip!.copyWith(name: _tripNameController!.text.trim());                                    
+                    Trip newTrip = trip!.copyWith(name: _tripNameController!.text.trim(), defaultCurrency: trip.defaultCurrency ?? currencies.first);
                     context.read<StartPlanningBloc>().add(StartPlanningSubmitted(newTrip));
                   }                  
                 }
